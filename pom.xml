@@ -31,6 +31,7 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+        <qcloud.cos_api.version>5.6.191</qcloud.cos_api.version>
     </properties>
 	
     <!-- 依赖声明 -->
@@ -176,6 +177,13 @@
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-common</artifactId>
                 <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- 腾讯云oss -->
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos_api-bundle</artifactId>
+                <version>5.6.69</version>
             </dependency>
 
         </dependencies>
