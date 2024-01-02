@@ -89,7 +89,7 @@ public class CommonController {
             // 上传并返回新文件名称
             Upload upload = TxCosUtils.upload("food" , file.getOriginalFilename(), file.getInputStream());
             AjaxResult ajax = AjaxResult.success();
-            //ajax.put("fileName" , fileName);
+            ajax.put("fileName" , "");
             ajax.put("url" , upload);
             return ajax;
         } catch (Exception e) {
