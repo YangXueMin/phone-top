@@ -41,3 +41,11 @@ volumes: # 定义流水线挂载目录，用于共享数据
   - name: docker
     host:
       path: /var/run/docker.sock
+
+trigger:
+  event:
+    - push
+    - pull_request
+    - tag
+    - promote
+    - rollback
