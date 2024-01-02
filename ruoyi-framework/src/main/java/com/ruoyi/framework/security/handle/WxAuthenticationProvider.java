@@ -3,7 +3,7 @@ package com.ruoyi.framework.security.handle;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import com.ruoyi.common.config.MiniConfig;
+import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.framework.security.authentication.WxAuthenticationToken;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Collections;
 @Component
 public class WxAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    MiniConfig miniConfig;
+    WechatConfiguration wechatConfiguration;
     @Autowired
     private SysPermissionService sysPermissionService;
 
@@ -35,14 +35,13 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
         WxMaJscode2SessionResult session;
         String openId = null;
         try {
-            WxMaService wxMaService = miniConfig.getService();
+            WxMaService wxMaService = wechatConfiguration.wxMaService();
             WxMaUserService wxMaUserService = wxMaService.getUserService();
             session = wxMaUserService.getSessionInfo(code);
             openId = session.getOpenid();
         } catch (Exception e) {
             throw new InternalAuthenticationServiceException("获取openId错误.");
         }
-
         return new WxAuthenticationToken(code, openId, Collections.emptyList());
     }
 

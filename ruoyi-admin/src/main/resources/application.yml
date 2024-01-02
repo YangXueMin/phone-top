@@ -132,9 +132,33 @@ xss:
 
 wechat:
   open: true
-  miniApp: #小程序
-    appid: wx270300682946837e
-    appsecret: ad840c6638edaf1b512d8310fe623ca6
+  mp:
+    enable: true
+    appId: wx25c642419710b859
+    appSecret: f2e9fbbfebdb78fab5efae773f6fba78
+    baseUrl:
+    token:
+    aesKey:
+  pay:
+    enable: false
+    appId: wx37e3dadd330f61e5
+    appsecret: 42147b43043e94bccadf97a1186f5e5f
+    #微信支付商户号
+    mchId: 1515853301
+    #微信支付商户密钥
+    mchKey: tuishou123456jiayuxuan1234567890
+    #服务商模式下的子商户公众账号ID
+    subAppId:
+    #服务商模式下的子商户号
+    subMchId:
+    # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+    keyPath:
+    # 交易类型
+    tradeType:
+    # 支付成功回调地址
+    paymentCallbackUrl: http://mdevgw.tuishou.shop/pay/app/accountManager/callback.json
+    # 退款成功回调地址
+    refundCallbackUrl:
 
 # Minio配置
 minio:
