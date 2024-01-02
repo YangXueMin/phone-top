@@ -4,6 +4,8 @@ package com.ruoyi.food.controller.common;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.qcloud.cos.transfer.Upload;
+import com.ruoyi.common.utils.file.TxCosUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class CommonController {
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
         try {
             if (!FileUtils.checkAllowDownload(fileName)) {
-                throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
+                throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 " , fileName));
             }
             String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
             String filePath = RuoYiConfig.getDownloadPath() + fileName;
@@ -54,7 +56,7 @@ public class CommonController {
                 FileUtils.deleteFile(filePath);
             }
         } catch (Exception e) {
-            log.error("下载文件失败", e);
+            log.error("下载文件失败" , e);
         }
     }
 
@@ -70,8 +72,25 @@ public class CommonController {
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
             AjaxResult ajax = AjaxResult.success();
-            ajax.put("fileName", fileName);
-            ajax.put("url", url);
+            ajax.put("fileName" , fileName);
+            ajax.put("url" , url);
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 通用上传请求
+     */
+    @PostMapping("/common/uploadCos")
+    public AjaxResult uploadCosFile(MultipartFile file) throws Exception {
+        try {
+            // 上传并返回新文件名称
+            Upload upload = TxCosUtils.upload("food" , file.getOriginalFilename(), file.getInputStream());
+            AjaxResult ajax = AjaxResult.success();
+            //ajax.put("fileName" , fileName);
+            ajax.put("url" , upload);
             return ajax;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -86,7 +105,7 @@ public class CommonController {
             throws Exception {
         try {
             if (!FileUtils.checkAllowDownload(resource)) {
-                throw new Exception(StringUtils.format("资源文件({})非法，不允许下载。 ", resource));
+                throw new Exception(StringUtils.format("资源文件({})非法，不允许下载。 " , resource));
             }
             // 本地资源路径
             String localPath = RuoYiConfig.getProfile();
@@ -98,7 +117,7 @@ public class CommonController {
             FileUtils.setAttachmentResponseHeader(response, downloadName);
             FileUtils.writeBytes(downloadPath, response.getOutputStream());
         } catch (Exception e) {
-            log.error("下载文件失败", e);
+            log.error("下载文件失败" , e);
         }
     }
 }
