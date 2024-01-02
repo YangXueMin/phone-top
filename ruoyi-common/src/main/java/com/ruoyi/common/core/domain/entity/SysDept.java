@@ -44,12 +44,6 @@ public class SysDept extends BaseEntity
     /** 邮箱 */
     private String email;
 
-    /** 学习时长 */
-    private BigDecimal learningDuration;
-
-    /** 积分 */
-    private Integer integral;
-
     /** 部门状态:0正常,1停用 */
     private String status;
 
@@ -188,22 +182,6 @@ public class SysDept extends BaseEntity
         this.children = children;
     }
 
-    public BigDecimal getLearningDuration() {
-        return learningDuration;
-    }
-
-    public void setLearningDuration(BigDecimal learningDuration) {
-        this.learningDuration = learningDuration;
-    }
-
-    public Integer getIntegral() {
-        return integral;
-    }
-
-    public void setIntegral(Integer integral) {
-        this.integral = integral;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -215,8 +193,6 @@ public class SysDept extends BaseEntity
             .append("leader", getLeader())
             .append("phone", getPhone())
             .append("email", getEmail())
-            .append("learningDuration", getLearningDuration())
-            .append("integral", getIntegral())
             .append("status", getStatus())
             .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())

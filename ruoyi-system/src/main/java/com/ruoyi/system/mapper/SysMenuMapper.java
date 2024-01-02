@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 
@@ -9,6 +11,7 @@ import com.ruoyi.common.core.domain.entity.SysMenu;
  *
  * @author ruoyi
  */
+@Mapper
 public interface SysMenuMapper
 {
     /**

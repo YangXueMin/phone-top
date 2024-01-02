@@ -170,6 +170,28 @@
             <artifactId>minio</artifactId>
             <version>8.2.1</version>
         </dependency>
+
+        <!-- java开发工具包 https://www.hutool.club/docs/#/ -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.6.5</version>
+        </dependency>
+
+        <!-- 腾讯云oss -->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.97</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/cos_api-5.6.97.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.2</version>
+        </dependency>
     </dependencies>
 
 </project>
