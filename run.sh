@@ -1,6 +1,6 @@
 #!/bin/sh
 # 定义应用名称
-app_name='party-building'
+app_name='food-shop'
 # 定义应用版本
 app_version='latest'
 echo '----copy jar----'

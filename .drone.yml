@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: party-building
+name: food-shop
 steps:
   - name: build-jar # 流水线名称
     image: maven:3.8.5-openjdk-8 # 定义创建容器的Docker镜像
