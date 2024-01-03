@@ -192,9 +192,7 @@
         <dependency>
             <groupId>com.qcloud</groupId>
             <artifactId>cos_api</artifactId>
-            <version>5.6.97</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/cos_api-5.6.97.jar</systemPath>
+            <version>5.6.155</version>
         </dependency>
 
         <dependency>

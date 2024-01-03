@@ -1,20 +1,26 @@
 package com.ruoyi.common.utils.file;
 
 import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.thread.ThreadUtil;
+import com.alibaba.fastjson2.JSON;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.exception.CosClientException;
-import com.qcloud.cos.model.*;
+import com.qcloud.cos.model.Bucket;
+import com.qcloud.cos.model.CannedAccessControlList;
+import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.region.Region;
 import com.qcloud.cos.transfer.Copy;
 import com.qcloud.cos.transfer.Download;
 import com.qcloud.cos.transfer.TransferManager;
 import com.qcloud.cos.transfer.Upload;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,10 +35,12 @@ import java.util.concurrent.ExecutorService;
  */
 public class TxCosUtils {
     /*配置参数自行填写*/
-    private static final String APP_ID = "";
-    private static final String SECRET_ID = "";
-    private static final String SECRET_KEY = "";
-    private static final String REGION_NAME = "";
+    private static final String APP_ID = "1323517301";
+    private static final String SECRET_ID = "AKIDim3PvVJRsJi5jT5Zs19CB464zlS2i1Fg";
+    private static final String SECRET_KEY = "KuVWkZN7uEavDWadfYM2WowuiKkwpa8x";
+    private static final String REGION_NAME = "ap-beijing";
+    private static final String BUCKET_NAME = "ygmfood";
+    public static final String URL = "https://ygmfood-1323517301.cos.ap-beijing.myqcloud.com/";
 
     private TxCosUtils() {
     }
@@ -112,6 +120,20 @@ public class TxCosUtils {
      * 创建时间：2019-03-05 14:25:08
      * 创建作者：李兴武
      *
+     * @param fileName 文件地址
+     * @throws CosClientException the cos client exception
+     * @author "lixingwu"
+     */
+    public static void deleteObject(String fileName)
+            throws CosClientException {
+        deleteObject(BUCKET_NAME, fileName);
+    }
+
+    /**
+     * 方法描述：删除文件.
+     * 创建时间：2019-03-05 14:25:08
+     * 创建作者：李兴武
+     *
      * @param bucketName bucketName
      * @param fileName   文件地址
      * @throws CosClientException the cos client exception
@@ -177,6 +199,20 @@ public class TxCosUtils {
     }
 
     /**
+     * 方法描述：上传文件
+     * 创建时间：2019-03-05 15:53:54
+     * 创建作者：李兴武
+     *
+     * @param filePath 文件存储地址
+     * @param stream   文件流
+     * @return the upload
+     * @author "lixingwu"
+     */
+    public static Upload upload(String filePath, InputStream stream) {
+        return upload(BUCKET_NAME, filePath, stream);
+    }
+
+    /**
      * 方法描述：下载文件.
      * 创建时间：2019-03-05 16:20:16
      * 创建作者：李兴武
@@ -199,6 +235,20 @@ public class TxCosUtils {
             manager.shutdownNow();
         }
         return download;
+    }
+
+    /**
+     * 方法描述：下载文件.
+     * 创建时间：2019-03-05 16:20:16
+     * 创建作者：李兴武
+     *
+     * @param filePath 文件存储地址
+     * @param destFile 存储到的本地目标文件
+     * @return the download
+     * @author "lixingwu"
+     */
+    public static Download download(String filePath, File destFile) {
+        return download(BUCKET_NAME, filePath, destFile);
     }
 
 
@@ -245,8 +295,9 @@ public class TxCosUtils {
 
     /*测试*/
     public static void main(String[] args) throws IOException {
-        // Bucket bucket = TxCosUtils.createBucket("test");
-        // List<Bucket> listBuckets = TxCosUtils.listBuckets();
+        //Bucket bucket = TxCosUtils.createBucket("test");
+        //List<Bucket> listBuckets = TxCosUtils.listBuckets();
+        //System.out.println(JSON.toJSONString(listBuckets));
         // boolean test = TxCosUtils.doesBucketExist("web-js-css01");
         // File file = new File("E:\\codeList01.html");
         // BufferedInputStream stream = FileUtil.getInputStream(file);
@@ -261,10 +312,10 @@ public class TxCosUtils {
 
         // 高级API
         // 上传文件
-        // File file = new File("E:\\templet.html");
-        // BufferedInputStream stream = FileUtil.getInputStream(file);
-        // Upload test = TxCosUtils.upload("test", "html/templet.html", stream);
-        // Console.log(test);
+        File file = new File("/Users/yangxuemin/IdeaProjects/Food-Vue/ruoyi-ui/src/assets/images/profile.jpg");
+        BufferedInputStream stream = FileUtil.getInputStream(file);
+        Upload test = TxCosUtils.upload("ygmfood", "profile.jpg", stream);
+        System.err.println(JSON.toJSONString(test));
 
         // 下载文件
         // Download test = TxCosUtils.download("test", "css/ch233.min.css.bak", new File("E:\\ch233.min.css"));
