@@ -30,7 +30,6 @@ public class ${ClassName} extends ${Entity}{
 private static final long serialVersionUID=1L;
 
 #foreach ($column in $columns)
-    @ApiModelProperty("${comment}")
     #if(!$table.isSuperColumn($column.javaField))
     /** $column.columnComment */
         #if($column.list)
@@ -48,6 +47,7 @@ private static final long serialVersionUID=1L;
             #else
             @Excel(name = "${comment}")
             #end
+        @ApiModelProperty("${comment}")
         #end
     private $column.javaType $column.javaField;
 
