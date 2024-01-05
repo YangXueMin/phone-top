@@ -6,6 +6,7 @@ import ${import};
 import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 #if($table.crud || $table.sub)
 import com.ruoyi.common.core.domain.BaseEntity;
 #elseif($table.tree)
@@ -24,10 +25,12 @@ import com.ruoyi.common.core.domain.TreeEntity;
     #set($Entity="TreeEntity")
 #end
 @ApiModel(value = "${ClassName}", description = "${functionName}")
+@ToString
 public class ${ClassName} extends ${Entity}{
 private static final long serialVersionUID=1L;
 
 #foreach ($column in $columns)
+    @ApiModelProperty("${comment}")
     #if(!$table.isSuperColumn($column.javaField))
     /** $column.columnComment */
         #if($column.list)
@@ -37,7 +40,6 @@ private static final long serialVersionUID=1L;
             #else
                 #set($comment=$column.columnComment)
             #end
-            @ApiModelProperty("${comment}")
             #if($parentheseIndex != -1)
             @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
             #elseif($column.javaType == 'Date')
@@ -85,20 +87,4 @@ public void set${subClassName}List(List<${subClassName}> ${subclassName}List)
         }
 
 #end
-@Override
-public String toString(){
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-    #foreach ($column in $columns)
-        #if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
-            #set($AttrName=$column.javaField)
-        #else
-            #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-        #end
-            .append("${column.javaField}",get${AttrName}())
-    #end
-    #if($table.sub)
-            .append("${subclassName}List",get${subClassName}List())
-    #end
-        .toString();
-        }
 }
