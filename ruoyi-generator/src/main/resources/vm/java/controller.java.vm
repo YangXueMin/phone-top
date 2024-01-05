@@ -16,6 +16,10 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -30,6 +34,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author ${author}
  * @date ${datetime}
  */
+@Api("${functionName}")
 @RestController
 @RequestMapping("/${moduleName}/${businessName}")
 public class ${ClassName}Controller extends BaseController
@@ -40,6 +45,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 查询${functionName}列表
      */
+    @ApiOperation("查询${functionName}列表")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @GetMapping("/list")
 #if($table.crud || $table.sub)
@@ -73,6 +79,8 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 获取${functionName}详细信息
      */
+    @ApiOperation("获取${functionName}详细信息")
+    @ApiImplicitParam(name = "${pkColumn.javaField}", value = "ID", required = true, dataType = "${pkColumn.javaType}", paramType = "path", dataTypeClass = ${pkColumn.javaType}.class)
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')")
     @GetMapping(value = "/{${pkColumn.javaField}}")
     public AjaxResult getInfo(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
@@ -83,6 +91,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 新增${functionName}
      */
+    @ApiOperation("新增${functionName}")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')")
     @Log(title = "${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
@@ -94,6 +103,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 修改${functionName}
      */
+    @ApiOperation("修改${functionName}")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')")
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -105,6 +115,8 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 删除${functionName}
      */
+    @ApiOperation("删除${functionName}")
+    @ApiImplicitParam(name = "${pkColumn.javaField}s", value = "ID数组", required = true, dataType = "${pkColumn.javaType}[]", paramType = "path", dataTypeClass = ${pkColumn.javaType}.class)
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{${pkColumn.javaField}s}")

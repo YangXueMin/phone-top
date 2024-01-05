@@ -6,6 +6,7 @@ import com.ruoyi.framework.security.filter.JwtAuthenticationWxTokenFilter;
 import com.ruoyi.framework.security.filter.WxLoginAuthenticationFilter;
 import com.ruoyi.framework.security.handle.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 自定义用户认证逻辑
      */
     @Autowired
+    @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
 
     /**
@@ -150,7 +152,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/wxLogin", "/register", "/captchaImage","/data/**","/common/**","/api/**").permitAll()
+                .antMatchers("/login","/memberLogin", "/wxLogin", "/register", "/captchaImage","/data/**","/common/**","/api/**").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html","/doc.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()

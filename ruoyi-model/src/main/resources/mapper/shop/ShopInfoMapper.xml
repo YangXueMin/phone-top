@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.ShopInfoMapper">
+
+    <resultMap type="ShopInfo" id="ShopInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="county"    column="county"    />
+        <result property="address"    column="address"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="businessHours"    column="business_hours"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="distributionMode"    column="distribution_mode"    />
+        <result property="isActivity"    column="is_activity"    />
+        <result property="isSyncShop"    column="is_sync_shop"    />
+        <result property="isSyncNatural"    column="is_sync_natural"    />
+        <result property="securityFile"    column="security_file"    />
+        <result property="naturalFile"    column="natural_file"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopInfoVo">
+        select
+            id,
+            name,
+            province,
+            city,
+            county,
+            address,
+            longitude,
+            latitude,
+            mobile,
+            business_hours,
+            start_time,
+            end_time,
+            distribution_mode,
+            is_activity,
+            is_sync_shop,
+            is_sync_natural,
+            security_file,
+            natural_file,
+            status,
+            del_flag,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from shop_info
+    </sql>
+
+    <select id="selectShopInfoList" parameterType="ShopInfo" resultMap="ShopInfoResult">
+        <include refid="selectShopInfoVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="county != null  and county != ''"> and county = #{county}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="businessHours != null  and businessHours != ''"> and business_hours = #{businessHours}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="distributionMode != null  and distributionMode != ''"> and distribution_mode = #{distributionMode}</if>
+            <if test="isActivity != null  and isActivity != ''"> and is_activity = #{isActivity}</if>
+            <if test="isSyncShop != null  and isSyncShop != ''"> and is_sync_shop = #{isSyncShop}</if>
+            <if test="isSyncNatural != null  and isSyncNatural != ''"> and is_sync_natural = #{isSyncNatural}</if>
+            <if test="securityFile != null  and securityFile != ''"> and security_file = #{securityFile}</if>
+            <if test="naturalFile != null  and naturalFile != ''"> and natural_file = #{naturalFile}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectShopInfoById" parameterType="Long" resultMap="ShopInfoResult">
+        <include refid="selectShopInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertShopInfo" parameterType="ShopInfo">
+        insert into shop_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="county != null">county,</if>
+            <if test="address != null">address,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="businessHours != null">business_hours,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="distributionMode != null">distribution_mode,</if>
+            <if test="isActivity != null">is_activity,</if>
+            <if test="isSyncShop != null">is_sync_shop,</if>
+            <if test="isSyncNatural != null">is_sync_natural,</if>
+            <if test="securityFile != null">security_file,</if>
+            <if test="naturalFile != null">natural_file,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="county != null">#{county},</if>
+            <if test="address != null">#{address},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="businessHours != null">#{businessHours},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="distributionMode != null">#{distributionMode},</if>
+            <if test="isActivity != null">#{isActivity},</if>
+            <if test="isSyncShop != null">#{isSyncShop},</if>
+            <if test="isSyncNatural != null">#{isSyncNatural},</if>
+            <if test="securityFile != null">#{securityFile},</if>
+            <if test="naturalFile != null">#{naturalFile},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShopInfo" parameterType="ShopInfo">
+        update shop_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="county != null">county = #{county},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="businessHours != null">business_hours = #{businessHours},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="distributionMode != null">distribution_mode = #{distributionMode},</if>
+            <if test="isActivity != null">is_activity = #{isActivity},</if>
+            <if test="isSyncShop != null">is_sync_shop = #{isSyncShop},</if>
+            <if test="isSyncNatural != null">is_sync_natural = #{isSyncNatural},</if>
+            <if test="securityFile != null">security_file = #{securityFile},</if>
+            <if test="naturalFile != null">natural_file = #{naturalFile},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopInfoById" parameterType="Long">
+        delete from shop_info where id = #{id}
+    </delete>
+
+    <delete id="deleteShopInfoByIds" parameterType="String">
+        delete from shop_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
