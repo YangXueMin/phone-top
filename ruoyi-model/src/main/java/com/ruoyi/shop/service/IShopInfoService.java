@@ -2,6 +2,7 @@ package com.ruoyi.shop.service;
 
 import java.util.List;
 import com.ruoyi.shop.domain.ShopInfo;
+import com.ruoyi.system.domain.SysPost;
 
 /**
  * 店铺信息Service接口
@@ -26,6 +27,21 @@ public interface IShopInfoService
      * @return 店铺信息集合
      */
     public List<ShopInfo> selectShopInfoList(ShopInfo shopInfo);
+
+    /**
+     * 查询所有岗位
+     *
+     * @return 岗位列表
+     */
+    public List<ShopInfo> selectShopInfoAll();
+
+    /**
+     * 根据用户ID获取店铺选择框列表
+     *
+     * @param userId 用户ID
+     * @return 选中岗位ID列表
+     */
+    public List<Long> selectShopListByUserId(Long userId);
 
     /**
      * 新增店铺信息

@@ -32,6 +32,15 @@ public class CompanyInfoServiceImpl implements ICompanyInfoService
         return companyInfoMapper.selectCompanyInfoById(id);
     }
 
+    @Override
+    public CompanyInfo selectCompanyInfoByCompanyId(Long companyId) {
+        List<CompanyInfo> companyInfoList = companyInfoMapper.selectCompanyInfoByCompanyId(companyId);
+        if(companyInfoList == null || companyInfoList.size() == 0){
+            return null;
+        }
+        return companyInfoList.get(0);
+    }
+
     /**
      * 查询企业信息配置列表
      *

@@ -20,6 +20,14 @@ public interface ICompanyInfoService
     public CompanyInfo selectCompanyInfoById(Long id);
 
     /**
+     * 查询企业信息配置
+     *
+     * @param companyId 企业ID
+     * @return 企业信息配置
+     */
+    public CompanyInfo selectCompanyInfoByCompanyId(Long companyId);
+
+    /**
      * 查询企业信息配置列表
      *
      * @param companyInfo 企业信息配置

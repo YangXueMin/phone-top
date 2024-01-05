@@ -91,6 +91,18 @@
         where id = #{id}
     </select>
 
+    <select id="selectShopAll" resultMap="ShopInfoResult">
+        <include refid="selectShopInfoVo"/>
+    </select>
+
+    <select id="selectShopListByUserId" parameterType="Long" resultType="Long">
+        select s.id
+        from shop_info s
+                 left join sys_user_shop us on us.shop_id = s.id
+                 left join sys_user u on u.user_id = us.user_id
+        where u.user_id = #{userId}
+    </select>
+
     <insert id="insertShopInfo" parameterType="ShopInfo">
         insert into shop_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

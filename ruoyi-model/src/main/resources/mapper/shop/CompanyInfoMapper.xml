@@ -53,6 +53,11 @@
         where id = #{id}
     </select>
 
+    <select id="selectCompanyInfoByCompanyId" parameterType="Long" resultMap="CompanyInfoResult">
+        <include refid="selectCompanyInfoVo"/>
+        where company_id = #{companyId}
+    </select>
+
     <insert id="insertCompanyInfo" parameterType="CompanyInfo">
         insert into shop_company_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

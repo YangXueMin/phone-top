@@ -1,6 +1,8 @@
 package com.ruoyi.shop.mapper;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SysPost;
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.shop.domain.ShopInfo;
 
@@ -28,6 +30,20 @@ public interface ShopInfoMapper
      * @return 店铺信息集合
      */
     public List<ShopInfo> selectShopInfoList(ShopInfo shopInfo);
+
+    /**
+     * 查询所有岗位
+     *
+     * @return 岗位列表
+     */
+    public List<ShopInfo> selectShopAll();
+
+    /**
+     * 根据用户ID获取店铺选择框列表
+     * @param userId
+     * @return
+     */
+    List<Long> selectShopListByUserId(Long userId);
 
     /**
      * 新增店铺信息

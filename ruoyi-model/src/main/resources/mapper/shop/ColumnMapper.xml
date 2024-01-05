@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.ColumnMapper">
+
+    <resultMap type="Column" id="ColumnResult">
+        <result property="id"    column="id"    />
+        <result property="columnType"    column="column_type"    />
+        <result property="columnName"    column="column_name"    />
+        <result property="picture"    column="picture"    />
+        <result property="isSkip"    column="is_skip"    />
+        <result property="interlinkage"    column="interlinkage"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectColumnVo">
+        select
+            id,
+            column_type,
+            column_name,
+            picture,
+            is_skip,
+            interlinkage,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from shop_column
+    </sql>
+
+    <select id="selectColumnList" parameterType="Column" resultMap="ColumnResult">
+        <include refid="selectColumnVo"/>
+        <where>
+            <if test="columnType != null  and columnType != ''"> and column_type = #{columnType}</if>
+            <if test="columnName != null  and columnName != ''"> and column_name like concat('%', #{columnName}, '%')</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="isSkip != null  and isSkip != ''"> and is_skip = #{isSkip}</if>
+            <if test="interlinkage != null  and interlinkage != ''"> and interlinkage = #{interlinkage}</if>
+        </where>
+    </select>
+
+    <select id="selectColumnById" parameterType="Long" resultMap="ColumnResult">
+        <include refid="selectColumnVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertColumn" parameterType="Column">
+        insert into shop_column
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="columnType != null">column_type,</if>
+            <if test="columnName != null">column_name,</if>
+            <if test="picture != null">picture,</if>
+            <if test="isSkip != null">is_skip,</if>
+            <if test="interlinkage != null">interlinkage,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="columnType != null">#{columnType},</if>
+            <if test="columnName != null">#{columnName},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="isSkip != null">#{isSkip},</if>
+            <if test="interlinkage != null">#{interlinkage},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateColumn" parameterType="Column">
+        update shop_column
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="columnType != null">column_type = #{columnType},</if>
+            <if test="columnName != null">column_name = #{columnName},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="isSkip != null">is_skip = #{isSkip},</if>
+            <if test="interlinkage != null">interlinkage = #{interlinkage},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteColumnById" parameterType="Long">
+        delete from shop_column where id = #{id}
+    </delete>
+
+    <delete id="deleteColumnByIds" parameterType="String">
+        delete from shop_column where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

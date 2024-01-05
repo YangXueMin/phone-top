@@ -42,6 +42,16 @@ public class ShopInfoServiceImpl implements IShopInfoService {
         return shopInfoMapper.selectShopInfoList(shopInfo);
     }
 
+    @Override
+    public List<ShopInfo> selectShopInfoAll() {
+        return shopInfoMapper.selectShopAll();
+    }
+
+    @Override
+    public List<Long> selectShopListByUserId(Long userId) {
+        return shopInfoMapper.selectShopListByUserId(userId);
+    }
+
     /**
      * 新增店铺信息
      *
