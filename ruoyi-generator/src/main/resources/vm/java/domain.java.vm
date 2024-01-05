@@ -47,8 +47,8 @@ private static final long serialVersionUID=1L;
             #else
             @Excel(name = "${comment}")
             #end
-        @ApiModelProperty("${comment}")
         #end
+    @ApiModelProperty("${comment}")
     private $column.javaType $column.javaField;
 
     #end
