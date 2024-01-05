@@ -37,8 +37,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @Api("${functionName}")
 @RestController
 @RequestMapping("/${moduleName}/${businessName}")
-public class ${ClassName}Controller extends BaseController
-{
+public class ${ClassName}Controller extends BaseController {
     @Autowired
     private I${ClassName}Service ${className}Service;
 
