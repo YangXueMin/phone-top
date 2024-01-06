@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.GoodsMapper">
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="name"    column="name"    />
+        <result property="describe"    column="describe"    />
+        <result property="classId"    column="class_id"    />
+        <result property="goodsLabel"    column="goods_label"    />
+        <result property="pictures"    column="pictures"    />
+        <result property="attributeList"    column="attribute_list"    />
+        <result property="deliveryType"    column="delivery_type"    />
+        <result property="isLimit"    column="is_limit"    />
+        <result property="limitType"    column="limit_type"    />
+        <result property="limitNum"    column="limit_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectGoodsVo">
+        select
+            id,
+            shop_id,
+            name,
+            describe,
+            class_id,
+            goods_label,
+            pictures,
+            attribute_list,
+            delivery_type,
+            is_limit,
+            limit_type,
+            limit_num,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        from shop_goods
+    </sql>
+
+    <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        <where>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
+            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="goodsLabel != null  and goodsLabel != ''"> and goods_label = #{goodsLabel}</if>
+            <if test="pictures != null  and pictures != ''"> and pictures = #{pictures}</if>
+            <if test="attributeList != null  and attributeList != ''"> and attribute_list = #{attributeList}</if>
+            <if test="deliveryType != null  and deliveryType != ''"> and delivery_type = #{deliveryType}</if>
+            <if test="isLimit != null  and isLimit != ''"> and is_limit = #{isLimit}</if>
+            <if test="limitType != null  and limitType != ''"> and limit_type = #{limitType}</if>
+            <if test="limitNum != null "> and limit_num = #{limitNum}</if>
+        </where>
+    </select>
+
+    <select id="selectGoodsById" parameterType="Long" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">shop_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="describe != null">describe,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="goodsLabel != null">goods_label,</if>
+            <if test="pictures != null">pictures,</if>
+            <if test="attributeList != null">attribute_list,</if>
+            <if test="deliveryType != null">delivery_type,</if>
+            <if test="isLimit != null">is_limit,</if>
+            <if test="limitType != null">limit_type,</if>
+            <if test="limitNum != null">limit_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">#{shopId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="describe != null">#{describe},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="goodsLabel != null">#{goodsLabel},</if>
+            <if test="pictures != null">#{pictures},</if>
+            <if test="attributeList != null">#{attributeList},</if>
+            <if test="deliveryType != null">#{deliveryType},</if>
+            <if test="isLimit != null">#{isLimit},</if>
+            <if test="limitType != null">#{limitType},</if>
+            <if test="limitNum != null">#{limitNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGoods" parameterType="Goods">
+        update shop_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="describe != null">describe = #{describe},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="goodsLabel != null">goods_label = #{goodsLabel},</if>
+            <if test="pictures != null">pictures = #{pictures},</if>
+            <if test="attributeList != null">attribute_list = #{attributeList},</if>
+            <if test="deliveryType != null">delivery_type = #{deliveryType},</if>
+            <if test="isLimit != null">is_limit = #{isLimit},</if>
+            <if test="limitType != null">limit_type = #{limitType},</if>
+            <if test="limitNum != null">limit_num = #{limitNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGoodsById" parameterType="Long">
+        delete from shop_goods where id = #{id}
+    </delete>
+
+    <delete id="deleteGoodsByIds" parameterType="String">
+        delete from shop_goods where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
