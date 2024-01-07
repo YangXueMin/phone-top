@@ -41,6 +41,18 @@ public class ShopTreeSelect implements Serializable {
         this.children = goodsClassify.getChildren().stream().map(ShopTreeSelect::new).collect(Collectors.toList());
     }
 
+    public ShopTreeSelect(ContentType contentType) {
+        this.id = contentType.getTypeId();
+        this.label = contentType.getName();
+        this.children = contentType.getChildren().stream().map(ShopTreeSelect::new).collect(Collectors.toList());
+    }
+
+    public ShopTreeSelect(BannerType bannerType) {
+        this.id = bannerType.getTypeId();
+        this.label = bannerType.getName();
+        this.children = bannerType.getChildren().stream().map(ShopTreeSelect::new).collect(Collectors.toList());
+    }
+
     public Long getId() {
         return id;
     }

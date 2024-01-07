@@ -93,16 +93,16 @@ public class ShopInfo extends BaseEntity {
      * 开始时间
      */
     @ApiModelProperty("开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "HH:mm")
+    @Excel(name = "开始时间", width = 30, dateFormat = "HH:mm")
     private Date startTime;
 
     /**
      * 结束时间
      */
     @ApiModelProperty("结束时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "HH:mm")
+    @Excel(name = "结束时间", width = 30, dateFormat = "HH:mm")
     private Date endTime;
 
     /**
