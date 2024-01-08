@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.shop.domain.CardCoupon;
 import com.ruoyi.shop.mapper.CardCouponMapper;
+import com.ruoyi.shop.mapper.CouponMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.shop.mapper.ShopCardMapper;
@@ -24,6 +25,8 @@ public class ShopCardServiceImpl implements IShopCardService {
     private ShopCardMapper shopCardMapper;
     @Autowired
     private CardCouponMapper cardCouponMapper;
+    @Autowired
+    private CouponMapper couponMapper;
 
     /**
      * 查询储值卡
@@ -33,7 +36,12 @@ public class ShopCardServiceImpl implements IShopCardService {
      */
     @Override
     public ShopCard selectShopCardById(Long id) {
-        return shopCardMapper.selectShopCardById(id);
+        ShopCard shopCard = shopCardMapper.selectShopCardById(id);
+        if(shopCard != null){
+            List<CardCoupon> cardCouponList = cardCouponMapper.selectCardCouponByCardId(id);
+            shopCard.setCardCouponList(cardCouponList);
+        }
+        return shopCard;
     }
 
     /**

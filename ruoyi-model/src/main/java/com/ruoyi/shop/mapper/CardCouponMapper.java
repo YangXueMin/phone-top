@@ -38,6 +38,14 @@ public interface CardCouponMapper {
     public int selectCountCardCouponByCouponId(Long couponId);
 
     /**
+     * 根据储值卡ID查询数据
+     *
+     * @param cardId 储值卡ID
+     * @return 结果
+     */
+    public List<CardCoupon> selectCardCouponByCardId(Long cardId);
+
+    /**
      * 批量新增储值卡优惠券信息
      *
      * @param cardCouponList 优惠券列表

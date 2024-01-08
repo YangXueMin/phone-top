@@ -28,6 +28,9 @@ public class CardCoupon {
     @ApiModelProperty("数量")
     private Long number;
 
+    @ApiModelProperty("优惠券")
+    private Coupon coupon;
+
     public void setCardId(Long cardId){
         this.cardId = cardId;
     }
@@ -50,5 +53,11 @@ public class CardCoupon {
         return number;
     }
 
+    public Coupon getCoupon() {
+        return coupon;
+    }
 
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+    }
 }
