@@ -73,7 +73,7 @@ public class CompanyGoods extends BaseEntity{
     private Long limitNum;
 
     @ApiModelProperty("规格详情数据")
-    private List<GoodsSpecs> specsList;
+    private List<CompanyGoodsSpecs> specsList;
 
     public void setId(Long id){
         this.id = id;
@@ -154,11 +154,11 @@ public class CompanyGoods extends BaseEntity{
         return limitNum;
     }
 
-    public List<GoodsSpecs> getSpecsList() {
+    public List<CompanyGoodsSpecs> getSpecsList() {
         return specsList;
     }
 
-    public void setSpecsList(List<GoodsSpecs> specsList) {
+    public void setSpecsList(List<CompanyGoodsSpecs> specsList) {
         this.specsList = specsList;
     }
 }

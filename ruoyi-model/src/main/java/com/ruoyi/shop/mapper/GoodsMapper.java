@@ -1,6 +1,7 @@
 package com.ruoyi.shop.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.shop.domain.Goods;
 
@@ -11,8 +12,7 @@ import com.ruoyi.shop.domain.Goods;
  * @date 2024-01-06
  */
 @Mapper
-public interface GoodsMapper
-{
+public interface GoodsMapper {
     /**
      * 查询商品
      *
@@ -60,4 +60,20 @@ public interface GoodsMapper
      * @return 结果
      */
     public int deleteGoodsByIds(Long[] ids);
+
+    /**
+     * 删除商品
+     *
+     * @param companyGoodsId 企业商品主键
+     * @return 结果
+     */
+    public int deleteGoodsByCompanyGoodsId(Long companyGoodsId);
+
+    /**
+     * 批量删除商品
+     *
+     * @param companyGoodsIds 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteGoodsByCompanyGoodsIds(Long[] companyGoodsIds);
 }

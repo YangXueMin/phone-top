@@ -6,6 +6,7 @@
 
     <resultMap type="Goods" id="GoodsResult">
         <result property="id"    column="id"    />
+        <result property="companyGoodsId"    column="company_goods_id"    />
         <result property="shopId"    column="shop_id"    />
         <result property="name"    column="name"    />
         <result property="describe"    column="describe"    />
@@ -26,6 +27,7 @@
     <sql id="selectGoodsVo">
         select
             id,
+            company_goods_id,
             shop_id,
             name,
             describe,
@@ -47,6 +49,7 @@
     <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
         <include refid="selectGoodsVo"/>
         <where>
+            <if test="companyGoodsId != null "> and company_goods_id = #{companyGoodsId}</if>
             <if test="shopId != null "> and shop_id = #{shopId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
@@ -69,6 +72,7 @@
     <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
         insert into shop_goods
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyGoodsId != null">company_goods_id,</if>
             <if test="shopId != null">shop_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="describe != null">describe,</if>
@@ -86,6 +90,7 @@
             <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyGoodsId != null">#{companyGoodsId},</if>
             <if test="shopId != null">#{shopId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="describe != null">#{describe},</if>
@@ -107,6 +112,7 @@
     <update id="updateGoods" parameterType="Goods">
         update shop_goods
         <trim prefix="SET" suffixOverrides=",">
+            <if test="companyGoodsId != null">company_goods_id = #{companyGoodsId},</if>
             <if test="shopId != null">shop_id = #{shopId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="describe != null">describe = #{describe},</if>
@@ -134,6 +140,17 @@
         delete from shop_goods where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteGoodsByCompanyGoodsId" parameterType="Long">
+        delete from shop_goods where company_goods_id = #{companyGoodsId}
+    </delete>
+
+    <delete id="deleteGoodsByCompanyGoodsIds" parameterType="String">
+        delete from shop_goods where company_goods_id in
+        <foreach item="companyGoodsId" collection="array" open="(" separator="," close=")">
+            #{companyGoodsId}
         </foreach>
     </delete>
 </mapper>

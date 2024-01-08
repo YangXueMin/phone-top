@@ -104,6 +104,13 @@
         delete from shop_goods_specs where goods_id = #{goodsId}
     </delete>
 
+    <delete id="deleteGoodsSpecsByGoodIds" parameterType="Long">
+        delete from shop_goods_specs where goods_id in
+        <foreach item="goodsId" collection="array" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </delete>
+
     <delete id="deleteGoodsSpecsByIds" parameterType="String">
         delete from shop_goods_specs where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">

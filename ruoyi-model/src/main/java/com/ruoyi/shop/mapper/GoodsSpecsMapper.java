@@ -62,6 +62,14 @@ public interface GoodsSpecsMapper {
     public int deleteGoodsSpecsByGoodId(Long goodId);
 
     /**
+     * 删除商品规格
+     *
+     * @param goodIds 商品主键
+     * @return 结果
+     */
+    public int deleteGoodsSpecsByGoodIds(Long[] goodIds);
+
+    /**
      * 批量删除商品规格
      *
      * @param ids 需要删除的数据主键集合

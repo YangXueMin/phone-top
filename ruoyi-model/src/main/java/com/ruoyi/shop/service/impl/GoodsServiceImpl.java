@@ -1,20 +1,16 @@
 package com.ruoyi.shop.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.GoodsSpecs;
+import com.ruoyi.shop.mapper.GoodsMapper;
 import com.ruoyi.shop.mapper.GoodsSpecsMapper;
+import com.ruoyi.shop.service.IGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.shop.mapper.GoodsMapper;
-import com.ruoyi.shop.domain.Goods;
-import com.ruoyi.shop.service.IGoodsService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 商品Service业务层处理
@@ -101,8 +97,13 @@ public class GoodsServiceImpl implements IGoodsService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteGoodsByIds(Long[] ids) {
-        return goodsMapper.deleteGoodsByIds(ids);
+        int i = goodsMapper.deleteGoodsByIds(ids);
+        if(i > 0){
+            goodsSpecsMapper.deleteGoodsSpecsByGoodIds(ids);
+        }
+        return i;
     }
 
     /**
@@ -112,7 +113,12 @@ public class GoodsServiceImpl implements IGoodsService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteGoodsById(Long id) {
-        return goodsMapper.deleteGoodsById(id);
+        int i = goodsMapper.deleteGoodsById(id);
+        if(i > 0){
+            goodsSpecsMapper.deleteGoodsSpecsByGoodId(id);
+        }
+        return i;
     }
 }
