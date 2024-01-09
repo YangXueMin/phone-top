@@ -62,7 +62,7 @@
             s.goods_discount,
             s.goods_number
         from shop_goods a
-        left  join shop_goods_specs s ON a.id = s.goods_id
+        left join shop_goods_specs s ON a.id = s.goods_id
     </sql>
 
     <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
