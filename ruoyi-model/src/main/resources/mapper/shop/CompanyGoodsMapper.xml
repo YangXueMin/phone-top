@@ -7,7 +7,7 @@
     <resultMap type="CompanyGoods" id="CompanyGoodsResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
-        <result property="describe"    column="describe"    />
+        <result property="describe"    column="describe_"    />
         <result property="classId"    column="class_id"    />
         <result property="goodsLabel"    column="goods_label"    />
         <result property="pictures"    column="pictures"    />
@@ -20,54 +20,73 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <collection  property="specsList"   javaType="java.util.List"           resultMap="CompanyGoodsSpecsResult" />
+    </resultMap>
+
+    <resultMap type="CompanyGoodsSpecs" id="CompanyGoodsSpecsResult">
+        <result property="id"    column="specsId"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsSpecs"    column="goods_specs"    />
+        <result property="goodsStock"    column="goods_stock"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="goodsDiscount"    column="goods_discount"    />
+        <result property="goodsNumber"    column="goods_number"    />
     </resultMap>
 
     <sql id="selectCompanyGoodsVo">
         select
-            id,
-            name,
-            describe,
-            class_id,
-            goods_label,
-            pictures,
-            attribute_list,
-            delivery_type,
-            is_limit,
-            limit_type,
-            limit_num,
-            create_by,
-            create_time,
-            update_by,
-            update_time
-        from shop_company_goods
+            a.id,
+            a.name,
+            a.describe_,
+            a.class_id,
+            a.goods_label,
+            a.pictures,
+            a.attribute_list,
+            a.delivery_type,
+            a.is_limit,
+            a.limit_type,
+            a.limit_num,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            s.id AS "specsId",
+            s.goods_id,
+            s.goods_specs,
+            s.goods_stock,
+            s.goods_price,
+            s.goods_discount,
+            s.goods_number
+        from shop_company_goods a
+        ON left join shop_company_goods_specs s ON s.goods_id = a.id
     </sql>
 
     <select id="selectCompanyGoodsList" parameterType="CompanyGoods" resultMap="CompanyGoodsResult">
         <include refid="selectCompanyGoodsVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
-            <if test="classId != null "> and class_id = #{classId}</if>
-            <if test="goodsLabel != null  and goodsLabel != ''"> and goods_label = #{goodsLabel}</if>
-            <if test="pictures != null  and pictures != ''"> and pictures = #{pictures}</if>
-            <if test="attributeList != null  and attributeList != ''"> and attribute_list = #{attributeList}</if>
-            <if test="deliveryType != null  and deliveryType != ''"> and delivery_type = #{deliveryType}</if>
-            <if test="isLimit != null  and isLimit != ''"> and is_limit = #{isLimit}</if>
-            <if test="limitType != null  and limitType != ''"> and limit_type = #{limitType}</if>
-            <if test="limitNum != null "> and limit_num = #{limitNum}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="describe != null  and describe != ''"> and a.describe_ = #{describe}</if>
+            <if test="classId != null "> and a.class_id = #{classId}</if>
+            <if test="goodsLabel != null  and goodsLabel != ''"> and a.goods_label = #{goodsLabel}</if>
+            <if test="pictures != null  and pictures != ''"> and a.pictures = #{pictures}</if>
+            <if test="attributeList != null  and attributeList != ''"> and a.attribute_list = #{attributeList}</if>
+            <if test="deliveryType != null  and deliveryType != ''"> and a.delivery_type = #{deliveryType}</if>
+            <if test="isLimit != null  and isLimit != ''"> and a.is_limit = #{isLimit}</if>
+            <if test="limitType != null  and limitType != ''"> and a.limit_type = #{limitType}</if>
+            <if test="limitNum != null "> and a.limit_num = #{limitNum}</if>
         </where>
     </select>
 
     <select id="selectCompanyGoodsById" parameterType="Long" resultMap="CompanyGoodsResult">
         <include refid="selectCompanyGoodsVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertCompanyGoods" parameterType="CompanyGoods" useGeneratedKeys="true" keyProperty="id">
         insert into shop_company_goods
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">name,</if>
-            <if test="describe != null">describe,</if>
+            <if test="describe != null">describe_,</if>
             <if test="classId != null">class_id,</if>
             <if test="goodsLabel != null">goods_label,</if>
             <if test="pictures != null">pictures,</if>
@@ -103,7 +122,7 @@
         update shop_company_goods
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
-            <if test="describe != null">describe = #{describe},</if>
+            <if test="describe != null">describe_ = #{describe},</if>
             <if test="classId != null">class_id = #{classId},</if>
             <if test="goodsLabel != null">goods_label = #{goodsLabel},</if>
             <if test="pictures != null">pictures = #{pictures},</if>
