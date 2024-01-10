@@ -21,6 +21,13 @@ public interface CompanyGoodsSpecsMapper {
      * @return 企业商品规格
      */
     public CompanyGoodsSpecs selectCompanyGoodsSpecsById(Long id);
+    /**
+     * 查询企业商品规格
+     *
+     * @param goodId 企业商品规格主键
+     * @return 企业商品规格
+     */
+    public List<CompanyGoodsSpecs> selectCompanyGoodsSpecsByGoodId(Long goodId);
 
     /**
      * 查询企业商品规格列表

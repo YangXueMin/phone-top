@@ -39,7 +39,11 @@ public class CompanyGoodsServiceImpl implements ICompanyGoodsService {
      */
     @Override
     public CompanyGoods selectCompanyGoodsById(Long id) {
-        return companyGoodsMapper.selectCompanyGoodsById(id);
+        CompanyGoods companyGoods = companyGoodsMapper.selectCompanyGoodsById(id);
+        if(companyGoods != null){
+            companyGoods.setSpecsList(companyGoodsSpecsMapper.selectCompanyGoodsSpecsByGoodId(companyGoods.getId()));
+        }
+        return companyGoods;
     }
 
     /**
@@ -50,7 +54,13 @@ public class CompanyGoodsServiceImpl implements ICompanyGoodsService {
      */
     @Override
     public List<CompanyGoods> selectCompanyGoodsList(CompanyGoods companyGoods) {
-        return companyGoodsMapper.selectCompanyGoodsList(companyGoods);
+        List<CompanyGoods> list = companyGoodsMapper.selectCompanyGoodsList(companyGoods);
+        if(list.size() > 0){
+            for (CompanyGoods goods : list) {
+                goods.setSpecsList(companyGoodsSpecsMapper.selectCompanyGoodsSpecsByGoodId(goods.getId()));
+            }
+        }
+        return list;
     }
 
     /**

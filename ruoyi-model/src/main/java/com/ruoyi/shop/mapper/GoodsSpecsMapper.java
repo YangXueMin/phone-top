@@ -22,6 +22,14 @@ public interface GoodsSpecsMapper {
     public GoodsSpecs selectGoodsSpecsById(Long id);
 
     /**
+     * 查询商品规格
+     *
+     * @param goodId 商品规格主键
+     * @return 商品规格
+     */
+    public List<GoodsSpecs> selectGoodsSpecsByGoodId(Long goodId);
+
+    /**
      * 查询商品规格列表
      *
      * @param goodsSpecs 商品规格

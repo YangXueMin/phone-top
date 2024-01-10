@@ -51,6 +51,11 @@
         where id = #{id}
     </select>
 
+    <select id="selectCompanyGoodsSpecsByGoodId" parameterType="Long" resultMap="CompanyGoodsSpecsResult">
+        <include refid="selectCompanyGoodsSpecsVo"/>
+        where goods_id = #{goodsId}
+    </select>
+
     <insert id="insertCompanyGoodsSpecs" parameterType="CompanyGoodsSpecs" useGeneratedKeys="true" keyProperty="id">
         insert into shop_company_goods_specs
         <trim prefix="(" suffix=")" suffixOverrides=",">

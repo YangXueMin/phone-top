@@ -20,17 +20,6 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
-        <collection  property="specsList"   javaType="java.util.List"           resultMap="CompanyGoodsSpecsResult" />
-    </resultMap>
-
-    <resultMap type="CompanyGoodsSpecs" id="CompanyGoodsSpecsResult">
-        <result property="id"    column="specsId"    />
-        <result property="goodsId"    column="goods_id"    />
-        <result property="goodsSpecs"    column="goods_specs"    />
-        <result property="goodsStock"    column="goods_stock"    />
-        <result property="goodsPrice"    column="goods_price"    />
-        <result property="goodsDiscount"    column="goods_discount"    />
-        <result property="goodsNumber"    column="goods_number"    />
     </resultMap>
 
     <sql id="selectCompanyGoodsVo">
@@ -58,7 +47,6 @@
             s.goods_discount,
             s.goods_number
         from shop_company_goods a
-        left join shop_company_goods_specs s ON s.goods_id = a.id
     </sql>
 
     <select id="selectCompanyGoodsList" parameterType="CompanyGoods" resultMap="CompanyGoodsResult">

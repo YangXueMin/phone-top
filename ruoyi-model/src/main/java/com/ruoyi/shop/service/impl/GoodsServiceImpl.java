@@ -33,7 +33,11 @@ public class GoodsServiceImpl implements IGoodsService {
      */
     @Override
     public Goods selectGoodsById(Long id) {
-        return goodsMapper.selectGoodsById(id);
+        Goods goods = goodsMapper.selectGoodsById(id);
+        if(goods != null){
+            goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(id));
+        }
+        return goods;
     }
 
     /**
@@ -44,7 +48,13 @@ public class GoodsServiceImpl implements IGoodsService {
      */
     @Override
     public List<Goods> selectGoodsList(Goods goods) {
-        return goodsMapper.selectGoodsList(goods);
+        List<Goods> goodsList = goodsMapper.selectGoodsList(goods);
+        if(goodsList.size() > 0){
+            for (Goods goodsData : goodsList) {
+                goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
+            }
+        }
+        return goodsList;
     }
 
     /**
