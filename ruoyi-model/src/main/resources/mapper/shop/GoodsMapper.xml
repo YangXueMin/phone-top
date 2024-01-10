@@ -42,14 +42,7 @@
             a.create_by,
             a.create_time,
             a.update_by,
-            a.update_time,
-            s.id AS specsId,
-            s.goods_id,
-            s.goods_specs,
-            s.goods_stock,
-            s.goods_price,
-            s.goods_discount,
-            s.goods_number
+            a.update_time
         from shop_goods a
     </sql>
 
