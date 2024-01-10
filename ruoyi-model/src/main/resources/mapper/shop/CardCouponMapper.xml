@@ -34,7 +34,6 @@
         select
             cc.card_id,
             cc.coupon_id,
-            cc.money,
             cc.number,
             sc.id AS scId,
             sc.coupon_name,

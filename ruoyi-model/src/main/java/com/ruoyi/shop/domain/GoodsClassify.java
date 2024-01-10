@@ -47,6 +47,13 @@ public class GoodsClassify extends BaseEntity {
     private String name;
 
     /**
+     * 图片
+     */
+    @Excel(name = "图片")
+    @ApiModelProperty("图片")
+    private String picture;
+
+    /**
      * 显示顺序
      */
     @Excel(name = "显示顺序")
@@ -93,6 +100,14 @@ public class GoodsClassify extends BaseEntity {
 
     public String getName() {
         return name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public void setOrderNum(Integer orderNum) {

@@ -9,6 +9,7 @@
         <result property="parentId"    column="parent_id"    />
         <result property="ancestors"    column="ancestors"    />
         <result property="name"    column="name"    />
+        <result property="picture"    column="picture"    />
         <result property="orderNum"    column="order_num"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -23,6 +24,7 @@
             parent_id,
             ancestors,
             name,
+            picture,
             order_num,
             del_flag,
             create_by,
@@ -53,6 +55,7 @@
             <if test="parentId != null">parent_id,</if>
             <if test="ancestors != null">ancestors,</if>
             <if test="name != null">name,</if>
+            <if test="picture != null">picture,</if>
             <if test="orderNum != null">order_num,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="createBy != null">create_by,</if>
@@ -64,6 +67,7 @@
             <if test="parentId != null">#{parentId},</if>
             <if test="ancestors != null">#{ancestors},</if>
             <if test="name != null">#{name},</if>
+            <if test="picture != null">#{picture},</if>
             <if test="orderNum != null">#{orderNum},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -79,6 +83,7 @@
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="ancestors != null">ancestors = #{ancestors},</if>
             <if test="name != null">name = #{name},</if>
+            <if test="picture != null">picture = #{picture},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
