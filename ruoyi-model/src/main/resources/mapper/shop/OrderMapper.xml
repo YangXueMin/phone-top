@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.OrderMapper">
+
+    <resultMap type="Order" id="OrderResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="favourableMoney"    column="favourable_money"    />
+        <result property="money"    column="money"    />
+        <result property="couponList"    column="coupon_list"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="haveType"    column="have_type"    />
+        <result property="haveTime"    column="have_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cancelStatus"    column="cancel_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectOrderVo">
+        select
+            id,
+            shop_id,
+            member_id,
+            order_number,
+            favourable_money,
+            money,
+            coupon_list,
+            order_status,
+            pay_type,
+            have_type,
+            have_time,
+            user_id,
+            cancel_status,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from shop_order
+    </sql>
+
+    <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="favourableMoney != null "> and favourable_money = #{favourableMoney}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="couponList != null  and couponList != ''"> and coupon_list = #{couponList}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
+            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
+            <if test="haveType != null  and haveType != ''"> and have_type = #{haveType}</if>
+            <if test="haveTime != null "> and have_time = #{haveTime}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and cancel_status = #{cancelStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">shop_id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="orderNumber != null">order_number,</if>
+            <if test="favourableMoney != null">favourable_money,</if>
+            <if test="money != null">money,</if>
+            <if test="couponList != null">coupon_list,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="haveType != null">have_type,</if>
+            <if test="haveTime != null">have_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="cancelStatus != null">cancel_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">#{shopId},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="favourableMoney != null">#{favourableMoney},</if>
+            <if test="money != null">#{money},</if>
+            <if test="couponList != null">#{couponList},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="haveType != null">#{haveType},</if>
+            <if test="haveTime != null">#{haveTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="cancelStatus != null">#{cancelStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="Order">
+        update shop_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="orderNumber != null">order_number = #{orderNumber},</if>
+            <if test="favourableMoney != null">favourable_money = #{favourableMoney},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="couponList != null">coupon_list = #{couponList},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="haveType != null">have_type = #{haveType},</if>
+            <if test="haveTime != null">have_time = #{haveTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="cancelStatus != null">cancel_status = #{cancelStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderById" parameterType="Long">
+        delete from shop_order where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderByIds" parameterType="String">
+        delete from shop_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

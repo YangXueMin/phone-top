@@ -6,8 +6,11 @@
 
     <resultMap type="Column" id="ColumnResult">
         <result property="id"    column="id"    />
-        <result property="columnType"    column="column_type"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
         <result property="columnName"    column="column_name"    />
+        <result property="status"    column="status"    />
+        <result property="orderNum"    column="order_num"    />
         <result property="picture"    column="picture"    />
         <result property="isSkip"    column="is_skip"    />
         <result property="interlinkage"    column="interlinkage"    />
@@ -21,8 +24,11 @@
     <sql id="selectColumnVo">
         select
             id,
-            column_type,
+            parent_id,
+            ancestors,
             column_name,
+            status,
+            order_num,
             picture,
             is_skip,
             interlinkage,
@@ -37,7 +43,10 @@
     <select id="selectColumnList" parameterType="Column" resultMap="ColumnResult">
         <include refid="selectColumnVo"/>
         <where>
-            <if test="columnType != null  and columnType != ''"> and column_type = #{columnType}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
             <if test="columnName != null  and columnName != ''"> and column_name like concat('%', #{columnName}, '%')</if>
             <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
             <if test="isSkip != null  and isSkip != ''"> and is_skip = #{isSkip}</if>
@@ -54,8 +63,11 @@
         insert into shop_column
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="columnType != null">column_type,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
             <if test="columnName != null">column_name,</if>
+            <if test="status != null">status,</if>
+            <if test="orderNum != null">order_num,</if>
             <if test="picture != null">picture,</if>
             <if test="isSkip != null">is_skip,</if>
             <if test="interlinkage != null">interlinkage,</if>
@@ -67,8 +79,11 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="columnType != null">#{columnType},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
             <if test="columnName != null">#{columnName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="orderNum != null">#{orderNum},</if>
             <if test="picture != null">#{picture},</if>
             <if test="isSkip != null">#{isSkip},</if>
             <if test="interlinkage != null">#{interlinkage},</if>
@@ -83,8 +98,11 @@
     <update id="updateColumn" parameterType="Column">
         update shop_column
         <trim prefix="SET" suffixOverrides=",">
-            <if test="columnType != null">column_type = #{columnType},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
             <if test="columnName != null">column_name = #{columnName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="picture != null">picture = #{picture},</if>
             <if test="isSkip != null">is_skip = #{isSkip},</if>
             <if test="interlinkage != null">interlinkage = #{interlinkage},</if>

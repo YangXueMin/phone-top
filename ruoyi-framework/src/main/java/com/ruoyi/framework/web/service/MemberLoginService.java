@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.MemberCardGenerator;
+import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
@@ -70,7 +70,10 @@ public class MemberLoginService {
             member.setAvatar(loginMemberBody.getAvatarUrl());
             member.setName(loginMemberBody.getNickName());
             member.setIsMember("N");
-            member.setNumber(MemberCardGenerator.generateMemberCard());
+            //生成唯一会员码
+            SnowflakeGenerator.setDatacenterId(1);
+            SnowflakeGenerator.setMachineId(1);
+            member.setNumber(SnowflakeGenerator.nextId().toString());
             memberService.insertMember(member);
         }
         // 用户验证

@@ -10,7 +10,7 @@
         <result property="logo"    column="logo"    />
         <result property="shortName"    column="short_name"    />
         <result property="phone"    column="phone"    />
-        <result property="natural"    column="natural"    />
+        <result property="natural"    column="natural_"    />
         <result property="certificate"    column="certificate"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -26,7 +26,7 @@
             logo,
             short_name,
             phone,
-            natural,
+            natural_,
             certificate,
             create_by,
             create_time,
@@ -43,7 +43,7 @@
             <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
             <if test="shortName != null  and shortName != ''"> and short_name like concat('%', #{shortName}, '%')</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="natural != null  and natural != ''"> and natural = #{natural}</if>
+            <if test="natural != null  and natural != ''"> and natural_ = #{natural}</if>
             <if test="certificate != null  and certificate != ''"> and certificate = #{certificate}</if>
         </where>
     </select>
@@ -66,7 +66,7 @@
             <if test="logo != null">logo,</if>
             <if test="shortName != null">short_name,</if>
             <if test="phone != null">phone,</if>
-            <if test="natural != null">natural,</if>
+            <if test="natural != null">natural_,</if>
             <if test="certificate != null">certificate,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -97,7 +97,7 @@
             <if test="logo != null">logo = #{logo},</if>
             <if test="shortName != null">short_name = #{shortName},</if>
             <if test="phone != null">phone = #{phone},</if>
-            <if test="natural != null">natural = #{natural},</if>
+            <if test="natural != null">natural_ = #{natural},</if>
             <if test="certificate != null">certificate = #{certificate},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

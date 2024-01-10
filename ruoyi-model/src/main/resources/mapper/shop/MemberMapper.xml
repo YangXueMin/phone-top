@@ -77,6 +77,10 @@
         where id = #{id}
     </select>
 
+    <select id="checkMobileUnique" parameterType="String" resultMap="MemberResult">
+        select id, mobile from shop_member where mobile = #{mobile} and del_flag = '0' limit 1
+    </select>
+
     <insert id="insertMember" parameterType="Member">
         insert into shop_member
         <trim prefix="(" suffix=")" suffixOverrides=",">

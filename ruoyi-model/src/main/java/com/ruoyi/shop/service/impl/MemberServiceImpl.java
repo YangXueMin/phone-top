@@ -2,8 +2,11 @@ package com.ruoyi.shop.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.shop.mapper.MemberMapper;
@@ -51,6 +54,27 @@ public class MemberServiceImpl implements IMemberService {
             return memberList.get(0);
         }
         return null;
+    }
+
+    @Override
+    public Member getMemberByMobile(String mobile) {
+        Member member = new Member();
+        member.setMobile(mobile);
+        List<Member> memberList = memberMapper.selectMemberListByOpenId(member);
+        if(memberList != null && memberList.size() > 0){
+            return memberList.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public String checkMobileUnique(Member member) {
+        Long id = StringUtils.isNull(member.getId()) ? -1L : member.getId();
+        Member info = memberMapper.checkMobileUnique(member.getMobile());
+        if (StringUtils.isNotNull(info) && info.getId().longValue() != id.longValue()) {
+            return UserConstants.NOT_UNIQUE;
+        }
+        return UserConstants.UNIQUE;
     }
 
     /**

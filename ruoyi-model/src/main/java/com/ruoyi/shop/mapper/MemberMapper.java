@@ -3,6 +3,7 @@ package com.ruoyi.shop.mapper;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -37,6 +38,14 @@ public interface MemberMapper
      * @return 会员管理集合
      */
     public List<Member> selectMemberListByOpenId(Member member);
+
+    /**
+     * 校验手机号码是否唯一
+     *
+     * @param mobile 手机号码
+     * @return 结果
+     */
+    public Member checkMobileUnique(String mobile);
 
     /**
      * 新增会员管理

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class BannerControllerApi extends BaseController {
      */
     @ApiOperation("查询banner列表")
     @GetMapping("/list")
-    public AjaxResult list(Banner banner) {
+    public AjaxResult list(@RequestBody Banner banner) {
         List<Banner> list = bannerService.selectBannerList(banner);
         return success(list);
     }

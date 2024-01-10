@@ -1,6 +1,7 @@
 package com.ruoyi.shop.service;
 
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.SysUser;
 
 import java.util.List;
 
@@ -33,6 +34,21 @@ public interface IMemberService {
      * @return
      */
     Member getMemberByOpenId(String openId);
+
+    /**
+     * 根据手机号获取用户
+     * @param mobile
+     * @return
+     */
+    Member getMemberByMobile(String mobile);
+
+    /**
+     * 校验手机号码是否唯一
+     *
+     * @param member 会员信息
+     * @return 结果
+     */
+    public String checkMobileUnique(Member member);
 
     /**
      * 新增会员管理

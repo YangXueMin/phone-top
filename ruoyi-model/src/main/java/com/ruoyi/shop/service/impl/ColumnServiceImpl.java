@@ -1,12 +1,19 @@
 package com.ruoyi.shop.service.impl;
 
-import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.shop.domain.Column;
+import com.ruoyi.shop.domain.ShopTreeSelect;
+import com.ruoyi.shop.mapper.ColumnMapper;
+import com.ruoyi.shop.service.IColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.shop.mapper.ColumnMapper;
-import com.ruoyi.shop.domain.Column;
-import com.ruoyi.shop.service.IColumnService;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 栏目设置Service业务层处理
@@ -15,8 +22,7 @@ import com.ruoyi.shop.service.IColumnService;
  * @date 2024-01-05
  */
 @Service
-public class ColumnServiceImpl implements IColumnService
-{
+public class ColumnServiceImpl implements IColumnService {
     @Autowired
     private ColumnMapper columnMapper;
 
@@ -27,8 +33,7 @@ public class ColumnServiceImpl implements IColumnService
      * @return 栏目设置
      */
     @Override
-    public Column selectColumnById(Long id)
-    {
+    public Column selectColumnById(Long id) {
         return columnMapper.selectColumnById(id);
     }
 
@@ -39,9 +44,37 @@ public class ColumnServiceImpl implements IColumnService
      * @return 栏目设置
      */
     @Override
-    public List<Column> selectColumnList(Column column)
-    {
+    public List<Column> selectColumnList(Column column) {
         return columnMapper.selectColumnList(column);
+    }
+
+    @Override
+    public List<ShopTreeSelect> selectTreeList(Column column) {
+        List<Column> columnList = SpringUtils.getAopProxy(this).selectColumnList(column);
+        return buildTreeSelect(columnList);
+    }
+
+    @Override
+    public List<ShopTreeSelect> buildTreeSelect(List<Column> columnList) {
+        List<Column> typeTrees = buildTree(columnList);
+        return typeTrees.stream().map(ShopTreeSelect::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Column> buildTree(List<Column> columnList) {
+        List<Column> returnList = new ArrayList<>();
+        List<Long> tempList = columnList.stream().map(Column::getId).collect(Collectors.toList());
+        for (Column column : columnList) {
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(column.getParentId())) {
+                recursionFn(columnList, column);
+                returnList.add(column);
+            }
+        }
+        if (returnList.isEmpty()) {
+            returnList = columnList;
+        }
+        return returnList;
     }
 
     /**
@@ -51,8 +84,7 @@ public class ColumnServiceImpl implements IColumnService
      * @return 结果
      */
     @Override
-    public int insertColumn(Column column)
-    {
+    public int insertColumn(Column column) {
         column.setCreateTime(DateUtils.getNowDate());
         return columnMapper.insertColumn(column);
     }
@@ -64,8 +96,7 @@ public class ColumnServiceImpl implements IColumnService
      * @return 结果
      */
     @Override
-    public int updateColumn(Column column)
-    {
+    public int updateColumn(Column column) {
         column.setUpdateTime(DateUtils.getNowDate());
         return columnMapper.updateColumn(column);
     }
@@ -77,8 +108,7 @@ public class ColumnServiceImpl implements IColumnService
      * @return 结果
      */
     @Override
-    public int deleteColumnByIds(Long[] ids)
-    {
+    public int deleteColumnByIds(Long[] ids) {
         return columnMapper.deleteColumnByIds(ids);
     }
 
@@ -89,8 +119,43 @@ public class ColumnServiceImpl implements IColumnService
      * @return 结果
      */
     @Override
-    public int deleteColumnById(Long id)
-    {
+    public int deleteColumnById(Long id) {
         return columnMapper.deleteColumnById(id);
+    }
+
+    /**
+     * 递归列表
+     */
+    private void recursionFn(List<Column> list, Column t) {
+        // 得到子节点列表
+        List<Column> childList = getChildList(list, t);
+        t.setChildren(childList);
+        for (Column column : childList) {
+            if (hasChild(list, column)) {
+                recursionFn(list, column);
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<Column> getChildList(List<Column> list, Column t) {
+        List<Column> tlist = new ArrayList<>();
+        Iterator<Column> it = list.iterator();
+        while (it.hasNext()) {
+            Column n = it.next();
+            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getId().longValue()) {
+                tlist.add(n);
+            }
+        }
+        return tlist;
+    }
+
+    /**
+     * 判断是否有子节点
+     */
+    private boolean hasChild(List<Column> list, Column t) {
+        return getChildList(list, t).size() > 0;
     }
 }

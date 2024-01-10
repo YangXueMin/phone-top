@@ -2,6 +2,8 @@ package com.ruoyi.shop.service;
 
 import java.util.List;
 import com.ruoyi.shop.domain.Column;
+import com.ruoyi.shop.domain.ContentType;
+import com.ruoyi.shop.domain.ShopTreeSelect;
 
 /**
  * 栏目设置Service接口
@@ -26,6 +28,30 @@ public interface IColumnService
      * @return 栏目设置集合
      */
     public List<Column> selectColumnList(Column column);
+
+    /**
+     * 查询栏目树结构信息
+     *
+     * @param column 栏目
+     * @return 栏目集合
+     */
+    public List<ShopTreeSelect> selectTreeList(Column column);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param columnList 栏目表
+     * @return 下拉树结构列表
+     */
+    public List<ShopTreeSelect> buildTreeSelect(List<Column> columnList);
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param columnList 栏目表
+     * @return 树结构列表
+     */
+    public List<Column> buildTree(List<Column> columnList);
 
     /**
      * 新增栏目设置

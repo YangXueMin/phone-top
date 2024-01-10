@@ -1,21 +1,11 @@
 package com.ruoyi.framework.security.handle;
 
-import cn.binarywang.wx.miniapp.api.WxMaService;
-import cn.binarywang.wx.miniapp.api.WxMaUserService;
-import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import com.ruoyi.common.config.WechatConfiguration;
-import com.ruoyi.common.core.domain.entity.Member;
-import com.ruoyi.common.core.domain.model.LoginMemberBody;
-import com.ruoyi.common.utils.MemberCardGenerator;
 import com.ruoyi.framework.security.authentication.MemberAuthenticationToken;
-import com.ruoyi.framework.security.authentication.WxAuthenticationToken;
 import com.ruoyi.framework.web.service.MemberDetailsServiceImpl;
 import com.ruoyi.shop.service.IMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author yangxuemin

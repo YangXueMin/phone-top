@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.OrderDetailsMapper">
+
+    <resultMap type="OrderDetails" id="OrderDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="number"    column="number"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectOrderDetailsVo">
+        select
+            id,
+            order_id,
+            shop_id,
+            number,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from shop_order_details
+    </sql>
+
+    <select id="selectOrderDetailsList" parameterType="OrderDetails" resultMap="OrderDetailsResult">
+        <include refid="selectOrderDetailsVo"/>
+        <where>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="number != null "> and number = #{number}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderDetailsById" parameterType="Long" resultMap="OrderDetailsResult">
+        <include refid="selectOrderDetailsVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectOrderDetailsByOrderId" parameterType="Long" resultMap="OrderDetailsResult">
+        <include refid="selectOrderDetailsVo"/>
+        where order_id = #{orderId}
+    </select>
+
+    <insert id="insertOrderDetails" parameterType="OrderDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_order_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="shopId != null">shop_id,</if>
+            <if test="number != null">number,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="shopId != null">#{shopId},</if>
+            <if test="number != null">#{number},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrderDetails" parameterType="OrderDetails">
+        update shop_order_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderDetailsById" parameterType="Long">
+        delete from shop_order_details where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderDetailsByIds" parameterType="String">
+        delete from shop_order_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteOrderDetailsByOrderId" parameterType="Long">
+        delete from shop_order_details where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteOrderDetailsByOrderIds" parameterType="String">
+        delete from shop_order_details where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+</mapper>
