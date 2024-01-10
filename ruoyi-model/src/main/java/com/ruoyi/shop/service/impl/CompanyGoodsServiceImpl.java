@@ -113,7 +113,7 @@ public class CompanyGoodsServiceImpl implements ICompanyGoodsService {
 
         companyGoods.setUpdateTime(DateUtils.getNowDate());
         int i = companyGoodsMapper.updateCompanyGoods(companyGoods);
-        companyGoodsSpecsMapper.deleteCompanyGoodsSpecsById(companyGoods.getId());
+        companyGoodsSpecsMapper.deleteCompanyGoodsSpecsByGoodId(companyGoods.getId());
         if (companyGoods.getSpecsList().size() > 0) {
             for (CompanyGoodsSpecs companyGoodsSpecs : companyGoods.getSpecsList()) {
                 companyGoodsSpecs.setGoodsId(companyGoods.getId());
