@@ -27,6 +27,11 @@ public class LoginMemberBody {
      */
     private String avatarUrl;
 
+    /**
+     * 手机号
+     */
+    private String mobile;
+
     public String getCode() {
         return code;
     }
@@ -49,5 +54,13 @@ public class LoginMemberBody {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

@@ -144,7 +144,7 @@ wechat:
     appId: wx63181c0cef0ae9c1
     appsecret: 64c6e6b1856dd81514ee6693dec6cf9b
     #微信支付商户号
-    mchId: 1515853301
+    mchId: 1665678322
     #微信支付商户密钥
     mchKey: tuishou123456jiayuxuan1234567890
     #服务商模式下的子商户公众账号ID

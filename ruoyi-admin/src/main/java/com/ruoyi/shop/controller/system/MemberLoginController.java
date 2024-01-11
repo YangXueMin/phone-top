@@ -41,6 +41,29 @@ public class MemberLoginController {
     }
 
     /**
+     * <pre>
+     * 获取用户信息接口
+     * </pre>
+     */
+    @GetMapping("/wechat/info")
+    public AjaxResult info(@PathVariable String appid, String sessionKey,
+                       String signature, String rawData, String encryptedData, String iv) {
+        return memberLoginService.info(appid, sessionKey, signature, rawData, encryptedData, iv);
+    }
+    /**
+     * <pre>
+     * 获取用户绑定手机号信息
+     * </pre>
+     */
+    @GetMapping("/wechat/phone")
+    public AjaxResult phone(@RequestParam("phoneCode") String phoneCode) {
+        return memberLoginService.phone(phoneCode);
+    }
+
+
+
+
+    /**
      * 获取用户信息
      *
      * @return 用户信息
