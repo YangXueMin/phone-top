@@ -92,7 +92,15 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
     @Transactional(rollbackFor = Exception.class)
     public int updateRechargeOrder(RechargeOrder rechargeOrder) {
         rechargeOrder.setUpdateTime(DateUtils.getNowDate());
-        return rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
+        final int i = rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
+        rechargeOrderCouponMapper.deleteRechargeOrderCouponByRechargeId(rechargeOrder.getId());
+        if (i > 0 && rechargeOrder.getCouponList().size() > 0) {
+            for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
+                rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+            }
+        }
+        return i;
     }
 
     /**

@@ -34,8 +34,10 @@ public class BannerControllerApi extends BaseController {
      */
     @ApiOperation("查询banner列表")
     @GetMapping("/list")
-    public AjaxResult list(@RequestBody Banner banner) {
-        List<Banner> list = bannerService.selectBannerList(banner);
+    public AjaxResult list() {
+        Banner banner = new Banner();
+        banner.setStatus("1");
+        List<Banner> list = bannerService.selectBannerListApi(banner);
         return success(list);
     }
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.shop.service.impl;
 
 import java.util.List;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,7 @@ import com.ruoyi.shop.service.IBannerService;
  * @date 2024-01-06
  */
 @Service
-public class BannerServiceImpl implements IBannerService
-{
+public class BannerServiceImpl implements IBannerService {
     @Autowired
     private BannerMapper bannerMapper;
 
@@ -27,8 +27,7 @@ public class BannerServiceImpl implements IBannerService
      * @return banner配置
      */
     @Override
-    public Banner selectBannerById(Long id)
-    {
+    public Banner selectBannerById(Long id) {
         return bannerMapper.selectBannerById(id);
     }
 
@@ -39,9 +38,13 @@ public class BannerServiceImpl implements IBannerService
      * @return banner配置
      */
     @Override
-    public List<Banner> selectBannerList(Banner banner)
-    {
+    public List<Banner> selectBannerList(Banner banner) {
         return bannerMapper.selectBannerList(banner);
+    }
+
+    @Override
+    public List<Banner> selectBannerListApi(Banner banner) {
+        return bannerMapper.selectBannerListApi(banner);
     }
 
     /**
@@ -51,8 +54,7 @@ public class BannerServiceImpl implements IBannerService
      * @return 结果
      */
     @Override
-    public int insertBanner(Banner banner)
-    {
+    public int insertBanner(Banner banner) {
         banner.setCreateTime(DateUtils.getNowDate());
         return bannerMapper.insertBanner(banner);
     }
@@ -64,8 +66,7 @@ public class BannerServiceImpl implements IBannerService
      * @return 结果
      */
     @Override
-    public int updateBanner(Banner banner)
-    {
+    public int updateBanner(Banner banner) {
         banner.setUpdateTime(DateUtils.getNowDate());
         return bannerMapper.updateBanner(banner);
     }
@@ -77,8 +78,7 @@ public class BannerServiceImpl implements IBannerService
      * @return 结果
      */
     @Override
-    public int deleteBannerByIds(Long[] ids)
-    {
+    public int deleteBannerByIds(Long[] ids) {
         return bannerMapper.deleteBannerByIds(ids);
     }
 
@@ -89,8 +89,7 @@ public class BannerServiceImpl implements IBannerService
      * @return 结果
      */
     @Override
-    public int deleteBannerById(Long id)
-    {
+    public int deleteBannerById(Long id) {
         return bannerMapper.deleteBannerById(id);
     }
 }

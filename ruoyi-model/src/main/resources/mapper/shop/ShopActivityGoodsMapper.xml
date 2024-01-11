@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.ShopActivityGoodsMapper">
+
+    <resultMap type="ShopActivityGoods" id="ShopActivityGoodsResult">
+        <result property="id" column="id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="buyingPrice" column="buying_price"/>
+        <result property="buyingNumber" column="buying_number"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectShopActivityGoodsVo">
+        select id,
+               activity_id,
+               goods_id,
+               buying_price,
+               buying_number,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from shop_activity_goods
+    </sql>
+
+    <select id="selectShopActivityGoodsList" parameterType="ShopActivityGoods" resultMap="ShopActivityGoodsResult">
+        <include refid="selectShopActivityGoodsVo"/>
+        <where>
+            <if test="activityId != null ">and activity_id = #{activityId}</if>
+            <if test="goodsId != null ">and goods_id = #{goodsId}</if>
+            <if test="buyingPrice != null ">and buying_price = #{buyingPrice}</if>
+            <if test="buyingNumber != null ">and buying_number = #{buyingNumber}</if>
+        </where>
+    </select>
+
+    <select id="selectShopActivityGoodsById" parameterType="Long" resultMap="ShopActivityGoodsResult">
+        <include refid="selectShopActivityGoodsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertShopActivityGoods" parameterType="ShopActivityGoods" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_activity_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="activityId != null">activity_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="buyingPrice != null">buying_price,</if>
+            <if test="buyingNumber != null">buying_number,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="activityId != null">#{activityId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="buyingPrice != null">#{buyingPrice},</if>
+            <if test="buyingNumber != null">#{buyingNumber},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShopActivityGoods" parameterType="ShopActivityGoods">
+        update shop_activity_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityId != null">activity_id = #{activityId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="buyingPrice != null">buying_price = #{buyingPrice},</if>
+            <if test="buyingNumber != null">buying_number = #{buyingNumber},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopActivityGoodsById" parameterType="Long">
+        delete
+        from shop_activity_goods
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteShopActivityGoodsByIds" parameterType="String">
+        delete from shop_activity_goods where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteShopActivityGoodsByActivityId" parameterType="Long">
+        delete
+        from shop_activity_goods
+        where activity_id = #{activityId}
+    </delete>
+
+    <delete id="deleteShopActivityGoodsByActivityIds" parameterType="String">
+        delete from shop_activity_goods where activity_id in
+        <foreach item="activityId" collection="array" open="(" separator="," close=")">
+            #{activityId}
+        </foreach>
+    </delete>
+</mapper>

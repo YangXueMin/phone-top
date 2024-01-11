@@ -28,6 +28,14 @@ public interface IBannerService
     public List<Banner> selectBannerList(Banner banner);
 
     /**
+     * 查询banner配置列表
+     *
+     * @param banner banner配置
+     * @return banner配置集合
+     */
+    public List<Banner> selectBannerListApi(Banner banner);
+
+    /**
      * 新增banner配置
      *
      * @param banner banner配置

@@ -60,6 +60,21 @@
         </where>
     </select>
 
+    <select id="selectBannerListApi" parameterType="Banner" resultMap="BannerResult">
+        <include refid="selectBannerVo"/>
+        <where>
+            and start_date lt;= now() AND end_date &gt;= now()
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="isSkip != null  and isSkip != ''"> and is_skip = #{isSkip}</if>
+            <if test="skipType != null  and skipType != ''"> and skip_type = #{skipType}</if>
+            <if test="columnType != null  and columnType != ''"> and column_type = #{columnType}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
     <select id="selectBannerById" parameterType="Long" resultMap="BannerResult">
         <include refid="selectBannerVo"/>
         where id = #{id}
