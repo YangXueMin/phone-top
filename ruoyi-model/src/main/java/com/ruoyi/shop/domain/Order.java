@@ -74,7 +74,7 @@ public class Order extends BaseEntity {
      * 订单状态
      */
     @Excel(name = "订单状态")
-    @ApiModelProperty("订单状态 (已创建：1，待核销：2，已核销：3，已取消：4)")
+    @ApiModelProperty("订单状态 (字典：shop_order_status)")
     private String orderStatus;
 
     /**
@@ -110,7 +110,7 @@ public class Order extends BaseEntity {
      * 核销状态
      */
     @Excel(name = "核销状态")
-    @ApiModelProperty("核销状态")
+    @ApiModelProperty("核销状态，字典：shop_order_cancel_status")
     private String cancelStatus;
 
     /**
