@@ -107,7 +107,7 @@ public class MemberLoginService {
      */
     public void recordLoginInfo(Long userId) {
         Member member = new Member();
-        member.setUserId(userId);
+        member.setId(userId);
         member.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
         member.setLoginDate(DateUtils.getNowDate());
         memberService.updateMember(member);

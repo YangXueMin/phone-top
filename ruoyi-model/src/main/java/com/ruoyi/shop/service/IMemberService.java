@@ -81,4 +81,10 @@ public interface IMemberService {
      * @return 结果
      */
     public int deleteMemberById(Long id);
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    Member getMemberInfo();
 }

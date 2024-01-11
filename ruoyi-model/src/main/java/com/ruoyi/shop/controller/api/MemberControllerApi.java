@@ -4,6 +4,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.ContentType;
 import com.ruoyi.shop.domain.ShopTreeSelect;
@@ -40,6 +41,15 @@ public class MemberControllerApi extends BaseController {
         }
         final int i = memberService.updateMember(member);
         return success(i);
+    }
+
+    /**
+     * 获取会员信息
+     */
+    @ApiOperation("获取会员信息")
+    @PostMapping("/getMemberInfo")
+    public AjaxResult getMemberInfo() {
+        return success(memberService.getMemberInfo());
     }
 
 }

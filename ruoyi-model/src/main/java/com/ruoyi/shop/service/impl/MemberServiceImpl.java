@@ -6,7 +6,9 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.shop.mapper.MemberMapper;
@@ -22,6 +24,8 @@ import com.ruoyi.shop.service.IMemberService;
 public class MemberServiceImpl implements IMemberService {
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     /**
      * 查询会员管理
@@ -50,7 +54,7 @@ public class MemberServiceImpl implements IMemberService {
         Member member = new Member();
         member.setOpenId(openId);
         List<Member> memberList = memberMapper.selectMemberListByOpenId(member);
-        if(memberList != null && memberList.size() > 0){
+        if (memberList != null && memberList.size() > 0) {
             return memberList.get(0);
         }
         return null;
@@ -61,7 +65,7 @@ public class MemberServiceImpl implements IMemberService {
         Member member = new Member();
         member.setMobile(mobile);
         List<Member> memberList = memberMapper.selectMemberListByOpenId(member);
-        if(memberList != null && memberList.size() > 0){
+        if (memberList != null && memberList.size() > 0) {
             return memberList.get(0);
         }
         return null;
@@ -121,5 +125,21 @@ public class MemberServiceImpl implements IMemberService {
     @Override
     public int deleteMemberById(Long id) {
         return memberMapper.deleteMemberById(id);
+    }
+
+    @Override
+    public Member getMemberInfo() {
+        Long id = SecurityUtils.getLoginUser().getUserId();
+        Member member = memberMapper.selectMemberById(id);
+        if (member != null && StringUtils.isNotBlank(member.getMobile())) {
+            SysUser sysUser = new SysUser();
+            sysUser.setPhonenumber(member.getMobile());
+            List<SysUser> userList = sysUserMapper.selectUserList(sysUser);
+            if (userList.size() > 0) {
+                member.setUserId(userList.get(0).getUserId());
+                member.setSysUser(userList.get(0));
+            }
+        }
+        return null;
     }
 }

@@ -102,6 +102,11 @@ public class Member extends BaseEntity {
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginDate;
 
+    /**
+     * 用户
+     */
+    private SysUser sysUser;
+
     public Long getId() {
         return id;
     }
@@ -212,5 +217,13 @@ public class Member extends BaseEntity {
 
     public void setLoginDate(Date loginDate) {
         this.loginDate = loginDate;
+    }
+
+    public SysUser getSysUser() {
+        return sysUser;
+    }
+
+    public void setSysUser(SysUser sysUser) {
+        this.sysUser = sysUser;
     }
 }
