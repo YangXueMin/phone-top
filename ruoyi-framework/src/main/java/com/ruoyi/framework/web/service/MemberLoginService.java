@@ -6,7 +6,6 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
-import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -106,48 +105,6 @@ public class MemberLoginService {
         recordLoginInfo(loginUser.getUserId());
         // 生成token
         return tokenService.createToken(loginUser);
-    }
-
-    /**
-     * <pre>
-     * 获取用户信息接口
-     * </pre>
-     */
-    public AjaxResult info(String appid, String sessionKey,
-                       String signature, String rawData, String encryptedData, String iv) {
-        WxMaService wxMaService = wechatConfiguration.wxMaService();
-        if (!wxMaService.switchover(appid)) {
-            return AjaxResult.error(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
-        }
-
-        // 用户信息校验
-        if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            WxMaConfigHolder.remove();//清理ThreadLocal
-            return AjaxResult.error("user check failed");
-        }
-
-        // 解密用户信息
-        WxMaUserInfo userInfo = wechatConfiguration.wxMaService().getUserService().getUserInfo(sessionKey, encryptedData, iv);
-        WxMaConfigHolder.remove();//清理ThreadLocal
-        return AjaxResult.success(userInfo);
-    }
-
-    /**
-     * <pre>
-     * 获取用户绑定手机号信息
-     * </pre>
-     */
-    public AjaxResult phone(String phoneCode) {
-        WxMaService wxMaService = wechatConfiguration.wxMaService();
-        // 解密
-        WxMaPhoneNumberInfo phoneNoInfo = null;
-        try {
-            phoneNoInfo = wxMaService.getUserService().getPhoneNoInfo(phoneCode);
-        } catch (WxErrorException e) {
-            return AjaxResult.error("电话解密失败");
-        }
-        WxMaConfigHolder.remove();//清理ThreadLocal
-        return AjaxResult.success(phoneNoInfo);
     }
 
     /**

@@ -3,15 +3,11 @@ package com.ruoyi.shop.controller.system;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.core.domain.model.LoginMemberBody;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.MemberLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 /**
  * @author yangxuemin
@@ -31,8 +27,7 @@ public class MemberLoginController {
      * @return 结果
      */
     @PostMapping("memberLogin")
-    public AjaxResult memberLogin(@RequestBody LoginMemberBody loginMemberBody)
-    {
+    public AjaxResult memberLogin(@RequestBody LoginMemberBody loginMemberBody) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = memberLoginService.memberLogin(loginMemberBody);
@@ -41,36 +36,12 @@ public class MemberLoginController {
     }
 
     /**
-     * <pre>
-     * 获取用户信息接口
-     * </pre>
-     */
-    @GetMapping("/wechat/info")
-    public AjaxResult info(@PathVariable String appid, String sessionKey,
-                       String signature, String rawData, String encryptedData, String iv) {
-        return memberLoginService.info(appid, sessionKey, signature, rawData, encryptedData, iv);
-    }
-    /**
-     * <pre>
-     * 获取用户绑定手机号信息
-     * </pre>
-     */
-    @GetMapping("/wechat/phone")
-    public AjaxResult phone(@RequestParam("phoneCode") String phoneCode) {
-        return memberLoginService.phone(phoneCode);
-    }
-
-
-
-
-    /**
      * 获取用户信息
      *
      * @return 用户信息
      */
     @GetMapping("getMemberInfo")
-    public AjaxResult getInfo()
-    {
+    public AjaxResult getInfo() {
         Member member = SecurityUtils.getLoginUser().getMember();
         AjaxResult ajax = AjaxResult.success();
         ajax.put("member", member);
