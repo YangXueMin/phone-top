@@ -1,15 +1,15 @@
 package com.ruoyi.shop.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
-import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 订单记录对象 shop_order
@@ -64,17 +64,17 @@ public class Order extends BaseEntity {
     private BigDecimal money;
 
     /**
-     * 优惠券集合
+     * 优惠券关系集合
      */
-    @Excel(name = "优惠券集合")
-    @ApiModelProperty("优惠券集合")
+    @Excel(name = "优惠券关系集合")
+    @ApiModelProperty("优惠券关系集合，多个用英文逗号隔开")
     private String couponList;
 
     /**
      * 订单状态
      */
     @Excel(name = "订单状态")
-    @ApiModelProperty("订单状态")
+    @ApiModelProperty("订单状态 (已创建：1，待核销：2，已核销：3，已取消：4)")
     private String orderStatus;
 
     /**

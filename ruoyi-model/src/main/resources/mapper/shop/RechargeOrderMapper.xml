@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.RechargeOrderMapper">
+
+    <resultMap type="RechargeOrder" id="RechargeOrderResult">
+        <result property="id" column="id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="memberId" column="member_id"/>
+        <result property="cardId" column="card_id"/>
+        <result property="money" column="money"/>
+        <result property="wechatOrder" column="wechat_order"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectRechargeOrderVo">
+        select id,
+               order_no,
+               member_id,
+               card_id,
+               money,
+               wechat_order,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from shop_recharge_order
+    </sql>
+
+    <select id="selectRechargeOrderList" parameterType="RechargeOrder" resultMap="RechargeOrderResult">
+        <include refid="selectRechargeOrderVo"/>
+        <where>
+            <if test="orderNo != null  and orderNo != ''">and order_no = #{orderNo}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="cardId != null ">and card_id = #{cardId}</if>
+            <if test="money != null ">and money = #{money}</if>
+            <if test="wechatOrder != null  and wechatOrder != ''">and wechat_order = #{wechatOrder}</if>
+        </where>
+    </select>
+
+    <select id="selectRechargeOrderById" parameterType="Long" resultMap="RechargeOrderResult">
+        <include refid="selectRechargeOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertRechargeOrder" parameterType="RechargeOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_recharge_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="cardId != null">card_id,</if>
+            <if test="money != null">money,</if>
+            <if test="wechatOrder != null">wechat_order,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="cardId != null">#{cardId},</if>
+            <if test="money != null">#{money},</if>
+            <if test="wechatOrder != null">#{wechatOrder},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRechargeOrder" parameterType="RechargeOrder">
+        update shop_recharge_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="cardId != null">card_id = #{cardId},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="wechatOrder != null">wechat_order = #{wechatOrder},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRechargeOrderById" parameterType="Long">
+        delete
+        from shop_recharge_order
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteRechargeOrderByIds" parameterType="String">
+        delete from shop_recharge_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shop.mapper.RechargeOrderCouponMapper">
+
+    <resultMap type="RechargeOrderCoupon" id="RechargeOrderCouponResult">
+        <result property="id" column="id"/>
+        <result property="rechargeId" column="recharge_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="coupon"    column="recharge_id" javaType="Coupon" resultMap="CouponResult" />
+    </resultMap>
+
+    <resultMap type="Coupon" id="CouponResult">
+        <result property="id"    column="coupon_id"    />
+        <result property="couponName"    column="coupon_name"    />
+        <result property="suitRange"    column="suit_range"    />
+        <result property="goodsList"    column="goods_list"    />
+        <result property="couponType"    column="coupon_type"    />
+        <result property="couponStrength"    column="coupon_strength"    />
+        <result property="couponStrengthMoney"    column="coupon_strength_money"    />
+        <result property="discount"    column="discount"    />
+        <result property="termValidity"    column="term_validity"    />
+        <result property="number"    column="number"    />
+        <result property="limitCollar"    column="limit_collar"    />
+        <result property="status"    column="coupon_status"    />
+    </resultMap>
+
+    <sql id="selectRechargeOrderCouponVo">
+        select a.id,
+               a.recharge_id,
+               a.member_id,
+               a.coupon_id,
+               a.status,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               c.coupon_name,
+               c.suit_range,
+               c.goods_list,
+               c.coupon_type,
+               c.coupon_strength,
+               c.coupon_strength_money,
+               c.discount,
+               c.term_validity,
+               c.number,
+               c.limit_collar,
+               c.status AS coupon_status
+        from shop_recharge_order_coupon a
+        left join shop_coupon c ON a.coupon_id = c.id
+    </sql>
+
+    <select id="selectRechargeOrderCouponList" parameterType="RechargeOrderCoupon"
+            resultMap="RechargeOrderCouponResult">
+        <include refid="selectRechargeOrderCouponVo"/>
+        <where>
+            <if test="rechargeId != null ">and a.recharge_id = #{rechargeId}</if>
+            <if test="memberId != null ">and a.member_id = #{memberId}</if>
+            <if test="couponId != null ">and a.coupon_id = #{couponId}</if>
+            <if test="status != null  and status != ''">and a.status = #{status}</if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="selectRechargeOrderCouponById" parameterType="Long" resultMap="RechargeOrderCouponResult">
+        <include refid="selectRechargeOrderCouponVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertRechargeOrderCoupon" parameterType="RechargeOrderCoupon" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_recharge_order_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rechargeId != null">recharge_id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rechargeId != null">#{rechargeId},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="couponId != null">#{couponId},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRechargeOrderCoupon" parameterType="RechargeOrderCoupon">
+        update shop_recharge_order_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rechargeId != null">recharge_id = #{rechargeId},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRechargeOrderCouponById" parameterType="Long">
+        delete
+        from shop_recharge_order_coupon
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteRechargeOrderCouponByIds" parameterType="String">
+        delete from shop_recharge_order_coupon where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRechargeOrderCouponByRechargeId" parameterType="Long">
+        delete
+        from shop_recharge_order_coupon
+        where recharge_id = #{rechargeId}
+    </delete>
+
+    <delete id="deleteRechargeOrderCouponByRechargeIds" parameterType="String">
+        delete from shop_recharge_order_coupon where recharge_id in
+        <foreach item="rechargeId" collection="array" open="(" separator="," close=")">
+            #{rechargeId}
+        </foreach>
+    </delete>
+</mapper>
