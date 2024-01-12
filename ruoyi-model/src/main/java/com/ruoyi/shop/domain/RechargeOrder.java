@@ -61,6 +61,34 @@ public class RechargeOrder extends BaseEntity {
     @ApiModelProperty("微信订单号")
     private String wechatOrder;
 
+    /**
+     * 订单状态
+     */
+    @Excel(name = "订单状态")
+    @ApiModelProperty("订单状态 (字典：shop_order_status)")
+    private String orderStatus;
+
+    /**
+     * 支付方式
+     */
+    @Excel(name = "支付方式")
+    @ApiModelProperty("支付方式")
+    private String payType;
+
+    /**
+     * 支付时间
+     */
+    @Excel(name = "支付时间")
+    @ApiModelProperty("支付时间")
+    private String payTime;
+
+    /**
+     * 支付记录
+     */
+    @Excel(name = "支付记录")
+    @ApiModelProperty("支付记录")
+    private String payResult;
+
     @ApiModelProperty("优惠券集合")
     private List<RechargeOrderCoupon> couponList;
 
@@ -110,6 +138,39 @@ public class RechargeOrder extends BaseEntity {
 
     public String getWechatOrder() {
         return wechatOrder;
+    }
+
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
+
+    public String getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(String payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getPayResult() {
+        return payResult;
+    }
+
+    public void setPayResult(String payResult) {
+        this.payResult = payResult;
     }
 
     public List<RechargeOrderCoupon> getCouponList() {

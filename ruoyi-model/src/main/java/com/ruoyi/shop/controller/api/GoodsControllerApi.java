@@ -7,9 +7,7 @@ import com.ruoyi.shop.service.IGoodsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,12 +25,21 @@ public class GoodsControllerApi extends BaseController {
     private IGoodsService goodsService;
 
     /**
-     * 查询banner配置列表
+     * 查询商品管理列表
      */
-    @ApiOperation("查询banner列表")
+    @ApiOperation("查询商品管理列表")
     @PostMapping("/list")
     public AjaxResult list() {
         List<Goods> list = goodsService.selectGoodsList(new Goods());
         return success(list);
+    }
+
+    /**
+     * 根据ID商品管理
+     */
+    @ApiOperation("根据ID商品管理")
+    @GetMapping("/get")
+    public AjaxResult get(@RequestParam("id") Long id) {
+        return success(goodsService.selectGoodsById(id));
     }
 }

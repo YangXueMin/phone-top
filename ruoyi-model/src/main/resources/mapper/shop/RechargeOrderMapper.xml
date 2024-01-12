@@ -11,6 +11,10 @@
         <result property="cardId" column="card_id"/>
         <result property="money" column="money"/>
         <result property="wechatOrder" column="wechat_order"/>
+        <result property="orderStatus"    column="order_status"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="payResult"    column="pay_result"    />
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
@@ -24,6 +28,10 @@
                card_id,
                money,
                wechat_order,
+               order_status,
+               pay_type,
+               pay_time,
+               pay_result,
                create_by,
                create_time,
                update_by,
@@ -39,12 +47,20 @@
             <if test="cardId != null ">and card_id = #{cardId}</if>
             <if test="money != null ">and money = #{money}</if>
             <if test="wechatOrder != null  and wechatOrder != ''">and wechat_order = #{wechatOrder}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
+            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
+            <if test="haveType != null  and haveType != ''"> and have_type = #{haveType}</if>
         </where>
     </select>
 
     <select id="selectRechargeOrderById" parameterType="Long" resultMap="RechargeOrderResult">
         <include refid="selectRechargeOrderVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectOrderByOrderNo" parameterType="string" resultMap="RechargeOrderResult">
+        <include refid="selectRechargeOrderVo"/>
+        where order_no = #{orderNo}
     </select>
 
     <insert id="insertRechargeOrder" parameterType="RechargeOrder" useGeneratedKeys="true" keyProperty="id">
@@ -55,6 +71,10 @@
             <if test="cardId != null">card_id,</if>
             <if test="money != null">money,</if>
             <if test="wechatOrder != null">wechat_order,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="payResult != null">pay_result,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -66,6 +86,10 @@
             <if test="cardId != null">#{cardId},</if>
             <if test="money != null">#{money},</if>
             <if test="wechatOrder != null">#{wechatOrder},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="payResult != null">#{payResult},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -81,6 +105,10 @@
             <if test="cardId != null">card_id = #{cardId},</if>
             <if test="money != null">money = #{money},</if>
             <if test="wechatOrder != null">wechat_order = #{wechatOrder},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="payResult != null">pay_result = #{payResult},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

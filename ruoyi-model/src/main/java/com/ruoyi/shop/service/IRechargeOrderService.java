@@ -1,8 +1,9 @@
 package com.ruoyi.shop.service;
 
-import java.util.List;
-
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.shop.domain.RechargeOrder;
+
+import java.util.List;
 
 /**
  * 充值记录Service接口
@@ -34,6 +35,22 @@ public interface IRechargeOrderService {
      * @return 结果
      */
     public int insertRechargeOrder(RechargeOrder rechargeOrder);
+
+    /**
+     * 发起支付
+     *
+     * @param rechargeOrder 发起支付
+     * @return 结果
+     */
+    public WxPayMpOrderResult pay(RechargeOrder rechargeOrder);
+
+    /**
+     * 支付通知
+     *
+     * @param xmlData 支付通知
+     * @return 结果
+     */
+    public String payOrderNotify(String xmlData);
 
     /**
      * 修改充值记录

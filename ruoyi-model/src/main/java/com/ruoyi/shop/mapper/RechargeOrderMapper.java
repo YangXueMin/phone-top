@@ -24,6 +24,14 @@ public interface RechargeOrderMapper {
     /**
      * 查询充值记录列表
      *
+     * @param orderNo 订单编号
+     * @return 充值记录集合
+     */
+    public List<RechargeOrder> selectOrderByOrderNo(String orderNo);
+
+    /**
+     * 查询充值记录列表
+     *
      * @param rechargeOrder 充值记录
      * @return 充值记录集合
      */
