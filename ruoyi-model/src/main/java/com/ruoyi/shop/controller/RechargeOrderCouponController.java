@@ -51,6 +51,16 @@ public class RechargeOrderCouponController extends BaseController {
     }
 
     /**
+     * 查询会员优惠券数量及列表
+     */
+    @ApiOperation("查询会员优惠券数量及列表")
+    @GetMapping("/memberList")
+    public AjaxResult memberList(RechargeOrderCoupon rechargeOrderCoupon) {
+        List<RechargeOrderCoupon> list = rechargeOrderCouponService.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
+        return success(list);
+    }
+
+    /**
      * 导出充值订单与优惠券关联列表
      */
     @PreAuthorize("@ss.hasPermi('shop:rechargeOrderCoupon:export')")

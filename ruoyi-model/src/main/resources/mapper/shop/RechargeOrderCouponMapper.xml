@@ -55,13 +55,13 @@
                c.number,
                c.limit_collar,
                c.status AS coupon_status
-        from shop_recharge_order_coupon a
-        left join shop_coupon c ON a.coupon_id = c.id
     </sql>
 
     <select id="selectRechargeOrderCouponList" parameterType="RechargeOrderCoupon"
             resultMap="RechargeOrderCouponResult">
         <include refid="selectRechargeOrderCouponVo"/>
+        from shop_recharge_order_coupon a
+        left join shop_coupon c ON a.coupon_id = c.id
         <where>
             <if test="rechargeId != null ">and a.recharge_id = #{rechargeId}</if>
             <if test="memberId != null ">and a.member_id = #{memberId}</if>
@@ -72,8 +72,27 @@
         ORDER BY a.create_time DESC
     </select>
 
+    <select id="selectRechargeOrderCouponMemberList" parameterType="RechargeOrderCoupon"
+            resultMap="RechargeOrderCouponResult">
+        ,count(a.coupon_id) as num
+        from shop_recharge_order_coupon a
+        left join shop_coupon c ON a.coupon_id = c.id
+        <include refid="selectRechargeOrderCouponVo"/>
+        <where>
+            <if test="rechargeId != null ">and a.recharge_id = #{rechargeId}</if>
+            <if test="memberId != null ">and a.member_id = #{memberId}</if>
+            <if test="couponId != null ">and a.coupon_id = #{couponId}</if>
+            <if test="status != null  and status != ''">and a.status = #{status}</if>
+            <if test="payStatus != null  and payStatus != ''">and a.pay_status = #{payStatus}</if>
+        </where>
+        GROUP BY a.coupon_id,a.status
+        ORDER BY a.create_time DESC
+    </select>
+
     <select id="selectRechargeOrderCouponById" parameterType="Long" resultMap="RechargeOrderCouponResult">
         <include refid="selectRechargeOrderCouponVo"/>
+        from shop_recharge_order_coupon a
+        left join shop_coupon c ON a.coupon_id = c.id
         where a.id = #{id}
     </select>
 

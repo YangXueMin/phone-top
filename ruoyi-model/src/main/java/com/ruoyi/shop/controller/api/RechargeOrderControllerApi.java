@@ -35,7 +35,7 @@ public class RechargeOrderControllerApi extends BaseController {
     @ApiOperation("获取卡券集合")
     @PostMapping("/findOrderCouponList")
     public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon){
-        final List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponList(rechargeOrderCoupon);
+        final List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
         return success(rechargeOrderCouponList);
     }
 

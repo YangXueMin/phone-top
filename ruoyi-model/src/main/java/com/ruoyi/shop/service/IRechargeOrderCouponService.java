@@ -28,6 +28,14 @@ public interface IRechargeOrderCouponService {
     public List<RechargeOrderCoupon> selectRechargeOrderCouponList(RechargeOrderCoupon rechargeOrderCoupon);
 
     /**
+     * 查询充值订单与优惠券关联列表
+     *
+     * @param rechargeOrderCoupon 充值订单与优惠券关联
+     * @return 充值订单与优惠券关联集合
+     */
+    public List<RechargeOrderCoupon> selectRechargeOrderCouponMemberList(RechargeOrderCoupon rechargeOrderCoupon);
+
+    /**
      * 新增充值订单与优惠券关联
      *
      * @param rechargeOrderCoupon 充值订单与优惠券关联

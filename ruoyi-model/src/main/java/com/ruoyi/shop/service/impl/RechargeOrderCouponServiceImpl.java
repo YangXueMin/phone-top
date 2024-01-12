@@ -43,6 +43,17 @@ public class RechargeOrderCouponServiceImpl implements IRechargeOrderCouponServi
     }
 
     /**
+     * 查询充值订单与优惠券关联列表
+     *
+     * @param rechargeOrderCoupon 充值订单与优惠券关联
+     * @return 充值订单与优惠券关联
+     */
+    @Override
+    public List<RechargeOrderCoupon> selectRechargeOrderCouponMemberList(RechargeOrderCoupon rechargeOrderCoupon) {
+        return rechargeOrderCouponMapper.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
+    }
+
+    /**
      * 新增充值订单与优惠券关联
      *
      * @param rechargeOrderCoupon 充值订单与优惠券关联
