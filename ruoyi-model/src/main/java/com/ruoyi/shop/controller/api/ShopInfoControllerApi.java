@@ -2,7 +2,6 @@ package com.ruoyi.shop.controller.api;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.shop.domain.Banner;
 import com.ruoyi.shop.domain.ShopInfo;
 import com.ruoyi.shop.service.IShopInfoService;
 import io.swagger.annotations.Api;
@@ -45,7 +44,7 @@ public class ShopInfoControllerApi extends BaseController {
      */
     @ApiOperation("根据主键查询店铺")
     @GetMapping("/get")
-    public AjaxResult get(@RequestParam("id")Long id) {
+    public AjaxResult get(@RequestParam("id") Long id) {
         return success(shopInfoService.selectShopInfoById(id));
     }
 }

@@ -74,10 +74,10 @@
 
     <select id="selectRechargeOrderCouponMemberList" parameterType="RechargeOrderCoupon"
             resultMap="RechargeOrderCouponResult">
+        <include refid="selectRechargeOrderCouponVo"/>
         ,count(a.coupon_id) as num
         from shop_recharge_order_coupon a
         left join shop_coupon c ON a.coupon_id = c.id
-        <include refid="selectRechargeOrderCouponVo"/>
         <where>
             <if test="rechargeId != null ">and a.recharge_id = #{rechargeId}</if>
             <if test="memberId != null ">and a.member_id = #{memberId}</if>
