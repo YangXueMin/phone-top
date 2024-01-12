@@ -84,8 +84,8 @@
             <if test="securityFile != null  and securityFile != ''"> and security_file = #{securityFile}</if>
             <if test="naturalFile != null  and naturalFile != ''"> and natural_file = #{naturalFile}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            ${params.shopScope}
         </where>
-        ${params.shopScope}
     </select>
 
     <select id="selectShopInfoById" parameterType="Long" resultMap="ShopInfoResult">

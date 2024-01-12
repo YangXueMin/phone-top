@@ -54,7 +54,7 @@ public class ShopScopeAspect {
         StringBuilder sqlString = new StringBuilder();
         if (user.getShopIds().length > 0) {
             sqlString.append(StringUtils.format(
-                    " OR {}.shop_id IN ( SELECT shop_id FROM sys_user_shop WHERE user_id = {} ) ", shopAlias, user.getShopIds()));
+                    " OR {}.shop_id IN ( SELECT shop_id FROM sys_user_shop WHERE user_id = {} ) ", shopAlias, user.getUserId()));
         }
 
         if (StringUtils.isNotBlank(sqlString.toString())) {
