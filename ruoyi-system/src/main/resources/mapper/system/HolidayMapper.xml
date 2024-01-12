@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HolidayMapper">
+
+    <resultMap type="Holiday" id="HolidayResult">
+        <result property="date" column="date_"/>
+        <result property="name" column="name_"/>
+        <result property="holiday" column="holiday"/>
+        <result property="wage" column="wage"/>
+    </resultMap>
+
+    <sql id="selectHolidayVo">
+        select date_,
+               name_,
+               holiday,
+               wage
+        from shop_holiday
+    </sql>
+
+
+    <select id="selectHolidayById" parameterType="Long" resultMap="HolidayResult">
+        <include refid="selectHolidayVo"/>
+        where date_ = #{date}
+    </select>
+
+    <insert id="insertAll" parameterType="java.util.List">
+        insert into shop_goods_specs
+        (
+        date_,
+        name_,
+        holiday,
+        wage
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            #{item.date},
+            #{item.name},
+            #{item.holiday},
+            #{item.wage}
+        </foreach>
+    </insert>
+
+    <delete id="deleteAll">
+        delete
+        from shop_goods_specs
+    </delete>
+
+
+</mapper>

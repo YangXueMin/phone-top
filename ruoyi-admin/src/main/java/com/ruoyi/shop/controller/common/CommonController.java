@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.qcloud.cos.transfer.Upload;
 import com.ruoyi.common.utils.file.TxCosUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.system.domain.Holiday;
+import com.ruoyi.system.mapper.HolidayMapper;
+import com.ruoyi.system.utils.HolidayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
 
+import java.util.List;
+
 /**
  * 通用请求处理
  *
@@ -34,6 +39,18 @@ public class CommonController {
 
     @Autowired
     private ServerConfig serverConfig;
+    @Autowired
+    private HolidayMapper holidayMapper;
+
+    @GetMapping("common/holiday")
+    public void fileDownload(){
+        try {
+            final List<Holiday> holidays = HolidayUtils.getHolidays();
+            holidayMapper.insertAll(holidays);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 通用下载请求
