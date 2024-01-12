@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ToolUtils;
+import com.ruoyi.shop.domain.*;
+import com.ruoyi.shop.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.shop.mapper.ShopInfoMapper;
-import com.ruoyi.shop.domain.ShopInfo;
 import com.ruoyi.shop.service.IShopInfoService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 店铺信息Service业务层处理
@@ -20,6 +22,14 @@ import com.ruoyi.shop.service.IShopInfoService;
 public class ShopInfoServiceImpl implements IShopInfoService {
     @Autowired
     private ShopInfoMapper shopInfoMapper;
+    @Autowired
+    private CompanyGoodsMapper companyGoodsMapper;
+    @Autowired
+    private CompanyGoodsSpecsMapper companyGoodsSpecsMapper;
+    @Autowired
+    private GoodsMapper goodsMapper;
+    @Autowired
+    private GoodsSpecsMapper goodsSpecsMapper;
 
     /**
      * 查询店铺信息
@@ -72,9 +82,36 @@ public class ShopInfoServiceImpl implements IShopInfoService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertShopInfo(ShopInfo shopInfo) {
         shopInfo.setCreateTime(DateUtils.getNowDate());
-        return shopInfoMapper.insertShopInfo(shopInfo);
+        final int i = shopInfoMapper.insertShopInfo(shopInfo);
+        if(i > 0){
+            CompanyGoods companyGoodsQuery = new CompanyGoods();
+            companyGoodsQuery.setStatus("1");
+            List<CompanyGoods> list = companyGoodsMapper.selectCompanyGoodsList(companyGoodsQuery);
+            if(list != null && list.size() > 0){
+                for (CompanyGoods companyGoods : list) {
+                    Goods goods = new Goods();
+                    ToolUtils.copyPropertiesIgnoreNull(companyGoods,goods);
+                    goods.setShopId(shopInfo.getId());
+                    goods.setCompanyGoodsId(companyGoods.getId());
+                    goodsMapper.insertGoods(goods);
+
+                    List<CompanyGoodsSpecs> companyGoodsSpecsList = companyGoodsSpecsMapper.selectCompanyGoodsSpecsByGoodId(goods.getId());
+                    if (companyGoodsSpecsList.size() > 0) {
+                        for (CompanyGoodsSpecs companyGoodsSpecs : companyGoodsSpecsList) {
+                            GoodsSpecs goodsSpecs = new GoodsSpecs();
+                            ToolUtils.copyPropertiesIgnoreNull(companyGoodsSpecs,goodsSpecs);
+                            goodsSpecs.setGoodsId(goods.getId());
+                            goodsSpecs.setCreateTime(DateUtils.getNowDate());
+                            goodsSpecsMapper.insertGoodsSpecs(goodsSpecs);
+                        }
+                    }
+                }
+            }
+        }
+        return i;
     }
 
     /**

@@ -16,6 +16,7 @@
         <result property="isLimit"    column="is_limit"    />
         <result property="limitType"    column="limit_type"    />
         <result property="limitNum"    column="limit_num"    />
+        <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -35,6 +36,7 @@
             a.is_limit,
             a.limit_type,
             a.limit_num,
+            a.status,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -55,6 +57,7 @@
             <if test="isLimit != null  and isLimit != ''"> and a.is_limit = #{isLimit}</if>
             <if test="limitType != null  and limitType != ''"> and a.limit_type = #{limitType}</if>
             <if test="limitNum != null "> and a.limit_num = #{limitNum}</if>
+            <if test="status != null "> and a.status = #{status}</if>
         </where>
     </select>
 
@@ -76,6 +79,7 @@
             <if test="isLimit != null">is_limit,</if>
             <if test="limitType != null">limit_type,</if>
             <if test="limitNum != null">limit_num,</if>
+            <if test="status != null">status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -92,6 +96,7 @@
             <if test="isLimit != null">#{isLimit},</if>
             <if test="limitType != null">#{limitType},</if>
             <if test="limitNum != null">#{limitNum},</if>
+            <if test="status != null">#{status},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -112,6 +117,7 @@
             <if test="isLimit != null">is_limit = #{isLimit},</if>
             <if test="limitType != null">limit_type = #{limitType},</if>
             <if test="limitNum != null">limit_num = #{limitNum},</if>
+            <if test="status != null">status = #{status},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

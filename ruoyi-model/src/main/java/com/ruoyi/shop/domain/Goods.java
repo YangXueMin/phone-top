@@ -108,6 +108,10 @@ public class Goods extends BaseEntity {
     @ApiModelProperty("限制数量")
     private Long limitNum;
 
+    @Excel(name = "商品状态")
+    @ApiModelProperty("商品状态")
+    private String status;
+
     @ApiModelProperty("规格详情数据")
     private List<GoodsSpecs> specsList;
 
@@ -213,6 +217,14 @@ public class Goods extends BaseEntity {
 
     public Long getLimitNum() {
         return limitNum;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<GoodsSpecs> getSpecsList() {
