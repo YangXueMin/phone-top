@@ -55,14 +55,14 @@ public class ShopScopeAspect {
         if (user.getShopIds().length > 0) {
             if(StringUtils.equals("shop_info",shopAlias)){
                 sqlString.append(StringUtils.format(
-                        " OR id IN {} ", user.getShopIds()));
+                        " OR id IN ({}) ", user.getShopIds()));
             }else {
                 String shopAliasData = shopAlias;
                 if (StringUtils.isNotBlank(shopAlias)) {
                     shopAliasData = shopAliasData + ".";
                 }
                 sqlString.append(StringUtils.format(
-                        " OR {}shop_id IN {} ", shopAliasData, user.getShopIds()));
+                        " OR {}shop_id IN ({}) ", shopAliasData, user.getShopIds()));
             }
         }
 
