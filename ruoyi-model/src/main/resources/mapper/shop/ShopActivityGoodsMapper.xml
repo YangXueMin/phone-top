@@ -15,35 +15,66 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <association property="goods"    column="goods_id" javaType="Coupon" resultMap="GoodsResult" />
+    </resultMap>
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="companyGoodsId"    column="company_goods_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="name"    column="name"    />
+        <result property="describe"    column="describe_"    />
+        <result property="classId"    column="class_id"    />
+        <result property="goodsLabel"    column="goods_label"    />
+        <result property="pictures"    column="pictures"    />
+        <result property="attributeList"    column="attribute_list"    />
+        <result property="deliveryType"    column="delivery_type"    />
+        <result property="isLimit"    column="is_limit"    />
+        <result property="limitType"    column="limit_type"    />
+        <result property="limitNum"    column="limit_num"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectShopActivityGoodsVo">
-        select id,
-               activity_id,
-               goods_id,
-               buying_price,
-               buying_number,
-               create_by,
-               create_time,
-               update_by,
-               update_time,
-               remark
-        from shop_activity_goods
+        select a.id,
+               a.activity_id,
+               a.goods_id,
+               a.buying_price,
+               a.buying_number,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.remark,
+               sg.company_goods_id,
+               sg.shop_id,
+               sg.name,
+               sg.describe_,
+               sg.class_id,
+               sg.goods_label,
+               sg.pictures,
+               sg.attribute_list,
+               sg.delivery_type,
+               sg.is_limit,
+               sg.limit_type,
+               sg.limit_num,
+               sg.status,
+        from shop_activity_goods a
+        left join shop_goods sg ON sg.id = a.goods_id
     </sql>
 
     <select id="selectShopActivityGoodsList" parameterType="ShopActivityGoods" resultMap="ShopActivityGoodsResult">
         <include refid="selectShopActivityGoodsVo"/>
         <where>
-            <if test="activityId != null ">and activity_id = #{activityId}</if>
-            <if test="goodsId != null ">and goods_id = #{goodsId}</if>
-            <if test="buyingPrice != null ">and buying_price = #{buyingPrice}</if>
-            <if test="buyingNumber != null ">and buying_number = #{buyingNumber}</if>
+            <if test="activityId != null ">and a.activity_id = #{activityId}</if>
+            <if test="goodsId != null ">and a.goods_id = #{goodsId}</if>
+            <if test="buyingPrice != null ">and a.buying_price = #{buyingPrice}</if>
+            <if test="buyingNumber != null ">and a.buying_number = #{buyingNumber}</if>
         </where>
     </select>
 
     <select id="selectShopActivityGoodsById" parameterType="Long" resultMap="ShopActivityGoodsResult">
         <include refid="selectShopActivityGoodsVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertShopActivityGoods" parameterType="ShopActivityGoods" useGeneratedKeys="true" keyProperty="id">
