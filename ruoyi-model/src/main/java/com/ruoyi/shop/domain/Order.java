@@ -43,6 +43,13 @@ public class Order extends BaseEntity {
     private Long memberId;
 
     /**
+     * 活动ID
+     */
+    @Excel(name = "活动ID")
+    @ApiModelProperty("活动ID")
+    private Long activityId;
+
+    /**
      * 订单编号
      */
     @Excel(name = "订单编号")
@@ -154,6 +161,14 @@ public class Order extends BaseEntity {
 
     public Long getMemberId() {
         return memberId;
+    }
+
+    public Long getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Long activityId) {
+        this.activityId = activityId;
     }
 
     public void setOrderNumber(String orderNumber) {

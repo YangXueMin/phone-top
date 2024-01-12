@@ -2,6 +2,7 @@ package com.ruoyi.shop.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,19 @@ public class ShopInfoServiceImpl implements IShopInfoService {
      * @return 店铺信息
      */
     @Override
+    @ShopScope(shopAlias = "a")
     public List<ShopInfo> selectShopInfoList(ShopInfo shopInfo) {
+        return shopInfoMapper.selectShopInfoList(shopInfo);
+    }
+
+    /**
+     * 查询店铺信息列表
+     *
+     * @param shopInfo 店铺信息
+     * @return 店铺信息
+     */
+    @Override
+    public List<ShopInfo> selectShopInfoListApi(ShopInfo shopInfo) {
         return shopInfoMapper.selectShopInfoList(shopInfo);
     }
 

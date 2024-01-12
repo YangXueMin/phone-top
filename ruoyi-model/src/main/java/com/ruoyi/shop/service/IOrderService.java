@@ -30,6 +30,14 @@ public interface IOrderService
     public List<Order> selectOrderList(Order order);
 
     /**
+     * 查询订单记录列表
+     *
+     * @param order 订单记录
+     * @return 订单记录集合
+     */
+    public List<Order> selectOrderListApi(Order order);
+
+    /**
      * 新增订单记录
      *
      * @param order 订单记录

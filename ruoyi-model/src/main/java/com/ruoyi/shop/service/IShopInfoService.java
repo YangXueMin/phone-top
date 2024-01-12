@@ -29,6 +29,14 @@ public interface IShopInfoService
     public List<ShopInfo> selectShopInfoList(ShopInfo shopInfo);
 
     /**
+     * 查询店铺信息列表
+     *
+     * @param shopInfo 店铺信息
+     * @return 店铺信息集合
+     */
+    public List<ShopInfo> selectShopInfoListApi(ShopInfo shopInfo);
+
+    /**
      * 查询所有岗位
      *
      * @return 岗位列表

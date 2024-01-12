@@ -35,7 +35,7 @@ public class ShopInfoControllerApi extends BaseController {
     public AjaxResult list() {
         ShopInfo shopInfo = new ShopInfo();
         shopInfo.setStatus("1");
-        List<ShopInfo> list = shopInfoService.selectShopInfoList(shopInfo);
+        List<ShopInfo> list = shopInfoService.selectShopInfoListApi(shopInfo);
         return success(list);
     }
 }

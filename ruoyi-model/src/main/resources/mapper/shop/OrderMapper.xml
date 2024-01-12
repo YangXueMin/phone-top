@@ -8,6 +8,7 @@
         <result property="id"    column="id"    />
         <result property="shopId"    column="shop_id"    />
         <result property="memberId"    column="member_id"    />
+        <result property="activityId"    column="activity_id"    />
         <result property="orderNumber"    column="order_number"    />
         <result property="favourableMoney"    column="favourable_money"    />
         <result property="money"    column="money"    />
@@ -29,50 +30,53 @@
 
     <sql id="selectOrderVo">
         select
-            id,
-            shop_id,
-            member_id,
-            order_number,
-            favourable_money,
-            money,
-            coupon_list,
-            order_status,
-            pay_type,
-            pay_time,
-            pay_result,
-            have_type,
-            have_time,
-            user_id,
-            cancel_status,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from shop_order
+            a.id,
+            a.shop_id,
+            a.member_id,
+            a.activity_id,
+            a.order_number,
+            a.favourable_money,
+            a.money,
+            a.coupon_list,
+            a.order_status,
+            a.pay_type,
+            a.pay_time,
+            a.pay_result,
+            a.have_type,
+            a.have_time,
+            a.user_id,
+            a.cancel_status,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark
+        from shop_order a
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
         <include refid="selectOrderVo"/>
         <where>
-            <if test="shopId != null "> and shop_id = #{shopId}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
-            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
-            <if test="favourableMoney != null "> and favourable_money = #{favourableMoney}</if>
-            <if test="money != null "> and money = #{money}</if>
-            <if test="couponList != null  and couponList != ''"> and coupon_list = #{couponList}</if>
-            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
-            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
-            <if test="haveType != null  and haveType != ''"> and have_type = #{haveType}</if>
-            <if test="haveTime != null "> and have_time = #{haveTime}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="cancelStatus != null  and cancelStatus != ''"> and cancel_status = #{cancelStatus}</if>
+            <if test="shopId != null "> and a.shop_id = #{shopId}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="activityId != null "> and a.activity_id = #{activityId}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and a.order_number = #{orderNumber}</if>
+            <if test="favourableMoney != null "> and a.favourable_money = #{favourableMoney}</if>
+            <if test="money != null "> and a.money = #{money}</if>
+            <if test="couponList != null  and couponList != ''"> and a.coupon_list = #{couponList}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and a.order_status = #{orderStatus}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
+            <if test="haveType != null  and haveType != ''"> and a.have_type = #{haveType}</if>
+            <if test="haveTime != null "> and a.have_time = #{haveTime}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
+            ${params.shopScope}
         </where>
     </select>
 
     <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
         <include refid="selectOrderVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <select id="selectOrderByOrderNumber" parameterType="string" resultMap="OrderResult">
@@ -85,6 +89,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="shopId != null">shop_id,</if>
             <if test="memberId != null">member_id,</if>
+            <if test="activityId != null">activity_id,</if>
             <if test="orderNumber != null">order_number,</if>
             <if test="favourableMoney != null">favourable_money,</if>
             <if test="money != null">money,</if>
@@ -106,6 +111,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="shopId != null">#{shopId},</if>
             <if test="memberId != null">#{memberId},</if>
+            <if test="activityId != null">#{activityId},</if>
             <if test="orderNumber != null">#{orderNumber},</if>
             <if test="favourableMoney != null">#{favourableMoney},</if>
             <if test="money != null">#{money},</if>
@@ -131,6 +137,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="shopId != null">shop_id = #{shopId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="activityId != null">activity_id = #{activityId},</if>
             <if test="orderNumber != null">order_number = #{orderNumber},</if>
             <if test="favourableMoney != null">favourable_money = #{favourableMoney},</if>
             <if test="money != null">money = #{money},</if>

@@ -6,6 +6,7 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
+import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
@@ -70,7 +71,19 @@ public class OrderServiceImpl implements IOrderService {
      * @return 订单记录
      */
     @Override
+    @ShopScope(shopAlias = "a")
     public List<Order> selectOrderList(Order order) {
+        List<Order> orderList = orderMapper.selectOrderList(order);
+        if (orderList.size() > 0) {
+            for (Order orderData : orderList) {
+                orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
+            }
+        }
+        return orderList;
+    }
+
+    @Override
+    public List<Order> selectOrderListApi(Order order) {
         List<Order> orderList = orderMapper.selectOrderList(order);
         if (orderList.size() > 0) {
             for (Order orderData : orderList) {
