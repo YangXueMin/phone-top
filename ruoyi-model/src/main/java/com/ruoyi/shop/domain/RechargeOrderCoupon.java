@@ -51,6 +51,13 @@ public class RechargeOrderCoupon extends BaseEntity {
     @ApiModelProperty("状态:(待使用：1，已使用：2，已过期：3，已失效：4)")
     private String status;
 
+    /**
+     * 支付状态
+     */
+    @Excel(name = "支付状态")
+    @ApiModelProperty("支付状态")
+    private String payStatus;
+
     @ApiModelProperty("优惠券")
     private Coupon coupon;
 
@@ -92,6 +99,14 @@ public class RechargeOrderCoupon extends BaseEntity {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
     }
 
     public Coupon getCoupon() {

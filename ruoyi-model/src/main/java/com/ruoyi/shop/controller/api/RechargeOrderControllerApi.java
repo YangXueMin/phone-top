@@ -4,6 +4,8 @@ import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.shop.domain.RechargeOrder;
+import com.ruoyi.shop.domain.RechargeOrderCoupon;
+import com.ruoyi.shop.service.IRechargeOrderCouponService;
 import com.ruoyi.shop.service.IRechargeOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author yangxuemin
@@ -25,6 +29,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class RechargeOrderControllerApi extends BaseController {
     @Autowired
     private IRechargeOrderService rechargeOrderService;
+    @Autowired
+    private IRechargeOrderCouponService iRechargeOrderCouponService;
+
+    @ApiOperation("获取卡券集合")
+    @PostMapping("/findOrderCouponList")
+    public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon){
+        final List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponList(rechargeOrderCoupon);
+        return success(rechargeOrderCouponList);
+    }
 
     /**
      * 创建订单

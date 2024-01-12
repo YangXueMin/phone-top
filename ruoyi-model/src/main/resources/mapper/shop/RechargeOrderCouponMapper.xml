@@ -10,6 +10,7 @@
         <result property="memberId" column="member_id"/>
         <result property="couponId" column="coupon_id"/>
         <result property="status" column="status"/>
+        <result property="payStatus" column="pay_status"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
@@ -38,6 +39,7 @@
                a.member_id,
                a.coupon_id,
                a.status,
+               a.pay_status,
                a.create_by,
                a.create_time,
                a.update_by,
@@ -65,6 +67,7 @@
             <if test="memberId != null ">and a.member_id = #{memberId}</if>
             <if test="couponId != null ">and a.coupon_id = #{couponId}</if>
             <if test="status != null  and status != ''">and a.status = #{status}</if>
+            <if test="payStatus != null  and payStatus != ''">and a.payStatus = #{pay_status}</if>
         </where>
         ORDER BY a.create_time DESC
     </select>
@@ -81,6 +84,7 @@
             <if test="memberId != null">member_id,</if>
             <if test="couponId != null">coupon_id,</if>
             <if test="status != null and status != ''">status,</if>
+            <if test="payStatus != null and payStatus != ''">pay_status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -91,6 +95,7 @@
             <if test="memberId != null">#{memberId},</if>
             <if test="couponId != null">#{couponId},</if>
             <if test="status != null and status != ''">#{status},</if>
+            <if test="payStatus != null and payStatus != ''">#{payStatus},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -105,11 +110,18 @@
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="couponId != null">coupon_id = #{couponId},</if>
             <if test="status != null and status != ''">status = #{status},</if>
+            <if test="payStatus != null and payStatus != ''">pay_status = #{payStatus},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateRechargeOrderCouponPayStatusByRechargeId" parameterType="string">
+        update shop_recharge_order_coupon
+            pay_status = 2
         where id = #{id}
     </update>
 

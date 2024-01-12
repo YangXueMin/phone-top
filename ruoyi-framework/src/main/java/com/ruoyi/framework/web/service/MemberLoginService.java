@@ -32,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 /**
  * @author yangxuemin
@@ -76,7 +77,8 @@ public class MemberLoginService {
             member.setAvatar(loginMemberBody.getAvatarUrl());
             member.setName(loginMemberBody.getNickName());
             member.setMobile(loginMemberBody.getMobile());
-            member.setIsMember("N");
+            member.setIsMember("0");
+            member.setBalance(BigDecimal.ZERO);
             //生成唯一会员码
             SnowflakeGenerator.setDatacenterId(1);
             SnowflakeGenerator.setMachineId(1);

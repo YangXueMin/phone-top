@@ -94,6 +94,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         if (i > 0 && rechargeOrder.getCouponList().size() > 0) {
             for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
                 rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                rechargeOrderCoupon.setPayStatus("1");
                 rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
             }
         }
@@ -150,10 +151,13 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
                     rechargeOrder.setPayResult(JSON.toJSONString(notifyResult));
                     rechargeOrder.setUpdateTime(DateUtils.getNowDate());
                     rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
+                    //更新优惠券支付状态
+                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId());
                     //更新用户余额
                     Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
                     BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
                     member.setBalance(balance.add(rechargeOrder.getMoney()));
+                    member.setIsMember("1");
                     memberMapper.updateMember(member);
                     return WxPayNotifyResponse.success("成功");
                 }

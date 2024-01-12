@@ -34,17 +34,4 @@ public class MemberLoginController {
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
-
-    /**
-     * 获取用户信息
-     *
-     * @return 用户信息
-     */
-    @GetMapping("getMemberInfo")
-    public AjaxResult getInfo() {
-        Member member = SecurityUtils.getLoginUser().getMember();
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("member", member);
-        return ajax;
-    }
 }
