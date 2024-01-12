@@ -6,6 +6,7 @@
 
     <resultMap type="RechargeOrderCoupon" id="RechargeOrderCouponResult">
         <result property="id" column="id"/>
+        <result property="num" column="num"/>
         <result property="rechargeId" column="recharge_id"/>
         <result property="memberId" column="member_id"/>
         <result property="couponId" column="coupon_id"/>
@@ -60,6 +61,7 @@
     <select id="selectRechargeOrderCouponList" parameterType="RechargeOrderCoupon"
             resultMap="RechargeOrderCouponResult">
         <include refid="selectRechargeOrderCouponVo"/>
+        , 0 AS num
         from shop_recharge_order_coupon a
         left join shop_coupon c ON a.coupon_id = c.id
         <where>
