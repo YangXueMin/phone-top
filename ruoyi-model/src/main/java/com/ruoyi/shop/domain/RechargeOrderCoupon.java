@@ -61,6 +61,9 @@ public class RechargeOrderCoupon extends BaseEntity {
     @ApiModelProperty("优惠券")
     private Coupon coupon;
 
+    @ApiModelProperty("数量")
+    private Integer num;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -115,5 +118,13 @@ public class RechargeOrderCoupon extends BaseEntity {
 
     public void setCoupon(Coupon coupon) {
         this.coupon = coupon;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }
