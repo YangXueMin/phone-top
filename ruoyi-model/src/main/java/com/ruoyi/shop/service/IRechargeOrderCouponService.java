@@ -36,6 +36,13 @@ public interface IRechargeOrderCouponService {
     public List<RechargeOrderCoupon> selectRechargeOrderCouponMemberList(RechargeOrderCoupon rechargeOrderCoupon);
 
     /**
+     * 获取用户卡券数量
+     *
+     * @return 获取用户卡券数量
+     */
+    public Integer getOrderCouponNumber();
+
+    /**
      * 新增充值订单与优惠券关联
      *
      * @param rechargeOrderCoupon 充值订单与优惠券关联

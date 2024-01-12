@@ -38,6 +38,13 @@ public interface RechargeOrderCouponMapper {
     public List<RechargeOrderCoupon> selectRechargeOrderCouponMemberList(RechargeOrderCoupon rechargeOrderCoupon);
 
     /**
+     * 获取会员优惠券数量
+     * @param memberId
+     * @return
+     */
+    Integer getOrderCouponNumber(Long memberId);
+
+    /**
      * 新增充值订单与优惠券关联
      *
      * @param rechargeOrderCoupon 充值订单与优惠券关联

@@ -3,6 +3,7 @@ package com.ruoyi.shop.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.shop.mapper.RechargeOrderCouponMapper;
@@ -51,6 +52,11 @@ public class RechargeOrderCouponServiceImpl implements IRechargeOrderCouponServi
     @Override
     public List<RechargeOrderCoupon> selectRechargeOrderCouponMemberList(RechargeOrderCoupon rechargeOrderCoupon) {
         return rechargeOrderCouponMapper.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
+    }
+
+    @Override
+    public Integer getOrderCouponNumber() {
+        return rechargeOrderCouponMapper.getOrderCouponNumber(SecurityUtils.getUserId());
     }
 
     /**

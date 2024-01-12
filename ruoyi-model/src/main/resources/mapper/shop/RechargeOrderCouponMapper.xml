@@ -91,6 +91,18 @@
         ORDER BY a.create_time DESC
     </select>
 
+    <select id="getOrderCouponNumber" resultType="int">
+        select
+        count(a.coupon_id) as num
+        from shop_recharge_order_coupon a
+        <where>
+            and a.status = 1
+            and a.pay_status = 2
+            <if test="memberId != null ">and a.member_id = #{memberId}</if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
     <select id="selectRechargeOrderCouponById" parameterType="Long" resultMap="RechargeOrderCouponResult">
         <include refid="selectRechargeOrderCouponVo"/>
         , 0 AS num

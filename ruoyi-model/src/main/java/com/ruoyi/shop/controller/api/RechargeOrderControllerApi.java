@@ -10,10 +10,7 @@ import com.ruoyi.shop.service.IRechargeOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +34,12 @@ public class RechargeOrderControllerApi extends BaseController {
     public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon){
         final List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
         return success(rechargeOrderCouponList);
+    }
+
+    @ApiOperation("获取用户卡券数量")
+    @GetMapping("/getOrderCouponNumber")
+    public AjaxResult getOrderCouponNumber(){
+        return success(iRechargeOrderCouponService.getOrderCouponNumber());
     }
 
     /**
