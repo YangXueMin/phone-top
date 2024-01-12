@@ -94,12 +94,13 @@ public class SnowflakeGenerator {
     }
 
     public static void main(String[] args) {
-        SnowflakeGenerator.setDatacenterId(1);
-        SnowflakeGenerator.setMachineId(1);
-
-        for (int i = 0; i < 10; i++) {
-            long id = SnowflakeGenerator.nextId();
-            System.out.println(id);
-        }
+        //SnowflakeGenerator.setDatacenterId(1);
+        //SnowflakeGenerator.setMachineId(1);
+        //
+        //for (int i = 0; i < 10; i++) {
+        //    long id = SnowflakeGenerator.nextId();
+        //    System.out.println(id);
+        //}
+        System.out.println(generateOrderNumber());
     }
 }

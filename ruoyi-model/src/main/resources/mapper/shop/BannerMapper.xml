@@ -63,7 +63,7 @@
     <select id="selectBannerListApi" parameterType="Banner" resultMap="BannerResult">
         <include refid="selectBannerVo"/>
         <where>
-            and start_date lt;= now() AND end_date &gt;= now()
+            and start_date &lt;= now() AND end_date &gt;= now()
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="picture != null  and picture != ''"> and picture = #{picture}</if>

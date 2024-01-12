@@ -17,6 +17,16 @@ public class IdUtils
         return UUID.randomUUID().toString();
     }
 
+
+    /**
+     * 获取随机字符串 Nonce Str
+     * String 随机字符串
+     * @return 随机字符串
+     */
+    public static String generateNonceStr() {
+        return java.util.UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
+    }
+
     /**
      * 简化的UUID，去掉了横线
      * 

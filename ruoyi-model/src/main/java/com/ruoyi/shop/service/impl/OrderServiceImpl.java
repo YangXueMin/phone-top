@@ -1,18 +1,32 @@
 package com.ruoyi.shop.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.domain.OrderDetails;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
+import com.ruoyi.shop.domain.ShopInfo;
 import com.ruoyi.shop.mapper.OrderDetailsMapper;
 import com.ruoyi.shop.mapper.OrderMapper;
 import com.ruoyi.shop.mapper.RechargeOrderCouponMapper;
+import com.ruoyi.shop.mapper.ShopInfoMapper;
 import com.ruoyi.shop.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,6 +43,10 @@ public class OrderServiceImpl implements IOrderService {
     private OrderDetailsMapper orderDetailsMapper;
     @Autowired
     private RechargeOrderCouponMapper rechargeOrderCouponMapper;
+    @Autowired
+    private WechatConfiguration wechatConfiguration;
+    @Autowired
+    private ShopInfoMapper shopInfoMapper;
 
     /**
      * 查询订单记录
@@ -72,6 +90,7 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional(rollbackFor = Exception.class)
     public int insertOrder(Order order) {
         order.setCreateTime(DateUtils.getNowDate());
+        order.setOrderNumber(SnowflakeGenerator.generateOrderNumber());
         int i = orderMapper.insertOrder(order);
         if (i > 0) {
             if (order.getDetailsList().size() > 0) {
@@ -97,6 +116,71 @@ public class OrderServiceImpl implements IOrderService {
         return i;
     }
 
+    @Override
+    public WxPayMpOrderResult pay(Order order) {
+        order = orderMapper.selectOrderById(order.getId());
+        Member member = SecurityUtils.getLoginUser().getMember();
+        WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
+        //随机字符串
+        request.setNonceStr(IdUtils.generateNonceStr());
+        //加密方式
+        request.setSignType("MD5");
+        //订单号
+        request.setOutTradeNo(order.getOrderNumber());
+        //金额，以分为单位
+        request.setTotalFee(order.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+        // 用户ip
+        request.setSpbillCreateIp("127.0.0.1");
+        //回调通知地址（必须外网能访问的地址）
+        request.setNotifyUrl("https://hospital.justgo.work/prod-api/api/shop/order/payOrderNotify");
+        //小程序支付
+        request.setTradeType("JSAPI");
+        //小程序用户openid
+        request.setOpenid(member.getOpenId());
+        //商品描述
+        final ShopInfo shopInfo = shopInfoMapper.selectShopInfoById(order.getShopId());
+        StringBuilder body = new StringBuilder("祁大脑袋熏鸡");
+        if (shopInfo != null) {
+            body.append("-");
+            body.append(shopInfo.getName());
+        }
+        request.setBody(body.toString());
+        //商品详情
+        //request.setDetail("");
+
+        try {
+            return wechatConfiguration.wxPayService().createOrder(request);
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String payOrderNotify(String xmlData) {
+        try {
+            WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService().parseOrderNotifyResult(xmlData);
+            if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
+                List<Order> orderList = orderMapper.selectOrderByOrderNumber(notifyResult.getOutTradeNo());
+                if (orderList != null && orderList.size() > 0) {
+                    Order order = orderList.get(0);
+                    order.setOrderStatus("2");
+                    order.setCancelStatus("1");
+                    order.setPayType("1");
+                    order.setPayTime(notifyResult.getTimeEnd());
+                    order.setPayResult(JSON.toJSONString(notifyResult));
+                    order.setUpdateTime(DateUtils.getNowDate());
+                    orderMapper.updateOrder(order);
+                    return WxPayNotifyResponse.success("成功");
+                }
+            }
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return WxPayNotifyResponse.fail("失败");
+    }
+
     /**
      * 修改订单记录
      *
@@ -118,7 +202,7 @@ public class OrderServiceImpl implements IOrderService {
                 }
             }
             //修改优惠券状态
-            if (StringUtils.equals("4",order.getOrderStatus())
+            if (StringUtils.equals("4", order.getOrderStatus())
                     && StringUtils.isNotBlank(order.getCouponList())) {
                 String[] couponList = order.getCouponList().split(",");
                 for (String couponId : couponList) {

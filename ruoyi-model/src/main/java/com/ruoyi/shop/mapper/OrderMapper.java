@@ -22,6 +22,14 @@ public interface OrderMapper
     public Order selectOrderById(Long id);
 
     /**
+     * 查询订单记录
+     *
+     * @param orderNumber 订单号
+     * @return 订单记录
+     */
+    public List<Order> selectOrderByOrderNumber(String orderNumber);
+
+    /**
      * 查询订单记录列表
      *
      * @param order 订单记录

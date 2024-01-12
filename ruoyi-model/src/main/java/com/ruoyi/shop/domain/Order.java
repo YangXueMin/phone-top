@@ -85,6 +85,20 @@ public class Order extends BaseEntity {
     private String payType;
 
     /**
+     * 支付时间
+     */
+    @Excel(name = "支付时间")
+    @ApiModelProperty("支付时间")
+    private String payTime;
+
+    /**
+     * 支付记录
+     */
+    @Excel(name = "支付记录")
+    @ApiModelProperty("支付记录")
+    private String payResult;
+
+    /**
      * 用餐方式
      */
     @Excel(name = "用餐方式")
@@ -220,6 +234,22 @@ public class Order extends BaseEntity {
 
     public String getCancelStatus() {
         return cancelStatus;
+    }
+
+    public String getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(String payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getPayResult() {
+        return payResult;
+    }
+
+    public void setPayResult(String payResult) {
+        this.payResult = payResult;
     }
 
     public List<OrderDetails> getDetailsList() {
