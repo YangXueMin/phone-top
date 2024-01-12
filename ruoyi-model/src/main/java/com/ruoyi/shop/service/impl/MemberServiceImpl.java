@@ -140,6 +140,6 @@ public class MemberServiceImpl implements IMemberService {
                 member.setSysUser(userList.get(0));
             }
         }
-        return null;
+        return member;
     }
 }
