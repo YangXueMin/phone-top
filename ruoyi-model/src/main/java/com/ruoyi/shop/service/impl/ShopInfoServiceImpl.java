@@ -39,7 +39,7 @@ public class ShopInfoServiceImpl implements IShopInfoService {
      * @return 店铺信息
      */
     @Override
-    @ShopScope()
+    @ShopScope(shopAlias = "shop_info")
     public List<ShopInfo> selectShopInfoList(ShopInfo shopInfo) {
         return shopInfoMapper.selectShopInfoList(shopInfo);
     }

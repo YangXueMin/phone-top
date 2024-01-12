@@ -35,7 +35,6 @@
     <sql id="selectShopInfoVo">
         select
             id,
-            id as shop_id,
             name,
             province,
             city,
