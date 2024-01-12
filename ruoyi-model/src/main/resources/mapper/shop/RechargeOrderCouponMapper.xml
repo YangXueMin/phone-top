@@ -67,7 +67,7 @@
             <if test="memberId != null ">and a.member_id = #{memberId}</if>
             <if test="couponId != null ">and a.coupon_id = #{couponId}</if>
             <if test="status != null  and status != ''">and a.status = #{status}</if>
-            <if test="payStatus != null  and payStatus != ''">and a.payStatus = #{pay_status}</if>
+            <if test="payStatus != null  and payStatus != ''">and a.pay_status = #{payStatus}</if>
         </where>
         ORDER BY a.create_time DESC
     </select>
