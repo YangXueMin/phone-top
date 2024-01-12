@@ -146,13 +146,14 @@ wechat:
     #微信支付商户号
     mchId: 1665678322
     #微信支付商户密钥
-    mchKey: tuishou123456jiayuxuan1234567890
+    mchKey: mzx3rzcg0ymcvhkcrqlky2d1z8as5dby
+    mchKey3: ko1guc4xnyxc1kdjegggtljirs9m4xcx
     #服务商模式下的子商户公众账号ID
     subAppId:
     #服务商模式下的子商户号
     subMchId:
     # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
-    keyPath:
+    keyPath: classpath:apiclient_cert.p12
     # 交易类型
     tradeType:
     # 支付成功回调地址
