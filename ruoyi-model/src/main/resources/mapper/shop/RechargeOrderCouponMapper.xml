@@ -93,6 +93,7 @@
 
     <select id="selectRechargeOrderCouponById" parameterType="Long" resultMap="RechargeOrderCouponResult">
         <include refid="selectRechargeOrderCouponVo"/>
+        , 0 AS num
         from shop_recharge_order_coupon a
         left join shop_coupon c ON a.coupon_id = c.id
         where a.id = #{id}
