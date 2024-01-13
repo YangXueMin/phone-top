@@ -5,47 +5,46 @@
 <mapper namespace="com.ruoyi.shop.mapper.DayActivityMapper">
 
     <resultMap type="DayActivity" id="DayActivityResult">
-        <result property="id" column="id"/>
-        <result property="activityName" column="activity_name"/>
-        <result property="shopId" column="shop_id"/>
-        <result property="activityTime" column="activity_time"/>
-        <result property="activityLabel" column="activity_label"/>
-        <result property="goodsType" column="goods_type"/>
-        <result property="activityDiscount" column="activity_discount"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="remark" column="remark"/>
+        <result property="id"    column="id"    />
+        <result property="activityName"    column="activity_name"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="activityTime"    column="activity_time"    />
+        <result property="activityLabel"    column="activity_label"    />
+        <result property="goodsType"    column="goods_type"    />
+        <result property="activityDiscount"    column="activity_discount"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectDayActivityVo">
-        select id,
-               activity_name,
-               shop_id,
-               activity_time,
-               activity_label,
-               goods_type,
-               activity_discount,
-               create_by,
-               create_time,
-               update_by,
-               update_time,
-               remark
+        select
+            id,
+            activity_name,
+            shop_id,
+            activity_time,
+            activity_label,
+            goods_type,
+            activity_discount,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
         from shop_member_day_activity
     </sql>
 
     <select id="selectDayActivityList" parameterType="DayActivity" resultMap="DayActivityResult">
         <include refid="selectDayActivityVo"/>
         <where>
-            <if test="activityName != null  and activityName != ''">and activity_name like concat('%', #{activityName},
-                '%')
-            </if>
-            <if test="shopId != null ">and shop_id = #{shopId}</if>
-            <if test="activityTime != null  and activityTime != ''">and activity_time = #{activityTime}</if>
-            <if test="activityLabel != null  and activityLabel != ''">and activity_label = #{activityLabel}</if>
-            <if test="goodsType != null  and goodsType != ''">and goods_type = #{goodsType}</if>
-            <if test="activityDiscount != null ">and activity_discount = #{activityDiscount}</if>
+            <if test="activityName != null  and activityName != ''"> and activity_name like concat('%', #{activityName}, '%')</if>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="activityTime != null  and activityTime != ''"> and activity_time = #{activityTime}</if>
+            <if test="activityLabel != null  and activityLabel != ''"> and activity_label = #{activityLabel}</if>
+            <if test="goodsType != null  and goodsType != ''"> and goods_type = #{goodsType}</if>
+            <if test="activityDiscount != null "> and activity_discount = #{activityDiscount}</if>
         </where>
     </select>
 
@@ -103,9 +102,7 @@
     </update>
 
     <delete id="deleteDayActivityById" parameterType="Long">
-        delete
-        from shop_member_day_activity
-        where id = #{id}
+        delete from shop_member_day_activity where id = #{id}
     </delete>
 
     <delete id="deleteDayActivityByIds" parameterType="String">

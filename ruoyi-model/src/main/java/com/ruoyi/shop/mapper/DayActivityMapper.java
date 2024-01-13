@@ -9,7 +9,7 @@ import com.ruoyi.shop.domain.DayActivity;
  * 会员日活动Mapper接口
  *
  * @author ruoyi
- * @date 2024-01-12
+ * @date 2024-01-13
  */
 @Mapper
 public interface DayActivityMapper {
