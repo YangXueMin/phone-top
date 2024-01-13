@@ -1,5 +1,8 @@
 package com.ruoyi.shop.controller.system;
 
+import com.qcloud.cos.transfer.Upload;
+import com.ruoyi.common.utils.file.TxCosUtils;
+import com.ruoyi.common.utils.uuid.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -116,14 +119,19 @@ public class SysProfileController extends BaseController {
     public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws Exception {
         if (!file.isEmpty()) {
             LoginUser loginUser = getLoginUser();
-            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
-            if (userService.updateUserAvatar(loginUser.getUsername(), avatar)) {
-                AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", avatar);
-                // 更新缓存用户头像
-                loginUser.getUser().setAvatar(avatar);
-                tokenService.setLoginUser(loginUser);
-                return ajax;
+            // 上传并返回新文件名称
+            String fileName = UUID.randomUUID() + file.getName();
+            Upload upload = TxCosUtils.upload(fileName, file.getInputStream());
+            if (upload != null) {
+                String avatar = TxCosUtils.URL + fileName;
+                if (userService.updateUserAvatar(loginUser.getUsername(), avatar)) {
+                    AjaxResult ajax = AjaxResult.success();
+                    ajax.put("imgUrl", avatar);
+                    // 更新缓存用户头像
+                    loginUser.getUser().setAvatar(avatar);
+                    tokenService.setLoginUser(loginUser);
+                    return ajax;
+                }
             }
         }
         return error("上传图片异常，请联系管理员");
