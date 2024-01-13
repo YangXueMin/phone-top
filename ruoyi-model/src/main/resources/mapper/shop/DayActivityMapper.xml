@@ -12,6 +12,7 @@
         <result property="activityLabel"    column="activity_label"    />
         <result property="goodsType"    column="goods_type"    />
         <result property="activityDiscount"    column="activity_discount"    />
+        <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -28,6 +29,7 @@
             activity_label,
             goods_type,
             activity_discount,
+               status,
             create_by,
             create_time,
             update_by,
@@ -45,6 +47,7 @@
             <if test="activityLabel != null  and activityLabel != ''"> and activity_label = #{activityLabel}</if>
             <if test="goodsType != null  and goodsType != ''"> and goods_type = #{goodsType}</if>
             <if test="activityDiscount != null "> and activity_discount = #{activityDiscount}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
 
@@ -62,6 +65,7 @@
             <if test="activityLabel != null">activity_label,</if>
             <if test="goodsType != null">goods_type,</if>
             <if test="activityDiscount != null">activity_discount,</if>
+            <if test="status != null">status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -75,6 +79,7 @@
             <if test="activityLabel != null">#{activityLabel},</if>
             <if test="goodsType != null">#{goodsType},</if>
             <if test="activityDiscount != null">#{activityDiscount},</if>
+            <if test="status != null">#{status},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -92,6 +97,7 @@
             <if test="activityLabel != null">activity_label = #{activityLabel},</if>
             <if test="goodsType != null">goods_type = #{goodsType},</if>
             <if test="activityDiscount != null">activity_discount = #{activityDiscount},</if>
+            <if test="status != null">status = #{status},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

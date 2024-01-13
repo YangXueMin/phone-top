@@ -67,6 +67,9 @@ public class DayActivity extends BaseEntity {
     @ApiModelProperty("折扣")
     private BigDecimal activityDiscount;
 
+    @ApiModelProperty("状态")
+    private String status;
+
     @ApiModelProperty("商品ID")
     private Long[] goodsIds;
 
@@ -143,5 +146,13 @@ public class DayActivity extends BaseEntity {
 
     public void setGoodsList(List<Goods> goodsList) {
         this.goodsList = goodsList;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
