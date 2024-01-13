@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="activityId" column="activity_id"/>
         <result property="goodsId" column="goods_id"/>
+        <result property="specsId" column="specs_id"/>
         <result property="buyingPrice" column="buying_price"/>
         <result property="buyingNumber" column="buying_number"/>
         <result property="createBy" column="create_by"/>
@@ -38,6 +39,7 @@
         select a.id,
                a.activity_id,
                a.goods_id,
+               a.specs_id,
                a.buying_price,
                a.buying_number,
                a.create_by,
@@ -67,6 +69,7 @@
         <where>
             <if test="activityId != null ">and a.activity_id = #{activityId}</if>
             <if test="goodsId != null ">and a.goods_id = #{goodsId}</if>
+            <if test="specsId != null ">and a.specs_id = #{specsId}</if>
             <if test="buyingPrice != null ">and a.buying_price = #{buyingPrice}</if>
             <if test="buyingNumber != null ">and a.buying_number = #{buyingNumber}</if>
         </where>
@@ -82,6 +85,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="activityId != null">activity_id,</if>
             <if test="goodsId != null">goods_id,</if>
+            <if test="specsId != null">specs_id,</if>
             <if test="buyingPrice != null">buying_price,</if>
             <if test="buyingNumber != null">buying_number,</if>
             <if test="createBy != null">create_by,</if>
@@ -93,6 +97,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="activityId != null">#{activityId},</if>
             <if test="goodsId != null">#{goodsId},</if>
+            <if test="specsId != null">#{specsId},</if>
             <if test="buyingPrice != null">#{buyingPrice},</if>
             <if test="buyingNumber != null">#{buyingNumber},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -108,6 +113,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="activityId != null">activity_id = #{activityId},</if>
             <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="specsId != null">specs_id = #{specsId},</if>
             <if test="buyingPrice != null">buying_price = #{buyingPrice},</if>
             <if test="buyingNumber != null">buying_number = #{buyingNumber},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

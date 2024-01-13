@@ -31,6 +31,11 @@ public class ShopActivityGoods extends BaseEntity{
     @ApiModelProperty("商品ID")
     private Long goodsId;
 
+    /** 规格ID */
+    @Excel(name = "规格ID")
+    @ApiModelProperty("规格ID")
+    private Long specsId;
+
     /** 抢购价 */
     @Excel(name = "抢购价")
     @ApiModelProperty("抢购价")
@@ -65,6 +70,15 @@ public class ShopActivityGoods extends BaseEntity{
     public Long getGoodsId(){
         return goodsId;
     }
+
+    public Long getSpecsId() {
+        return specsId;
+    }
+
+    public void setSpecsId(Long specsId) {
+        this.specsId = specsId;
+    }
+
     public void setBuyingPrice(BigDecimal buyingPrice){
         this.buyingPrice = buyingPrice;
     }
