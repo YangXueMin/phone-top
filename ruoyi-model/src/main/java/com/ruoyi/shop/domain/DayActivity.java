@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 会员日活动对象 shop_member_day_activity
@@ -66,6 +67,12 @@ public class DayActivity extends BaseEntity {
     @ApiModelProperty("折扣")
     private BigDecimal activityDiscount;
 
+    @ApiModelProperty("商品ID")
+    private Long[] goodsIds;
+
+    @ApiModelProperty("商品数据")
+    private List<Goods> goodsList;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -122,4 +129,19 @@ public class DayActivity extends BaseEntity {
         return activityDiscount;
     }
 
+    public Long[] getGoodsIds() {
+        return goodsIds;
+    }
+
+    public void setGoodsIds(Long[] goodsIds) {
+        this.goodsIds = goodsIds;
+    }
+
+    public List<Goods> getGoodsList() {
+        return goodsList;
+    }
+
+    public void setGoodsList(List<Goods> goodsList) {
+        this.goodsList = goodsList;
+    }
 }

@@ -67,6 +67,13 @@
         </where>
     </select>
 
+    <select id="selectGoodsListByIdIn" parameterType="String" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/> where a.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
     <select id="selectGoodsById" parameterType="Long" resultMap="GoodsResult">
         <include refid="selectGoodsVo"/>
         where a.id = #{id}

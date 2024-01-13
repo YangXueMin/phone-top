@@ -30,6 +30,14 @@ public interface GoodsMapper {
     public List<Goods> selectGoodsList(Goods goods);
 
     /**
+     * 查询商品列表
+     *
+     * @param ids ID集合
+     * @return 商品集合
+     */
+    public List<Goods> selectGoodsListByIdIn(Long[] ids);
+
+    /**
      * 新增商品
      *
      * @param goods 商品

@@ -1,16 +1,16 @@
 package com.ruoyi.shop.service;
 
-import com.ruoyi.shop.domain.DayActivity;
-
 import java.util.List;
+import com.ruoyi.shop.domain.DayActivity;
 
 /**
  * 会员日活动Service接口
  *
  * @author ruoyi
- * @date 2024-01-12
+ * @date 2024-01-13
  */
-public interface IDayActivityService {
+public interface IDayActivityService
+{
     /**
      * 查询会员日活动
      *

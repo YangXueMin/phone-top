@@ -34,4 +34,14 @@ public class MemberLoginController {
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
+
+    /**
+     * <pre>
+     * 获取用户绑定手机号信息
+     * </pre>
+     */
+    @GetMapping("/wechat/phone")
+    public AjaxResult phone(@RequestParam("phoneCode") String phoneCode) {
+        return memberLoginService.phone(phoneCode);
+    }
 }

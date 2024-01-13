@@ -110,6 +110,24 @@ public class MemberLoginService {
     }
 
     /**
+     * <pre>
+     * 获取用户绑定手机号信息
+     * </pre>
+     */
+    public AjaxResult phone(String phoneCode) {
+        WxMaService wxMaService = wechatConfiguration.wxMaService();
+        // 解密
+        WxMaPhoneNumberInfo phoneNoInfo = null;
+        try {
+            phoneNoInfo = wxMaService.getUserService().getPhoneNoInfo(phoneCode);
+        } catch (WxErrorException e) {
+            return AjaxResult.error("电话解密失败");
+        }
+        WxMaConfigHolder.remove();//清理ThreadLocal
+        return AjaxResult.success(phoneNoInfo);
+    }
+
+    /**
      * 记录登录信息
      *
      * @param userId 用户ID
