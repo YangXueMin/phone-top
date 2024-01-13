@@ -49,7 +49,6 @@
             <if test="wechatOrder != null  and wechatOrder != ''">and wechat_order = #{wechatOrder}</if>
             <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
             <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
-            <if test="haveType != null  and haveType != ''"> and have_type = #{haveType}</if>
         </where>
     </select>
 
