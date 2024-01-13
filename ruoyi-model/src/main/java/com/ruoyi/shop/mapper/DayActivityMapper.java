@@ -1,6 +1,7 @@
 package com.ruoyi.shop.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.shop.domain.DayActivity;
 
@@ -11,8 +12,7 @@ import com.ruoyi.shop.domain.DayActivity;
  * @date 2024-01-12
  */
 @Mapper
-public interface DayActivityMapper
-{
+public interface DayActivityMapper {
     /**
      * 查询会员日活动
      *
