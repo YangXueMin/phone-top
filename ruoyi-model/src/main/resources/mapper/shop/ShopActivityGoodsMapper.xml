@@ -57,7 +57,7 @@
                sg.is_limit,
                sg.limit_type,
                sg.limit_num,
-               sg.status,
+               sg.status
         from shop_activity_goods a
         left join shop_goods sg ON sg.id = a.goods_id
     </sql>

@@ -1,6 +1,5 @@
 package com.ruoyi.shop.service.impl;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.DayActivity;
@@ -11,7 +10,6 @@ import com.ruoyi.shop.mapper.DayActivityMapper;
 import com.ruoyi.shop.mapper.GoodsMapper;
 import com.ruoyi.shop.mapper.GoodsSpecsMapper;
 import com.ruoyi.shop.service.IDayActivityService;
-import com.ruoyi.system.domain.SysUserPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,11 +62,11 @@ public class DayActivityServiceImpl implements IDayActivityService {
         return dayActivityList;
     }
 
-    public void  getGoodsList(DayActivity dayActivity){
+    public void getGoodsList(DayActivity dayActivity) {
         List<Long> list = dayActivityGoodsMapper.selectDayActivityGoodsByDayActivityId(dayActivity.getId());
-        if(list.size() > 0){
+        if (list.size() > 0) {
             List<Goods> goodsList = goodsMapper.selectGoodsListByIdIn(list.toArray(new Long[0]));
-            if(goodsList.size() > 0){
+            if (goodsList.size() > 0) {
                 for (Goods goodsData : goodsList) {
                     goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
                 }
@@ -138,7 +136,7 @@ public class DayActivityServiceImpl implements IDayActivityService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteDayActivityByIds(Long[] ids) {
         final int i = dayActivityMapper.deleteDayActivityByIds(ids);
-        if(i > 0){
+        if (i > 0) {
             dayActivityGoodsMapper.deleteDayActivityGoods(ids);
         }
         return i;
@@ -154,7 +152,7 @@ public class DayActivityServiceImpl implements IDayActivityService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteDayActivityById(Long id) {
         final int i = dayActivityMapper.deleteDayActivityById(id);
-        if(i > 0){
+        if (i > 0) {
             dayActivityGoodsMapper.deleteDayActivityGoodsByDayActivityId(id);
         }
         return i;
