@@ -29,7 +29,7 @@ public class RechargeOrderControllerApi extends BaseController {
     @Autowired
     private IRechargeOrderCouponService iRechargeOrderCouponService;
 
-    @ApiOperation("获取卡券集合")
+    @ApiOperation("获取充值卡券集合")
     @PostMapping("/findOrderCouponList")
     public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon){
         final List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
