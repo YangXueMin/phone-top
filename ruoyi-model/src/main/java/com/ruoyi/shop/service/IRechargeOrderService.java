@@ -1,6 +1,7 @@
 package com.ruoyi.shop.service;
 
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.ruoyi.shop.domain.RechargeOrder;
 
 import java.util.List;
@@ -51,6 +52,21 @@ public interface IRechargeOrderService {
      * @return 结果
      */
     public String payOrderNotify(String xmlData);
+
+    /**
+     * 发起退款
+     * @param rechargeOrder
+     * @return
+     */
+    WxPayRefundResult refund(RechargeOrder rechargeOrder);
+
+    /**
+     * 退款通知
+     *
+     * @param xmlData
+     * @return
+     */
+    public String refundNotify(String xmlData);
 
     /**
      * 修改充值记录

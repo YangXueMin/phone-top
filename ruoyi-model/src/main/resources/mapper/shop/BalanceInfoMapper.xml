@@ -111,4 +111,8 @@
             #{id}
         </foreach>
     </delete>
+
+    <delete id="deleteBalanceInfoByOrderIdAndOrderType">
+        delete from shop_balance_info where order_id = #{orderId} AND order_type = #{orderType}
+    </delete>
 </mapper>

@@ -3,10 +3,14 @@ package com.ruoyi.shop.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -118,7 +122,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
-        request.setNotifyUrl("https://hospital.justgo.work/prod-api/api/shop/rechargeOrder/payOrderNotify");
+        request.setNotifyUrl(Constants.URL + "api/shop/rechargeOrder/payOrderNotify");
         //小程序支付
         request.setTradeType("JSAPI");
         //小程序用户openid
@@ -153,15 +157,66 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
                     rechargeOrder.setUpdateTime(DateUtils.getNowDate());
                     rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
                     //更新优惠券支付状态
-                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId());
+                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId(), "2");
                     //更新用户余额
                     Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
                     BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
                     member.setBalance(balance.add(rechargeOrder.getMoney()));
                     member.setIsMember("1");
                     memberMapper.updateMember(member);
-                    return WxPayNotifyResponse.success("成功");
                 }
+                return WxPayNotifyResponse.success("成功");
+            }
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return WxPayNotifyResponse.fail("失败");
+    }
+
+    @Override
+    public WxPayRefundResult refund(RechargeOrder rechargeOrder) {
+        WxPayRefundRequest request = new WxPayRefundRequest();
+        try {
+            //订单号
+            request.setOutTradeNo(rechargeOrder.getOrderNo());
+            //退款单号
+            request.setOutRefundNo(rechargeOrder.getOrderNo());
+            //订单金额
+            request.setTotalFee(rechargeOrder.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+            //退款金额
+            request.setRefundFee(rechargeOrder.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+            //加密方式
+            request.setSignType("MD5");
+            //回调通知地址（必须外网能访问的地址）
+            request.setNotifyUrl(Constants.URL + "api/shop/rechargeOrder/notify/refund");
+            return wechatConfiguration.wxPayService().refund(request);
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String refundNotify(String xmlData) {
+        try {
+            final WxPayRefundNotifyResult result = wechatConfiguration.wxPayService().parseRefundNotifyResult(xmlData);
+            if (StringUtils.equals("SUCCESS", result.getReturnCode())) {
+                List<RechargeOrder> orderList = rechargeOrderMapper.selectOrderByOrderNo(result.getReqInfo().getOutTradeNo());
+                if (orderList != null && orderList.size() > 0) {
+                    RechargeOrder rechargeOrder = orderList.get(0);
+                    rechargeOrder.setOrderStatus("3");
+                    rechargeOrder.setPayResult(JSON.toJSONString(result));
+                    rechargeOrder.setUpdateTime(DateUtils.getNowDate());
+                    rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
+                    //更新优惠券支付状态
+                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId(), "3");
+                    //更新用户余额
+                    Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
+                    BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
+                    member.setBalance(balance.subtract(rechargeOrder.getMoney()));
+                    memberMapper.updateMember(member);
+                }
+                return WxPayNotifyResponse.success("成功");
             }
         } catch (WxPayException e) {
             e.printStackTrace();

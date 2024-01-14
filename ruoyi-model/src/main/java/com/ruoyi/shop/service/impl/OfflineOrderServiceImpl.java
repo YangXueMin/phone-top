@@ -92,6 +92,24 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
         return i;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int balanceRefund(OfflineOrder offlineOrder) {
+        offlineOrder.setOrderStatus("3");
+        offlineOrder.setUpdateTime(DateUtils.getNowDate());
+        final int i = offlineOrderMapper.updateOfflineOrder(offlineOrder);
+        if(i > 0){
+            Member member = memberMapper.selectMemberById(offlineOrder.getMemberId());
+            BigDecimal beforeBalance = member.getBalance();
+            member.setBalance(member.getBalance().add(offlineOrder.getMoney()));
+            member.setUpdateTime(DateUtils.getNowDate());
+            memberMapper.updateMember(member);
+            //删除余额消费记录
+            balanceInfoMapper.deleteBalanceInfoByOrderIdAndOrderType(offlineOrder.getId(), "2");
+        }
+        return i;
+    }
+
     /**
      * 批量删除线下订单
      *

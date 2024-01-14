@@ -44,6 +44,13 @@ public interface IOfflineOrderService {
     public int updateOfflineOrder(OfflineOrder offlineOrder);
 
     /**
+     * 申请退款
+     * @param offlineOrder
+     * @return
+     */
+    int balanceRefund(OfflineOrder offlineOrder);
+
+    /**
      * 批量删除线下订单
      *
      * @param ids 需要删除的线下订单主键集合

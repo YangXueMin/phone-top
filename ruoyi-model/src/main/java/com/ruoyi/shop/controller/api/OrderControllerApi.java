@@ -1,6 +1,9 @@
 package com.ruoyi.shop.controller.api;
 
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
+import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
@@ -53,9 +56,9 @@ public class OrderControllerApi extends BaseController {
     @PostMapping("/create")
     public AjaxResult create(@RequestBody Order order) {
         //如果是用余额支付，判断用户余额是否充足
-        if(StringUtils.equals("1",order.getPayType())){
+        if (StringUtils.equals("1", order.getPayType())) {
             Member member = memberService.selectMemberById(order.getMemberId());
-            if(member.getBalance().compareTo(order.getMoney()) < 0){
+            if (member.getBalance().compareTo(order.getMoney()) < 0) {
                 return warn("余额不足，请充值");
             }
         }
@@ -69,6 +72,10 @@ public class OrderControllerApi extends BaseController {
     @ApiOperation("发起支付")
     @PostMapping("/pay")
     public AjaxResult pay(@RequestBody Order order) {
+        order = orderService.selectOrderById(order.getId());
+        if (order == null) {
+            return warn("订单不存在");
+        }
         WxPayMpOrderResult pay = orderService.pay(order);
         return success(pay);
     }
@@ -81,4 +88,56 @@ public class OrderControllerApi extends BaseController {
     public String payOrderNotify(@RequestBody String xmlData) {
         return orderService.payOrderNotify(xmlData);
     }
+
+
+    /**
+     * 退款
+     *
+     * @param order
+     * @return
+     */
+    @ApiOperation(value = "退款")
+    @PostMapping("/refund")
+    public AjaxResult refund(@RequestBody Order order) {
+        order = orderService.selectOrderById(order.getId());
+        if (order == null) {
+            return warn("订单不存在");
+        }
+        if (!StringUtils.equals("1", order.getOrderStatus())) {
+            return warn("订单已使用或已退款");
+        }
+        return success(orderService.refund(order));
+    }
+
+    /**
+     * 余额退款
+     *
+     * @param order
+     * @return
+     */
+    @ApiOperation(value = "余额退款")
+    @PostMapping("/balanceRefund")
+    public AjaxResult balanceRefund(@RequestBody Order order) {
+        order = orderService.selectOrderById(order.getId());
+        if (order == null) {
+            return warn("订单不存在");
+        }
+        if (!StringUtils.equals("1", order.getOrderStatus())) {
+            return warn("订单已使用或已退款");
+        }
+        return success(orderService.balanceRefund(order));
+    }
+
+    /**
+     * 退款回调通知
+     *
+     * @param xmlData
+     * @return
+     */
+    @ApiOperation(value = "退款回调通知")
+    @PostMapping("/notify/refund")
+    public String refundNotify(@RequestBody String xmlData) {
+        return orderService.refundNotify(xmlData);
+    }
+
 }

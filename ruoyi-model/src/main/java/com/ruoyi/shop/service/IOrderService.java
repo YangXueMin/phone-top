@@ -2,7 +2,9 @@ package com.ruoyi.shop.service;
 
 import java.util.List;
 
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.ruoyi.shop.domain.Order;
 
 /**
@@ -11,8 +13,7 @@ import com.ruoyi.shop.domain.Order;
  * @author ruoyi
  * @date 2024-01-10
  */
-public interface IOrderService
-{
+public interface IOrderService {
     /**
      * 查询订单记录
      *
@@ -60,6 +61,30 @@ public interface IOrderService
      * @return 结果
      */
     public String payOrderNotify(String xmlData);
+
+    /**
+     * 退款
+     *
+     * @param order
+     * @return
+     */
+    public WxPayRefundResult refund(Order order);
+
+    /**
+     * 余额退款
+     *
+     * @param order
+     * @return
+     */
+    public int balanceRefund(Order order);
+
+    /**
+     * 退款通知
+     *
+     * @param xmlData
+     * @return
+     */
+    public String refundNotify(String xmlData);
 
     /**
      * 修改订单记录

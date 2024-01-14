@@ -3,6 +3,7 @@ package com.ruoyi.shop.controller.api;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.domain.RechargeOrder;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
 import com.ruoyi.shop.service.IRechargeOrderCouponService;
@@ -75,6 +76,7 @@ public class RechargeOrderControllerApi extends BaseController {
     @ApiOperation("发起支付")
     @PostMapping("/pay")
     public AjaxResult pay(@RequestBody RechargeOrder rechargeOrder) {
+        rechargeOrder = rechargeOrderService.selectRechargeOrderById(rechargeOrder.getId());
         WxPayMpOrderResult pay = rechargeOrderService.pay(rechargeOrder);
         return success(pay);
     }
@@ -87,4 +89,31 @@ public class RechargeOrderControllerApi extends BaseController {
     public String payOrderNotify(@RequestBody String xmlData) {
         return rechargeOrderService.payOrderNotify(xmlData);
     }
+
+    /**
+     * 退款
+     * @param rechargeOrder
+     * @return
+     */
+    @ApiOperation(value = "退款")
+    @PostMapping("/refund")
+    public AjaxResult refund(@RequestBody RechargeOrder rechargeOrder){
+        rechargeOrder = rechargeOrderService.selectRechargeOrderById(rechargeOrder.getId());
+        if(rechargeOrder == null){
+            return warn("订单不存在");
+        }
+        return success(rechargeOrderService.refund(rechargeOrder));
+    }
+
+    /**
+     * 退款回调通知
+     * @param xmlData
+     * @return
+     */
+    @ApiOperation(value = "退款回调通知")
+    @PostMapping("/notify/refund")
+    public String refundNotify(@RequestBody String xmlData){
+        return rechargeOrderService.refundNotify(xmlData);
+    }
+
 }

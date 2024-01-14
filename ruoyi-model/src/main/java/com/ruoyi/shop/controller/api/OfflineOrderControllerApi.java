@@ -2,6 +2,7 @@ package com.ruoyi.shop.controller.api;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.OfflineOrder;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.service.IOfflineOrderService;
@@ -44,5 +45,21 @@ public class OfflineOrderControllerApi extends BaseController {
     public AjaxResult confirm(@RequestBody OfflineOrder offlineOrder) {
         final int i = offlineOrderService.updateOfflineOrder(offlineOrder);
         return success(i);
+    }
+
+    /**
+     * 发起退款
+     */
+    @ApiOperation("发起退款")
+    @PostMapping("/balanceRefund")
+    public AjaxResult balanceRefund(@RequestBody OfflineOrder offlineOrder) {
+        offlineOrder = offlineOrderService.selectOfflineOrderById(offlineOrder.getId());
+        if (offlineOrder == null) {
+            return warn("订单不存在");
+        }
+        if (!StringUtils.equals("1", offlineOrder.getOrderStatus())) {
+            return warn("订单已使用或已退款");
+        }
+        return success(offlineOrderService.balanceRefund(offlineOrder));
     }
 }

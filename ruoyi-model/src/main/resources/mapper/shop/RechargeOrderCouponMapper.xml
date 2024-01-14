@@ -155,7 +155,7 @@
 
     <update id="updateRechargeOrderCouponPayStatusByRechargeId" parameterType="string">
         update shop_recharge_order_coupon
-            pay_status = 2
+            pay_status = #{payStatus}
         where id = #{id}
     </update>
 
