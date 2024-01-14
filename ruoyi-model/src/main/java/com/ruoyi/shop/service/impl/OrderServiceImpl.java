@@ -14,14 +14,8 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.shop.domain.Order;
-import com.ruoyi.shop.domain.OrderDetails;
-import com.ruoyi.shop.domain.RechargeOrderCoupon;
-import com.ruoyi.shop.domain.ShopInfo;
-import com.ruoyi.shop.mapper.OrderDetailsMapper;
-import com.ruoyi.shop.mapper.OrderMapper;
-import com.ruoyi.shop.mapper.RechargeOrderCouponMapper;
-import com.ruoyi.shop.mapper.ShopInfoMapper;
+import com.ruoyi.shop.domain.*;
+import com.ruoyi.shop.mapper.*;
 import com.ruoyi.shop.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +42,10 @@ public class OrderServiceImpl implements IOrderService {
     private WechatConfiguration wechatConfiguration;
     @Autowired
     private ShopInfoMapper shopInfoMapper;
+    @Autowired
+    private BalanceInfoMapper balanceInfoMapper;
+    @Autowired
+    private MemberMapper memberMapper;
 
     /**
      * 查询订单记录
@@ -102,6 +100,14 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int insertOrder(Order order) {
+        if (StringUtils.equals("1", order.getPayType())) {
+            order.setOrderStatus("2");
+            order.setCancelStatus("1");
+            order.setPayTime(DateUtils.dateTimeNow());
+        } else {
+            order.setOrderStatus("1");
+            order.setCancelStatus("1");
+        }
         order.setCreateTime(DateUtils.getNowDate());
         order.setOrderNumber(SnowflakeGenerator.generateOrderNumber());
         int i = orderMapper.insertOrder(order);
@@ -124,6 +130,17 @@ public class OrderServiceImpl implements IOrderService {
                         rechargeOrderCouponMapper.updateRechargeOrderCoupon(rechargeOrderCoupon);
                     }
                 }
+            }
+            if (StringUtils.equals("1", order.getPayType())) {
+                Member member = memberMapper.selectMemberById(order.getMemberId());
+                BigDecimal beforeBalance = member.getBalance();
+                member.setBalance(member.getBalance().subtract(order.getMoney()));
+                member.setUpdateTime(DateUtils.getNowDate());
+                memberMapper.updateMember(member);
+                //添加余额消费记录
+                BalanceInfo balanceInfo = new BalanceInfo(order.getMemberId(), "1", order.getId(), beforeBalance, member.getBalance(), order.getMoney());
+                balanceInfo.setCreateTime(DateUtils.getNowDate());
+                balanceInfoMapper.insertBalanceInfo(balanceInfo);
             }
         }
         return i;
@@ -180,7 +197,7 @@ public class OrderServiceImpl implements IOrderService {
                     Order order = orderList.get(0);
                     order.setOrderStatus("2");
                     order.setCancelStatus("1");
-                    order.setPayType("1");
+                    order.setPayType("2");
                     order.setPayTime(notifyResult.getTimeEnd());
                     order.setPayResult(JSON.toJSONString(notifyResult));
                     order.setUpdateTime(DateUtils.getNowDate());

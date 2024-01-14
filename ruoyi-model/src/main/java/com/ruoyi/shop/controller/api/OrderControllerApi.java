@@ -3,7 +3,10 @@ package com.ruoyi.shop.controller.api;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
+import com.ruoyi.shop.service.IMemberService;
 import com.ruoyi.shop.service.IOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 public class OrderControllerApi extends BaseController {
     @Autowired
     private IOrderService orderService;
+    @Autowired
+    private IMemberService memberService;
 
     /**
      * 获取订单列表
@@ -47,6 +52,13 @@ public class OrderControllerApi extends BaseController {
     @ApiOperation("创建订单")
     @PostMapping("/create")
     public AjaxResult create(@RequestBody Order order) {
+        //如果是用余额支付，判断用户余额是否充足
+        if(StringUtils.equals("1",order.getPayType())){
+            Member member = memberService.selectMemberById(order.getMemberId());
+            if(member.getBalance().compareTo(order.getMoney()) < 0){
+                return warn("余额不足，请充值");
+            }
+        }
         final int i = orderService.insertOrder(order);
         return success(i);
     }

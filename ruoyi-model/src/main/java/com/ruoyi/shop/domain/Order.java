@@ -95,7 +95,7 @@ public class Order extends BaseEntity {
      * 支付方式
      */
     @Excel(name = "支付方式")
-    @ApiModelProperty("支付方式")
+    @ApiModelProperty("支付方式 （余额支付：1，微信支付：2）")
     private String payType;
 
     /**
