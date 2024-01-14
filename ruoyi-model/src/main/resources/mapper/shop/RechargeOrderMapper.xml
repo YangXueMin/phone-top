@@ -19,42 +19,58 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <association property="shopCard"    column="card_id" javaType="ShopCard" resultMap="ShopCardResult" />
+    </resultMap>
+
+    <resultMap type="ShopCard" id="ShopCardResult">
+        <result property="id"    column="card_id"    />
+        <result property="title"    column="title"    />
+        <result property="money"    column="money"    />
+        <result property="picture"    column="picture"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectRechargeOrderVo">
-        select id,
-               order_no,
-               member_id,
-               card_id,
-               money,
-               wechat_order,
-               order_status,
-               pay_type,
-               pay_time,
-               pay_result,
-               create_by,
-               create_time,
-               update_by,
-               update_time
-        from shop_recharge_order
+        select a.id,
+               a.order_no,
+               a.member_id,
+               a.card_id,
+               a.money,
+               a.wechat_order,
+               a.order_status,
+               a.pay_type,
+               a.pay_time,
+               a.pay_result,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               c.title,
+               c.money,
+               c.picture,
+               c.content,
+               c.status
+        from shop_recharge_order a
+        left join shop_card c ON a.card_id = c.id
     </sql>
 
     <select id="selectRechargeOrderList" parameterType="RechargeOrder" resultMap="RechargeOrderResult">
         <include refid="selectRechargeOrderVo"/>
         <where>
-            <if test="orderNo != null  and orderNo != ''">and order_no = #{orderNo}</if>
-            <if test="memberId != null ">and member_id = #{memberId}</if>
-            <if test="cardId != null ">and card_id = #{cardId}</if>
-            <if test="money != null ">and money = #{money}</if>
-            <if test="wechatOrder != null  and wechatOrder != ''">and wechat_order = #{wechatOrder}</if>
-            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
-            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
+            <if test="orderNo != null  and orderNo != ''">and a.order_no = #{orderNo}</if>
+            <if test="memberId != null ">and a.member_id = #{memberId}</if>
+            <if test="cardId != null ">and a.card_id = #{cardId}</if>
+            <if test="money != null ">and a.money = #{money}</if>
+            <if test="wechatOrder != null  and wechatOrder != ''">and a.wechat_order = #{wechatOrder}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and a.order_status = #{orderStatus}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
         </where>
     </select>
 
     <select id="selectRechargeOrderById" parameterType="Long" resultMap="RechargeOrderResult">
         <include refid="selectRechargeOrderVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <select id="selectOrderByOrderNo" parameterType="string" resultMap="RechargeOrderResult">

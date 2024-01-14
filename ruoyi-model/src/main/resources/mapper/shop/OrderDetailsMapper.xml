@@ -7,41 +7,93 @@
     <resultMap type="OrderDetails" id="OrderDetailsResult">
         <result property="id"    column="id"    />
         <result property="orderId"    column="order_id"    />
-        <result property="shopId"    column="shop_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="specsId"    column="specs_id"    />
         <result property="number"    column="number"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="goods"    column="goods_id" javaType="Goods" resultMap="GoodsResult" />
+        <association property="goodsSpecs"    column="specs_id" javaType="GoodsSpecs" resultMap="GoodsSpecsResult" />
+    </resultMap>
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="goods_id"    />
+        <result property="companyGoodsId"    column="company_goods_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="name"    column="name"    />
+        <result property="describe"    column="describe_"    />
+        <result property="classId"    column="class_id"    />
+        <result property="goodsLabel"    column="goods_label"    />
+        <result property="pictures"    column="pictures"    />
+        <result property="attributeList"    column="attribute_list"    />
+        <result property="deliveryType"    column="delivery_type"    />
+        <result property="isLimit"    column="is_limit"    />
+        <result property="limitType"    column="limit_type"    />
+        <result property="limitNum"    column="limit_num"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap type="GoodsSpecs" id="GoodsSpecsResult">
+        <result property="id"    column="specs_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsSpecs"    column="goods_specs"    />
+        <result property="goodsStock"    column="goods_stock"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="goodsDiscount"    column="goods_discount"    />
+        <result property="goodsNumber"    column="goods_number"    />
     </resultMap>
 
     <sql id="selectOrderDetailsVo">
         select
-            id,
-            order_id,
-            shop_id,
-            number,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from shop_order_details
+            a.id,
+            a.order_id,
+            a.goods_id,
+            a.specs_id,
+            a.number,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            g.company_goods_id,
+            g.shop_id,
+            g.name,
+            g.describe_,
+            g.class_id,
+            g.goods_label,
+            g.pictures,
+            g.attribute_list,
+            g.delivery_type,
+            g.is_limit,
+            g.limit_type,
+            g.limit_num,
+            g.status,
+            gs.goods_specs,
+            gs.goods_stock,
+            gs.goods_price,
+            gs.goods_discount,
+            gs.goods_number
+        from shop_order_details a
+        left join shop_goods g ON a.goods_id = g.id
+        left join shop_goods_specs gs ON gs.id = a.specs_id
     </sql>
 
     <select id="selectOrderDetailsList" parameterType="OrderDetails" resultMap="OrderDetailsResult">
         <include refid="selectOrderDetailsVo"/>
         <where>
-            <if test="orderId != null "> and order_id = #{orderId}</if>
-            <if test="shopId != null "> and shop_id = #{shopId}</if>
-            <if test="number != null "> and number = #{number}</if>
+            <if test="orderId != null "> and a.order_id = #{orderId}</if>
+            <if test="goodsId != null "> and a.goods_id = #{goodsId}</if>
+            <if test="specsId != null "> and a.specs_id = #{specsId}</if>
+            <if test="number != null "> and a.number = #{number}</if>
         </where>
     </select>
 
     <select id="selectOrderDetailsById" parameterType="Long" resultMap="OrderDetailsResult">
         <include refid="selectOrderDetailsVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <select id="selectOrderDetailsByOrderId" parameterType="Long" resultMap="OrderDetailsResult">
@@ -53,7 +105,8 @@
         insert into shop_order_details
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
-            <if test="shopId != null">shop_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="specsId != null">specs_id,</if>
             <if test="number != null">number,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -63,7 +116,8 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
-            <if test="shopId != null">#{shopId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="specsId != null">#{specsId},</if>
             <if test="number != null">#{number},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -77,7 +131,8 @@
         update shop_order_details
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
-            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="specsId != null">specs_id = #{specsId},</if>
             <if test="number != null">number = #{number},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

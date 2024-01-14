@@ -43,6 +43,13 @@ public class Order extends BaseEntity {
     private Long memberId;
 
     /**
+     * 订单类型
+     */
+    @Excel(name = "订单类型")
+    @ApiModelProperty("订单类型 （普通订单：1，会员日订单：2，活动订单：3）")
+    private String orderType;
+
+    /**
      * 活动ID
      */
     @Excel(name = "活动ID")
@@ -137,7 +144,11 @@ public class Order extends BaseEntity {
     /**
      * 订单详情
      */
+    @ApiModelProperty("订单详情")
     private List<OrderDetails> detailsList;
+
+    @ApiModelProperty("店铺信息")
+    private ShopInfo shopInfo;
 
     public void setId(Long id) {
         this.id = id;
@@ -271,7 +282,23 @@ public class Order extends BaseEntity {
         return detailsList;
     }
 
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+
     public void setDetailsList(List<OrderDetails> detailsList) {
         this.detailsList = detailsList;
+    }
+
+    public ShopInfo getShopInfo() {
+        return shopInfo;
+    }
+
+    public void setShopInfo(ShopInfo shopInfo) {
+        this.shopInfo = shopInfo;
     }
 }

@@ -35,7 +35,14 @@ public class OrderDetails extends BaseEntity {
      */
     @Excel(name = "商品ID")
     @ApiModelProperty("商品ID")
-    private Long shopId;
+    private Long goodsId;
+
+    /**
+     * 规格ID
+     */
+    @Excel(name = "规格ID")
+    @ApiModelProperty("规格ID")
+    private Long specsId;
 
     /**
      * 数量
@@ -43,6 +50,12 @@ public class OrderDetails extends BaseEntity {
     @Excel(name = "数量")
     @ApiModelProperty("数量")
     private Long number;
+
+    @ApiModelProperty("商品信息")
+    private Goods goods;
+
+    @ApiModelProperty("规格")
+    private GoodsSpecs goodsSpecs;
 
     public void setId(Long id) {
         this.id = id;
@@ -60,12 +73,20 @@ public class OrderDetails extends BaseEntity {
         return orderId;
     }
 
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
+    public Long getGoodsId() {
+        return goodsId;
     }
 
-    public Long getShopId() {
-        return shopId;
+    public void setGoodsId(Long goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public Long getSpecsId() {
+        return specsId;
+    }
+
+    public void setSpecsId(Long specsId) {
+        this.specsId = specsId;
     }
 
     public void setNumber(Long number) {
@@ -76,4 +97,19 @@ public class OrderDetails extends BaseEntity {
         return number;
     }
 
+    public Goods getGoods() {
+        return goods;
+    }
+
+    public void setGoods(Goods goods) {
+        this.goods = goods;
+    }
+
+    public GoodsSpecs getGoodsSpecs() {
+        return goodsSpecs;
+    }
+
+    public void setGoodsSpecs(GoodsSpecs goodsSpecs) {
+        this.goodsSpecs = goodsSpecs;
+    }
 }

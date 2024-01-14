@@ -89,6 +89,9 @@ public class RechargeOrder extends BaseEntity {
     @ApiModelProperty("支付记录")
     private String payResult;
 
+    @ApiModelProperty("卡券信息")
+    private ShopCard shopCard;
+
     @ApiModelProperty("优惠券集合")
     private List<RechargeOrderCoupon> couponList;
 
@@ -171,6 +174,14 @@ public class RechargeOrder extends BaseEntity {
 
     public void setPayResult(String payResult) {
         this.payResult = payResult;
+    }
+
+    public ShopCard getShopCard() {
+        return shopCard;
+    }
+
+    public void setShopCard(ShopCard shopCard) {
+        this.shopCard = shopCard;
     }
 
     public List<RechargeOrderCoupon> getCouponList() {
