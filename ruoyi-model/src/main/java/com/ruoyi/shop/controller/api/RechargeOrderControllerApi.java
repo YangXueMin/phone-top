@@ -42,6 +42,23 @@ public class RechargeOrderControllerApi extends BaseController {
         return success(iRechargeOrderCouponService.getOrderCouponNumber());
     }
 
+
+    @ApiOperation("获取充值订单列表")
+    @PostMapping("/findList")
+    public AjaxResult findList(@RequestBody RechargeOrder rechargeOrder){
+        return success(rechargeOrderService.selectRechargeOrderList(rechargeOrder));
+    }
+
+    /**
+     * 获取订单详情
+     */
+    @ApiOperation("获取订单详情")
+    @GetMapping("/get")
+    public AjaxResult get(@RequestParam("id") Long id) {
+        return success(rechargeOrderService.selectRechargeOrderById(id));
+    }
+
+
     /**
      * 创建订单
      */
