@@ -75,7 +75,7 @@ public class ShopActivityServiceImpl implements IShopActivityService {
                         }
                     }
                 }
-                shopActivity.setActivityGoodsList(activityGoodsList);
+                activity.setActivityGoodsList(activityGoodsList);
             }
         }
         return list;
