@@ -9,10 +9,7 @@ import com.ruoyi.shop.service.IOfflineOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yangxuemin
@@ -26,6 +23,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class OfflineOrderControllerApi extends BaseController {
     @Autowired
     private IOfflineOrderService offlineOrderService;
+
+    /**
+     * 获取订单列表
+     */
+    @ApiOperation("获取订单列表")
+    @PostMapping("/findList")
+    public AjaxResult findList(@RequestBody OfflineOrder offlineOrder) {
+        return success(offlineOrderService.selectOfflineOrderListApi(offlineOrder));
+    }
+
+    /**
+     * 获取订单详情
+     */
+    @ApiOperation("获取订单详情")
+    @GetMapping("/get")
+    public AjaxResult get(@RequestParam("id") Long id) {
+        return success(offlineOrderService.selectOfflineOrderById(id));
+    }
+
 
     /**
      * 创建订单

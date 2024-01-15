@@ -37,7 +37,7 @@ public class OrderControllerApi extends BaseController {
     @ApiOperation("获取订单列表")
     @PostMapping("/findList")
     public AjaxResult findList(@RequestBody Order order) {
-        return success(orderService.selectOrderList(order));
+        return success(orderService.selectOrderListApi(order));
     }
 
     /**

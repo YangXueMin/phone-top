@@ -56,6 +56,17 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
     }
 
     /**
+     * 查询线下订单列表
+     *
+     * @param offlineOrder 线下订单
+     * @return 线下订单
+     */
+    @Override
+    public List<OfflineOrder> selectOfflineOrderListApi(OfflineOrder offlineOrder) {
+        return offlineOrderMapper.selectOfflineOrderList(offlineOrder);
+    }
+
+    /**
      * 新增线下订单
      *
      * @param offlineOrder 线下订单
