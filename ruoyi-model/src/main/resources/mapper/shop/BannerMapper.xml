@@ -58,6 +58,7 @@
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectBannerListApi" parameterType="Banner" resultMap="BannerResult">

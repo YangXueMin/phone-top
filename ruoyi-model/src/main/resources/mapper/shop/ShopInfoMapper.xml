@@ -85,6 +85,7 @@
             <if test="status != null  and status != ''"> and status = #{status}</if>
             ${params.shopScope}
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectShopInfoById" parameterType="Long" resultMap="ShopInfoResult">

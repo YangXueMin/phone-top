@@ -66,6 +66,7 @@
             <if test="orderStatus != null  and orderStatus != ''"> and a.order_status = #{orderStatus}</if>
             <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
         </where>
+        order by a.create_time DESC
     </select>
 
     <select id="selectRechargeOrderById" parameterType="Long" resultMap="RechargeOrderResult">

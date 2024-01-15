@@ -40,6 +40,7 @@
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectShopContentById" parameterType="Long" resultMap="ShopContentResult">

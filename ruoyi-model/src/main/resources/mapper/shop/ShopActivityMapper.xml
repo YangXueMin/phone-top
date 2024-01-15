@@ -44,6 +44,7 @@
             <if test="activityTime != null ">and activity_time = #{activityTime}</if>
             <if test="status != null  and status != ''">and status = #{status}</if>
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectShopActivityById" parameterType="Long" resultMap="ShopActivityResult">

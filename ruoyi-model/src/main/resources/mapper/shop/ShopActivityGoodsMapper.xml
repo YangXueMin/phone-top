@@ -73,6 +73,7 @@
             <if test="buyingPrice != null ">and a.buying_price = #{buyingPrice}</if>
             <if test="buyingNumber != null ">and a.buying_number = #{buyingNumber}</if>
         </where>
+        order by a.create_time DESC
     </select>
 
     <select id="selectShopActivityGoodsById" parameterType="Long" resultMap="ShopActivityGoodsResult">

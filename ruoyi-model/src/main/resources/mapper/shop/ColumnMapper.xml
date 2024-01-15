@@ -52,6 +52,7 @@
             <if test="isSkip != null  and isSkip != ''"> and is_skip = #{isSkip}</if>
             <if test="interlinkage != null  and interlinkage != ''"> and interlinkage = #{interlinkage}</if>
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectColumnById" parameterType="Long" resultMap="ColumnResult">

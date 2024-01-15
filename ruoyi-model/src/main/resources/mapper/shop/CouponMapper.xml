@@ -59,6 +59,7 @@
             <if test="limitCollar != null "> and limit_collar = #{limitCollar}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectCouponById" parameterType="Long" resultMap="CouponResult">

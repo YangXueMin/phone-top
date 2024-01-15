@@ -63,6 +63,7 @@
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and login_date = #{loginDate}</if>
         </where>
+        order by create_time DESC
     </select>
 
     <select id="selectMemberListByOpenId" parameterType="Member" resultMap="MemberResult">

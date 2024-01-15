@@ -65,6 +65,7 @@
             <if test="limitNum != null "> and a.limit_num = #{limitNum}</if>
             <if test="status != null "> and a.status = #{status}</if>
         </where>
+        order by a.create_time DESC
     </select>
 
     <select id="selectGoodsListByIdIn" parameterType="String" resultMap="GoodsResult">

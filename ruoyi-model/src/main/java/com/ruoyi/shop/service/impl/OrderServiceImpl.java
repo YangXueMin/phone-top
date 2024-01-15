@@ -73,7 +73,7 @@ public class OrderServiceImpl implements IOrderService {
      * @return 订单记录
      */
     @Override
-    @ShopScope()
+    @ShopScope(shopAlias = "a")
     public List<Order> selectOrderList(Order order) {
         List<Order> orderList = orderMapper.selectOrderList(order);
         if (orderList.size() > 0) {

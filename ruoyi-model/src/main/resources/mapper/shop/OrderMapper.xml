@@ -117,6 +117,7 @@
             <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
             ${params.shopScope}
         </where>
+        order by a.create_time DESC
     </select>
 
     <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">

@@ -1,5 +1,6 @@
 package com.ruoyi.shop.service.impl;
 
+import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -49,6 +50,7 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
      * @return 线下订单
      */
     @Override
+    @ShopScope(shopAlias = "a")
     public List<OfflineOrder> selectOfflineOrderList(OfflineOrder offlineOrder) {
         return offlineOrderMapper.selectOfflineOrderList(offlineOrder);
     }
