@@ -47,6 +47,7 @@ public class CommonController {
     @GetMapping("common/holiday")
     public void fileDownload() {
         try {
+            holidayMapper.deleteAll();
             final List<Holiday> holidays = HolidayUtils.getHolidays();
             holidayMapper.insertAll(holidays);
         } catch (Exception e) {
