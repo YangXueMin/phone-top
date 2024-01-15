@@ -109,7 +109,7 @@ public class CommonController {
             // 上传并返回新文件名称
             String extension = FileUploadUtils.getExtension(file);
             String param = "";
-            boolean containsValue = Arrays.asList(MimeTypeUtils.IMAGE_EXTENSION_SCRIPT).contains(extension);
+            boolean containsValue = Arrays.asList(MimeTypeUtils.IMAGE_EXTENSION).contains(extension);
             if (containsValue) {
                 param = "?imageMogr2/format/webp";
             }
