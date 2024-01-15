@@ -10,10 +10,7 @@ import com.ruoyi.shop.service.IShopContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -56,9 +53,18 @@ public class ContentControllerApi extends BaseController {
      * 查询内容列表
      */
     @ApiOperation("查询内容列表")
-    @GetMapping("/list")
+    @PostMapping("/list")
     public AjaxResult list(@RequestBody ShopContent shopContent) {
         List<ShopContent> list = shopContentService.selectShopContentList(shopContent);
         return success(list);
+    }
+
+    /**
+     * 根据主键查询内容
+     */
+    @ApiOperation("根据主键查询内容")
+    @GetMapping("/get")
+    public AjaxResult get(@RequestParam("id")Long id) {
+        return success(shopContentService.selectShopContentById(id));
     }
 }
