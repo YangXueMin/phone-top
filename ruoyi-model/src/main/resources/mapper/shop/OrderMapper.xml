@@ -28,6 +28,8 @@
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <association property="shopInfo"    column="shop_id" javaType="ShopInfo" resultMap="ShopInfoResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+        <association property="sysUser"    column="member_id" javaType="Member" resultMap="MemberResult" />
     </resultMap>
 
     <resultMap type="ShopInfo" id="ShopInfoResult">
@@ -50,6 +52,27 @@
         <result property="securityFile"    column="security_file"    />
         <result property="naturalFile"    column="natural_file"    />
         <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
+        <result property="userId"    column="memberUserId"    />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="phonenumber"  column="phonenumber"  />
     </resultMap>
 
     <sql id="selectOrderVo">
@@ -93,9 +116,26 @@
             s.is_sync_natural,
             s.security_file,
             s.natural_file,
-            s.status
+            s.status,
+            m.name AS memberName,
+            m.avatar AS memberAvatar,
+            m.number,
+            m.mobile AS memberMobile,
+            m.sex,
+            m.birthday,
+            m.balance,
+            m.open_id,
+            m.is_member,
+            m.user_id AS memberUserId,
+            u.user_name,
+            u.nick_name,
+            u.email,
+            u.avatar,
+            u.phonenumber
         from shop_order a
         left join shop_info s ON a.shop_id = s.id
+        left join shop_member m ON m.id = a.member_id
+        left join sys_user u ON u.user_id = a.user_id
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">

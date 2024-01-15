@@ -3,6 +3,8 @@ package com.ruoyi.shop.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -147,8 +149,23 @@ public class Order extends BaseEntity {
     @ApiModelProperty("订单详情")
     private List<OrderDetails> detailsList;
 
+    /**
+     * 店铺信息
+     */
     @ApiModelProperty("店铺信息")
     private ShopInfo shopInfo;
+
+    /**
+     * 会员信息
+     */
+    @ApiModelProperty("会员信息")
+    private Member member;
+
+    /**
+     * 核销用户信息
+     */
+    @ApiModelProperty("核销用户信息")
+    private SysUser sysUser;
 
     public void setId(Long id) {
         this.id = id;
@@ -300,5 +317,21 @@ public class Order extends BaseEntity {
 
     public void setShopInfo(ShopInfo shopInfo) {
         this.shopInfo = shopInfo;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public SysUser getSysUser() {
+        return sysUser;
+    }
+
+    public void setSysUser(SysUser sysUser) {
+        this.sysUser = sysUser;
     }
 }

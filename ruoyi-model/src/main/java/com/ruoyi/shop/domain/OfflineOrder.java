@@ -2,6 +2,7 @@ package com.ruoyi.shop.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.entity.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -97,6 +98,12 @@ public class OfflineOrder extends BaseEntity {
     @ApiModelProperty("店铺信息")
     private ShopInfo shopInfo;
 
+    /**
+     * 会员信息
+     */
+    @ApiModelProperty("会员信息")
+    private Member member;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -191,5 +198,13 @@ public class OfflineOrder extends BaseEntity {
 
     public void setShopInfo(ShopInfo shopInfo) {
         this.shopInfo = shopInfo;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }
