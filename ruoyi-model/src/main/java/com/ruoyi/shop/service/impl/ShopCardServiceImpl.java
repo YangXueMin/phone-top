@@ -1,17 +1,16 @@
 package com.ruoyi.shop.service.impl;
 
-import java.util.List;
-
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.shop.domain.CardCoupon;
+import com.ruoyi.shop.domain.ShopCard;
 import com.ruoyi.shop.mapper.CardCouponMapper;
-import com.ruoyi.shop.mapper.CouponMapper;
+import com.ruoyi.shop.mapper.ShopCardMapper;
+import com.ruoyi.shop.service.IShopCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.shop.mapper.ShopCardMapper;
-import com.ruoyi.shop.domain.ShopCard;
-import com.ruoyi.shop.service.IShopCardService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 储值卡Service业务层处理
@@ -25,8 +24,6 @@ public class ShopCardServiceImpl implements IShopCardService {
     private ShopCardMapper shopCardMapper;
     @Autowired
     private CardCouponMapper cardCouponMapper;
-    @Autowired
-    private CouponMapper couponMapper;
 
     /**
      * 查询储值卡
@@ -37,7 +34,7 @@ public class ShopCardServiceImpl implements IShopCardService {
     @Override
     public ShopCard selectShopCardById(Long id) {
         ShopCard shopCard = shopCardMapper.selectShopCardById(id);
-        if(shopCard != null){
+        if (shopCard != null) {
             List<CardCoupon> cardCouponList = cardCouponMapper.selectCardCouponByCardId(id);
             shopCard.setCardCouponList(cardCouponList);
         }
@@ -52,7 +49,13 @@ public class ShopCardServiceImpl implements IShopCardService {
      */
     @Override
     public List<ShopCard> selectShopCardList(ShopCard shopCard) {
-        return shopCardMapper.selectShopCardList(shopCard);
+        List<ShopCard> cardList = shopCardMapper.selectShopCardList(shopCard);
+        if (cardList != null && cardList.size() > 0) {
+            for (ShopCard card : cardList) {
+                card.setCardCouponList(cardCouponMapper.selectCardCouponByCardId(card.getId()));
+            }
+        }
+        return cardList;
     }
 
     /**
