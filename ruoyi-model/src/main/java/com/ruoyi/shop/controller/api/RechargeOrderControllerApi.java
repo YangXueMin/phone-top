@@ -32,21 +32,21 @@ public class RechargeOrderControllerApi extends BaseController {
 
     @ApiOperation("获取充值卡券集合")
     @PostMapping("/findOrderCouponList")
-    public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon){
-        final List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponMemberList(rechargeOrderCoupon);
+    public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon) {
+        List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponList(rechargeOrderCoupon);
         return success(rechargeOrderCouponList);
     }
 
     @ApiOperation("获取用户卡券数量")
     @GetMapping("/getOrderCouponNumber")
-    public AjaxResult getOrderCouponNumber(){
+    public AjaxResult getOrderCouponNumber() {
         return success(iRechargeOrderCouponService.getOrderCouponNumber());
     }
 
 
     @ApiOperation("获取充值订单列表")
     @PostMapping("/findList")
-    public AjaxResult findList(@RequestBody RechargeOrder rechargeOrder){
+    public AjaxResult findList(@RequestBody RechargeOrder rechargeOrder) {
         return success(rechargeOrderService.selectRechargeOrderList(rechargeOrder));
     }
 
@@ -92,14 +92,15 @@ public class RechargeOrderControllerApi extends BaseController {
 
     /**
      * 退款
+     *
      * @param rechargeOrder
      * @return
      */
     @ApiOperation(value = "退款")
     @PostMapping("/refund")
-    public AjaxResult refund(@RequestBody RechargeOrder rechargeOrder){
+    public AjaxResult refund(@RequestBody RechargeOrder rechargeOrder) {
         rechargeOrder = rechargeOrderService.selectRechargeOrderById(rechargeOrder.getId());
-        if(rechargeOrder == null){
+        if (rechargeOrder == null) {
             return warn("订单不存在");
         }
         return success(rechargeOrderService.refund(rechargeOrder));
@@ -107,12 +108,13 @@ public class RechargeOrderControllerApi extends BaseController {
 
     /**
      * 退款回调通知
+     *
      * @param xmlData
      * @return
      */
     @ApiOperation(value = "退款回调通知")
     @PostMapping("/notify/refund")
-    public String refundNotify(@RequestBody String xmlData){
+    public String refundNotify(@RequestBody String xmlData) {
         return rechargeOrderService.refundNotify(xmlData);
     }
 

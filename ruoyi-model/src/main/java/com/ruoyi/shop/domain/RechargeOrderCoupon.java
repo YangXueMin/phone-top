@@ -1,10 +1,13 @@
 package com.ruoyi.shop.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 充值订单与优惠券关联对象 shop_recharge_order_coupon
@@ -63,6 +66,10 @@ public class RechargeOrderCoupon extends BaseEntity {
 
     @ApiModelProperty("数量")
     private Integer num;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty("有效截止时间")
+    private Date endDate;
 
     public void setId(Long id) {
         this.id = id;
@@ -126,5 +133,13 @@ public class RechargeOrderCoupon extends BaseEntity {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

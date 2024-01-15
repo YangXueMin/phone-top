@@ -29,7 +29,11 @@ public class RechargeOrderCouponServiceImpl implements IRechargeOrderCouponServi
      */
     @Override
     public RechargeOrderCoupon selectRechargeOrderCouponById(Long id) {
-        return rechargeOrderCouponMapper.selectRechargeOrderCouponById(id);
+        RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponMapper.selectRechargeOrderCouponById(id);
+        if (rechargeOrderCoupon.getCoupon() != null) {
+            rechargeOrderCoupon.setEndDate(DateUtils.addDays(rechargeOrderCoupon.getCreateTime(), rechargeOrderCoupon.getCoupon().getTermValidity()));
+        }
+        return rechargeOrderCoupon;
     }
 
     /**
@@ -40,7 +44,15 @@ public class RechargeOrderCouponServiceImpl implements IRechargeOrderCouponServi
      */
     @Override
     public List<RechargeOrderCoupon> selectRechargeOrderCouponList(RechargeOrderCoupon rechargeOrderCoupon) {
-        return rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon);
+        List<RechargeOrderCoupon> rechargeOrderCouponList = rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon);
+        if (rechargeOrderCouponList != null && rechargeOrderCouponList.size() > 0) {
+            for (RechargeOrderCoupon orderCoupon : rechargeOrderCouponList) {
+                if (orderCoupon.getCoupon() != null) {
+                    orderCoupon.setEndDate(DateUtils.addDays(orderCoupon.getCreateTime(), orderCoupon.getCoupon().getTermValidity()));
+                }
+            }
+        }
+        return rechargeOrderCouponList;
     }
 
     /**
