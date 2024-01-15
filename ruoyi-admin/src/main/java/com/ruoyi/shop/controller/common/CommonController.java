@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.qcloud.cos.transfer.Upload;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.utils.file.TxCosUtils;
+import com.ruoyi.common.utils.qrCode.EwmEntity;
+import com.ruoyi.common.utils.qrCode.EwmUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.system.domain.Holiday;
 import com.ruoyi.system.mapper.HolidayMapper;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
@@ -43,6 +46,8 @@ public class CommonController {
     private ServerConfig serverConfig;
     @Autowired
     private HolidayMapper holidayMapper;
+    @Autowired
+    private EwmUtils ewmUtils;
 
     @GetMapping("common/holiday")
     public void fileDownload() {
@@ -150,6 +155,14 @@ public class CommonController {
         } catch (Exception e) {
             log.error("下载文件失败", e);
         }
+    }
+
+    /**
+     * 生成二维码
+     */
+    @PostMapping("/common/qrCode")
+    public AjaxResult qrCode(@RequestBody EwmEntity ewmEntity) {
+        return AjaxResult.success(ewmUtils.generateBase64(ewmEntity.getContent(), ewmEntity.getImageType()));
     }
 }
 
