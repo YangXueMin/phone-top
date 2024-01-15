@@ -1,5 +1,6 @@
 package com.ruoyi.system.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.ruoyi.system.domain.Holiday;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -26,6 +27,7 @@ public interface HolidayMapper {
      *
      * @return 结果
      */
+    @InterceptorIgnore(blockAttack = "true")
     public int deleteAll();
 
     /**
