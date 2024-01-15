@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.qcloud.cos.transfer.Upload;
+import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.utils.file.TxCosUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.system.domain.Holiday;
@@ -26,6 +27,7 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,7 +45,7 @@ public class CommonController {
     private HolidayMapper holidayMapper;
 
     @GetMapping("common/holiday")
-    public void fileDownload(){
+    public void fileDownload() {
         try {
             final List<Holiday> holidays = HolidayUtils.getHolidays();
             holidayMapper.insertAll(holidays);
@@ -105,12 +107,18 @@ public class CommonController {
     public AjaxResult uploadCosFile(MultipartFile file) throws Exception {
         try {
             // 上传并返回新文件名称
+            String extension = FileUploadUtils.getExtension(file);
+            String param = "";
+            boolean containsValue = Arrays.asList(MimeTypeUtils.IMAGE_EXTENSION_SCRIPT).contains(extension);
+            if (containsValue) {
+                param = "?imageMogr2/format/webp";
+            }
             String fileName = UUID.randomUUID() + file.getName();
             Upload upload = TxCosUtils.upload(fileName, file.getInputStream());
             if (upload != null) {
                 AjaxResult ajax = AjaxResult.success();
                 ajax.put("fileName", fileName);
-                ajax.put("url", TxCosUtils.URL + fileName);
+                ajax.put("url", TxCosUtils.URL + fileName + param);
                 return ajax;
             }
         } catch (Exception e) {

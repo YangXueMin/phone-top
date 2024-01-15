@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 会员日活动Service业务层处理
@@ -73,6 +74,7 @@ public class DayActivityServiceImpl implements IDayActivityService {
             }
             dayActivity.setGoodsList(goodsList);
         }
+        dayActivity.setGoodsIds(list.toArray(new Long[0]));
     }
 
     /**
