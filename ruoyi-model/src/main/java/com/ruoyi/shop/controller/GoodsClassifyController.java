@@ -1,6 +1,7 @@
 package com.ruoyi.shop.controller;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -74,6 +75,9 @@ public class GoodsClassifyController extends BaseController {
     @Log(title = "商品分类", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody GoodsClassify goodsClassify) {
+        if (UserConstants.NOT_UNIQUE.equals(goodsClassifyService.checkNameUnique(goodsClassify))) {
+            return error("新增分类'" + goodsClassify.getName() + "'失败，分类名称已存在");
+        }
         return toAjax(goodsClassifyService.insertGoodsClassify(goodsClassify));
     }
 
@@ -85,6 +89,12 @@ public class GoodsClassifyController extends BaseController {
     @Log(title = "商品分类", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody GoodsClassify goodsClassify) {
+        Long classId = goodsClassify.getClassId();
+        if (UserConstants.NOT_UNIQUE.equals(goodsClassifyService.checkNameUnique(goodsClassify))) {
+            return error("修改分类'" + goodsClassify.getName() + "'失败，分类名称已存在");
+        } else if (goodsClassify.getParentId().equals(classId)) {
+            return error("修改分类'" + goodsClassify.getName() + "'失败，上级分类不能是自己");
+        }
         return toAjax(goodsClassifyService.updateGoodsClassify(goodsClassify));
     }
 
@@ -92,12 +102,21 @@ public class GoodsClassifyController extends BaseController {
      * 删除商品分类
      */
     @ApiOperation("删除商品分类")
-    @ApiImplicitParam(name = "classIds", value = "ID数组", required = true, dataType = "Long[]", paramType = "path", dataTypeClass = Long.class)
+    @ApiImplicitParam(name = "classId", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('shop:classify:remove')")
     @Log(title = "商品分类", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{classIds}")
-    public AjaxResult remove(@PathVariable Long[] classIds) {
-        return toAjax(goodsClassifyService.deleteGoodsClassifyByClassIds(classIds));
+    @DeleteMapping("/{classId}")
+    public AjaxResult remove(@PathVariable Long classId) {
+        if (goodsClassifyService.hasChildByClassId(classId)) {
+            return warn("存在下级分类,不允许删除");
+        }
+        if (goodsClassifyService.checkClassifyExistGoods(classId)) {
+            return warn("分类下存在商品,不允许删除");
+        }
+        if (goodsClassifyService.checkClassifyExistCompanyGoods(classId)) {
+            return warn("分类下存在企业商品,不允许删除");
+        }
+        return toAjax(goodsClassifyService.deleteGoodsClassifyByClassId(classId));
     }
 
     /**

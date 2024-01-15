@@ -49,6 +49,16 @@
         where class_id = #{classId}
     </select>
 
+    <select id="hasChildByClassId" parameterType="Long" resultType="int">
+        select count(1) from shop_goods_classify
+        where del_flag = '0' and parent_id = #{classId} limit 1
+    </select>
+
+    <select id="checkNameUnique" resultMap="GoodsClassifyResult">
+        <include refid="selectGoodsClassifyVo"/>
+        where name=#{name} and parent_id = #{parentId} and del_flag = '0' limit 1
+    </select>
+
     <insert id="insertGoodsClassify" parameterType="GoodsClassify" useGeneratedKeys="true" keyProperty="classId">
         insert into shop_goods_classify
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -97,6 +107,14 @@
     <delete id="deleteGoodsClassifyByClassId" parameterType="Long">
         delete from shop_goods_classify where class_id = #{classId}
     </delete>
+
+    <select id="checkClassifyExistGoods" parameterType="Long" resultType="int">
+        select count(1) from shop_goods where class_id = #{classId}
+    </select>
+
+    <select id="checkClassifyExistCompanyGoods" parameterType="Long" resultType="int">
+        select count(1) from shop_company_goods where class_id = #{classId}
+    </select>
 
     <delete id="deleteGoodsClassifyByClassIds" parameterType="String">
         delete from shop_goods_classify where class_id in

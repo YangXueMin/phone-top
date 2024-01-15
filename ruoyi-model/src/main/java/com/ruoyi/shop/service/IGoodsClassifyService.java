@@ -3,6 +3,7 @@ package com.ruoyi.shop.service;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.TreeSelect;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.shop.domain.GoodsClassify;
 import com.ruoyi.shop.domain.ShopTreeSelect;
 
@@ -55,6 +56,22 @@ public interface IGoodsClassifyService
     public List<GoodsClassify> buildClassifyTree(List<GoodsClassify> classifyList);
 
     /**
+     * 是否存在部门子节点
+     *
+     * @param classId 分类ID
+     * @return 结果
+     */
+    public boolean hasChildByClassId(Long classId);
+
+    /**
+     * 校验名称是否唯一
+     *
+     * @param goodsClassify 分类信息
+     * @return 结果
+     */
+    public String checkNameUnique(GoodsClassify goodsClassify);
+
+    /**
      * 新增商品分类
      *
      * @param goodsClassify 商品分类
@@ -85,4 +102,20 @@ public interface IGoodsClassifyService
      * @return 结果
      */
     public int deleteGoodsClassifyByClassId(Long classId);
+
+    /**
+     * 查询分类是否存在商品
+     *
+     * @param classId 分类ID
+     * @return 结果 true 存在 false 不存在
+     */
+    public boolean checkClassifyExistGoods(Long classId);
+
+    /**
+     * 查询分类是否存在企业商品
+     *
+     * @param classId 分类ID
+     * @return 结果 true 存在 false 不存在
+     */
+    public boolean checkClassifyExistCompanyGoods(Long classId);
 }

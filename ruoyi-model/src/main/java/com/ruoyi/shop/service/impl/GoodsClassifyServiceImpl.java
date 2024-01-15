@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.TreeSelect;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -84,6 +86,22 @@ public class GoodsClassifyServiceImpl implements IGoodsClassifyService {
         return returnList;
     }
 
+    @Override
+    public boolean hasChildByClassId(Long classId) {
+        int result = goodsClassifyMapper.hasChildByClassId(classId);
+        return result > 0;
+    }
+
+    @Override
+    public String checkNameUnique(GoodsClassify goodsClassify) {
+        Long deptId = StringUtils.isNull(goodsClassify.getClassId()) ? -1L : goodsClassify.getClassId();
+        SysDept info = goodsClassifyMapper.checkNameUnique(goodsClassify.getName(), goodsClassify.getParentId());
+        if (StringUtils.isNotNull(info) && info.getDeptId().longValue() != deptId.longValue()) {
+            return UserConstants.NOT_UNIQUE;
+        }
+        return UserConstants.UNIQUE;
+    }
+
     /**
      * 新增商品分类
      *
@@ -128,6 +146,30 @@ public class GoodsClassifyServiceImpl implements IGoodsClassifyService {
     @Override
     public int deleteGoodsClassifyByClassId(Long classId) {
         return goodsClassifyMapper.deleteGoodsClassifyByClassId(classId);
+    }
+
+    /**
+     * 查询分类是否存在商品
+     *
+     * @param classId 分类ID
+     * @return 结果 true 存在 false 不存在
+     */
+    @Override
+    public boolean checkClassifyExistGoods(Long classId) {
+        int result = goodsClassifyMapper.checkClassifyExistGoods(classId);
+        return result > 0;
+    }
+
+    /**
+     * 查询分类是否存在企业商品
+     *
+     * @param classId 分类ID
+     * @return 结果 true 存在 false 不存在
+     */
+    @Override
+    public boolean checkClassifyExistCompanyGoods(Long classId) {
+        int result = goodsClassifyMapper.checkClassifyExistCompanyGoods(classId);
+        return result > 0;
     }
 
     /**
