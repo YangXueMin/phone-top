@@ -69,6 +69,13 @@ public interface IRechargeOrderService {
     public String refundNotify(String xmlData);
 
     /**
+     * 取消订单
+     * @param rechargeOrder
+     * @return
+     */
+    int cancel(RechargeOrder rechargeOrder);
+
+    /**
      * 修改充值记录
      *
      * @param rechargeOrder 充值记录

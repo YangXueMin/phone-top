@@ -71,7 +71,7 @@ public interface IOrderService {
     public WxPayRefundResult refund(Order order);
 
     /**
-     * 余额退款
+     * 余额退款或取消订单
      *
      * @param order
      * @return

@@ -118,4 +118,19 @@ public class RechargeOrderControllerApi extends BaseController {
         return rechargeOrderService.refundNotify(xmlData);
     }
 
+    /**
+     * 取消订单
+     *
+     * @param rechargeOrder
+     * @return
+     */
+    @ApiOperation(value = "取消订单")
+    @PostMapping("/cancel")
+    public AjaxResult cancel(@RequestBody RechargeOrder rechargeOrder) {
+        rechargeOrder = rechargeOrderService.selectRechargeOrderById(rechargeOrder.getId());
+        if (rechargeOrder == null) {
+            return warn("订单不存在");
+        }
+        return success(rechargeOrderService.cancel(rechargeOrder));
+    }
 }

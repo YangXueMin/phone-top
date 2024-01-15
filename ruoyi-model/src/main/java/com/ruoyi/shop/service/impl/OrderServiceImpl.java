@@ -243,7 +243,6 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int balanceRefund(Order order) {
-        order.setOrderStatus("3");
         order.setUpdateTime(DateUtils.getNowDate());
         final int i = orderMapper.updateOrder(order);
         if(i > 0){
@@ -259,12 +258,15 @@ public class OrderServiceImpl implements IOrderService {
                     }
                 }
             }
-            //余额还原到用户
-            Member member = memberMapper.selectMemberById(order.getMemberId());
-            member.setBalance(member.getBalance().add(order.getMoney()));
-            memberMapper.updateMember(member);
-            //删除余额消费记录
-            balanceInfoMapper.deleteBalanceInfoByOrderIdAndOrderType(order.getId(), "1");
+            //如果是余额订单需要退钱
+            if(StringUtils.equals("1",order.getPayType())){
+                //余额还原到用户
+                Member member = memberMapper.selectMemberById(order.getMemberId());
+                member.setBalance(member.getBalance().add(order.getMoney()));
+                memberMapper.updateMember(member);
+                //删除余额消费记录
+                balanceInfoMapper.deleteBalanceInfoByOrderIdAndOrderType(order.getId(), "1");
+            }
         }
         return i;
     }

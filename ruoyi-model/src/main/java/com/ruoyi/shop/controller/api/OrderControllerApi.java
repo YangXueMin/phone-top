@@ -110,21 +110,23 @@ public class OrderControllerApi extends BaseController {
     }
 
     /**
-     * 余额退款
+     * 余额退款或取消订单
      *
      * @param order
      * @return
      */
-    @ApiOperation(value = "余额退款")
+    @ApiOperation(value = "余额退款或取消订单")
     @PostMapping("/balanceRefund")
     public AjaxResult balanceRefund(@RequestBody Order order) {
+        String orderStatus = order.getOrderStatus();
         order = orderService.selectOrderById(order.getId());
         if (order == null) {
             return warn("订单不存在");
         }
         if (!StringUtils.equals("1", order.getOrderStatus())) {
-            return warn("订单已使用或已退款");
+            return warn("订单已使用或已退款或已取消");
         }
+        order.setOrderStatus(orderStatus);
         return success(orderService.balanceRefund(order));
     }
 

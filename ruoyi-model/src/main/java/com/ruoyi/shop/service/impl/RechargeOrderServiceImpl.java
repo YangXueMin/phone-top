@@ -224,6 +224,16 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         return WxPayNotifyResponse.fail("失败");
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int cancel(RechargeOrder rechargeOrder) {
+        rechargeOrder.setCreateTime(DateUtils.getNowDate());
+        rechargeOrder.setOrderStatus("4");
+        int i = rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
+        rechargeOrderCouponMapper.deleteRechargeOrderCouponByRechargeId(rechargeOrder.getId());
+        return i;
+    }
+
     /**
      * 修改充值记录
      *
