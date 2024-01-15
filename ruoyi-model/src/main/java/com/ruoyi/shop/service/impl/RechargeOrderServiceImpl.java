@@ -100,6 +100,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
             for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
                 rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
                 rechargeOrderCoupon.setPayStatus("1");
+                rechargeOrderCoupon.setStatus("1");
                 rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
             }
         }
