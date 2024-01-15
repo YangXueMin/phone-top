@@ -40,7 +40,7 @@ public class MemberLoginController {
      * 获取用户绑定手机号信息
      * </pre>
      */
-    @GetMapping("/wechat/phone")
+    @GetMapping("/api/wechat/phone")
     public AjaxResult phone(@RequestParam("phoneCode") String phoneCode) {
         return memberLoginService.phone(phoneCode);
     }
