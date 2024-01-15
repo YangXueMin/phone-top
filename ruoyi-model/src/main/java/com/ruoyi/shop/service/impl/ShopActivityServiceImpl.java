@@ -44,9 +44,8 @@ public class ShopActivityServiceImpl implements IShopActivityService {
             List<ShopActivityGoods> activityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
             if(activityGoodsList.size() > 0){
                 for (ShopActivityGoods activityGoods : activityGoodsList) {
-                    Goods goods = activityGoods.getGoods();
-                    if(goods != null){
-                        goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goods.getId()));
+                    if(activityGoods.getGoods() != null){
+                        activityGoods.getGoods().setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(activityGoods.getGoodsId()));
                     }
                 }
             }
@@ -71,9 +70,8 @@ public class ShopActivityServiceImpl implements IShopActivityService {
                 List<ShopActivityGoods> activityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
                 if(activityGoodsList.size() > 0){
                     for (ShopActivityGoods activityGoods : activityGoodsList) {
-                        Goods goods = activityGoods.getGoods();
-                        if(goods != null){
-                            goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goods.getId()));
+                        if(activityGoods.getGoods() != null){
+                            activityGoods.getGoods().setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(activityGoods.getGoodsId()));
                         }
                     }
                 }
