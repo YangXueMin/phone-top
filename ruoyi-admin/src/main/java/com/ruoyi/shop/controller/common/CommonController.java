@@ -4,9 +4,11 @@ package com.ruoyi.shop.controller.common;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.http.HttpUtil;
 import com.qcloud.cos.transfer.Upload;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.utils.file.TxCosUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.qrCode.EwmEntity;
 import com.ruoyi.common.utils.qrCode.EwmUtils;
 import com.ruoyi.common.utils.uuid.UUID;
@@ -163,6 +165,17 @@ public class CommonController {
     @PostMapping("/common/qrCode")
     public AjaxResult qrCode(@RequestBody EwmEntity ewmEntity) {
         return AjaxResult.success(ewmUtils.generateBase64(ewmEntity.getContent(), ewmEntity.getImageType()));
+    }
+
+    /**
+     * 根据IP获取用户地址
+     */
+    @GetMapping("/common/getAddressByIP")
+    public AjaxResult getAddressByIP(HttpServletRequest request) {
+        final String ipAddr = IpUtils.getIpAddr(request);
+        String url = "https://restapi.amap.com/v3/ip?key=6c2e7bc7a2189168b39c18f5b4b4d00e&ip=" + ipAddr;
+        String result = HttpUtil.createGet(url).execute().body();
+        return AjaxResult.success(result);
     }
 }
 

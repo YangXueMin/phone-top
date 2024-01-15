@@ -1,6 +1,5 @@
 package com.ruoyi.common.utils.qrCode;
 
-import lombok.Data;
 import lombok.ToString;
 
 /**
@@ -9,7 +8,6 @@ import lombok.ToString;
  * @Description
  * @date 2024/1/15 10:56 PM
  */
-@Data
 @ToString
 public class EwmEntity {
     /**
@@ -21,4 +19,20 @@ public class EwmEntity {
      * 图片类型
      */
     private String imageType;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
 }
