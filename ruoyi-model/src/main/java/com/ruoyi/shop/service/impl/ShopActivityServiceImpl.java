@@ -3,7 +3,9 @@ package com.ruoyi.shop.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.ShopActivityGoods;
+import com.ruoyi.shop.mapper.GoodsSpecsMapper;
 import com.ruoyi.shop.mapper.ShopActivityGoodsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class ShopActivityServiceImpl implements IShopActivityService {
     private ShopActivityMapper shopActivityMapper;
     @Autowired
     private ShopActivityGoodsMapper shopActivityGoodsMapper;
+    @Autowired
+    private GoodsSpecsMapper goodsSpecsMapper;
 
     /**
      * 查询活动管理
@@ -37,7 +41,16 @@ public class ShopActivityServiceImpl implements IShopActivityService {
         if(shopActivity != null){
             ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
             shopActivityGoods.setActivityId(id);
-            shopActivity.setActivityGoodsList(shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods));
+            List<ShopActivityGoods> activityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
+            if(activityGoodsList.size() > 0){
+                for (ShopActivityGoods activityGoods : activityGoodsList) {
+                    Goods goods = activityGoods.getGoods();
+                    if(goods != null){
+                        goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goods.getId()));
+                    }
+                }
+            }
+            shopActivity.setActivityGoodsList(activityGoodsList);
         }
         return shopActivity;
     }
@@ -55,7 +68,16 @@ public class ShopActivityServiceImpl implements IShopActivityService {
             for (ShopActivity activity : list) {
                 ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
                 shopActivityGoods.setActivityId(activity.getId());
-                shopActivity.setActivityGoodsList(shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods));
+                List<ShopActivityGoods> activityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
+                if(activityGoodsList.size() > 0){
+                    for (ShopActivityGoods activityGoods : activityGoodsList) {
+                        Goods goods = activityGoods.getGoods();
+                        if(goods != null){
+                            goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goods.getId()));
+                        }
+                    }
+                }
+                shopActivity.setActivityGoodsList(activityGoodsList);
             }
         }
         return list;
