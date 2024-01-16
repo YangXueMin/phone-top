@@ -162,8 +162,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
         // 添加Logout filter
         httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
-        // 添加Logout filter
-        httpSecurity.logout().logoutUrl("/wxLogout").logoutSuccessHandler(weChatLogoutSuccessHandler);
 
         // 添加JWT filter
         httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
