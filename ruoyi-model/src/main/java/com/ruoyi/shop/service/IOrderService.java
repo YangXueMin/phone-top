@@ -95,6 +95,14 @@ public interface IOrderService {
     public int updateOrder(Order order);
 
     /**
+     * 核销订单记录
+     *
+     * @param order 订单记录
+     * @return 结果
+     */
+    public int cancelOrder(Order order);
+
+    /**
      * 批量删除订单记录
      *
      * @param ids 需要删除的订单记录主键集合

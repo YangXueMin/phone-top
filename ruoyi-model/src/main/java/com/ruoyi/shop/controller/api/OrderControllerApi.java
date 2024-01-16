@@ -7,14 +7,18 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.service.IMemberService;
 import com.ruoyi.shop.service.IOrderService;
+import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author yangxuemin
@@ -30,6 +34,8 @@ public class OrderControllerApi extends BaseController {
     private IOrderService orderService;
     @Autowired
     private IMemberService memberService;
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 获取订单列表
@@ -140,6 +146,37 @@ public class OrderControllerApi extends BaseController {
     @PostMapping("/notify/refund")
     public String refundNotify(@RequestBody String xmlData) {
         return orderService.refundNotify(xmlData);
+    }
+
+    /**
+     * 核销订单
+     *
+     * @param order
+     * @return
+     */
+    @ApiOperation(value = "核销订单")
+    @PostMapping("/cancel")
+    public AjaxResult cancel(@RequestBody Order order) {
+        order = orderService.selectOrderById(order.getId());
+        if (order == null) {
+            return warn("订单不存在");
+        }
+        if (!StringUtils.equals("1", order.getOrderStatus())) {
+            return warn("订单已使用或已退款或已取消");
+        }
+        if (!StringUtils.equals("1", order.getCancelStatus())) {
+            return warn("订单已核销");
+        }
+        //判断核销人员ID是否有门店权限
+        List<Long> shopIdList = sysUserService.findShopIdsByUserId(order.getUserId());
+        if (shopIdList.size() > 0) {
+            Order finalOrder = order;
+            boolean containsTargetId = shopIdList.stream().anyMatch(id -> id.equals(finalOrder.getShopId()));
+            if(!containsTargetId){
+                return warn("当前核销人员无门店权限");
+            }
+        }
+        return success(orderService.updateOrder(order));
     }
 
 }

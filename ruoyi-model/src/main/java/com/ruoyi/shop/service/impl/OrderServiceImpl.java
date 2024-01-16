@@ -345,6 +345,19 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     /**
+     * 核销订单
+     * @param order 订单记录
+     * @return
+     */
+    @Override
+    public int cancelOrder(Order order) {
+        order.setCancelStatus("2");
+        order.setUpdateTime(DateUtils.getNowDate());
+        final int i = orderMapper.updateOrder(order);
+        return i;
+    }
+
+    /**
      * 批量删除订单记录
      *
      * @param ids 需要删除的订单记录主键

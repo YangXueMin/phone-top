@@ -125,6 +125,11 @@ public class SysUserServiceImpl implements ISysUserService {
         return sysUser;
     }
 
+    @Override
+    public List<Long> findShopIdsByUserId(Long userId) {
+        return userShopMapper.findShopIdsByUserId(userId);
+    }
+
     /**
      * 通过用户ID查询用户
      *

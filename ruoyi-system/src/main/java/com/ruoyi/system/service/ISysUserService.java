@@ -50,6 +50,14 @@ public interface ISysUserService
     public SysUser selectUserByUserName(String userName);
 
     /**
+     * 通过用户ID获取店铺ID集合
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public List<Long> findShopIdsByUserId(Long userId);
+
+    /**
      * 通过用户ID查询用户
      * 
      * @param userId 用户ID
