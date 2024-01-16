@@ -122,6 +122,8 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         request.setOutTradeNo(rechargeOrder.getOrderNo());
         //金额，以分为单位
         request.setTotalFee(rechargeOrder.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+        //TODO
+        request.setTotalFee(1);
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
