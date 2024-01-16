@@ -114,7 +114,7 @@ public class OrderServiceImpl implements IOrderService {
         }
         order.setCreateTime(DateUtils.getNowDate());
         order.setOrderNumber(SnowflakeGenerator.generateOrderNumber());
-        orderMapper.insertOrder(order);
+        final int i = orderMapper.insertOrder(order);
         if (i > 0) {
             if (order.getDetailsList().size() > 0) {
                 for (OrderDetails orderDetails : order.getDetailsList()) {
