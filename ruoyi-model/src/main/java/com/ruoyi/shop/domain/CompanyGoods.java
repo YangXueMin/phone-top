@@ -79,6 +79,9 @@ public class CompanyGoods extends BaseEntity{
     @ApiModelProperty("规格详情数据")
     private List<CompanyGoodsSpecs> specsList;
 
+    @ApiModelProperty("分类")
+    private GoodsClassify goodsClassify;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -172,5 +175,13 @@ public class CompanyGoods extends BaseEntity{
 
     public void setSpecsList(List<CompanyGoodsSpecs> specsList) {
         this.specsList = specsList;
+    }
+
+    public GoodsClassify getGoodsClassify() {
+        return goodsClassify;
+    }
+
+    public void setGoodsClassify(GoodsClassify goodsClassify) {
+        this.goodsClassify = goodsClassify;
     }
 }

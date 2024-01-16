@@ -21,6 +21,16 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <association property="goodsClassify"    column="class_id" javaType="GoodsClassify" resultMap="GoodsClassifyResult" />
+    </resultMap>
+
+    <resultMap type="GoodsClassify" id="GoodsClassifyResult">
+        <result property="classId"    column="class_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="name"    column="className"    />
+        <result property="picture"    column="picture"    />
+        <result property="orderNum"    column="order_num"    />
     </resultMap>
 
     <sql id="selectCompanyGoodsVo">
@@ -40,8 +50,14 @@
             a.create_by,
             a.create_time,
             a.update_by,
-            a.update_time
+            a.update_time,
+            gc.parent_id,
+            gc.ancestors,
+            gc.name AS className,
+            gc.picture,
+            gc.order_num
         from shop_company_goods a
+        left join shop_goods_classify gc ON gc.class_id = a.class_id
     </sql>
 
     <select id="selectCompanyGoodsList" parameterType="CompanyGoods" resultMap="CompanyGoodsResult">
