@@ -93,7 +93,10 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public List<SysUser> findUserListByShopId(Long shopId) {
         List<Long> userIdList = userShopMapper.findUserIdsByShopId(shopId);
-        return  userMapper.selectUserByIdList(userIdList.toArray(new Long[0]));
+        if(userIdList != null && userIdList.size() > 0){
+            return userMapper.selectUserByIdList(userIdList.toArray(new Long[0]));
+        }
+        return  new ArrayList<>();
     }
 
     /**

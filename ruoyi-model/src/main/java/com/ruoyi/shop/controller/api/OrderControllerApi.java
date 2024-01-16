@@ -161,7 +161,7 @@ public class OrderControllerApi extends BaseController {
         if (order == null) {
             return warn("订单不存在");
         }
-        if (!StringUtils.equals("1", order.getOrderStatus())) {
+        if (!StringUtils.equals("2", order.getOrderStatus())) {
             return warn("订单已使用或已退款或已取消");
         }
         if (!StringUtils.equals("1", order.getCancelStatus())) {
