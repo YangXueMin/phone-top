@@ -82,7 +82,7 @@ public class RechargeOrderController extends BaseController {
     @Log(title = "充值记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody RechargeOrder rechargeOrder) {
-        return toAjax(rechargeOrderService.insertRechargeOrder(rechargeOrder));
+        return success(rechargeOrderService.insertRechargeOrder(rechargeOrder));
     }
 
     /**

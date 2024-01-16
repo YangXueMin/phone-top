@@ -74,7 +74,7 @@ public class OrderController extends BaseController {
     @Log(title = "订单记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Order order) {
-        return toAjax(orderService.insertOrder(order));
+        return success(orderService.insertOrder(order));
     }
 
     /**

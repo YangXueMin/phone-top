@@ -35,7 +35,7 @@ public interface IRechargeOrderService {
      * @param rechargeOrder 充值记录
      * @return 结果
      */
-    public int insertRechargeOrder(RechargeOrder rechargeOrder);
+    public RechargeOrder insertRechargeOrder(RechargeOrder rechargeOrder);
 
     /**
      * 发起支付

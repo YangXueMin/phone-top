@@ -66,8 +66,7 @@ public class RechargeOrderControllerApi extends BaseController {
     @ApiOperation("创建订单")
     @PostMapping("/create")
     public AjaxResult create(@RequestBody RechargeOrder rechargeOrder) {
-        final int i = rechargeOrderService.insertRechargeOrder(rechargeOrder);
-        return success(i);
+        return success(rechargeOrderService.insertRechargeOrder(rechargeOrder));
     }
 
     /**

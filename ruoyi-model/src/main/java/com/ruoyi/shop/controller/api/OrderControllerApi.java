@@ -68,8 +68,7 @@ public class OrderControllerApi extends BaseController {
                 return warn("余额不足，请充值");
             }
         }
-        final int i = orderService.insertOrder(order);
-        return success(i);
+        return success(orderService.insertOrder(order));
     }
 
     /**

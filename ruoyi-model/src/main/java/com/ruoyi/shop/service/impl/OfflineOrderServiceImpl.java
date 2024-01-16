@@ -73,9 +73,10 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
      * @return 结果
      */
     @Override
-    public int insertOfflineOrder(OfflineOrder offlineOrder) {
+    public OfflineOrder insertOfflineOrder(OfflineOrder offlineOrder) {
         offlineOrder.setCreateTime(DateUtils.getNowDate());
-        return offlineOrderMapper.insertOfflineOrder(offlineOrder);
+        offlineOrderMapper.insertOfflineOrder(offlineOrder);
+        return offlineOrder;
     }
 
     /**

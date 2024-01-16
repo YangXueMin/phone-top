@@ -74,7 +74,7 @@ public class OfflineOrderController extends BaseController {
     @Log(title = "线下订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody OfflineOrder offlineOrder) {
-        return toAjax(offlineOrderService.insertOfflineOrder(offlineOrder));
+        return success(offlineOrderService.insertOfflineOrder(offlineOrder));
     }
 
     /**

@@ -44,7 +44,7 @@ public interface IOrderService {
      * @param order 订单记录
      * @return 结果
      */
-    public int insertOrder(Order order);
+    public Order insertOrder(Order order);
 
     /**
      * 发起支付

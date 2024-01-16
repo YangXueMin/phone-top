@@ -41,7 +41,7 @@ public interface IOfflineOrderService {
      * @param offlineOrder 线下订单
      * @return 结果
      */
-    public int insertOfflineOrder(OfflineOrder offlineOrder);
+    public OfflineOrder insertOfflineOrder(OfflineOrder offlineOrder);
 
     /**
      * 修改线下订单

@@ -48,8 +48,7 @@ public class OfflineOrderControllerApi extends BaseController {
     @ApiOperation("创建线下订单")
     @PostMapping("/create")
     public AjaxResult create(@RequestBody OfflineOrder offlineOrder) {
-        final int i = offlineOrderService.insertOfflineOrder(offlineOrder);
-        return success(i);
+        return success(offlineOrderService.insertOfflineOrder(offlineOrder));
     }
 
     /**

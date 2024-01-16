@@ -94,7 +94,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int insertRechargeOrder(RechargeOrder rechargeOrder) {
+    public RechargeOrder insertRechargeOrder(RechargeOrder rechargeOrder) {
         rechargeOrder.setCreateTime(DateUtils.getNowDate());
         rechargeOrder.setOrderStatus("1");
         int i = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
@@ -106,7 +106,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
                 rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
             }
         }
-        return i;
+        return rechargeOrder;
     }
 
     @Override

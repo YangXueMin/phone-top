@@ -103,7 +103,7 @@ public class OrderServiceImpl implements IOrderService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int insertOrder(Order order) {
+    public Order insertOrder(Order order) {
         if (StringUtils.equals("1", order.getPayType())) {
             order.setOrderStatus("2");
             order.setCancelStatus("1");
@@ -114,7 +114,7 @@ public class OrderServiceImpl implements IOrderService {
         }
         order.setCreateTime(DateUtils.getNowDate());
         order.setOrderNumber(SnowflakeGenerator.generateOrderNumber());
-        int i = orderMapper.insertOrder(order);
+        orderMapper.insertOrder(order);
         if (i > 0) {
             if (order.getDetailsList().size() > 0) {
                 for (OrderDetails orderDetails : order.getDetailsList()) {
@@ -147,7 +147,7 @@ public class OrderServiceImpl implements IOrderService {
                 balanceInfoMapper.insertBalanceInfo(balanceInfo);
             }
         }
-        return i;
+        return order;
     }
 
     @Override
