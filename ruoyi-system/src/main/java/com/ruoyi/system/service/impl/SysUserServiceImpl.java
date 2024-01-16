@@ -86,6 +86,17 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     /**
+     * 根据店铺获取用户数据
+     * @param shopId 店铺ID
+     * @return
+     */
+    @Override
+    public List<SysUser> findUserListByShopId(Long shopId) {
+        List<Long> userIdList = userShopMapper.findUserIdsByShopId(shopId);
+        return  userMapper.selectUserByIdList(userIdList.toArray(new Long[0]));
+    }
+
+    /**
      * 根据条件分页查询已分配用户角色列表
      *
      * @param user 用户信息

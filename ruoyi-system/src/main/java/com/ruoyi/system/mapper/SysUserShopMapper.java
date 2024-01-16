@@ -29,6 +29,14 @@ public interface SysUserShopMapper {
     public int countUserShopById(Long shopId);
 
     /**
+     * 通过店铺ID获取用户ID集合
+     *
+     * @param shopId 店铺ID
+     * @return 结果
+     */
+    public List<Long> findUserIdsByShopId(Long shopId);
+
+    /**
      * 通过用户ID获取店铺ID集合
      *
      * @param userId 用户ID

@@ -17,6 +17,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    select count(1) from sys_user_shop where shop_id=#{shopId}
 	</select>
 
+	<select id="findUserIdsByShopId" resultType="Long">
+	    select user_id from sys_user_shop where shop_id=#{shopId}
+	</select>
+
 	<select id="findShopIdsByUserId" resultType="Long">
 	    select shop_id from sys_user_shop where user_id=#{userId}
 	</select>

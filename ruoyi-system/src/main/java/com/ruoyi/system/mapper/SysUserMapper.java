@@ -54,6 +54,14 @@ public interface SysUserMapper {
     public SysUser selectUserById(Long userId);
 
     /**
+     * 通过用户ID集合查询用户
+     *
+     * @param idList 用户ID集合
+     * @return 用户对象信息
+     */
+    public List<SysUser> selectUserByIdList(Long[] idList);
+
+    /**
      * 新增用户信息
      *
      * @param user 用户信息
