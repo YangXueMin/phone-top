@@ -64,6 +64,7 @@
             <if test="limitType != null  and limitType != ''"> and a.limit_type = #{limitType}</if>
             <if test="limitNum != null "> and a.limit_num = #{limitNum}</if>
             <if test="status != null "> and a.status = #{status}</if>
+            ${params.shopScope}
         </where>
         order by a.create_time DESC
     </select>

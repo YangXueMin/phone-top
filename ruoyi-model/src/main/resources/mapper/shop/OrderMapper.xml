@@ -146,11 +146,11 @@
             <if test="orderType != null "> and a.order_type = #{orderType}</if>
             <if test="activityId != null "> and a.activity_id = #{activityId}</if>
             <if test="orderNumber != null  and orderNumber != ''"> and a.order_number = #{orderNumber}</if>
-            <if test="favourableMoney != null "> anda. favourable_money = #{favourableMoney}</if>
+            <if test="favourableMoney != null "> and a.favourable_money = #{favourableMoney}</if>
             <if test="money != null "> and a.money = #{money}</if>
             <if test="couponList != null  and couponList != ''"> and a.coupon_list = #{couponList}</if>
             <if test="orderStatus != null  and orderStatus != ''"> and a.order_status = #{orderStatus}</if>
-            <if test="payType != null  and payType != ''"> and a.ay_type = #{payType}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
             <if test="haveType != null  and haveType != ''"> and a.have_type = #{haveType}</if>
             <if test="haveTime != null "> and a.have_time = #{haveTime}</if>
             <if test="userId != null "> and a.user_id = #{userId}</if>

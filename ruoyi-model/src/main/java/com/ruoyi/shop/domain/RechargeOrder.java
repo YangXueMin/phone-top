@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -91,6 +92,9 @@ public class RechargeOrder extends BaseEntity {
 
     @ApiModelProperty("卡券信息")
     private ShopCard shopCard;
+
+    @ApiModelProperty("会员信息")
+    private Member member;
 
     @ApiModelProperty("优惠券集合")
     private List<RechargeOrderCoupon> couponList;
@@ -182,6 +186,14 @@ public class RechargeOrder extends BaseEntity {
 
     public void setShopCard(ShopCard shopCard) {
         this.shopCard = shopCard;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public List<RechargeOrderCoupon> getCouponList() {

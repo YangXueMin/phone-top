@@ -1,5 +1,6 @@
 package com.ruoyi.shop.service.impl;
 
+import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.GoodsSpecs;
@@ -47,6 +48,7 @@ public class GoodsServiceImpl implements IGoodsService {
      * @return 商品
      */
     @Override
+    @ShopScope()
     public List<Goods> selectGoodsList(Goods goods) {
         List<Goods> goodsList = goodsMapper.selectGoodsList(goods);
         if(goodsList.size() > 0){

@@ -124,8 +124,8 @@ public class Order extends BaseEntity {
     /**
      * 用餐时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "用餐时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "用餐时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("用餐时间")
     private Date haveTime;
 

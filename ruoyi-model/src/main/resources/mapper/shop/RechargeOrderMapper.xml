@@ -20,6 +20,7 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <association property="shopCard"    column="card_id" javaType="ShopCard" resultMap="ShopCardResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
     </resultMap>
 
     <resultMap type="ShopCard" id="ShopCardResult">
@@ -29,6 +30,20 @@
         <result property="picture"    column="picture"    />
         <result property="content"    column="content"    />
         <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
+        <result property="userId"    column="memberUserId"    />
     </resultMap>
 
     <sql id="selectRechargeOrderVo">
@@ -50,9 +65,20 @@
                c.money,
                c.picture,
                c.content,
-               c.status
+               c.status,
+               m.name AS memberName,
+               m.avatar AS memberAvatar,
+               m.number,
+               m.mobile AS memberMobile,
+               m.sex,
+               m.birthday,
+               m.balance,
+               m.open_id,
+               m.is_member,
+               m.user_id AS memberUserId
         from shop_recharge_order a
         left join shop_card c ON a.card_id = c.id
+        left join shop_member m ON m.id = a.member_id
     </sql>
 
     <select id="selectRechargeOrderList" parameterType="RechargeOrder" resultMap="RechargeOrderResult">
