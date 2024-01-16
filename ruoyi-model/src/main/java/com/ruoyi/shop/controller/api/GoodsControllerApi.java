@@ -30,7 +30,7 @@ public class GoodsControllerApi extends BaseController {
     @ApiOperation("查询商品管理列表")
     @PostMapping("/list")
     public AjaxResult list(@RequestBody Goods goods) {
-        List<Goods> list = goodsService.selectGoodsList(goods);
+        List<Goods> list = goodsService.selectGoodsListApi(goods);
         return success(list);
     }
 

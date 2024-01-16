@@ -28,6 +28,14 @@ public interface IGoodsService
     public List<Goods> selectGoodsList(Goods goods);
 
     /**
+     * 查询商品列表
+     *
+     * @param goods 商品
+     * @return 商品集合
+     */
+    public List<Goods> selectGoodsListApi(Goods goods);
+
+    /**
      * 新增商品
      *
      * @param goods 商品

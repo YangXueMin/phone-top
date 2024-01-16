@@ -48,8 +48,25 @@ public class GoodsServiceImpl implements IGoodsService {
      * @return 商品
      */
     @Override
-    @ShopScope()
+    @ShopScope(shopAlias = "a")
     public List<Goods> selectGoodsList(Goods goods) {
+        List<Goods> goodsList = goodsMapper.selectGoodsList(goods);
+        if(goodsList.size() > 0){
+            for (Goods goodsData : goodsList) {
+                goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
+            }
+        }
+        return goodsList;
+    }
+
+    /**
+     * 查询商品列表
+     *
+     * @param goods 商品
+     * @return 商品
+     */
+    @Override
+    public List<Goods> selectGoodsListApi(Goods goods) {
         List<Goods> goodsList = goodsMapper.selectGoodsList(goods);
         if(goodsList.size() > 0){
             for (Goods goodsData : goodsList) {
