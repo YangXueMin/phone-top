@@ -164,8 +164,6 @@ public class OrderServiceImpl implements IOrderService {
         request.setOutTradeNo(order.getOrderNumber());
         //金额，以分为单位
         request.setTotalFee(order.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
-        //TODO
-        request.setTotalFee(1);
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
@@ -229,12 +227,8 @@ public class OrderServiceImpl implements IOrderService {
             request.setOutRefundNo(order.getOrderNumber());
             //订单金额
             request.setTotalFee(order.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
-            //TODO
-            request.setTotalFee(1);
             //退款金额
             request.setRefundFee(order.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
-            //TODO
-            request.setRefundFee(1);
             //加密方式
             request.setSignType("MD5");
             //回调通知地址（必须外网能访问的地址）
