@@ -108,10 +108,10 @@ public class OrderControllerApi extends BaseController {
         if (order == null) {
             return warn("订单不存在");
         }
-        if (!StringUtils.equals("1", order.getOrderStatus())) {
-            return warn("订单已使用或已退款");
+        if (StringUtils.equals("2", order.getOrderStatus())) {
+            return success(orderService.refund(order));
         }
-        return success(orderService.refund(order));
+        return warn("订单已使用或已退款");
     }
 
     /**
@@ -128,11 +128,19 @@ public class OrderControllerApi extends BaseController {
         if (order == null) {
             return warn("订单不存在");
         }
-        if (!StringUtils.equals("1", order.getOrderStatus())) {
-            return warn("订单已使用或已退款或已取消");
+        boolean flag = false;
+        if (StringUtils.equals("4",orderStatus) && StringUtils.equals("1", order.getOrderStatus())) {
+            flag = true;
         }
-        order.setOrderStatus(orderStatus);
-        return success(orderService.balanceRefund(order));
+        if(StringUtils.equals("3",orderStatus) && StringUtils.equals("2", order.getOrderStatus())){
+            flag = true;
+        }
+        if(flag){
+            order.setOrderStatus(orderStatus);
+            return success(orderService.balanceRefund(order));
+        }
+        return warn("订单已使用或已退款或已取消");
+
     }
 
     /**
