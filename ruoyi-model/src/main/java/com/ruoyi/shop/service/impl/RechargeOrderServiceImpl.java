@@ -59,9 +59,11 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
     @Override
     public RechargeOrder selectRechargeOrderById(Long id) {
         RechargeOrder rechargeOrder = rechargeOrderMapper.selectRechargeOrderById(id);
-        RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
-        rechargeOrderCoupon.setRechargeId(id);
-        rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon);
+        if(rechargeOrder != null){
+            RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+            rechargeOrderCoupon.setRechargeId(id);
+            rechargeOrder.setCouponList(rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon));
+        }
         return rechargeOrder;
     }
 
@@ -78,7 +80,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
             for (RechargeOrder order : rechargeOrderList) {
                 RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
                 rechargeOrderCoupon.setRechargeId(order.getId());
-                rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon);
+                order.setCouponList(rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon));
             }
         }
         return rechargeOrderList;
