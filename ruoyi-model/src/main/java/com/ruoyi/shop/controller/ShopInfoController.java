@@ -2,6 +2,7 @@ package com.ruoyi.shop.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,11 +45,20 @@ public class ShopInfoController extends BaseController {
     @ApiOperation("查询店铺信息列表")
     @PreAuthorize("@ss.hasPermi('shop:info:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ShopInfo shopInfo)
-    {
+    public TableDataInfo list(ShopInfo shopInfo) {
         startPage();
         List<ShopInfo> list = shopInfoService.selectShopInfoList(shopInfo);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询店铺信息列表
+     */
+    @ApiOperation("查询店铺信息列表")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(ShopInfo shopInfo) {
+        List<ShopInfo> list = shopInfoService.selectShopInfoList(shopInfo);
+        return success(list);
     }
 
     /**
@@ -57,8 +67,7 @@ public class ShopInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:info:export')")
     @Log(title = "店铺信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ShopInfo shopInfo)
-    {
+    public void export(HttpServletResponse response, ShopInfo shopInfo) {
         List<ShopInfo> list = shopInfoService.selectShopInfoList(shopInfo);
         ExcelUtil<ShopInfo> util = new ExcelUtil<ShopInfo>(ShopInfo.class);
         util.exportExcel(response, list, "店铺信息数据");
@@ -71,8 +80,7 @@ public class ShopInfoController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('shop:info:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(shopInfoService.selectShopInfoById(id));
     }
 
@@ -83,8 +91,7 @@ public class ShopInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:info:add')")
     @Log(title = "店铺信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ShopInfo shopInfo)
-    {
+    public AjaxResult add(@RequestBody ShopInfo shopInfo) {
         return toAjax(shopInfoService.insertShopInfo(shopInfo));
     }
 
@@ -95,8 +102,7 @@ public class ShopInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:info:edit')")
     @Log(title = "店铺信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ShopInfo shopInfo)
-    {
+    public AjaxResult edit(@RequestBody ShopInfo shopInfo) {
         return toAjax(shopInfoService.updateShopInfo(shopInfo));
     }
 
@@ -108,8 +114,7 @@ public class ShopInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:info:remove')")
     @Log(title = "店铺信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(shopInfoService.deleteShopInfoByIds(ids));
     }
 }
