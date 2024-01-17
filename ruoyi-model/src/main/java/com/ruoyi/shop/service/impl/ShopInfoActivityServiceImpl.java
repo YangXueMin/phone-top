@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.shop.mapper.ShopInfoActivityMapper;
 import com.ruoyi.shop.domain.ShopInfoActivity;
 import com.ruoyi.shop.service.IShopInfoActivityService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 店铺信息活动配置Service业务层处理
@@ -45,13 +46,20 @@ public class ShopInfoActivityServiceImpl implements IShopInfoActivityService {
     /**
      * 新增店铺信息活动配置
      *
-     * @param shopInfoActivity 店铺信息活动配置
+     * @param shopInfoActivityList 店铺信息活动配置
      * @return 结果
      */
     @Override
-    public int insertShopInfoActivity(ShopInfoActivity shopInfoActivity) {
-        shopInfoActivity.setCreateTime(DateUtils.getNowDate());
-        return shopInfoActivityMapper.insertShopInfoActivity(shopInfoActivity);
+    @Transactional(rollbackFor = Exception.class)
+    public int insertShopInfoActivity(List<ShopInfoActivity> shopInfoActivityList) {
+        int i = 0;
+        for (ShopInfoActivity shopInfoActivity : shopInfoActivityList) {
+            shopInfoActivity.setCreateTime(DateUtils.getNowDate());
+            shopInfoActivityMapper.insertShopInfoActivity(shopInfoActivity);
+            i ++;
+        }
+
+        return i;
     }
 
     /**

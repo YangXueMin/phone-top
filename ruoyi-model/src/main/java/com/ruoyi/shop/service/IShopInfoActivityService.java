@@ -33,7 +33,7 @@ public interface IShopInfoActivityService {
      * @param shopInfoActivity 店铺信息活动配置
      * @return 结果
      */
-    public int insertShopInfoActivity(ShopInfoActivity shopInfoActivity);
+    public int insertShopInfoActivity(List<ShopInfoActivity> shopInfoActivityList);
 
     /**
      * 修改店铺信息活动配置

@@ -73,8 +73,8 @@ public class ShopInfoActivityController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:infoActivity:add')")
     @Log(title = "店铺信息活动配置", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ShopInfoActivity shopInfoActivity) {
-        return toAjax(shopInfoActivityService.insertShopInfoActivity(shopInfoActivity));
+    public AjaxResult add(@RequestBody List<ShopInfoActivity> shopInfoActivityList) {
+        return toAjax(shopInfoActivityService.insertShopInfoActivity(shopInfoActivityList));
     }
 
     /**
