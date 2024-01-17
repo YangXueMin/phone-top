@@ -1,7 +1,9 @@
 package com.ruoyi.shop.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.shop.domain.ShopActivity;
 
 /**
@@ -26,6 +28,22 @@ public interface IShopActivityService {
      * @return 活动管理集合
      */
     public List<ShopActivity> selectShopActivityList(ShopActivity shopActivity);
+
+    /**
+     * 查询活动管理列表
+     *
+     * @param shopActivity 活动管理
+     * @return 活动管理集合
+     */
+    public List<ShopActivity> selectShopActivityListApi(ShopActivity shopActivity);
+
+    /**
+     * 查询活动管理列表
+     *
+     * @param shopActivity 活动管理
+     * @return 活动管理集合
+     */
+    public Map<String, Map<String, List<ShopActivity>>> selectShopActivityListGroup(ShopActivity shopActivity);
 
     /**
      * 新增活动管理

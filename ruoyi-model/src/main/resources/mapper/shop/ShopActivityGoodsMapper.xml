@@ -16,7 +16,8 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
-        <association property="goods"    column="goods_id" javaType="Coupon" resultMap="GoodsResult" />
+        <association property="goods"    column="goods_id" javaType="Goods" resultMap="GoodsResult" />
+        <association property="specs"    column="specs_id" javaType="GoodsSpecs" resultMap="GoodsSpecsResult" />
     </resultMap>
 
     <resultMap type="Goods" id="GoodsResult">
@@ -33,6 +34,16 @@
         <result property="limitType"    column="limit_type"    />
         <result property="limitNum"    column="limit_num"    />
         <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap type="GoodsSpecs" id="GoodsSpecsResult">
+        <result property="id"    column="specs_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsSpecs"    column="goods_specs"    />
+        <result property="goodsStock"    column="goods_stock"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="goodsDiscount"    column="goods_discount"    />
+        <result property="goodsNumber"    column="goods_number"    />
     </resultMap>
 
     <sql id="selectShopActivityGoodsVo">
@@ -59,9 +70,15 @@
                sg.is_limit,
                sg.limit_type,
                sg.limit_num,
-               sg.status
+               sg.status,
+               sgs.goods_specs,
+               sgs.goods_stock,
+               sgs.goods_price,
+               sgs.goods_discount,
+               sgs.goods_number
         from shop_activity_goods a
         left join shop_goods sg ON sg.id = a.goods_id
+        left join shop_goods_specs sgs ON sgs.id = a.specs_id
     </sql>
 
     <select id="selectShopActivityGoodsList" parameterType="ShopActivityGoods" resultMap="ShopActivityGoodsResult">

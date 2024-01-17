@@ -1,8 +1,13 @@
 package com.ruoyi.shop.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.time.DateFormatUtil;
 import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.ShopActivityGoods;
 import com.ruoyi.shop.mapper.GoodsSpecsMapper;
@@ -38,13 +43,13 @@ public class ShopActivityServiceImpl implements IShopActivityService {
     @Override
     public ShopActivity selectShopActivityById(Long id) {
         ShopActivity shopActivity = shopActivityMapper.selectShopActivityById(id);
-        if(shopActivity != null){
+        if (shopActivity != null) {
             ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
             shopActivityGoods.setActivityId(id);
             List<ShopActivityGoods> activityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
-            if(activityGoodsList.size() > 0){
+            if (activityGoodsList.size() > 0) {
                 for (ShopActivityGoods activityGoods : activityGoodsList) {
-                    if(activityGoods.getGoods() != null){
+                    if (activityGoods.getGoods() != null) {
                         activityGoods.getGoods().setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(activityGoods.getGoodsId()));
                     }
                 }
@@ -62,15 +67,26 @@ public class ShopActivityServiceImpl implements IShopActivityService {
      */
     @Override
     public List<ShopActivity> selectShopActivityList(ShopActivity shopActivity) {
+        return selectShopActivityListApi(shopActivity);
+    }
+
+    /**
+     * 查询活动管理列表
+     *
+     * @param shopActivity 活动管理
+     * @return 活动管理
+     */
+    @Override
+    public List<ShopActivity> selectShopActivityListApi(ShopActivity shopActivity) {
         List<ShopActivity> list = shopActivityMapper.selectShopActivityList(shopActivity);
-        if(list.size() > 0){
+        if (list.size() > 0) {
             for (ShopActivity activity : list) {
                 ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
                 shopActivityGoods.setActivityId(activity.getId());
                 List<ShopActivityGoods> activityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
-                if(activityGoodsList.size() > 0){
+                if (activityGoodsList.size() > 0) {
                     for (ShopActivityGoods activityGoods : activityGoodsList) {
-                        if(activityGoods.getGoods() != null){
+                        if (activityGoods.getGoods() != null) {
                             activityGoods.getGoods().setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(activityGoods.getGoodsId()));
                         }
                     }
@@ -79,6 +95,13 @@ public class ShopActivityServiceImpl implements IShopActivityService {
             }
         }
         return list;
+    }
+
+    @Override
+    public Map<String, Map<String, List<ShopActivity>>> selectShopActivityListGroup(ShopActivity shopActivity) {
+        List<ShopActivity> list = selectShopActivityListApi(shopActivity);
+        return list.stream()
+                .collect(Collectors.groupingBy(ShopActivity::getBeginDateString, Collectors.groupingBy(ShopActivity::getShopName)));
     }
 
     /**
@@ -92,8 +115,8 @@ public class ShopActivityServiceImpl implements IShopActivityService {
     public int insertShopActivity(ShopActivity shopActivity) {
         shopActivity.setCreateTime(DateUtils.getNowDate());
         int i = shopActivityMapper.insertShopActivity(shopActivity);
-        if(i > 0){
-            if(shopActivity.getActivityGoodsList().size() > 0){
+        if (i > 0) {
+            if (shopActivity.getActivityGoodsList().size() > 0) {
                 for (ShopActivityGoods shopActivityGoods : shopActivity.getActivityGoodsList()) {
                     shopActivityGoods.setActivityId(shopActivity.getId());
                     shopActivityGoods.setCreateTime(DateUtils.getNowDate());
@@ -115,9 +138,9 @@ public class ShopActivityServiceImpl implements IShopActivityService {
     public int updateShopActivity(ShopActivity shopActivity) {
         shopActivity.setUpdateTime(DateUtils.getNowDate());
         int i = shopActivityMapper.updateShopActivity(shopActivity);
-        if(i > 0){
+        if (i > 0) {
             shopActivityGoodsMapper.deleteShopActivityGoodsByActivityId(shopActivity.getId());
-            if(shopActivity.getActivityGoodsList().size() > 0){
+            if (shopActivity.getActivityGoodsList().size() > 0) {
                 for (ShopActivityGoods shopActivityGoods : shopActivity.getActivityGoodsList()) {
                     shopActivityGoods.setActivityId(shopActivity.getId());
                     shopActivityGoods.setCreateTime(DateUtils.getNowDate());

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.utils.time.DateFormatUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -50,6 +51,11 @@ public class ShopActivity extends BaseEntity {
     private Date beginDate;
 
     /**
+     * 活动开始时间
+     */
+    private String beginDateString;
+
+    /**
      * 活动时长
      */
     @Excel(name = "活动时长")
@@ -68,6 +74,12 @@ public class ShopActivity extends BaseEntity {
      */
     @ApiModelProperty("活动商品集合")
     private List<ShopActivityGoods> activityGoodsList;
+
+    @ApiModelProperty("店铺名称")
+    private String shopName;
+
+    @ApiModelProperty("店铺信息")
+    private ShopInfo shopInfo;
 
     public void setId(Long id) {
         this.id = id;
@@ -123,5 +135,28 @@ public class ShopActivity extends BaseEntity {
 
     public void setActivityGoodsList(List<ShopActivityGoods> activityGoodsList) {
         this.activityGoodsList = activityGoodsList;
+    }
+
+    public String getBeginDateString() {
+        if(beginDate != null){
+           return DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_DATE_API, beginDate);
+        }
+        return beginDateString;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public ShopInfo getShopInfo() {
+        return shopInfo;
+    }
+
+    public void setShopInfo(ShopInfo shopInfo) {
+        this.shopInfo = shopInfo;
     }
 }

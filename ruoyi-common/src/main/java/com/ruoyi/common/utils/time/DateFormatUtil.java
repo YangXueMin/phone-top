@@ -38,6 +38,7 @@ public class DateFormatUtil {
 	public static final String PATTERN_ISO_ON_HO_DATE = "yyyyMMdd";
 	public static final String PATTERN_ISO_ON_WECHAT_DATE = "yyyyMMddHHmmss";
 	public static final String PATTERN_ISO_DATE = "yyyy-MM-dd HH:mm";
+	public static final String PATTERN_ISO_DATE_API = "HH:mm yyyy-MM-dd";
 	public static final String PATTERN_ISO_CALENDAR_DATE = "yyyy-M-d";
 
 	public static final String PATTERN_ISO_ON_YEAR = "yyyy";

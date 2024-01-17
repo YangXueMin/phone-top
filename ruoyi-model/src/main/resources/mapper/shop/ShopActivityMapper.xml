@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="activityName" column="activity_name"/>
         <result property="shopId" column="shop_id"/>
+        <result property="shopName" column="shop_name_longitude_latitude"/>
         <result property="beginDate" column="begin_date"/>
         <result property="activityTime" column="activity_time"/>
         <result property="status" column="status"/>
@@ -16,40 +17,82 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <association property="shopInfo"    column="shop_id" javaType="ShopInfo" resultMap="ShopInfoResult" />
+    </resultMap>
+
+    <resultMap type="ShopInfo" id="ShopInfoResult">
+        <result property="id"    column="shop_id"    />
+        <result property="name"    column="name"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="county"    column="county"    />
+        <result property="address"    column="address"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="businessHours"    column="business_hours"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="distributionMode"    column="distribution_mode"    />
+        <result property="isActivity"    column="is_activity"    />
+        <result property="isSyncShop"    column="is_sync_shop"    />
+        <result property="isSyncNatural"    column="is_sync_natural"    />
+        <result property="securityFile"    column="security_file"    />
+        <result property="naturalFile"    column="natural_file"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectShopActivityVo">
-        select id,
-               activity_name,
-               shop_id,
-               begin_date,
-               activity_time,
-               status,
-               create_by,
-               create_time,
-               update_by,
-               update_time,
-               remark
-        from shop_activity
+        select a.id,
+               a.activity_name,
+               a.shop_id,
+               a.begin_date,
+               a.activity_time,
+               a.status,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.remark,
+               CONCAT_WS(',', s.name, s.longitude,s.latitude) AS shop_name_longitude_latitude,
+               s.name,
+               s.province,
+               s.city,
+               s.county,
+               s.address,
+               s.longitude,
+               s.latitude,
+               s.mobile,
+               s.business_hours,
+               s.start_time,
+               s.end_time,
+               s.distribution_mode,
+               s.is_activity,
+               s.is_sync_shop,
+               s.is_sync_natural,
+               s.security_file,
+               s.natural_file,
+               s.status
+        from shop_activity a
+        left join shop_info s ON a.shop_id = s.id
     </sql>
 
     <select id="selectShopActivityList" parameterType="ShopActivity" resultMap="ShopActivityResult">
         <include refid="selectShopActivityVo"/>
         <where>
-            <if test="activityName != null  and activityName != ''">and activity_name like concat('%', #{activityName},
-                '%')
+            <if test="activityName != null  and activityName != ''">and a.activity_name like concat('%', #{activityName},'%')
             </if>
-            <if test="shopId != null ">and shop_id = #{shopId}</if>
-            <if test="beginDate != null ">and begin_date = #{beginDate}</if>
-            <if test="activityTime != null ">and activity_time = #{activityTime}</if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
+            <if test="shopId != null ">and a.shop_id = #{shopId}</if>
+            <if test="beginDate != null ">and a.begin_date = #{beginDate}</if>
+            <if test="activityTime != null ">and a.activity_time = #{activityTime}</if>
+            <if test="status != null  and status != ''">and a.status = #{status}</if>
         </where>
-        order by create_time DESC
+        order by a.create_time DESC
     </select>
 
     <select id="selectShopActivityById" parameterType="Long" resultMap="ShopActivityResult">
         <include refid="selectShopActivityVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertShopActivity" parameterType="ShopActivity" useGeneratedKeys="true" keyProperty="id">
