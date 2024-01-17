@@ -53,12 +53,14 @@ public class ShopInfoActivityServiceImpl implements IShopInfoActivityService {
     @Transactional(rollbackFor = Exception.class)
     public int insertShopInfoActivity(List<ShopInfoActivity> shopInfoActivityList) {
         int i = 0;
-        for (ShopInfoActivity shopInfoActivity : shopInfoActivityList) {
-            shopInfoActivity.setCreateTime(DateUtils.getNowDate());
-            shopInfoActivityMapper.insertShopInfoActivity(shopInfoActivity);
-            i ++;
+        if(shopInfoActivityList.size() > 0){
+            shopInfoActivityMapper.deleteShopInfoActivityByShopId(shopInfoActivityList.get(0).getShopId());
+            for (ShopInfoActivity shopInfoActivity : shopInfoActivityList) {
+                shopInfoActivity.setCreateTime(DateUtils.getNowDate());
+                shopInfoActivityMapper.insertShopInfoActivity(shopInfoActivity);
+                i ++;
+            }
         }
-
         return i;
     }
 

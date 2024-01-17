@@ -52,6 +52,13 @@ public interface ShopInfoActivityMapper
      * @return 结果
      */
     public int deleteShopInfoActivityById(Long id);
+    /**
+     * 删除店铺信息活动配置
+     *
+     * @param id 店铺信息活动配置主键
+     * @return 结果
+     */
+    public int deleteShopInfoActivityByShopId(Long id);
 
     /**
      * 批量删除店铺信息活动配置
