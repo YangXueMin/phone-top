@@ -2,6 +2,7 @@ package com.ruoyi.shop.mapper;
 
 import com.ruoyi.shop.domain.OrderDetails;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -36,6 +37,14 @@ public interface OrderDetailsMapper {
      * @return 订单详情集合
      */
     public List<OrderDetails> selectOrderDetailsList(OrderDetails orderDetails);
+
+
+    /**
+     * 查询商品出售数量
+     * @param goodsId
+     * @return
+     */
+    Integer selectCountByGoodsId(@Param("goodsId")Long goodsId);
 
     /**
      * 新增订单详情

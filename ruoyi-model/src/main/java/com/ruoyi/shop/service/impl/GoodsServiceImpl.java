@@ -6,6 +6,7 @@ import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.GoodsSpecs;
 import com.ruoyi.shop.mapper.GoodsMapper;
 import com.ruoyi.shop.mapper.GoodsSpecsMapper;
+import com.ruoyi.shop.mapper.OrderDetailsMapper;
 import com.ruoyi.shop.service.IGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class GoodsServiceImpl implements IGoodsService {
     private GoodsMapper goodsMapper;
     @Autowired
     private GoodsSpecsMapper goodsSpecsMapper;
+    @Autowired
+    private OrderDetailsMapper orderDetailsMapper;
 
     /**
      * 查询商品
@@ -37,6 +40,7 @@ public class GoodsServiceImpl implements IGoodsService {
         Goods goods = goodsMapper.selectGoodsById(id);
         if(goods != null){
             goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(id));
+            goods.setSellNumber(orderDetailsMapper.selectCountByGoodsId(id));
         }
         return goods;
     }
@@ -54,6 +58,7 @@ public class GoodsServiceImpl implements IGoodsService {
         if(goodsList.size() > 0){
             for (Goods goodsData : goodsList) {
                 goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
+                goodsData.setSellNumber(orderDetailsMapper.selectCountByGoodsId(goods.getId()));
             }
         }
         return goodsList;

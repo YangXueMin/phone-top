@@ -91,6 +91,18 @@
         </where>
     </select>
 
+    <select id="selectCountByGoodsId" resultType="integer">
+        SELECT count(a.goods_id) AS number
+        FROM shop_order_details a
+        left join shop_order o ON a.order_id = o.id
+        <where>
+            order_status ='2'
+            <if test="goodsId != null " >
+                AND a.goods_id = #{goodsId}
+            </if>
+        </where>
+    </select>
+
     <select id="selectOrderDetailsById" parameterType="Long" resultMap="OrderDetailsResult">
         <include refid="selectOrderDetailsVo"/>
         where a.id = #{id}
