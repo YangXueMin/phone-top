@@ -28,7 +28,7 @@ public class ShopActivityControllerApi extends BaseController {
         return success(shopActivityService.selectShopActivityListApi(shopActivity));
     }
 
-    @ApiOperation("获取活动管理")
+    @ApiOperation("获取活动管理按时间和店铺名称分组")
     @PostMapping("/findListGroup")
     public AjaxResult findListGroup(@RequestBody ShopActivity shopActivity) {
         return success(shopActivityService.selectShopActivityListGroup(shopActivity));
