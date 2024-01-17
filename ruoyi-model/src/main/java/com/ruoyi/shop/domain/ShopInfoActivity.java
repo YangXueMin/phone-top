@@ -1,6 +1,8 @@
 package com.ruoyi.shop.domain;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -35,6 +37,12 @@ public class ShopInfoActivity extends BaseEntity {
     @Excel(name = "活动类型")
     @ApiModelProperty("活动类型")
     private String activityType;
+    /**
+     * 活动类型
+     */
+    @Excel(name = "活动类型")
+    @ApiModelProperty("活动类型")
+    private String activityTypeLabel;
 
     /**
      * 标题
@@ -90,4 +98,10 @@ public class ShopInfoActivity extends BaseEntity {
         return content;
     }
 
+    public String getActivityTypeLabel() {
+        if(StringUtils.isNotBlank(activityType)){
+            return DictUtils.getDictLabel("shop_info_activity_type",activityType);
+        }
+        return activityTypeLabel;
+    }
 }
