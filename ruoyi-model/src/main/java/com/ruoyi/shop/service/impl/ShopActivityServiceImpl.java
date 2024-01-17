@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.time.DateFormatUtil;
@@ -98,10 +99,22 @@ public class ShopActivityServiceImpl implements IShopActivityService {
     }
 
     @Override
-    public Map<String, Map<String, List<ShopActivity>>> selectShopActivityListGroup(ShopActivity shopActivity) {
+    public JSONObject selectShopActivityListGroup(ShopActivity shopActivity) {
         List<ShopActivity> list = selectShopActivityListApi(shopActivity);
-        return list.stream()
+        Map<String, Map<String, List<ShopActivity>>> map = list.stream()
                 .collect(Collectors.groupingBy(ShopActivity::getBeginDateString, Collectors.groupingBy(ShopActivity::getShopName)));
+        JSONObject jsonObject = new JSONObject();
+        for (Map.Entry<String, Map<String, List<ShopActivity>>> entry : map.entrySet()) {
+            JSONArray jsonArray = new JSONArray();
+            for (Map.Entry<String, List<ShopActivity>> entry2 : entry.getValue().entrySet()) {
+                Map<String, Object> data = new HashMap<>(2);
+                data.put("name", entry2.getKey());
+                data.put("list", entry2.getValue());
+                jsonArray.add(data);
+            }
+            jsonObject.put(entry.getKey(), jsonArray);
+        }
+        return jsonObject;
     }
 
     /**

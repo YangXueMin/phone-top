@@ -43,7 +43,7 @@ public interface IShopActivityService {
      * @param shopActivity 活动管理
      * @return 活动管理集合
      */
-    public Map<String, Map<String, List<ShopActivity>>> selectShopActivityListGroup(ShopActivity shopActivity);
+    public JSONObject selectShopActivityListGroup(ShopActivity shopActivity);
 
     /**
      * 新增活动管理
