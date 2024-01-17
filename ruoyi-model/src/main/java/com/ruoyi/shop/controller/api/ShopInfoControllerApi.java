@@ -3,6 +3,7 @@ package com.ruoyi.shop.controller.api;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.shop.domain.ShopInfo;
+import com.ruoyi.shop.service.ICompanyInfoService;
 import com.ruoyi.shop.service.IShopInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,8 @@ import java.util.List;
 public class ShopInfoControllerApi extends BaseController {
     @Autowired
     private IShopInfoService shopInfoService;
+    @Autowired
+    private ICompanyInfoService companyInfoService;
 
     /**
      * 查询店铺列表
@@ -46,5 +49,15 @@ public class ShopInfoControllerApi extends BaseController {
     @GetMapping("/get")
     public AjaxResult get(@RequestParam("id") Long id) {
         return success(shopInfoService.selectShopInfoById(id));
+    }
+
+    /**
+     * 获取企业信息配置详情
+     * @return
+     */
+    @ApiOperation("获取企业信息配置详情")
+    @GetMapping("/getCompanyInfo")
+    public AjaxResult getCompanyInfo(){
+        return success(companyInfoService.selectCompanyInfoById(1L));
     }
 }
