@@ -2,7 +2,6 @@ package com.ruoyi.shop.controller.api;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.shop.domain.ShopCard;
 import com.ruoyi.shop.domain.ShopInfoActivity;
 import com.ruoyi.shop.service.IShopInfoActivityService;
 import io.swagger.annotations.Api;
@@ -27,14 +26,14 @@ public class ShopInfoActivityControllerApi extends BaseController {
 
     @ApiOperation("获取店铺活动集合")
     @PostMapping("/findList")
-    public AjaxResult findCardList(@RequestBody ShopInfoActivity shopInfoActivity){
+    public AjaxResult findCardList(@RequestBody ShopInfoActivity shopInfoActivity) {
         final List<ShopInfoActivity> cardList = shopInfoActivityService.selectShopInfoActivityList(shopInfoActivity);
         return success(cardList);
     }
 
     @ApiOperation("根据主键获取店铺活动集合")
     @GetMapping("/get")
-    public AjaxResult get(@RequestParam("id") Long id){
+    public AjaxResult get(@RequestParam("id") Long id) {
         return success(shopInfoActivityService.selectShopInfoActivityById(id));
     }
 }

@@ -1,8 +1,12 @@
 package com.ruoyi.shop.domain;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -16,140 +20,181 @@ import com.ruoyi.common.core.domain.BaseEntity;
  */
 @ApiModel(value = "Banner", description = "banner配置")
 @ToString
-public class Banner extends BaseEntity{
-    private static final long serialVersionUID=1L;
+public class Banner extends BaseEntity {
+    private static final long serialVersionUID = 1L;
 
-    /** 主键 */
+    /**
+     * 主键
+     */
     private Long id;
 
-    /** 名称 */
+    /**
+     * 名称
+     */
     @Excel(name = "名称")
     @ApiModelProperty("名称")
     private String name;
 
-    /** 类型 */
+    /**
+     * 类型
+     */
     @Excel(name = "类型")
     @ApiModelProperty("类型")
     private String type;
 
-    /** 图片 */
+    /**
+     * 图片
+     */
     @Excel(name = "图片")
     @ApiModelProperty("图片")
     private String picture;
 
-    /** 是否跳转 */
+    /**
+     * 是否跳转
+     */
     @Excel(name = "是否跳转")
     @ApiModelProperty("是否跳转")
     private String isSkip;
 
-    /** 跳转类型 */
+    /**
+     * 跳转类型
+     */
     @Excel(name = "跳转类型")
     @ApiModelProperty("跳转类型")
     private String skipType;
 
-    /** 栏目类型 */
+    /**
+     * 栏目类型
+     */
     @Excel(name = "栏目类型")
     @ApiModelProperty("栏目类型")
     private String columnType;
 
-    /** 链接地址 */
+    /**
+     * 链接地址
+     */
     @Excel(name = "链接地址")
     @ApiModelProperty("链接地址")
     private String url;
 
-    /** 上线时间 */
+    /**
+     * 上线时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "上线时间", width = 30, dateFormat = "yyyy-MM-dd")
     @ApiModelProperty("上线时间")
     private Date startDate;
 
-    /** 下线时间 */
+    /**
+     * 下线时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "下线时间", width = 30, dateFormat = "yyyy-MM-dd")
     @ApiModelProperty("下线时间")
     private Date endDate;
 
-    /** 状态 */
+    /**
+     * 状态
+     */
     @Excel(name = "状态")
     @ApiModelProperty("状态")
     private String status;
 
-    public void setId(Long id){
+    @ApiModelProperty("跳转类型字典")
+    private SysDictData skipTypeDicData;
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    public void setType(String type){
+
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getType(){
+    public String getType() {
         return type;
     }
-    public void setPicture(String picture){
+
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
-    public String getPicture(){
+    public String getPicture() {
         return picture;
     }
-    public void setIsSkip(String isSkip){
+
+    public void setIsSkip(String isSkip) {
         this.isSkip = isSkip;
     }
 
-    public String getIsSkip(){
+    public String getIsSkip() {
         return isSkip;
     }
-    public void setSkipType(String skipType){
+
+    public void setSkipType(String skipType) {
         this.skipType = skipType;
     }
 
-    public String getSkipType(){
+    public String getSkipType() {
         return skipType;
     }
-    public void setColumnType(String columnType){
+
+    public void setColumnType(String columnType) {
         this.columnType = columnType;
     }
 
-    public String getColumnType(){
+    public String getColumnType() {
         return columnType;
     }
-    public void setUrl(String url){
+
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    public String getUrl(){
+    public String getUrl() {
         return url;
     }
-    public void setStartDate(Date startDate){
+
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public Date getStartDate(){
+    public Date getStartDate() {
         return startDate;
     }
-    public void setEndDate(Date endDate){
+
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public Date getEndDate(){
+    public Date getEndDate() {
         return endDate;
     }
-    public void setStatus(String status){
+
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return status;
     }
 
+    public SysDictData getSkipTypeDicData() {
+        if (StringUtils.isNotBlank(skipType)) {
+            return DictUtils.getDictData("shop_banner_column_type", skipType);
+        }
+        return skipTypeDicData;
+    }
 }
