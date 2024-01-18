@@ -56,8 +56,8 @@ public class ShopInfoControllerApi extends BaseController {
      * 根据用户ID查询店铺集合
      */
     @ApiOperation("根据用户ID查询店铺集合")
-    @GetMapping("/getByUserId")
-    public AjaxResult getByUserId(@RequestParam("userId") Long userId) {
+    @GetMapping("/findListByUserId")
+    public AjaxResult findListByUserId(@RequestParam("userId") Long userId) {
         return success(shopInfoService.selectShopListByUserId(userId));
     }
 
