@@ -1,12 +1,15 @@
 package com.ruoyi.shop.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.annotation.ShopScope;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ToolUtils;
 import com.ruoyi.shop.domain.*;
 import com.ruoyi.shop.mapper.*;
+import com.ruoyi.system.mapper.SysUserShopMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.shop.service.IShopInfoService;
@@ -73,6 +76,20 @@ public class ShopInfoServiceImpl implements IShopInfoService {
     @Override
     public List<Long> selectShopListByUserId(Long userId) {
         return shopInfoMapper.selectShopListByUserId(userId);
+    }
+
+    /**
+     * 根据用户获取店铺数据
+     * @param userId 用户ID
+     * @return
+     */
+    @Override
+    public List<ShopInfo> findShopInfoListByUserId(Long userId) {
+        List<Long> shopIdList = this.selectShopListByUserId(userId);
+        if(shopIdList != null && shopIdList.size() > 0){
+            return shopInfoMapper.selectShopInfoByIds(shopIdList.toArray(new Long[0]));
+        }
+        return  new ArrayList<>();
     }
 
     /**

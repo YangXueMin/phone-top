@@ -51,6 +51,16 @@ public class ShopInfoControllerApi extends BaseController {
         return success(shopInfoService.selectShopInfoById(id));
     }
 
+
+    /**
+     * 根据用户ID查询店铺集合
+     */
+    @ApiOperation("根据用户ID查询店铺集合")
+    @GetMapping("/getByUserId")
+    public AjaxResult getByUserId(@RequestParam("userId") Long userId) {
+        return success(shopInfoService.selectShopListByUserId(userId));
+    }
+
     /**
      * 获取企业信息配置详情
      * @return

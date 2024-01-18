@@ -1,6 +1,8 @@
 package com.ruoyi.shop.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.shop.domain.ShopInfo;
 import com.ruoyi.system.domain.SysPost;
 
@@ -50,6 +52,13 @@ public interface IShopInfoService
      * @return 选中岗位ID列表
      */
     public List<Long> selectShopListByUserId(Long userId);
+
+    /**
+     * 根据用户获取店铺数据
+     * @param userId
+     * @return
+     */
+    List<ShopInfo> findShopInfoListByUserId(Long userId);
 
     /**
      * 新增店铺信息

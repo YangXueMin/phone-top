@@ -93,6 +93,14 @@
         where id = #{id}
     </select>
 
+    <select id="selectShopInfoByIds" parameterType="string" resultMap="ShopInfoResult">
+        <include refid="selectShopInfoVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
     <select id="selectShopAll" resultMap="ShopInfoResult">
         <include refid="selectShopInfoVo"/>
     </select>

@@ -24,6 +24,14 @@ public interface ShopInfoMapper
     public ShopInfo selectShopInfoById(Long id);
 
     /**
+     * 查询店铺信息
+     *
+     * @param ids 店铺信息主键
+     * @return 店铺信息
+     */
+    public List<ShopInfo> selectShopInfoByIds(Long[] ids);
+
+    /**
      * 查询店铺信息列表
      *
      * @param shopInfo 店铺信息
