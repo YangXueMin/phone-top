@@ -132,12 +132,10 @@ public class MemberServiceImpl implements IMemberService {
         Long id = SecurityUtils.getLoginUser().getUserId();
         Member member = memberMapper.selectMemberById(id);
         if (member != null && StringUtils.isNotBlank(member.getMobile())) {
-            SysUser sysUser = new SysUser();
-            sysUser.setPhonenumber(member.getMobile());
-            List<SysUser> userList = sysUserMapper.selectUserList(sysUser);
-            if (userList.size() > 0) {
-                member.setUserId(userList.get(0).getUserId());
-                member.setSysUser(userList.get(0));
+            SysUser sysUser = sysUserMapper.selectUserByPhonenumber(member.getMobile());
+            if (sysUser != null) {
+                member.setUserId(sysUser.getUserId());
+                member.setSysUser(sysUser);
             }
         }
         return member;
