@@ -47,12 +47,36 @@ public interface IOrderService {
     public Order insertOrder(Order order);
 
     /**
+     * 新增订单记录
+     *
+     * @param order 订单记录
+     * @return 结果
+     */
+    public Order insertOrderBalance(Order order);
+
+    /**
+     * 发起支付
+     *
+     * @param order 发起支付
+     * @return 结果
+     */
+    public WxPayMpOrderResult payBalance(Order order);
+
+    /**
      * 发起支付
      *
      * @param order 发起支付
      * @return 结果
      */
     public WxPayMpOrderResult pay(Order order);
+
+    /**
+     * 支付通知
+     *
+     * @param xmlData 支付通知
+     * @return 结果
+     */
+    public String payOrderBalanceNotify(String xmlData);
 
     /**
      * 支付通知

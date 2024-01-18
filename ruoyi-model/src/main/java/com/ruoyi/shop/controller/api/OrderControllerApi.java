@@ -72,6 +72,29 @@ public class OrderControllerApi extends BaseController {
     }
 
     /**
+     * 创建订单
+     */
+    @ApiOperation("创建储值+订单")
+    @PostMapping("/createBalance")
+    public AjaxResult createBalance(@RequestBody Order order) {
+        return success(orderService.insertOrderBalance(order));
+    }
+
+    /**
+     * 发起支付
+     */
+    @ApiOperation("发起支付")
+    @PostMapping("/payBalance")
+    public AjaxResult payBalance(@RequestBody Order order) {
+        order = orderService.selectOrderById(order.getId());
+        if (order == null) {
+            return warn("订单不存在");
+        }
+        WxPayMpOrderResult pay = orderService.payBalance(order);
+        return success(pay);
+    }
+
+    /**
      * 发起支付
      */
     @ApiOperation("发起支付")
@@ -83,6 +106,15 @@ public class OrderControllerApi extends BaseController {
         }
         WxPayMpOrderResult pay = orderService.pay(order);
         return success(pay);
+    }
+
+    /**
+     * 支付回调通知处理
+     */
+    @ApiOperation("支付回调通知处理")
+    @PostMapping("/payOrderBalanceNotify")
+    public String payOrderBalanceNotify(@RequestBody String xmlData) {
+        return orderService.payOrderBalanceNotify(xmlData);
     }
 
     /**

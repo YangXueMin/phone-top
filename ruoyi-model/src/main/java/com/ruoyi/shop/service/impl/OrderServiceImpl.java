@@ -50,6 +50,8 @@ public class OrderServiceImpl implements IOrderService {
     private BalanceInfoMapper balanceInfoMapper;
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private RechargeOrderMapper rechargeOrderMapper;
 
     /**
      * 查询订单记录
@@ -152,6 +154,80 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public Order insertOrderBalance(Order order) {
+        order.setOrderStatus("1");
+        order.setCancelStatus("1");
+        order.setCreateTime(DateUtils.getNowDate());
+        final String orderNumber = SnowflakeGenerator.generateOrderNumber();
+        order.setOrderNumber(orderNumber);
+        final int i = orderMapper.insertOrder(order);
+        if (i > 0) {
+            if (order.getDetailsList().size() > 0) {
+                for (OrderDetails orderDetails : order.getDetailsList()) {
+                    orderDetails.setOrderId(order.getId());
+                    orderDetails.setCreateTime(DateUtils.getNowDate());
+                    orderDetailsMapper.insertOrderDetails(orderDetails);
+                }
+            }
+            RechargeOrder rechargeOrder = order.getRechargeOrder();
+            rechargeOrder.setCreateTime(DateUtils.getNowDate());
+            rechargeOrder.setOrderNo(orderNumber);
+            rechargeOrder.setOrderStatus("1");
+            int ri = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
+            if (ri > 0 && rechargeOrder.getCouponList().size() > 0) {
+                for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
+                    rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                    rechargeOrderCoupon.setPayStatus("1");
+                    rechargeOrderCoupon.setStatus("1");
+                    rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
+                    rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+                }
+            }
+        }
+        return order;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public WxPayMpOrderResult payBalance(Order order) {
+        order = orderMapper.selectOrderById(order.getId());
+        RechargeOrder rechargeOrder = rechargeOrderMapper.selectRechargeOrderById(order.getRechargeOrder().getId());
+        Member member = SecurityUtils.getLoginUser().getMember();
+        WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
+        //随机字符串
+        request.setNonceStr(IdUtils.generateNonceStr());
+        //加密方式
+        request.setSignType("MD5");
+        //订单号
+        request.setOutTradeNo(order.getOrderNumber());
+        //金额，以分为单位
+        request.setTotalFee((order.getMoney().add(rechargeOrder.getMoney())).multiply(BigDecimal.valueOf(100L)).intValue());
+        // 用户ip
+        request.setSpbillCreateIp("127.0.0.1");
+        //回调通知地址（必须外网能访问的地址）
+        request.setNotifyUrl(Constants.URL + "api/shop/order/payOrderBalanceNotify");
+        //小程序支付
+        request.setTradeType("JSAPI");
+        //小程序用户openid
+        request.setOpenid(member.getOpenId());
+        //商品描述
+        final ShopInfo shopInfo = shopInfoMapper.selectShopInfoById(order.getShopId());
+        StringBuilder body = new StringBuilder("祁大脑袋熏鸡");
+        if (shopInfo != null) {
+            body.append("-");
+            body.append(shopInfo.getName());
+        }
+        request.setBody(body.toString());
+        try {
+            return wechatConfiguration.wxPayService().createOrder(request);
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public WxPayMpOrderResult pay(Order order) {
         order = orderMapper.selectOrderById(order.getId());
         Member member = SecurityUtils.getLoginUser().getMember();
@@ -180,15 +256,54 @@ public class OrderServiceImpl implements IOrderService {
             body.append(shopInfo.getName());
         }
         request.setBody(body.toString());
-        //商品详情
-        //request.setDetail("");
-
         try {
             return wechatConfiguration.wxPayService().createOrder(request);
         } catch (WxPayException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String payOrderBalanceNotify(String xmlData) {
+        try {
+            WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService().parseOrderNotifyResult(xmlData);
+            if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
+                List<Order> orderList = orderMapper.selectOrderByOrderNumber(notifyResult.getOutTradeNo());
+                if (orderList != null && orderList.size() > 0) {
+                    Order order = orderList.get(0);
+                    order.setOrderStatus("2");
+                    order.setCancelStatus("1");
+                    order.setPayType("2");
+                    order.setPayTime(notifyResult.getTimeEnd());
+                    order.setPayResult(JSON.toJSONString(notifyResult));
+                    order.setUpdateTime(DateUtils.getNowDate());
+                    orderMapper.updateOrder(order);
+                }
+                List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectOrderByOrderNo(notifyResult.getOutTradeNo());
+                if (rechargeOrderList != null && rechargeOrderList.size() > 0) {
+                    RechargeOrder rechargeOrder = rechargeOrderList.get(0);
+                    rechargeOrder.setOrderStatus("2");
+                    rechargeOrder.setPayTime(notifyResult.getTimeEnd());
+                    rechargeOrder.setPayResult(JSON.toJSONString(notifyResult));
+                    rechargeOrder.setUpdateTime(DateUtils.getNowDate());
+                    rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
+                    //更新优惠券支付状态
+                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId(), "2");
+                    //更新用户余额
+                    Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
+                    BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
+                    member.setBalance(balance.add(rechargeOrder.getMoney()));
+                    member.setIsMember("1");
+                    memberMapper.updateMember(member);
+                }
+                return WxPayNotifyResponse.success("成功");
+            }
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return WxPayNotifyResponse.fail("失败");
     }
 
     @Override
