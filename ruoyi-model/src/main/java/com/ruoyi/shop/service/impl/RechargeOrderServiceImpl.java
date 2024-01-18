@@ -14,6 +14,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.shop.domain.RechargeOrder;
@@ -96,6 +97,7 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
     @Transactional(rollbackFor = Exception.class)
     public RechargeOrder insertRechargeOrder(RechargeOrder rechargeOrder) {
         rechargeOrder.setCreateTime(DateUtils.getNowDate());
+        rechargeOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         rechargeOrder.setOrderStatus("1");
         int i = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
         if (i > 0 && rechargeOrder.getCouponList().size() > 0) {
