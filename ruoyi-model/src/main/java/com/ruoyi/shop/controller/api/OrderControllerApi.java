@@ -183,7 +183,7 @@ public class OrderControllerApi extends BaseController {
                 return warn("当前核销人员无门店权限");
             }
         }
-        return success(orderService.updateOrder(order));
+        return success(orderService.cancelOrder(order));
     }
 
 }

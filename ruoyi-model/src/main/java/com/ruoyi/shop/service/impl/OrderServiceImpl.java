@@ -353,8 +353,7 @@ public class OrderServiceImpl implements IOrderService {
     public int cancelOrder(Order order) {
         order.setCancelStatus("2");
         order.setUpdateTime(DateUtils.getNowDate());
-        final int i = orderMapper.updateOrder(order);
-        return i;
+        return orderMapper.updateOrder(order);
     }
 
     /**
