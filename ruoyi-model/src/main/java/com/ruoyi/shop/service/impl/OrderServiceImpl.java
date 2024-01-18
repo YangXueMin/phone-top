@@ -169,18 +169,20 @@ public class OrderServiceImpl implements IOrderService {
                     orderDetailsMapper.insertOrderDetails(orderDetails);
                 }
             }
-            RechargeOrder rechargeOrder = order.getRechargeOrder();
-            rechargeOrder.setCreateTime(DateUtils.getNowDate());
-            rechargeOrder.setOrderNo(orderNumber);
-            rechargeOrder.setOrderStatus("1");
-            int ri = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
-            if (ri > 0 && rechargeOrder.getCouponList().size() > 0) {
-                for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
-                    rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
-                    rechargeOrderCoupon.setPayStatus("1");
-                    rechargeOrderCoupon.setStatus("1");
-                    rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
-                    rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+            if(order.getRechargeOrder() != null){
+                RechargeOrder rechargeOrder = order.getRechargeOrder();
+                rechargeOrder.setCreateTime(DateUtils.getNowDate());
+                rechargeOrder.setOrderNo(orderNumber);
+                rechargeOrder.setOrderStatus("1");
+                int ri = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
+                if (ri > 0 && rechargeOrder.getCouponList().size() > 0) {
+                    for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
+                        rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                        rechargeOrderCoupon.setPayStatus("1");
+                        rechargeOrderCoupon.setStatus("1");
+                        rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
+                        rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+                    }
                 }
             }
         }
