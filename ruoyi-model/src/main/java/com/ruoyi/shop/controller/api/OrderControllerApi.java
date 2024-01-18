@@ -171,7 +171,7 @@ public class OrderControllerApi extends BaseController {
         if (!StringUtils.equals("2", order.getOrderStatus())) {
             return warn("订单已使用或已退款或已取消");
         }
-        if (!StringUtils.equals("1", order.getCancelStatus())) {
+        if (StringUtils.equals("2", order.getCancelStatus())) {
             return warn("订单已核销");
         }
         //判断核销人员ID是否有门店权限
