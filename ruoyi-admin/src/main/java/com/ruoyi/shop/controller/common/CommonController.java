@@ -164,7 +164,7 @@ public class CommonController {
      */
     @PostMapping("/common/qrCode")
     public AjaxResult qrCode(@RequestBody EwmEntity ewmEntity) {
-        return AjaxResult.success(ewmUtils.generateBase64(ewmEntity.getContent(), ewmEntity.getImageType()));
+        return AjaxResult.success("生成二维码成功",ewmUtils.generateBase64(ewmEntity.getContent(), ewmEntity.getImageType()));
     }
 
     /**
