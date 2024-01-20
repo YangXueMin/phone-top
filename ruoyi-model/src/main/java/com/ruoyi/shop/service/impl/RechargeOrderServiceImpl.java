@@ -163,7 +163,10 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
                     rechargeOrder.setUpdateTime(DateUtils.getNowDate());
                     rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
                     //更新优惠券支付状态
-                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId(), "2");
+                    RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+                    rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                    rechargeOrderCoupon.setPayStatus("2");
+                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrderCoupon);
                     //更新用户余额
                     Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
                     BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
@@ -215,7 +218,10 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
                     rechargeOrder.setUpdateTime(DateUtils.getNowDate());
                     rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
                     //更新优惠券支付状态
-                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrder.getId(), "3");
+                    RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+                    rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                    rechargeOrderCoupon.setPayStatus("3");
+                    rechargeOrderCouponMapper.updateRechargeOrderCouponPayStatusByRechargeId(rechargeOrderCoupon);
                     //更新用户余额
                     Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
                     BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;

@@ -10,6 +10,7 @@ import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
+import com.ruoyi.shop.domain.OrderRequest;
 import com.ruoyi.shop.service.IMemberService;
 import com.ruoyi.shop.service.IOrderService;
 import com.ruoyi.system.service.ISysUserService;
@@ -76,14 +77,14 @@ public class OrderControllerApi extends BaseController {
      */
     @ApiOperation("创建储值+订单")
     @PostMapping("/createBalance")
-    public AjaxResult createBalance(@RequestBody Order order) {
-        return success(orderService.insertOrderBalance(order));
+    public AjaxResult createBalance(@RequestBody OrderRequest orderRequest) {
+        return success(orderService.insertOrderBalance(orderRequest));
     }
 
     /**
-     * 发起支付
+     * 普通订单发起支付
      */
-    @ApiOperation("发起支付")
+    @ApiOperation("普通订单发起支付")
     @PostMapping("/payBalance")
     public AjaxResult payBalance(@RequestBody Order order) {
         order = orderService.selectOrderById(order.getId());
@@ -111,7 +112,7 @@ public class OrderControllerApi extends BaseController {
     /**
      * 支付回调通知处理
      */
-    @ApiOperation("支付回调通知处理")
+    @ApiOperation("普通订单支付回调通知处理")
     @PostMapping("/payOrderBalanceNotify")
     public String payOrderBalanceNotify(@RequestBody String xmlData) {
         return orderService.payOrderBalanceNotify(xmlData);

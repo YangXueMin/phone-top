@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 充值订单与优惠券关联Mapper接口
@@ -64,11 +65,10 @@ public interface RechargeOrderCouponMapper {
     /**
      * 更新优惠券支付状态
      *
-     * @param rechargeId 充值订单与优惠券关联主键
-     * @param payStatus 支付状态
+     * @param rechargeOrderCoupon 支付状态
      * @return 结果
      */
-    public int updateRechargeOrderCouponPayStatusByRechargeId(Long rechargeId, String payStatus);
+    public int updateRechargeOrderCouponPayStatusByRechargeId(RechargeOrderCoupon rechargeOrderCoupon);
 
     /**
      * 删除充值订单与优惠券关联

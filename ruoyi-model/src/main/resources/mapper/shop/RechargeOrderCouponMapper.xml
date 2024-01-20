@@ -153,10 +153,10 @@
         where id = #{id}
     </update>
 
-    <update id="updateRechargeOrderCouponPayStatusByRechargeId" parameterType="string">
+    <update id="updateRechargeOrderCouponPayStatusByRechargeId" parameterType="RechargeOrderCoupon">
         update shop_recharge_order_coupon
-            pay_status = #{payStatus}
-        where id = #{id}
+           set pay_status = #{payStatus}
+        where recharge_id = #{rechargeId}
     </update>
 
     <delete id="deleteRechargeOrderCouponById" parameterType="Long">

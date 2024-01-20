@@ -167,12 +167,6 @@ public class Order extends BaseEntity {
     @ApiModelProperty("核销用户信息")
     private SysUser sysUser;
 
-    /**
-     * 储值订单
-     */
-    @ApiModelProperty("储值订单")
-    private RechargeOrder rechargeOrder;
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -339,13 +333,5 @@ public class Order extends BaseEntity {
 
     public void setSysUser(SysUser sysUser) {
         this.sysUser = sysUser;
-    }
-
-    public RechargeOrder getRechargeOrder() {
-        return rechargeOrder;
-    }
-
-    public void setRechargeOrder(RechargeOrder rechargeOrder) {
-        this.rechargeOrder = rechargeOrder;
     }
 }

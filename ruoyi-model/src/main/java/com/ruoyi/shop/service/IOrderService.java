@@ -6,6 +6,7 @@ import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.ruoyi.shop.domain.Order;
+import com.ruoyi.shop.domain.OrderRequest;
 
 /**
  * 订单记录Service接口
@@ -49,10 +50,10 @@ public interface IOrderService {
     /**
      * 新增订单记录
      *
-     * @param order 订单记录
+     * @param orderRequest 订单记录
      * @return 结果
      */
-    public Order insertOrderBalance(Order order);
+    public Order insertOrderBalance(OrderRequest orderRequest);
 
     /**
      * 发起支付
