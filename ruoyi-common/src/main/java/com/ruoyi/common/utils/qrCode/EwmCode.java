@@ -19,6 +19,8 @@ public class EwmCode {
         QrConfig qrConfig=new QrConfig();
         qrConfig.setBackColor(Color.white.getRGB());
         qrConfig.setForeColor(Color.black.getRGB());
+        qrConfig.setWidth(200);
+        qrConfig.setHeight(200);
         return qrConfig;
     }
 }

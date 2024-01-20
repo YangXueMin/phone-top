@@ -120,7 +120,7 @@ public class OrderServiceImpl implements IOrderService {
         Member member = memberMapper.selectMemberById(order.getMemberId());
         BigDecimal beforeBalance = member.getBalance();
 
-        if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 1) {
+        if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 0) {
             order.setOrderStatus("2");
             order.setCancelStatus("1");
             order.setPayTime(DateUtils.dateTimeNow());
@@ -177,7 +177,7 @@ public class OrderServiceImpl implements IOrderService {
                     }
                 }
             }
-            if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 1) {
+            if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 0) {
                 member.setBalance(member.getBalance().subtract(order.getMoney()));
                 member.setUpdateTime(DateUtils.getNowDate());
                 memberMapper.updateMember(member);
@@ -195,7 +195,10 @@ public class OrderServiceImpl implements IOrderService {
     public WxPayMpOrderResult pay(Order order) {
         order = orderMapper.selectOrderById(order.getId());
         List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectOrderByOrderNo(order.getOrderNumber());
-        BigDecimal money = order.getMoney();
+        BigDecimal money = BigDecimal.ZERO;
+        if(StringUtils.equals("1",order.getOrderStatus())){
+            money = money.add(order.getMoney());
+        }
         if (rechargeOrderList.size() > 0) {
             money = money.add(rechargeOrderList.get(0).getMoney());
         }
@@ -242,6 +245,16 @@ public class OrderServiceImpl implements IOrderService {
                 List<Order> orderList = orderMapper.selectOrderByOrderNumber(notifyResult.getOutTradeNo());
                 if (orderList != null && orderList.size() > 0) {
                     Order order = orderList.get(0);
+                    if(StringUtils.equals("1",order.getOrderStatus())){
+                        order.setOrderStatus("2");
+                        order.setCancelStatus("1");
+                        order.setPayType("2");
+                        order.setPayTime(notifyResult.getTimeEnd());
+                        order.setPayResult(JSON.toJSONString(notifyResult));
+                        order.setUpdateTime(DateUtils.getNowDate());
+                        orderMapper.updateOrder(order);
+                    }
+
 
                     List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectOrderByOrderNo(notifyResult.getOutTradeNo());
                     if (rechargeOrderList != null && rechargeOrderList.size() > 0) {
@@ -259,28 +272,9 @@ public class OrderServiceImpl implements IOrderService {
                         //更新用户余额
                         Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
                         BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
-                        BigDecimal orderMoney = BigDecimal.ZERO;
-                        if (StringUtils.equals("1", order.getOrderStatus())) {
-                            orderMoney = order.getMoney();
-                        }
-                        member.setBalance(balance.add(rechargeOrder.getMoney()).subtract(orderMoney).setScale(2, RoundingMode.HALF_UP));
+                        member.setBalance(balance.add(rechargeOrder.getMoney()).setScale(2, RoundingMode.HALF_UP));
                         member.setIsMember("1");
                         memberMapper.updateMember(member);
-                        if (StringUtils.equals("1", order.getOrderStatus())) {
-                            //添加余额消费记录
-                            BalanceInfo balanceInfo = new BalanceInfo(order.getMemberId(), "1", order.getId(), balance.add(rechargeOrder.getMoney()), member.getBalance(), order.getMoney());
-                            balanceInfo.setCreateTime(DateUtils.getNowDate());
-                            balanceInfoMapper.insertBalanceInfo(balanceInfo);
-                        }
-                    }
-                    if (StringUtils.equals("1", order.getOrderStatus())) {
-                        order.setOrderStatus("2");
-                        order.setCancelStatus("1");
-                        order.setPayType("2");
-                        order.setPayTime(notifyResult.getTimeEnd());
-                        order.setPayResult(JSON.toJSONString(notifyResult));
-                        order.setUpdateTime(DateUtils.getNowDate());
-                        orderMapper.updateOrder(order);
                     }
                 }
                 return WxPayNotifyResponse.success("成功");
