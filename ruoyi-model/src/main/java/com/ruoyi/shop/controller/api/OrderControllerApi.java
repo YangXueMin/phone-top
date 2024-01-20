@@ -1,5 +1,6 @@
 package com.ruoyi.shop.controller.api;
 
+import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
@@ -62,37 +63,15 @@ public class OrderControllerApi extends BaseController {
     @ApiOperation("创建订单")
     @PostMapping("/create")
     public AjaxResult create(@RequestBody Order order) {
+        logger.info("接收到参数：{}", JSON.toJSONString(order));
         //如果是用余额支付，判断用户余额是否充足
-        if (StringUtils.equals("1", order.getPayType())) {
+        if (StringUtils.equals("1", order.getPayType()) && order.getCardId() == null) {
             Member member = memberService.selectMemberById(order.getMemberId());
             if (member.getBalance().compareTo(order.getMoney()) < 0) {
                 return warn("余额不足，请充值");
             }
         }
         return success(orderService.insertOrder(order));
-    }
-
-    /**
-     * 创建订单
-     */
-    @ApiOperation("创建储值+订单")
-    @PostMapping("/createBalance")
-    public AjaxResult createBalance(@RequestBody OrderRequest orderRequest) {
-        return success(orderService.insertOrderBalance(orderRequest));
-    }
-
-    /**
-     * 普通订单发起支付
-     */
-    @ApiOperation("普通订单发起支付")
-    @PostMapping("/payBalance")
-    public AjaxResult payBalance(@RequestBody Order order) {
-        order = orderService.selectOrderById(order.getId());
-        if (order == null) {
-            return warn("订单不存在");
-        }
-        WxPayMpOrderResult pay = orderService.payBalance(order);
-        return success(pay);
     }
 
     /**
@@ -107,15 +86,6 @@ public class OrderControllerApi extends BaseController {
         }
         WxPayMpOrderResult pay = orderService.pay(order);
         return success(pay);
-    }
-
-    /**
-     * 支付回调通知处理
-     */
-    @ApiOperation("普通订单支付回调通知处理")
-    @PostMapping("/payOrderBalanceNotify")
-    public String payOrderBalanceNotify(@RequestBody String xmlData) {
-        return orderService.payOrderBalanceNotify(xmlData);
     }
 
     /**

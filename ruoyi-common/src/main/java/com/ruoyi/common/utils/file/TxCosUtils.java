@@ -40,7 +40,7 @@ public class TxCosUtils {
     private static final String SECRET_KEY = "KuVWkZN7uEavDWadfYM2WowuiKkwpa8x";
     private static final String REGION_NAME = "ap-beijing";
     private static final String BUCKET_NAME = "ygmfood";
-    public static final String URL = "https://ygmfood-1323517301.cos.ap-beijing.myqcloud.com/";
+    public static final String URL = "https://image.ygmfood.com/";
 
     private TxCosUtils() {
     }

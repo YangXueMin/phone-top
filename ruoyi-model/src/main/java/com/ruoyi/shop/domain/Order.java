@@ -167,6 +167,13 @@ public class Order extends BaseEntity {
     @ApiModelProperty("核销用户信息")
     private SysUser sysUser;
 
+    /**
+     * 充值卡ID
+     */
+    @Excel(name = "充值卡ID")
+    @ApiModelProperty("充值卡ID")
+    private Long cardId;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -333,5 +340,13 @@ public class Order extends BaseEntity {
 
     public void setSysUser(SysUser sysUser) {
         this.sysUser = sysUser;
+    }
+
+    public Long getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Long cardId) {
+        this.cardId = cardId;
     }
 }
