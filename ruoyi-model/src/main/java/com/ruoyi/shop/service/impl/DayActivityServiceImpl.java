@@ -2,6 +2,7 @@ package com.ruoyi.shop.service.impl;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.time.DateFormatUtil;
 import com.ruoyi.shop.domain.DayActivity;
 import com.ruoyi.shop.domain.DayActivityGoods;
 import com.ruoyi.shop.domain.Goods;
@@ -10,11 +11,15 @@ import com.ruoyi.shop.mapper.DayActivityMapper;
 import com.ruoyi.shop.mapper.GoodsMapper;
 import com.ruoyi.shop.mapper.GoodsSpecsMapper;
 import com.ruoyi.shop.service.IDayActivityService;
+import com.ruoyi.system.domain.Holiday;
+import com.ruoyi.system.mapper.HolidayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +39,8 @@ public class DayActivityServiceImpl implements IDayActivityService {
     private GoodsMapper goodsMapper;
     @Autowired
     private GoodsSpecsMapper goodsSpecsMapper;
+    @Autowired
+    private HolidayMapper holidayMapper;
 
     /**
      * 查询会员日活动
@@ -57,10 +64,39 @@ public class DayActivityServiceImpl implements IDayActivityService {
     @Override
     public List<DayActivity> selectDayActivityList(DayActivity dayActivity) {
         List<DayActivity> dayActivityList = dayActivityMapper.selectDayActivityList(dayActivity);
-        for (DayActivity activity : dayActivityList) {
-            getGoodsList(activity);
+        if (dayActivityList.size() > 0) {
+            for (DayActivity activity : dayActivityList) {
+                getGoodsList(activity);
+            }
         }
         return dayActivityList;
+    }
+
+    @Override
+    public boolean isHoliday(Long shopId) {
+        final Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        DayActivity dayActivity = new DayActivity();
+        dayActivity.setShopId(shopId);
+        dayActivity.setStatus("1");
+        List<DayActivity> dayActivityList = dayActivityMapper.selectDayActivityList(dayActivity);
+        if (dayActivityList.size() > 0) {
+            Holiday holiday = holidayMapper.selectHolidayById(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, date));
+            dayActivity = dayActivityList.get(0);
+            String activityTime = dayActivity.getActivityTime();
+            //是同一天
+            if (StringUtils.equals(dayOfWeek + "", activityTime)) {
+                //判断今天是否是节假日
+                if(holiday != null && holiday.isHoliday()){
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public void getGoodsList(DayActivity dayActivity) {

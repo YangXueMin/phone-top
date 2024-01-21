@@ -45,4 +45,10 @@ public class DayActivityControllerApi extends BaseController {
         return success(dayActivityService.deleteDayActivityById(id));
     }
 
+
+    @ApiOperation("是否会员日")
+    @GetMapping("/isHoliday")
+    public AjaxResult isHoliday(@RequestParam("shopId")Long shopId){
+        return success(dayActivityService.isHoliday(shopId));
+    }
 }
