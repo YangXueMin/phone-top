@@ -6,6 +6,7 @@ import java.util.List;
 import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ToolUtils;
 import com.ruoyi.shop.domain.*;
 import com.ruoyi.shop.mapper.*;
@@ -80,16 +81,17 @@ public class ShopInfoServiceImpl implements IShopInfoService {
 
     /**
      * 根据用户获取店铺数据
+     *
      * @param userId 用户ID
      * @return
      */
     @Override
     public List<ShopInfo> findShopInfoListByUserId(Long userId) {
         List<Long> shopIdList = this.selectShopListByUserId(userId);
-        if(shopIdList != null && shopIdList.size() > 0){
+        if (shopIdList != null && shopIdList.size() > 0) {
             return shopInfoMapper.selectShopInfoByIds(shopIdList.toArray(new Long[0]));
         }
-        return  new ArrayList<>();
+        return new ArrayList<>();
     }
 
     /**
@@ -103,14 +105,14 @@ public class ShopInfoServiceImpl implements IShopInfoService {
     public int insertShopInfo(ShopInfo shopInfo) {
         shopInfo.setCreateTime(DateUtils.getNowDate());
         final int i = shopInfoMapper.insertShopInfo(shopInfo);
-        if(i > 0){
+        if (i > 0 && StringUtils.equals("1", shopInfo.getIsSyncShop())) {
             CompanyGoods companyGoodsQuery = new CompanyGoods();
             companyGoodsQuery.setStatus("1");
             List<CompanyGoods> list = companyGoodsMapper.selectCompanyGoodsList(companyGoodsQuery);
-            if(list != null && list.size() > 0){
+            if (list != null && list.size() > 0) {
                 for (CompanyGoods companyGoods : list) {
                     Goods goods = new Goods();
-                    ToolUtils.copyPropertiesIgnoreNull(companyGoods,goods);
+                    ToolUtils.copyPropertiesIgnoreNull(companyGoods, goods);
                     goods.setShopId(shopInfo.getId());
                     goods.setCompanyGoodsId(companyGoods.getId());
                     goodsMapper.insertGoods(goods);
@@ -119,7 +121,7 @@ public class ShopInfoServiceImpl implements IShopInfoService {
                     if (companyGoodsSpecsList.size() > 0) {
                         for (CompanyGoodsSpecs companyGoodsSpecs : companyGoodsSpecsList) {
                             GoodsSpecs goodsSpecs = new GoodsSpecs();
-                            ToolUtils.copyPropertiesIgnoreNull(companyGoodsSpecs,goodsSpecs);
+                            ToolUtils.copyPropertiesIgnoreNull(companyGoodsSpecs, goodsSpecs);
                             goodsSpecs.setGoodsId(goods.getId());
                             goodsSpecs.setCreateTime(DateUtils.getNowDate());
                             goodsSpecsMapper.insertGoodsSpecs(goodsSpecs);

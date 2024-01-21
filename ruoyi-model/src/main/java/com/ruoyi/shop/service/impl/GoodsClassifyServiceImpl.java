@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.TreeSelect;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -111,6 +112,13 @@ public class GoodsClassifyServiceImpl implements IGoodsClassifyService {
     @Override
     public int insertGoodsClassify(GoodsClassify goodsClassify) {
         goodsClassify.setCreateTime(DateUtils.getNowDate());
+        if(goodsClassify.getParentId() != null){
+            GoodsClassify info = goodsClassifyMapper.selectGoodsClassifyByClassId(goodsClassify.getParentId());
+            goodsClassify.setAncestors(info.getAncestors() + "," + goodsClassify.getParentId());
+        }else {
+            goodsClassify.setParentId(0L);
+            goodsClassify.setAncestors("0");
+        }
         return goodsClassifyMapper.insertGoodsClassify(goodsClassify);
     }
 

@@ -92,9 +92,10 @@ public class GoodsClassifyController extends BaseController {
         Long classId = goodsClassify.getClassId();
         if (UserConstants.NOT_UNIQUE.equals(goodsClassifyService.checkNameUnique(goodsClassify))) {
             return error("修改分类'" + goodsClassify.getName() + "'失败，分类名称已存在");
-        } else if (goodsClassify.getParentId().equals(classId)) {
-            return error("修改分类'" + goodsClassify.getName() + "'失败，上级分类不能是自己");
         }
+        //else if (goodsClassify.getParentId().equals(classId)) {
+        //    return error("修改分类'" + goodsClassify.getName() + "'失败，上级分类不能是自己");
+        //}
         return toAjax(goodsClassifyService.updateGoodsClassify(goodsClassify));
     }
 
