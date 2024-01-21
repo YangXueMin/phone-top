@@ -89,13 +89,9 @@ public class GoodsClassifyController extends BaseController {
     @Log(title = "商品分类", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody GoodsClassify goodsClassify) {
-        Long classId = goodsClassify.getClassId();
         if (UserConstants.NOT_UNIQUE.equals(goodsClassifyService.checkNameUnique(goodsClassify))) {
             return error("修改分类'" + goodsClassify.getName() + "'失败，分类名称已存在");
         }
-        //else if (goodsClassify.getParentId().equals(classId)) {
-        //    return error("修改分类'" + goodsClassify.getName() + "'失败，上级分类不能是自己");
-        //}
         return toAjax(goodsClassifyService.updateGoodsClassify(goodsClassify));
     }
 
