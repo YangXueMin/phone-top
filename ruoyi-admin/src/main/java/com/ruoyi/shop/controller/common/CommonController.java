@@ -12,6 +12,7 @@ import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.qrCode.EwmEntity;
 import com.ruoyi.common.utils.qrCode.EwmUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.shop.service.IShopIpJsonService;
 import com.ruoyi.system.domain.Holiday;
 import com.ruoyi.system.mapper.HolidayMapper;
 import com.ruoyi.system.utils.HolidayUtils;
@@ -50,6 +51,8 @@ public class CommonController {
     private HolidayMapper holidayMapper;
     @Autowired
     private EwmUtils ewmUtils;
+    @Autowired
+    private IShopIpJsonService shopIpJsonService;
 
     @GetMapping("common/holiday")
     public void fileDownload() {
@@ -173,9 +176,7 @@ public class CommonController {
     @GetMapping("/common/getAddressByIP")
     public AjaxResult getAddressByIP(HttpServletRequest request) {
         final String ipAddr = IpUtils.getIpAddr(request);
-        String url = "https://restapi.amap.com/v3/ip?key=6c2e7bc7a2189168b39c18f5b4b4d00e&ip=" + ipAddr;
-        String result = HttpUtil.createGet(url).execute().body();
-        return AjaxResult.success(result);
+        return AjaxResult.success(shopIpJsonService.selectShopIpJsonByIp(ipAddr).getJson());
     }
 }
 

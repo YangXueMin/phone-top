@@ -113,7 +113,7 @@
         where u.user_id = #{userId}
     </select>
 
-    <insert id="insertShopInfo" parameterType="ShopInfo">
+    <insert id="insertShopInfo" parameterType="ShopInfo" useGeneratedKeys="true" keyProperty="id">
         insert into shop_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

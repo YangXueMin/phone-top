@@ -52,7 +52,7 @@ public class ShopScopeAspect {
      */
     public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String shopAlias) {
         StringBuilder sqlString = new StringBuilder();
-        if (user.getShopIds().length > 0) {
+        if (user.getShopIds() != null && user.getShopIds().length > 0) {
             if(StringUtils.equals("shop_info",shopAlias)){
                 sqlString.append(StringUtils.format(
                         " OR id IN ( SELECT shop_id FROM sys_user_shop WHERE user_id = {} ) ", user.getUserId()));

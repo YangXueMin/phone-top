@@ -20,7 +20,7 @@
     </sql>
 
 
-    <select id="selectHolidayById" parameterType="Long" resultMap="HolidayResult">
+    <select id="selectHolidayById" parameterType="String" resultMap="HolidayResult">
         <include refid="selectHolidayVo"/>
         where date_ = #{date}
     </select>

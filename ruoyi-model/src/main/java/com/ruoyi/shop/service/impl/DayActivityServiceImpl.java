@@ -82,17 +82,20 @@ public class DayActivityServiceImpl implements IDayActivityService {
         DayActivity dayActivity = new DayActivity();
         dayActivity.setShopId(shopId);
         dayActivity.setStatus("1");
+        dayActivity.setActivityTime(dayActivity + "");
         List<DayActivity> dayActivityList = dayActivityMapper.selectDayActivityList(dayActivity);
         if (dayActivityList.size() > 0) {
             Holiday holiday = holidayMapper.selectHolidayById(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, date));
+            //判断今天是否是节假日
+            if (holiday != null && holiday.isHoliday()) {
+                return false;
+            }
             dayActivity = dayActivityList.get(0);
             String activityTime = dayActivity.getActivityTime();
-            //是同一天
-            if (StringUtils.equals(dayOfWeek + "", activityTime)) {
-                //判断今天是否是节假日
-                if(holiday != null && holiday.isHoliday()){
-                    return false;
-                }
+            //是同一天，并且不是周六和周日
+            if (StringUtils.equals(dayOfWeek + "", activityTime)
+                //&& dayOfWeek != 1 && dayOfWeek != 6
+            ) {
                 return true;
             }
         }
