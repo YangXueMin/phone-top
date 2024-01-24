@@ -31,7 +31,7 @@
         <result property="remark"    column="remark"    />
         <association property="shopInfo"    column="shop_id" javaType="ShopInfo" resultMap="ShopInfoResult" />
         <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
-        <association property="sysUser"    column="member_id" javaType="Member" resultMap="MemberResult" />
+        <association property="sysUser"    column="user_id" javaType="SysUser" resultMap="SysUserResult" />
     </resultMap>
 
     <resultMap type="ShopInfo" id="ShopInfoResult">
