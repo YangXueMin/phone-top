@@ -3,6 +3,7 @@ package com.ruoyi.shop.mapper;
 import com.ruoyi.shop.domain.RechargeOrder;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -38,6 +39,14 @@ public interface RechargeOrderMapper {
     public List<RechargeOrder> selectRechargeOrderList(RechargeOrder rechargeOrder);
 
     /**
+     * 查询充值记录列表
+     *
+     * @param rechargeOrder 充值记录
+     * @return 充值记录集合
+     */
+    public BigDecimal getTotalMoney(RechargeOrder rechargeOrder);
+
+    /**
      * 新增充值记录
      *
      * @param rechargeOrder 充值记录
@@ -52,6 +61,12 @@ public interface RechargeOrderMapper {
      * @return 结果
      */
     public int updateRechargeOrder(RechargeOrder rechargeOrder);
+    /**
+     * 更新超时订单
+     *
+     * @return 结果
+     */
+    public int updateTimeOrderStatus();
 
     /**
      * 删除充值记录

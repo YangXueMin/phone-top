@@ -26,7 +26,7 @@
     <resultMap type="ShopCard" id="ShopCardResult">
         <result property="id"    column="card_id"    />
         <result property="title"    column="title"    />
-        <result property="money"    column="money"    />
+        <result property="money"    column="cardMoney"    />
         <result property="picture"    column="picture"    />
         <result property="content"    column="content"    />
         <result property="status"    column="status"    />
@@ -62,7 +62,7 @@
                a.update_by,
                a.update_time,
                c.title,
-               c.money,
+               c.money AS cardMoney,
                c.picture,
                c.content,
                c.status,
@@ -93,6 +93,20 @@
             <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
         </where>
         order by a.create_time DESC
+    </select>
+
+    <select id="getTotalMoney" parameterType="RechargeOrder" resultType="java.math.BigDecimal">
+        select  sum(a.money)
+        from shop_recharge_order a
+        <where>
+            <if test="orderNo != null  and orderNo != ''">and a.order_no = #{orderNo}</if>
+            <if test="memberId != null ">and a.member_id = #{memberId}</if>
+            <if test="cardId != null ">and a.card_id = #{cardId}</if>
+            <if test="money != null ">and a.money = #{money}</if>
+            <if test="wechatOrder != null  and wechatOrder != ''">and a.wechat_order = #{wechatOrder}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and a.order_status = #{orderStatus}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
+        </where>
     </select>
 
     <select id="selectRechargeOrderById" parameterType="Long" resultMap="RechargeOrderResult">
@@ -157,6 +171,12 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateTimeOrderStatus" >
+        update shop_recharge_order
+        set order_status = 4
+        where order_status = 1 AND create_time &lt; DATE_SUB(NOW(), INTERVAL 10 MINUTE);
     </update>
 
     <delete id="deleteRechargeOrderById" parameterType="Long">

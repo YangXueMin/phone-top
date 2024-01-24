@@ -117,7 +117,7 @@ public class ShopInfoServiceImpl implements IShopInfoService {
                     goods.setCompanyGoodsId(companyGoods.getId());
                     goodsMapper.insertGoods(goods);
 
-                    List<CompanyGoodsSpecs> companyGoodsSpecsList = companyGoodsSpecsMapper.selectCompanyGoodsSpecsByGoodId(goods.getId());
+                    List<CompanyGoodsSpecs> companyGoodsSpecsList = companyGoodsSpecsMapper.selectCompanyGoodsSpecsByGoodId(companyGoods.getId());
                     if (companyGoodsSpecsList.size() > 0) {
                         for (CompanyGoodsSpecs companyGoodsSpecs : companyGoodsSpecsList) {
                             GoodsSpecs goodsSpecs = new GoodsSpecs();

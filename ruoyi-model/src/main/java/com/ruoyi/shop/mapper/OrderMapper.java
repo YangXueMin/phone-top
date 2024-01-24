@@ -1,5 +1,6 @@
 package com.ruoyi.shop.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.shop.domain.Order;
@@ -38,6 +39,13 @@ public interface OrderMapper
     public List<Order> selectOrderList(Order order);
 
     /**
+     * 统计核销金额
+     * @param order
+     * @return
+     */
+    public BigDecimal getCancelSum(Order order);
+
+    /**
      * 新增订单记录
      *
      * @param order 订单记录
@@ -52,6 +60,12 @@ public interface OrderMapper
      * @return 结果
      */
     public int updateOrder(Order order);
+
+    /**
+     * 更新超时订单
+     * @return
+     */
+    public int updateTimeOrderStatus();
 
     /**
      * 删除订单记录

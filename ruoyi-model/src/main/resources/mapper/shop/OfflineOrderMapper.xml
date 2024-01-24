@@ -15,6 +15,8 @@
         <result property="orderStatus" column="order_status"/>
         <result property="payType" column="pay_type"/>
         <result property="payTime" column="pay_time"/>
+        <result property="mName" column="m_name"/>
+        <result property="mPhone" column="m_phone"/>
         <result property="userId" column="user_id"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
@@ -72,6 +74,8 @@
                a.order_status,
                a.pay_type,
                a.pay_time,
+               a.m_name,
+               a.m_phone,
                a.user_id,
                a.create_by,
                a.create_time,
@@ -123,6 +127,8 @@
             <if test="orderStatus != null  and orderStatus != ''">and a.order_status = #{orderStatus}</if>
             <if test="payType != null  and payType != ''">and a.pay_type = #{payType}</if>
             <if test="payTime != null  and payTime != ''">and a.pay_time = #{payTime}</if>
+            <if test="mName != null ">and a.m_name like concat('%',  #{mName}, '%')</if>
+            <if test="mPhone != null ">and a.m_phone like concat('%',  #{mPhone}, '%')</if>
             <if test="userId != null ">and a.user_id = #{userId}</if>
             ${params.shopScope}
         </where>
@@ -146,6 +152,8 @@
             <if test="orderStatus != null">order_status,</if>
             <if test="payType != null">pay_type,</if>
             <if test="payTime != null">pay_time,</if>
+            <if test="mName != null">m_name,</if>
+            <if test="mPhone != null">m_phone,</if>
             <if test="userId != null">user_id,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -163,6 +171,8 @@
             <if test="orderStatus != null">#{orderStatus},</if>
             <if test="payType != null">#{payType},</if>
             <if test="payTime != null">#{payTime},</if>
+            <if test="mName != null">#{mName},</if>
+            <if test="mPhone != null">#{mPhone},</if>
             <if test="userId != null">#{userId},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -184,6 +194,8 @@
             <if test="orderStatus != null">order_status = #{orderStatus},</if>
             <if test="payType != null">pay_type = #{payType},</if>
             <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="mName != null">m_name = #{mName},</if>
+            <if test="mPhone != null">m_phone = #{mPhone},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

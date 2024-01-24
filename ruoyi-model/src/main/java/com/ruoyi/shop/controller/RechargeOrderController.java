@@ -50,6 +50,14 @@ public class RechargeOrderController extends BaseController {
         List<RechargeOrder> list = rechargeOrderService.selectRechargeOrderList(rechargeOrder);
         return getDataTable(list);
     }
+    /**
+     * 查询总充值金额
+     */
+    @ApiOperation("查询总充值金额")
+    @GetMapping("/getTotalMoney")
+    public AjaxResult getTotalMoney(RechargeOrder rechargeOrder) {
+        return success(rechargeOrderService.getTotalMoney(rechargeOrder));
+    }
 
     /**
      * 导出充值记录列表

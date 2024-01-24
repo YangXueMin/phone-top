@@ -44,6 +44,15 @@ public class OrderController extends BaseController {
     }
 
     /**
+     * 统计订单核销金额
+     */
+    @ApiOperation("统计订单核销金额")
+    @GetMapping("/getCancelSum")
+    public AjaxResult getCancelSum(Order order) {
+        return success(orderService.getCancelSum(order));
+    }
+
+    /**
      * 导出订单记录列表
      */
     @PreAuthorize("@ss.hasPermi('shop:order:export')")

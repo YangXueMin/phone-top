@@ -129,6 +129,12 @@ public class Order extends BaseEntity {
     @ApiModelProperty("用餐时间")
     private Date haveTime;
 
+    @ApiModelProperty("提货人姓名")
+    private String mName;
+
+    @ApiModelProperty("提货人手机号")
+    private String mPhone;
+
     /**
      * 核销人员ID
      */
@@ -173,6 +179,13 @@ public class Order extends BaseEntity {
     @Excel(name = "充值卡ID")
     @ApiModelProperty("充值卡ID")
     private Long cardId;
+
+    /**
+     * 活动实体
+     */
+    @Excel(name = "活动实体")
+    @ApiModelProperty("活动实体")
+    private ShopActivity shopActivity;
 
     public void setId(Long id) {
         this.id = id;
@@ -348,5 +361,29 @@ public class Order extends BaseEntity {
 
     public void setCardId(Long cardId) {
         this.cardId = cardId;
+    }
+
+    public ShopActivity getShopActivity() {
+        return shopActivity;
+    }
+
+    public void setShopActivity(ShopActivity shopActivity) {
+        this.shopActivity = shopActivity;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getmPhone() {
+        return mPhone;
+    }
+
+    public void setmPhone(String mPhone) {
+        this.mPhone = mPhone;
     }
 }

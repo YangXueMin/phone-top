@@ -82,7 +82,6 @@ public class DayActivityServiceImpl implements IDayActivityService {
         DayActivity dayActivity = new DayActivity();
         dayActivity.setShopId(shopId);
         dayActivity.setStatus("1");
-        dayActivity.setActivityTime(dayActivity + "");
         List<DayActivity> dayActivityList = dayActivityMapper.selectDayActivityList(dayActivity);
         if (dayActivityList.size() > 0) {
             Holiday holiday = holidayMapper.selectHolidayById(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, date));

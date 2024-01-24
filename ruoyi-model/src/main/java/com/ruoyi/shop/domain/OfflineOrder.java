@@ -88,6 +88,12 @@ public class OfflineOrder extends BaseEntity {
     @ApiModelProperty("支付时间")
     private String payTime;
 
+    @ApiModelProperty("提货人姓名")
+    private String mName;
+
+    @ApiModelProperty("提货人手机号")
+    private String mPhone;
+
     /**
      * 店员ID
      */
@@ -206,5 +212,21 @@ public class OfflineOrder extends BaseEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getmPhone() {
+        return mPhone;
+    }
+
+    public void setmPhone(String mPhone) {
+        this.mPhone = mPhone;
     }
 }

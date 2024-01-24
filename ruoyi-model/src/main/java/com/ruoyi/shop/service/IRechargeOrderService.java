@@ -4,6 +4,7 @@ import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.ruoyi.shop.domain.RechargeOrder;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -28,6 +29,14 @@ public interface IRechargeOrderService {
      * @return 充值记录集合
      */
     public List<RechargeOrder> selectRechargeOrderList(RechargeOrder rechargeOrder);
+
+    /**
+     * 查询总充值金额
+     *
+     * @param rechargeOrder 充值记录
+     * @return 充值记录集合
+     */
+    public BigDecimal getTotalMoney(RechargeOrder rechargeOrder);
 
     /**
      * 新增充值记录

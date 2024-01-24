@@ -140,5 +140,5 @@ public class Constants
     public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config" };
 
-    public static final String URL = "https://hospital.justgo.work/prod-api/";
+    public static final String URL = "https://shop.ygmfood.com/prod-api/";
 }

@@ -2,6 +2,8 @@ package com.ruoyi.shop.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -52,6 +54,12 @@ public class DayActivity extends BaseEntity {
     @Excel(name = "活动标签")
     @ApiModelProperty("活动标签")
     private String activityLabel;
+    /**
+     * 活动标签label
+     */
+    @Excel(name = "活动标签label")
+    @ApiModelProperty("活动标签label")
+    private String activityLabelLabel;
 
     /**
      * 活动商品类型
@@ -59,6 +67,13 @@ public class DayActivity extends BaseEntity {
     @Excel(name = "活动商品类型")
     @ApiModelProperty("活动商品类型")
     private String goodsType;
+
+    /**
+     * 活动商品类型
+     */
+    @Excel(name = "活动商品类型label")
+    @ApiModelProperty("活动商品类型label")
+    private String goodsTypeLabel;
 
     /**
      * 折扣
@@ -154,5 +169,27 @@ public class DayActivity extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getActivityLabelLabel() {
+        if(StringUtils.isNotBlank(activityLabel)){
+            return DictUtils.getDictLabel("shop_activity_label",activityLabel);
+        }
+        return activityLabelLabel;
+    }
+
+    public void setActivityLabelLabel(String activityLabelLabel) {
+        this.activityLabelLabel = activityLabelLabel;
+    }
+
+    public String getGoodsTypeLabel() {
+        if(StringUtils.isNotBlank(goodsType)){
+            return DictUtils.getDictLabel("shop_day_type",goodsType);
+        }
+        return goodsTypeLabel;
+    }
+
+    public void setGoodsTypeLabel(String goodsTypeLabel) {
+        this.goodsTypeLabel = goodsTypeLabel;
     }
 }

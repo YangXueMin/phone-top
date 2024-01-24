@@ -167,6 +167,7 @@ public class OrderControllerApi extends BaseController {
     @ApiOperation(value = "核销订单")
     @PostMapping("/cancel")
     public AjaxResult cancel(@RequestBody Order order) {
+        Long userId = order.getUserId();
         order = orderService.selectOrderById(order.getId());
         if (order == null) {
             return warn("订单不存在");
@@ -178,13 +179,14 @@ public class OrderControllerApi extends BaseController {
             return warn("订单已核销");
         }
         //判断核销人员ID是否有门店权限
-        List<Long> shopIdList = sysUserService.findShopIdsByUserId(order.getUserId());
+        List<Long> shopIdList = sysUserService.findShopIdsByUserId(userId);
         if (shopIdList.size() > 0) {
             Order finalOrder = order;
             boolean containsTargetId = shopIdList.stream().anyMatch(id -> id.equals(finalOrder.getShopId()));
             if(!containsTargetId){
                 return warn("当前核销人员无门店权限");
             }
+            order.setUserId(userId);
             return success(orderService.cancelOrder(order));
         }
         return warn("无权限");

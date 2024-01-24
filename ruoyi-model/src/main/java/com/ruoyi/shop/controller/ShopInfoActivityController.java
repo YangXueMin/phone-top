@@ -35,7 +35,6 @@ public class ShopInfoActivityController extends BaseController {
      * 查询店铺信息活动配置列表
      */
     @ApiOperation("查询店铺信息活动配置列表")
-    @PreAuthorize("@ss.hasPermi('shop:infoActivity:list')")
     @GetMapping("/list")
     public TableDataInfo list(ShopInfoActivity shopInfoActivity) {
         startPage();
@@ -60,7 +59,6 @@ public class ShopInfoActivityController extends BaseController {
      */
     @ApiOperation("获取店铺信息活动配置详细信息")
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
-    @PreAuthorize("@ss.hasPermi('shop:infoActivity:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(shopInfoActivityService.selectShopInfoActivityById(id));
@@ -70,7 +68,6 @@ public class ShopInfoActivityController extends BaseController {
      * 新增店铺信息活动配置
      */
     @ApiOperation("新增店铺信息活动配置")
-    @PreAuthorize("@ss.hasPermi('shop:infoActivity:add')")
     @Log(title = "店铺信息活动配置", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody List<ShopInfoActivity> shopInfoActivityList) {
@@ -81,7 +78,6 @@ public class ShopInfoActivityController extends BaseController {
      * 修改店铺信息活动配置
      */
     @ApiOperation("修改店铺信息活动配置")
-    @PreAuthorize("@ss.hasPermi('shop:infoActivity:edit')")
     @Log(title = "店铺信息活动配置", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ShopInfoActivity shopInfoActivity) {
@@ -93,7 +89,6 @@ public class ShopInfoActivityController extends BaseController {
      */
     @ApiOperation("删除店铺信息活动配置")
     @ApiImplicitParam(name = "ids", value = "ID数组", required = true, dataType = "Long[]", paramType = "path", dataTypeClass = Long.class)
-    @PreAuthorize("@ss.hasPermi('shop:infoActivity:remove')")
     @Log(title = "店铺信息活动配置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {

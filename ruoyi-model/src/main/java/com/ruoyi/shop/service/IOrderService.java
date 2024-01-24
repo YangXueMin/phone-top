@@ -1,5 +1,6 @@
 package com.ruoyi.shop.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
@@ -30,6 +31,13 @@ public interface IOrderService {
      * @return 订单记录集合
      */
     public List<Order> selectOrderList(Order order);
+
+    /**
+     * 统计核销金额
+     * @param order
+     * @return
+     */
+    public BigDecimal getCancelSum(Order order);
 
     /**
      * 查询订单记录列表

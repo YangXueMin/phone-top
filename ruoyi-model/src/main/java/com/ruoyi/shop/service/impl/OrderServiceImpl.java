@@ -55,13 +55,11 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private RechargeOrderMapper rechargeOrderMapper;
     @Autowired
-    private GoodsSpecsMapper goodsSpecsMapper;
-    @Autowired
-    private CouponMapper couponMapper;
-    @Autowired
     private ShopCardMapper shopCardMapper;
     @Autowired
     private CardCouponMapper cardCouponMapper;
+    @Autowired
+    private ShopActivityMapper shopActivityMapper;
 
     /**
      * 查询订单记录
@@ -74,6 +72,9 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderMapper.selectOrderById(id);
         if (order != null) {
             order.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(id));
+            if(order.getActivityId() != null){
+                order.setShopActivity(shopActivityMapper.selectShopActivityById(order.getActivityId()));
+            }
         }
         return order;
     }
@@ -91,9 +92,18 @@ public class OrderServiceImpl implements IOrderService {
         if (orderList.size() > 0) {
             for (Order orderData : orderList) {
                 orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
+                if(orderData.getActivityId() != null){
+                    orderData.setShopActivity(shopActivityMapper.selectShopActivityById(orderData.getActivityId()));
+                }
             }
         }
         return orderList;
+    }
+
+    @Override
+    @ShopScope(shopAlias = "a")
+    public BigDecimal getCancelSum(Order order) {
+        return orderMapper.getCancelSum(order);
     }
 
     @Override
@@ -120,7 +130,8 @@ public class OrderServiceImpl implements IOrderService {
         Member member = memberMapper.selectMemberById(order.getMemberId());
         BigDecimal beforeBalance = member.getBalance();
 
-        if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 0) {
+        if ((StringUtils.equals("1", order.getPayType()) || order.getMoney().compareTo(BigDecimal.ZERO) == 0 )
+                && order.getMoney().compareTo(member.getBalance()) < 0) {
             order.setOrderStatus("2");
             order.setCancelStatus("1");
             order.setPayTime(DateUtils.dateTimeNow());

@@ -20,6 +20,8 @@
         <result property="payResult"    column="pay_result"    />
         <result property="haveType"    column="have_type"    />
         <result property="haveTime"    column="have_time"    />
+        <result property="mName"    column="m_name"    />
+        <result property="mPhone"    column="m_phone"    />
         <result property="userId"    column="user_id"    />
         <result property="cancelStatus"    column="cancel_status"    />
         <result property="createBy"    column="create_by"    />
@@ -92,6 +94,8 @@
             a.pay_result,
             a.have_type,
             a.have_time,
+               a.m_name,
+               a.m_phone,
             a.user_id,
             a.cancel_status,
             a.create_by,
@@ -154,10 +158,30 @@
             <if test="haveType != null  and haveType != ''"> and a.have_type = #{haveType}</if>
             <if test="haveTime != null "> and a.have_time = #{haveTime}</if>
             <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="mName != null ">and a.m_name like concat('%',  #{mName}, '%')</if>
+            <if test="mPhone != null ">and a.m_phone like concat('%',  #{mPhone}, '%')</if>
+            <if test="sysUser != null ">
+                <if test="sysUser.nickName != null and sysUser.nickName != ''">
+                    and u.nick_name = like concat('%', #{sysUser.nickName}, '%')
+                </if>
+            </if>
             <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
             ${params.shopScope}
         </where>
         order by a.create_time DESC
+    </select>
+
+
+    <select id="getCancelSum" parameterType="Order" resultType="java.math.BigDecimal">
+        select ifNull(sum(a.money),0)
+        from shop_order a
+        <where>
+            <if test="shopId != null "> and a.shop_id = #{shopId}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
+            <if test="orderType != null "> and a.order_type = #{orderType}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
+            ${params.shopScope}
+        </where>
     </select>
 
     <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
@@ -167,7 +191,7 @@
 
     <select id="selectOrderByOrderNumber" parameterType="string" resultMap="OrderResult">
         <include refid="selectOrderVo"/>
-        where order_number = #{orderNumber}
+        where a.order_number = #{orderNumber}
     </select>
 
     <insert id="insertOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
@@ -187,6 +211,8 @@
             <if test="payResult != null">pay_result,</if>
             <if test="haveType != null">have_type,</if>
             <if test="haveTime != null">have_time,</if>
+            <if test="mName != null">m_name,</if>
+            <if test="mPhone != null">m_phone,</if>
             <if test="userId != null">user_id,</if>
             <if test="cancelStatus != null">cancel_status,</if>
             <if test="createBy != null">create_by,</if>
@@ -210,6 +236,8 @@
             <if test="payResult != null">#{payResult},</if>
             <if test="haveType != null">#{haveType},</if>
             <if test="haveTime != null">#{haveTime},</if>
+            <if test="mName != null">#{mName},</if>
+            <if test="mPhone != null">#{mPhone},</if>
             <if test="userId != null">#{userId},</if>
             <if test="cancelStatus != null">#{cancelStatus},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -237,6 +265,8 @@
             <if test="payResult != null">pay_result = #{payResult},</if>
             <if test="haveType != null">have_type = #{haveType},</if>
             <if test="haveTime != null">have_time = #{haveTime},</if>
+            <if test="mName != null">m_name = #{mName},</if>
+            <if test="mPhone != null">m_phone = #{mPhone},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="cancelStatus != null">cancel_status = #{cancelStatus},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -246,6 +276,11 @@
             <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateTimeOrderStatus">
+        UPDATE shop_order set order_status = 4
+        where order_status = 1 AND create_time &lt; DATE_SUB(NOW(), INTERVAL 10 MINUTE);
     </update>
 
     <delete id="deleteOrderById" parameterType="Long">

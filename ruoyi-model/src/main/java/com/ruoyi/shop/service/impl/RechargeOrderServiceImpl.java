@@ -87,6 +87,11 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         return rechargeOrderList;
     }
 
+    @Override
+    public BigDecimal getTotalMoney(RechargeOrder rechargeOrder) {
+        return rechargeOrderMapper.getTotalMoney(rechargeOrder);
+    }
+
     /**
      * 新增充值记录
      *

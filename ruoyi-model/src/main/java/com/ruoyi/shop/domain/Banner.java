@@ -94,6 +94,12 @@ public class Banner extends BaseEntity {
     private Date endDate;
 
     /**
+     * 显示顺序
+     */
+    @ApiModelProperty("显示顺序")
+    private Integer orderNum;
+
+    /**
      * 状态
      */
     @Excel(name = "状态")
@@ -189,6 +195,14 @@ public class Banner extends BaseEntity {
 
     public String getStatus() {
         return status;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
     }
 
     public SysDictData getSkipTypeDicData() {

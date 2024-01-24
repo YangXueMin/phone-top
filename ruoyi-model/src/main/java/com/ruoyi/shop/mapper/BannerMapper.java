@@ -54,6 +54,20 @@ public interface BannerMapper
     public int updateBanner(Banner banner);
 
     /**
+     * 修改banner配置
+     *
+     * @return 结果
+     */
+    public int updateStatusOff();
+
+    /**
+     * 修改banner配置
+     *
+     * @return 结果
+     */
+    public int updateStatusOn();
+
+    /**
      * 删除banner配置
      *
      * @param id banner配置主键
