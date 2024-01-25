@@ -280,7 +280,7 @@
 
     <update id="updateTimeOrderStatus">
         UPDATE shop_order set order_status = 4
-        where order_status = 1 AND create_time &lt; DATE_SUB(NOW(), INTERVAL 10 MINUTE);
+        where order_status = 1 AND pay_type = 2 AND create_time &lt; DATE_SUB(NOW(), INTERVAL 10 MINUTE);
     </update>
 
     <delete id="deleteOrderById" parameterType="Long">
