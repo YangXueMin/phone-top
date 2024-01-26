@@ -1,6 +1,8 @@
 package com.ruoyi.shop.domain;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -65,6 +67,13 @@ public class Goods extends BaseEntity {
     @Excel(name = "商品标签")
     @ApiModelProperty("商品标签")
     private String goodsLabel;
+
+    /**
+     * 商品标签
+     */
+    @Excel(name = "商品标签")
+    @ApiModelProperty("商品标签")
+    private String goodsLabelLabel;
 
     /**
      * 图片
@@ -255,5 +264,12 @@ public class Goods extends BaseEntity {
 
     public void setSellNumber(Integer sellNumber) {
         this.sellNumber = sellNumber;
+    }
+
+    public String getGoodsLabelLabel() {
+        if(StringUtils.isNotBlank(goodsLabel)){
+            return DictUtils.getDictLabel("shop_goods_label",goodsLabel);
+        }
+        return goodsLabelLabel;
     }
 }

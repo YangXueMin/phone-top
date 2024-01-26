@@ -22,6 +22,7 @@
     <resultMap type="Coupon" id="CouponResult">
         <result property="id"    column="coupon_id"    />
         <result property="couponName"    column="coupon_name"    />
+        <result property="photo"    column="photo"    />
         <result property="suitRange"    column="suit_range"    />
         <result property="goodsList"    column="goods_list"    />
         <result property="couponType"    column="coupon_type"    />
@@ -46,6 +47,7 @@
                a.update_by,
                a.update_time,
                c.coupon_name,
+               c.photo,
                c.suit_range,
                c.goods_list,
                c.coupon_type,

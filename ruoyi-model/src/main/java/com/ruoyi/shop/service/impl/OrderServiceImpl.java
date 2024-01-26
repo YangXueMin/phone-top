@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,16 +89,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     @ShopScope(shopAlias = "a")
     public List<Order> selectOrderList(Order order) {
-        List<Order> orderList = orderMapper.selectOrderList(order);
-        if (orderList.size() > 0) {
-            for (Order orderData : orderList) {
-                orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
-                if(orderData.getActivityId() != null){
-                    orderData.setShopActivity(shopActivityMapper.selectShopActivityById(orderData.getActivityId()));
-                }
-            }
-        }
-        return orderList;
+        return selectOrderListApi(order);
     }
 
     @Override
@@ -112,6 +104,18 @@ public class OrderServiceImpl implements IOrderService {
         if (orderList.size() > 0) {
             for (Order orderData : orderList) {
                 orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
+                if(orderData.getActivityId() != null){
+                    orderData.setShopActivity(shopActivityMapper.selectShopActivityById(orderData.getActivityId()));
+                }
+                if (StringUtils.isNotBlank(order.getCouponList())) {
+                    List<RechargeOrderCoupon> rechargeOrderCouponList = new ArrayList<>();
+                    String[] couponList = order.getCouponList().split(",");
+                    for (String couponId : couponList) {
+                        RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponMapper.selectRechargeOrderCouponById(Long.parseLong(couponId));
+                        rechargeOrderCouponList.add(rechargeOrderCoupon);
+                    }
+                    orderData.setRechargeOrderCouponList(rechargeOrderCouponList);
+                }
             }
         }
         return orderList;

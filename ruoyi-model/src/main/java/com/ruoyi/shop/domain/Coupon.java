@@ -26,6 +26,11 @@ public class Coupon extends BaseEntity{
     @ApiModelProperty("名称")
     private String couponName;
 
+    /** 图片 */
+    @Excel(name = "图片")
+    @ApiModelProperty("图片")
+    private String photo;
+
     /** 适用范围 */
     @Excel(name = "适用范围")
     @ApiModelProperty("适用范围")
@@ -161,4 +166,11 @@ public class Coupon extends BaseEntity{
         return status;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 }

@@ -187,6 +187,13 @@ public class Order extends BaseEntity {
     @ApiModelProperty("活动实体")
     private ShopActivity shopActivity;
 
+    /**
+     * 优惠券关系集合
+     */
+    @Excel(name = "优惠券关系集合")
+    @ApiModelProperty("优惠券关系集合")
+    private List<RechargeOrderCoupon> rechargeOrderCouponList;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -385,5 +392,13 @@ public class Order extends BaseEntity {
 
     public void setmPhone(String mPhone) {
         this.mPhone = mPhone;
+    }
+
+    public List<RechargeOrderCoupon> getRechargeOrderCouponList() {
+        return rechargeOrderCouponList;
+    }
+
+    public void setRechargeOrderCouponList(List<RechargeOrderCoupon> rechargeOrderCouponList) {
+        this.rechargeOrderCouponList = rechargeOrderCouponList;
     }
 }

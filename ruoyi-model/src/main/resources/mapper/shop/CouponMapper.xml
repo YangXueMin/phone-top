@@ -7,6 +7,7 @@
     <resultMap type="Coupon" id="CouponResult">
         <result property="id"    column="id"    />
         <result property="couponName"    column="coupon_name"    />
+        <result property="photo"    column="photo"    />
         <result property="suitRange"    column="suit_range"    />
         <result property="goodsList"    column="goods_list"    />
         <result property="couponType"    column="coupon_type"    />
@@ -27,6 +28,7 @@
         select
             id,
             coupon_name,
+            photo,
             suit_range,
             goods_list,
             coupon_type,
@@ -71,6 +73,7 @@
         insert into shop_coupon
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="couponName != null">coupon_name,</if>
+            <if test="photo != null">photo,</if>
             <if test="suitRange != null">suit_range,</if>
             <if test="goodsList != null">goods_list,</if>
             <if test="couponType != null">coupon_type,</if>
@@ -88,6 +91,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="couponName != null">#{couponName},</if>
+            <if test="photo != null">#{photo},</if>
             <if test="suitRange != null">#{suitRange},</if>
             <if test="goodsList != null">#{goodsList},</if>
             <if test="couponType != null">#{couponType},</if>
@@ -109,6 +113,7 @@
         update shop_coupon
         <trim prefix="SET" suffixOverrides=",">
             <if test="couponName != null">coupon_name = #{couponName},</if>
+            <if test="photo != null">photo = #{photo},</if>
             <if test="suitRange != null">suit_range = #{suitRange},</if>
             <if test="goodsList != null">goods_list = #{goodsList},</if>
             <if test="couponType != null">coupon_type = #{couponType},</if>

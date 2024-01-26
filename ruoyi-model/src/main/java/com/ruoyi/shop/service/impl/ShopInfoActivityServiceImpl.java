@@ -3,6 +3,7 @@ package com.ruoyi.shop.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.shop.mapper.ShopInfoActivityMapper;
@@ -56,9 +57,11 @@ public class ShopInfoActivityServiceImpl implements IShopInfoActivityService {
         if(shopInfoActivityList.size() > 0){
             shopInfoActivityMapper.deleteShopInfoActivityByShopId(shopInfoActivityList.get(0).getShopId());
             for (ShopInfoActivity shopInfoActivity : shopInfoActivityList) {
-                shopInfoActivity.setCreateTime(DateUtils.getNowDate());
-                shopInfoActivityMapper.insertShopInfoActivity(shopInfoActivity);
-                i ++;
+                if(StringUtils.isNotBlank(shopInfoActivity.getTitle())){
+                    shopInfoActivity.setCreateTime(DateUtils.getNowDate());
+                    shopInfoActivityMapper.insertShopInfoActivity(shopInfoActivity);
+                    i ++;
+                }
             }
         }
         return i;

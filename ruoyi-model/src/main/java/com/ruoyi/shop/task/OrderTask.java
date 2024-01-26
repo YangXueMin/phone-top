@@ -39,14 +39,16 @@ public class OrderTask {
         if (orderList.size() > 0) {
             for (Order order : orderList) {
                 if (order.getCreateTime().getTime() < DateUtil.subMinutes(date, 10).getTime()) {
-                    //还原用户优惠券
-                    String[] couponList = order.getCouponList().split(",");
-                    for (String couponId : couponList) {
-                        RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponMapper.selectRechargeOrderCouponById(Long.parseLong(couponId));
-                        if (rechargeOrderCoupon.getId() != null) {
-                            rechargeOrderCoupon.setStatus("1");
-                            rechargeOrderCoupon.setUpdateTime(DateUtils.getNowDate());
-                            rechargeOrderCouponMapper.updateRechargeOrderCoupon(rechargeOrderCoupon);
+                    if(StringUtils.isNotBlank(order.getCouponList())){
+                        //还原用户优惠券
+                        String[] couponList = order.getCouponList().split(",");
+                        for (String couponId : couponList) {
+                            RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponMapper.selectRechargeOrderCouponById(Long.parseLong(couponId));
+                            if (rechargeOrderCoupon.getId() != null) {
+                                rechargeOrderCoupon.setStatus("1");
+                                rechargeOrderCoupon.setUpdateTime(DateUtils.getNowDate());
+                                rechargeOrderCouponMapper.updateRechargeOrderCoupon(rechargeOrderCoupon);
+                            }
                         }
                     }
                 }

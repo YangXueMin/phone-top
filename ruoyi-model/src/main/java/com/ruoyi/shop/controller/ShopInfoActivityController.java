@@ -71,7 +71,7 @@ public class ShopInfoActivityController extends BaseController {
     @Log(title = "店铺信息活动配置", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody List<ShopInfoActivity> shopInfoActivityList) {
-        return toAjax(shopInfoActivityService.insertShopInfoActivity(shopInfoActivityList));
+        return success(shopInfoActivityService.insertShopInfoActivity(shopInfoActivityList));
     }
 
     /**

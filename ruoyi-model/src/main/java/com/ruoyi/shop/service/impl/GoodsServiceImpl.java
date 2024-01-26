@@ -76,6 +76,7 @@ public class GoodsServiceImpl implements IGoodsService {
         if(goodsList.size() > 0){
             for (Goods goodsData : goodsList) {
                 goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
+                goods.setSellNumber(orderDetailsMapper.selectCountByGoodsId(goodsData.getId()));
             }
         }
         return goodsList;
