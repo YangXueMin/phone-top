@@ -1,11 +1,13 @@
 package com.ruoyi.shop.controller;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.websocket.WebSocketServerMessage;
 import com.ruoyi.shop.domain.OfflineOrder;
 import com.ruoyi.shop.service.IOfflineOrderService;
 import io.swagger.annotations.Api;
@@ -16,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -75,6 +78,18 @@ public class OfflineOrderController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody OfflineOrder offlineOrder) {
         return success(offlineOrderService.insertOfflineOrder(offlineOrder));
+    }
+
+    /**
+     * 发送
+     */
+    @ApiOperation("发送")
+    @PostMapping(value = "send")
+    public AjaxResult send(@RequestBody OfflineOrder offlineOrder) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status",3);
+        WebSocketServerMessage.sendInfo(jsonObject.toString(),9L);
+        return success();
     }
 
     /**

@@ -20,11 +20,11 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.shop.domain.RechargeOrder;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
 import com.ruoyi.shop.domain.ShopCard;
-import com.ruoyi.shop.mapper.MemberMapper;
 import com.ruoyi.shop.mapper.RechargeOrderCouponMapper;
 import com.ruoyi.shop.mapper.RechargeOrderMapper;
 import com.ruoyi.shop.mapper.ShopCardMapper;
 import com.ruoyi.shop.service.IRechargeOrderService;
+import com.ruoyi.system.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,8 +118,12 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WxPayMpOrderResult pay(RechargeOrder rechargeOrder) {
         rechargeOrder = rechargeOrderMapper.selectRechargeOrderById(rechargeOrder.getId());
+        String orderNumber = SnowflakeGenerator.generateOrderNumber();
+        rechargeOrder.setOrderNo(orderNumber);
+        rechargeOrderMapper.updateRechargeOrder(rechargeOrder);
         Member member = SecurityUtils.getLoginUser().getMember();
         WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
         //随机字符串

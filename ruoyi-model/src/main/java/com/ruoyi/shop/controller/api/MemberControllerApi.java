@@ -5,7 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.shop.service.IMemberService;
+import com.ruoyi.system.service.IMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

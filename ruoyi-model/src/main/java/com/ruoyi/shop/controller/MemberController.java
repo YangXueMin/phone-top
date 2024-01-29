@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.shop.service.IMemberService;
+import com.ruoyi.system.service.IMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

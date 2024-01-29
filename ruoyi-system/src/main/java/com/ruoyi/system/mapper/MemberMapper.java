@@ -1,10 +1,9 @@
-package com.ruoyi.shop.mapper;
-
-import java.util.List;
+package com.ruoyi.system.mapper;
 
 import com.ruoyi.common.core.domain.entity.Member;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 会员管理Mapper接口

@@ -1,19 +1,24 @@
 package com.ruoyi.shop.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.google.gson.JsonObject;
 import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.websocket.WebSocketServerMessage;
 import com.ruoyi.shop.domain.BalanceInfo;
 import com.ruoyi.shop.domain.OfflineOrder;
 import com.ruoyi.shop.mapper.BalanceInfoMapper;
-import com.ruoyi.shop.mapper.MemberMapper;
 import com.ruoyi.shop.mapper.OfflineOrderMapper;
 import com.ruoyi.shop.service.IOfflineOrderService;
+import com.ruoyi.system.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -31,6 +36,8 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
     private BalanceInfoMapper balanceInfoMapper;
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private WebSocketServerMessage webSocketServerMessage;
 
     /**
      * 查询线下订单
@@ -75,7 +82,13 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
     @Override
     public OfflineOrder insertOfflineOrder(OfflineOrder offlineOrder) {
         offlineOrder.setCreateTime(DateUtils.getNowDate());
-        offlineOrderMapper.insertOfflineOrder(offlineOrder);
+        final int i = offlineOrderMapper.insertOfflineOrder(offlineOrder);
+        if (i > 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", "offlineOrder");
+            jsonObject.put("data", offlineOrder);
+            WebSocketServerMessage.sendInfo(jsonObject.toString(), offlineOrder.getMemberId());
+        }
         return offlineOrder;
     }
 
@@ -90,8 +103,8 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
     public int updateOfflineOrder(OfflineOrder offlineOrder) {
         offlineOrder.setUpdateTime(DateUtils.getNowDate());
         final int i = offlineOrderMapper.updateOfflineOrder(offlineOrder);
-        if(i > 0){
-            if(StringUtils.equals("2",offlineOrder.getOrderStatus())){
+        if (i > 0) {
+            if (StringUtils.equals("2", offlineOrder.getOrderStatus())) {
                 Member member = memberMapper.selectMemberById(offlineOrder.getMemberId());
                 BigDecimal beforeBalance = member.getBalance();
                 member.setBalance(member.getBalance().subtract(offlineOrder.getMoney()));
@@ -112,7 +125,7 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
         offlineOrder.setOrderStatus("3");
         offlineOrder.setUpdateTime(DateUtils.getNowDate());
         final int i = offlineOrderMapper.updateOfflineOrder(offlineOrder);
-        if(i > 0){
+        if (i > 0) {
             Member member = memberMapper.selectMemberById(offlineOrder.getMemberId());
             BigDecimal beforeBalance = member.getBalance();
             member.setBalance(member.getBalance().add(offlineOrder.getMoney()));

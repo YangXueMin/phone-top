@@ -22,6 +22,8 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.shop.domain.*;
 import com.ruoyi.shop.mapper.*;
 import com.ruoyi.shop.service.IOrderService;
+import com.ruoyi.system.mapper.MemberMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单记录Service业务层处理
@@ -38,6 +41,7 @@ import java.util.List;
  * @date 2024-01-10
  */
 @Service
+@Slf4j
 public class OrderServiceImpl implements IOrderService {
     @Autowired
     private OrderMapper orderMapper;
@@ -73,7 +77,7 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderMapper.selectOrderById(id);
         if (order != null) {
             order.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(id));
-            if(order.getActivityId() != null){
+            if (order.getActivityId() != null) {
                 order.setShopActivity(shopActivityMapper.selectShopActivityById(order.getActivityId()));
             }
         }
@@ -104,7 +108,7 @@ public class OrderServiceImpl implements IOrderService {
         if (orderList.size() > 0) {
             for (Order orderData : orderList) {
                 orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
-                if(orderData.getActivityId() != null){
+                if (orderData.getActivityId() != null) {
                     orderData.setShopActivity(shopActivityMapper.selectShopActivityById(orderData.getActivityId()));
                 }
                 if (StringUtils.isNotBlank(order.getCouponList())) {
@@ -130,11 +134,29 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Order insertOrder(Order order) {
+        //判断优惠券是否使用过
+        if (StringUtils.isNotBlank(order.getCouponList())) {
+            String[] couponList = order.getCouponList().split(",");
+            List<String> couponIdList = new ArrayList<>();
+            for (String couponId : couponList) {
+                RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponMapper.selectRechargeOrderCouponById(Long.parseLong(couponId));
+                if (rechargeOrderCoupon.getId() != null && StringUtils.equals("1", rechargeOrderCoupon.getStatus())) {
+                    couponIdList.add(rechargeOrderCoupon.getId() + "");
+                }
+            }
+            if (couponIdList.size() > 0) {
+                order.setCouponList(String.join(",", couponIdList));
+                order.setPayType("2");
+            } else {
+                order.setCouponList(null);
+            }
+
+        }
         String orderNumber = SnowflakeGenerator.generateOrderNumber();
         Member member = memberMapper.selectMemberById(order.getMemberId());
         BigDecimal beforeBalance = member.getBalance();
 
-        if ((StringUtils.equals("1", order.getPayType()) || order.getMoney().compareTo(BigDecimal.ZERO) == 0 )
+        if ((StringUtils.equals("1", order.getPayType()) || order.getMoney().compareTo(BigDecimal.ZERO) == 0)
                 && order.getMoney().compareTo(member.getBalance()) < 0) {
             order.setOrderStatus("2");
             order.setCancelStatus("1");
@@ -211,11 +233,11 @@ public class OrderServiceImpl implements IOrderService {
         order = orderMapper.selectOrderById(order.getId());
         List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectOrderByOrderNo(order.getOrderNumber());
         BigDecimal money = BigDecimal.ZERO;
-        if(StringUtils.equals("1",order.getOrderStatus())){
+        if (StringUtils.equals("1", order.getOrderStatus())) {
             money = money.add(order.getMoney());
         }
         if (rechargeOrderList.size() > 0) {
-            money = money.add(rechargeOrderList.get(0).getMoney());
+            money = rechargeOrderList.get(0).getMoney();
         }
         Member member = SecurityUtils.getLoginUser().getMember();
         WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
@@ -227,6 +249,48 @@ public class OrderServiceImpl implements IOrderService {
         request.setOutTradeNo(order.getOrderNumber());
         //金额，以分为单位
         request.setTotalFee(money.multiply(BigDecimal.valueOf(100L)).intValue());
+        // 用户ip
+        request.setSpbillCreateIp("127.0.0.1");
+        //回调通知地址（必须外网能访问的地址）
+        request.setNotifyUrl(Constants.URL + "api/shop/order/payNotify");
+        //小程序支付
+        request.setTradeType("JSAPI");
+        //小程序用户openid
+        request.setOpenid(member.getOpenId());
+        //商品描述
+        final ShopInfo shopInfo = shopInfoMapper.selectShopInfoById(order.getShopId());
+        StringBuilder body = new StringBuilder("祁大脑袋熏鸡");
+        if (shopInfo != null) {
+            body.append("-");
+            body.append(shopInfo.getName());
+        }
+        request.setBody(body.toString());
+        try {
+            return wechatConfiguration.wxPayService().createOrder(request);
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public WxPayMpOrderResult payOrder(Order order) {
+        order = orderMapper.selectOrderById(order.getId());
+        //需要重新修改订单号
+        String orderNumber = SnowflakeGenerator.generateOrderNumber();
+        order.setOrderNumber(orderNumber);
+        orderMapper.updateOrder(order);
+        Member member = SecurityUtils.getLoginUser().getMember();
+        WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
+        //随机字符串
+        request.setNonceStr(IdUtils.generateNonceStr());
+        //加密方式
+        request.setSignType("MD5");
+        //订单号
+        request.setOutTradeNo(order.getOrderNumber());
+        //金额，以分为单位
+        request.setTotalFee(order.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
@@ -253,27 +317,33 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String payOrderNotify(String xmlData) {
+    public String payNotify(String xmlData) {
         try {
             WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService().parseOrderNotifyResult(xmlData);
             if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
                 List<Order> orderList = orderMapper.selectOrderByOrderNumber(notifyResult.getOutTradeNo());
+                List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectOrderByOrderNo(notifyResult.getOutTradeNo());
+                RechargeOrder rechargeOrder = null;
+                if (rechargeOrderList != null && rechargeOrderList.size() > 0) {
+                    rechargeOrder = rechargeOrderList.get(0);
+                }
                 if (orderList != null && orderList.size() > 0) {
                     Order order = orderList.get(0);
-                    if(StringUtils.equals("1",order.getOrderStatus())){
+                    if (StringUtils.equals("1", order.getOrderStatus())) {
+                        if (rechargeOrder != null
+                                && rechargeOrder.getMoney().multiply(BigDecimal.valueOf(100L)).intValue() == notifyResult.getTotalFee()) {
+                            order.setPayType("1");
+                        } else {
+                            order.setPayType("2");
+                        }
                         order.setOrderStatus("2");
                         order.setCancelStatus("1");
-                        order.setPayType("2");
                         order.setPayTime(notifyResult.getTimeEnd());
                         order.setPayResult(JSON.toJSONString(notifyResult));
                         order.setUpdateTime(DateUtils.getNowDate());
                         orderMapper.updateOrder(order);
                     }
-
-
-                    List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectOrderByOrderNo(notifyResult.getOutTradeNo());
-                    if (rechargeOrderList != null && rechargeOrderList.size() > 0) {
-                        RechargeOrder rechargeOrder = rechargeOrderList.get(0);
+                    if (rechargeOrder != null && rechargeOrder.getMoney().multiply(BigDecimal.valueOf(100L)).intValue() == notifyResult.getTotalFee()) {
                         rechargeOrder.setOrderStatus("2");
                         rechargeOrder.setPayTime(notifyResult.getTimeEnd());
                         rechargeOrder.setPayResult(JSON.toJSONString(notifyResult));
@@ -287,12 +357,46 @@ public class OrderServiceImpl implements IOrderService {
                         //更新用户余额
                         Member member = memberMapper.selectMemberById(rechargeOrder.getMemberId());
                         BigDecimal balance = member.getBalance() != null ? member.getBalance() : BigDecimal.ZERO;
-                        member.setBalance(balance.add(rechargeOrder.getMoney()).setScale(2, RoundingMode.HALF_UP));
+                        member.setBalance(balance.add(rechargeOrder.getMoney()).subtract(order.getMoney()).setScale(2, RoundingMode.HALF_UP));
                         member.setIsMember("1");
                         memberMapper.updateMember(member);
+                        //添加余额消费记录
+                        BalanceInfo balanceInfo = new BalanceInfo(order.getMemberId(), "1", order.getId(), balance.add(rechargeOrder.getMoney()), member.getBalance(), order.getMoney());
+                        balanceInfo.setCreateTime(DateUtils.getNowDate());
+                        balanceInfoMapper.insertBalanceInfo(balanceInfo);
+                    }else {
+                        log.error("支付回调失败，回调信息：{}",JSON.toJSONString(notifyResult));
                     }
                 }
                 return WxPayNotifyResponse.success("成功");
+            }
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return WxPayNotifyResponse.fail("失败");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String payOrderNotify(String xmlData) {
+        try {
+            WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService().parseOrderNotifyResult(xmlData);
+            if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
+                List<Order> orderList = orderMapper.selectOrderByOrderNumber(notifyResult.getOutTradeNo());
+                if (orderList != null && orderList.size() > 0) {
+                    Order order = orderList.get(0);
+                    if (StringUtils.equals("1", order.getOrderStatus()) && order.getMoney().multiply(BigDecimal.valueOf(100L)).intValue() == notifyResult.getTotalFee()) {
+                        order.setOrderStatus("2");
+                        order.setCancelStatus("1");
+                        order.setPayType("2");
+                        order.setPayTime(notifyResult.getTimeEnd());
+                        order.setPayResult(JSON.toJSONString(notifyResult));
+                        order.setUpdateTime(DateUtils.getNowDate());
+                        orderMapper.updateOrder(order);
+                        return WxPayNotifyResponse.success("成功");
+                    }
+                }
+                log.error("支付回调失败，回调信息：{}",JSON.toJSONString(notifyResult));
             }
         } catch (WxPayException e) {
             e.printStackTrace();

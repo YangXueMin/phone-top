@@ -2,18 +2,13 @@ package com.ruoyi.shop.controller.api;
 
 import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
-import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
-import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
-import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
-import com.ruoyi.shop.domain.OrderRequest;
-import com.ruoyi.shop.service.IMemberService;
 import com.ruoyi.shop.service.IOrderService;
+import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,6 +81,29 @@ public class OrderControllerApi extends BaseController {
         }
         WxPayMpOrderResult pay = orderService.pay(order);
         return success(pay);
+    }
+
+    /**
+     * 发起支付
+     */
+    @ApiOperation("发起支付")
+    @PostMapping("/payOrder")
+    public AjaxResult payOrder(@RequestBody Order order) {
+        order = orderService.selectOrderById(order.getId());
+        if (order == null) {
+            return warn("订单不存在");
+        }
+        WxPayMpOrderResult pay = orderService.payOrder(order);
+        return success(pay);
+    }
+
+    /**
+     * 支付回调通知处理
+     */
+    @ApiOperation("支付回调通知处理")
+    @PostMapping("/payNotify")
+    public String payNotify(@RequestBody String xmlData) {
+        return orderService.payNotify(xmlData);
     }
 
     /**

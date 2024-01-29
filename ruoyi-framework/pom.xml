@@ -58,12 +58,6 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-system</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-model</artifactId>
-            <version>3.8.5</version>
-            <scope>compile</scope>
-        </dependency>
 
     </dependencies>
 

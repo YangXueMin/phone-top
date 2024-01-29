@@ -64,6 +64,22 @@ public interface IOrderService {
     public WxPayMpOrderResult pay(Order order);
 
     /**
+     * 发起支付
+     *
+     * @param order 发起支付
+     * @return 结果
+     */
+    public WxPayMpOrderResult payOrder(Order order);
+
+    /**
+     * 支付通知
+     *
+     * @param xmlData 支付通知
+     * @return 结果
+     */
+    public String payNotify(String xmlData);
+
+    /**
      * 支付通知
      *
      * @param xmlData 支付通知

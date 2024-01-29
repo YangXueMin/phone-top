@@ -23,7 +23,7 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.authentication.MemberAuthenticationToken;
 import com.ruoyi.framework.security.handle.MemberAuthenticationProvider;
-import com.ruoyi.shop.service.IMemberService;
+import com.ruoyi.system.service.IMemberService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
