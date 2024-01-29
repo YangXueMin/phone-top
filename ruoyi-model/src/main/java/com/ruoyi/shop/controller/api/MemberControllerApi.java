@@ -49,7 +49,7 @@ public class MemberControllerApi extends BaseController {
      * 重置密码
      */
     @Log(title = "会员重置密码", businessType = BusinessType.UPDATE)
-    @PutMapping("/updateMemberPwd")
+    @GetMapping("/updateMemberPwd")
     public AjaxResult updatePwd(String oldPassword, String newPassword) {
         LoginUser loginUser = getLoginUser();
         Long userId = loginUser.getUserId();

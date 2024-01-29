@@ -98,7 +98,7 @@ public class MemberController extends BaseController {
      * 重置密码
      */
     @Log(title = "会员重置密码", businessType = BusinessType.UPDATE)
-    @PutMapping("/updateMemberPwd")
+    @GetMapping("/updateMemberPwd")
     public AjaxResult updatePwd(Long id) {
         LoginUser loginUser = getLoginUser();
         String newPassword = "123456";
