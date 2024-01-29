@@ -110,6 +110,9 @@ public class OfflineOrder extends BaseEntity {
     @ApiModelProperty("会员信息")
     private Member member;
 
+    @ApiModelProperty("会员密码")
+    private String password;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -228,5 +231,13 @@ public class OfflineOrder extends BaseEntity {
 
     public void setmPhone(String mPhone) {
         this.mPhone = mPhone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

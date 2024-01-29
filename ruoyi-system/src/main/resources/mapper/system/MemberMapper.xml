@@ -9,6 +9,7 @@
         <result property="name"    column="name"    />
         <result property="avatar"    column="avatar"    />
         <result property="number"    column="number"    />
+        <result property="password"    column="password"    />
         <result property="mobile"    column="mobile"    />
         <result property="sex"    column="sex"    />
         <result property="birthday"    column="birthday"    />
@@ -32,6 +33,7 @@
             name,
             avatar,
             number,
+            password,
             mobile,
             sex,
             birthday,
@@ -89,6 +91,7 @@
             <if test="name != null and name != ''">name,</if>
             <if test="avatar != null">avatar,</if>
             <if test="number != null">number,</if>
+            <if test="password != null">password,</if>
             <if test="mobile != null and mobile != ''">mobile,</if>
             <if test="sex != null">sex,</if>
             <if test="birthday != null">birthday,</if>
@@ -110,6 +113,7 @@
             <if test="name != null and name != ''">#{name},</if>
             <if test="avatar != null">#{avatar},</if>
             <if test="number != null">#{number},</if>
+            <if test="password != null">#{password},</if>
             <if test="mobile != null and mobile != ''">#{mobile},</if>
             <if test="sex != null">#{sex},</if>
             <if test="birthday != null">#{birthday},</if>
@@ -134,6 +138,7 @@
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="avatar != null">avatar = #{avatar},</if>
             <if test="number != null">number = #{number},</if>
+            <if test="password != null">password = #{password},</if>
             <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
             <if test="sex != null">sex = #{sex},</if>
             <if test="birthday != null">birthday = #{birthday},</if>
@@ -151,6 +156,10 @@
             <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="resetMemberPwd" parameterType="Member">
+        update shop_member set password = #{password} where id = #{id}
     </update>
 
     <delete id="deleteMemberById" parameterType="Long">

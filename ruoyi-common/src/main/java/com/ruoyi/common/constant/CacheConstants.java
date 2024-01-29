@@ -43,6 +43,11 @@ public class CacheConstants
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
 
     /**
+     * 支付密码错误次数 redis key
+     */
+    public static final String PWD_ERR_PAY_KEY = "pwd_err_pay:";
+
+    /**
      * 城市天气 redis key
      */
     public static final String CITY_WEATHER_KEY = "city_weather:";

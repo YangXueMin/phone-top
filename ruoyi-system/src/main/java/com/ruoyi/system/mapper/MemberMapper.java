@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.common.core.domain.entity.Member;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -61,6 +62,15 @@ public interface MemberMapper
      * @return 结果
      */
     public int updateMember(Member member);
+
+    /**
+     * 重置用户密码
+     *
+     * @param id 会员ID
+     * @param password 密码
+     * @return 结果
+     */
+    public int resetMemberPwd(@Param("id") Long id, @Param("password") String password);
 
     /**
      * 删除会员管理

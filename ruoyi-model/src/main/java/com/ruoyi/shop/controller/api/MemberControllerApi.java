@@ -1,18 +1,20 @@
 package com.ruoyi.shop.controller.api;
 
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.IMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yangxuemin
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberControllerApi extends BaseController {
     @Autowired
     private IMemberService memberService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 更新会员信息
@@ -39,6 +43,30 @@ public class MemberControllerApi extends BaseController {
         }
         final int i = memberService.updateMember(member);
         return success(i);
+    }
+
+    /**
+     * 重置密码
+     */
+    @Log(title = "会员重置密码", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateMemberPwd")
+    public AjaxResult updatePwd(String oldPassword, String newPassword) {
+        LoginUser loginUser = getLoginUser();
+        Long userId = loginUser.getUserId();
+        String password = loginUser.getMember().getPassword();
+        if (!SecurityUtils.matchesPassword(oldPassword, password)) {
+            return error("修改密码失败，旧密码错误");
+        }
+        if (SecurityUtils.matchesPassword(newPassword, password)) {
+            return error("新密码不能与旧密码相同");
+        }
+        if (memberService.resetMemberPwd(userId, SecurityUtils.encryptPassword(newPassword)) > 0) {
+            // 更新缓存用户密码
+            loginUser.getMember().setPassword(SecurityUtils.encryptPassword(newPassword));
+            tokenService.setLoginUser(loginUser);
+            return success();
+        }
+        return error("修改密码异常，请联系管理员");
     }
 
     /**

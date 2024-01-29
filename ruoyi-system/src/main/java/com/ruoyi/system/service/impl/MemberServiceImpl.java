@@ -105,6 +105,11 @@ public class MemberServiceImpl implements IMemberService {
         return memberMapper.updateMember(member);
     }
 
+    @Override
+    public int resetMemberPwd(Long id, String password) {
+        return memberMapper.resetMemberPwd(id, password);
+    }
+
     /**
      * 批量删除会员管理
      *

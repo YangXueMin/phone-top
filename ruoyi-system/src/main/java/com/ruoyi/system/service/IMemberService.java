@@ -66,6 +66,15 @@ public interface IMemberService {
     public int updateMember(Member member);
 
     /**
+     * 重置用户密码
+     *
+     * @param id 会员ID
+     * @param password 密码
+     * @return 结果
+     */
+    public int resetMemberPwd(Long id, String password);
+
+    /**
      * 批量删除会员管理
      *
      * @param ids 需要删除的会员管理主键集合

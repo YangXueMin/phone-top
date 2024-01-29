@@ -4,9 +4,12 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.IMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -30,6 +33,8 @@ import java.util.List;
 public class MemberController extends BaseController {
     @Autowired
     private IMemberService memberService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询会员管理列表
@@ -86,6 +91,24 @@ public class MemberController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody Member member) {
         return toAjax(memberService.updateMember(member));
+    }
+
+
+    /**
+     * 重置密码
+     */
+    @Log(title = "会员重置密码", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateMemberPwd")
+    public AjaxResult updatePwd(Long id) {
+        LoginUser loginUser = getLoginUser();
+        String newPassword = "123456";
+        if (memberService.resetMemberPwd(id, SecurityUtils.encryptPassword(newPassword)) > 0) {
+            // 更新缓存用户密码
+            loginUser.getMember().setPassword(SecurityUtils.encryptPassword(newPassword));
+            tokenService.setLoginUser(loginUser);
+            return success();
+        }
+        return error("修改密码异常，请联系管理员");
     }
 
     /**

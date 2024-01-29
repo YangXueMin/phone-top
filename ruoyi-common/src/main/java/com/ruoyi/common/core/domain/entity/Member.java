@@ -42,6 +42,12 @@ public class Member extends BaseEntity {
     private String number;
 
     /**
+     * 密码
+     */
+    @Excel(name = "密码")
+    private String password;
+
+    /**
      * 手机号
      */
     @Excel(name = "手机号")
@@ -225,5 +231,13 @@ public class Member extends BaseEntity {
 
     public void setSysUser(SysUser sysUser) {
         this.sysUser = sysUser;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
