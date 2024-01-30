@@ -30,6 +30,13 @@ public interface OfflineOrderMapper {
     public List<OfflineOrder> selectOfflineOrderList(OfflineOrder offlineOrder);
 
     /**
+     * 根据订单编号查询订单
+     * @param orderNumber
+     * @return
+     */
+    public List<OfflineOrder> selectOfflineOrderByOrderNumber(String orderNumber);
+
+    /**
      * 新增线下订单
      *
      * @param offlineOrder 线下订单

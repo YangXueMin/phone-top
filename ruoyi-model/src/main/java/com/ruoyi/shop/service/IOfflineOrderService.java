@@ -1,5 +1,6 @@
 package com.ruoyi.shop.service;
 
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.shop.domain.OfflineOrder;
 
 import java.util.List;
@@ -50,6 +51,21 @@ public interface IOfflineOrderService {
      * @return 结果
      */
     public int updateOfflineOrder(OfflineOrder offlineOrder);
+
+    /**
+     * 发起支付
+     * @param offlineOrder
+     * @return
+     */
+    public WxPayMpOrderResult pay(OfflineOrder offlineOrder);
+
+    /**
+     * 支付通知
+     *
+     * @param xmlData 支付通知
+     * @return 结果
+     */
+    public String payNotify(String xmlData);
 
     /**
      * 申请退款

@@ -1,5 +1,6 @@
 package com.ruoyi.shop.controller.api;
 
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -14,6 +15,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.shop.domain.OfflineOrder;
+import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.service.IOfflineOrderService;
 import com.ruoyi.system.service.IMemberService;
 import io.swagger.annotations.Api;
@@ -108,6 +110,30 @@ public class OfflineOrderControllerApi extends BaseController {
     private String getCacheKey(Long id) {
         return CacheConstants.PWD_ERR_PAY_KEY + id;
     }
+
+    /**
+     * 发起支付
+     */
+    @ApiOperation("发起支付")
+    @PostMapping("/pay")
+    public AjaxResult payOrder(@RequestBody OfflineOrder offlineOrder) {
+        offlineOrder = offlineOrderService.selectOfflineOrderById(offlineOrder.getId());
+        if (offlineOrder == null) {
+            return warn("订单不存在");
+        }
+        WxPayMpOrderResult pay = offlineOrderService.pay(offlineOrder);
+        return success(pay);
+    }
+
+    /**
+     * 支付回调通知处理
+     */
+    @ApiOperation("支付回调通知处理")
+    @PostMapping("/payNotify")
+    public String payNotify(@RequestBody String xmlData) {
+        return offlineOrderService.payNotify(xmlData);
+    }
+
 
     /**
      * 发起退款

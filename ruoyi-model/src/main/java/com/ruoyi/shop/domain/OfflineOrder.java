@@ -88,6 +88,13 @@ public class OfflineOrder extends BaseEntity {
     @ApiModelProperty("支付时间")
     private String payTime;
 
+    /**
+     * 支付记录
+     */
+    @Excel(name = "支付记录")
+    @ApiModelProperty("支付记录")
+    private String payResult;
+
     @ApiModelProperty("提货人姓名")
     private String mName;
 
@@ -239,5 +246,13 @@ public class OfflineOrder extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPayResult() {
+        return payResult;
+    }
+
+    public void setPayResult(String payResult) {
+        this.payResult = payResult;
     }
 }
