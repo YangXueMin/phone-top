@@ -17,9 +17,11 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.shop.domain.CardCoupon;
 import com.ruoyi.shop.domain.RechargeOrder;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
 import com.ruoyi.shop.domain.ShopCard;
+import com.ruoyi.shop.mapper.CardCouponMapper;
 import com.ruoyi.shop.mapper.RechargeOrderCouponMapper;
 import com.ruoyi.shop.mapper.RechargeOrderMapper;
 import com.ruoyi.shop.mapper.ShopCardMapper;
@@ -50,6 +52,8 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
     private ShopCardMapper shopCardMapper;
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private CardCouponMapper cardCouponMapper;
 
     /**
      * 查询充值记录
@@ -105,8 +109,13 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         rechargeOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         rechargeOrder.setOrderStatus("1");
         int i = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
-        if (i > 0 && rechargeOrder.getCouponList().size() > 0) {
-            for (RechargeOrderCoupon rechargeOrderCoupon : rechargeOrder.getCouponList()) {
+        if (i > 0 && rechargeOrder.getCardId() != null) {
+            List<CardCoupon> cardCouponList = cardCouponMapper.selectCardCouponByCardId(rechargeOrder.getCardId());
+            for (CardCoupon cardCoupon : cardCouponList) {
+                RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+                rechargeOrderCoupon.setCouponId(cardCoupon.getCouponId());
+                rechargeOrderCoupon.setMemberId(rechargeOrder.getMemberId());
+                rechargeOrderCoupon.setNum(cardCoupon.getNumber().intValue());
                 rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
                 rechargeOrderCoupon.setPayStatus("1");
                 rechargeOrderCoupon.setStatus("1");

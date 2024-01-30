@@ -199,7 +199,7 @@ public class OrderServiceImpl implements IOrderService {
                 rechargeOrder.setOrderNo(orderNumber);
                 rechargeOrder.setOrderStatus("1");
                 int ri = rechargeOrderMapper.insertRechargeOrder(rechargeOrder);
-                if (ri > 0) {
+                if (ri > 0 && order.getCardId() != null) {
                     List<CardCoupon> cardCouponList = cardCouponMapper.selectCardCouponByCardId(order.getCardId());
                     for (CardCoupon cardCoupon : cardCouponList) {
                         RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();

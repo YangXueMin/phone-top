@@ -94,6 +94,7 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
         String orderNumber = SnowflakeGenerator.generateOrderNumber();
         offlineOrder.setOrderNumber(orderNumber);
         offlineOrder.setCreateTime(DateUtils.getNowDate());
+        offlineOrder.setOrderStatus("1");
         final int i = offlineOrderMapper.insertOfflineOrder(offlineOrder);
         if (i > 0) {
             JSONObject jsonObject = new JSONObject();
