@@ -1,7 +1,6 @@
 package com.ruoyi.framework.websocket;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -48,13 +47,13 @@ public class WebSocketServerMessage {
     /**
      * concurrent包的线程安全Map，用来存放每个客户端对应的MyWebSocket对象
      */
-    private static ConcurrentHashMap<String, WebSocketServerMessage> webSocketMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Long, WebSocketServerMessage> webSocketMap = new ConcurrentHashMap<>();
 
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
-    private String userId;
+    private Long userId;
 
 
     /**
@@ -80,6 +79,8 @@ public class WebSocketServerMessage {
         Long userId = loginUser.getUserId();
         //存储会话到会话集合
         sessionMap.put(userId, session);
+        //存储
+        webSocketMap.put(userId, this);
         //存储用户信息到用户集合
         userMap.put(userId, loginUser);
         //获取会话长度(就是在线人数)
@@ -104,9 +105,15 @@ public class WebSocketServerMessage {
         }
         sessionMap.remove(userId);
         userMap.remove(userId);
+        webSocketMap.remove(userId);
     }
 
-    //根据session拿到用户id
+    /**
+     * 根据session拿到用户id
+     *
+     * @param session
+     * @return
+     */
     private Long getUserIdBySession(Session session) {
         for (Long userId : sessionMap.keySet()) {
             if (sessionMap.get(userId) != null && session != null
@@ -177,9 +184,9 @@ public class WebSocketServerMessage {
     /**
      * 通过userId向客户端发送消息
      */
-    public void sendMessageByUserId(String userId, String message) throws IOException {
+    public void sendMessageByUserId(Long userId, String message) throws IOException {
         logger.info("服务端发送消息到{},消息：{}", userId, message);
-        if (StrUtil.isNotBlank(userId) && webSocketMap.containsKey(userId)) {
+        if (userId != null && webSocketMap.containsKey(userId)) {
             webSocketMap.get(userId).sendMessage(message);
         } else {
             logger.error("用户{}不在线", userId);
@@ -191,7 +198,7 @@ public class WebSocketServerMessage {
      * 群发自定义消息
      */
     public static void sendInfo(String message) throws IOException {
-        for (String item : webSocketMap.keySet()) {
+        for (Long item : webSocketMap.keySet()) {
             try {
                 webSocketMap.get(item).sendMessage(message);
             } catch (IOException e) {

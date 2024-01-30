@@ -41,14 +41,17 @@ public class MemberControllerApi extends BaseController {
                 && UserConstants.NOT_UNIQUE.equals(memberService.checkMobileUnique(member))) {
             return error("修改用户'" + member.getName() + "'失败，手机号码已存在");
         }
+        if(StringUtils.isNotBlank(member.getPassword())){
+            member.setPassword(SecurityUtils.encryptPassword(member.getPassword()));
+        }
         final int i = memberService.updateMember(member);
         return success(i);
     }
 
     /**
-     * 重置密码
+     * 会员修改密码
      */
-    @Log(title = "会员重置密码", businessType = BusinessType.UPDATE)
+    @Log(title = "会员修改密码", businessType = BusinessType.UPDATE)
     @GetMapping("/updateMemberPwd")
     public AjaxResult updatePwd(String oldPassword, String newPassword) {
         LoginUser loginUser = getLoginUser();
