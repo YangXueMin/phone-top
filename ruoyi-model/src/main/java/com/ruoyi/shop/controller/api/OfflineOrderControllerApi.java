@@ -7,10 +7,13 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.user.UserPasswordRetryLimitExceedException;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
@@ -52,8 +55,11 @@ public class OfflineOrderControllerApi extends BaseController {
      */
     @ApiOperation("获取线下订单列表")
     @PostMapping("/findList")
-    public AjaxResult findList(@RequestBody OfflineOrder offlineOrder) {
-        return success(offlineOrderService.selectOfflineOrderListApi(offlineOrder));
+    public TableDataInfo findList(@RequestBody OfflineOrder offlineOrder) {
+        if(ServletUtils.getParameter(TableSupport.PAGE_NUM) != null){
+            startPage();
+        }
+        return getDataTable(offlineOrderService.selectOfflineOrderListApi(offlineOrder));
     }
 
     /**

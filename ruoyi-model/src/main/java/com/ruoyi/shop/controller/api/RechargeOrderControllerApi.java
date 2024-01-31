@@ -3,6 +3,9 @@ package com.ruoyi.shop.controller.api;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.page.TableSupport;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.domain.RechargeOrder;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
@@ -32,9 +35,12 @@ public class RechargeOrderControllerApi extends BaseController {
 
     @ApiOperation("获取充值卡券集合")
     @PostMapping("/findOrderCouponList")
-    public AjaxResult findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon) {
+    public TableDataInfo findOrderCouponList(@RequestBody RechargeOrderCoupon rechargeOrderCoupon) {
+        if(ServletUtils.getParameter(TableSupport.PAGE_NUM) != null){
+            startPage();
+        }
         List<RechargeOrderCoupon> rechargeOrderCouponList = iRechargeOrderCouponService.selectRechargeOrderCouponList(rechargeOrderCoupon);
-        return success(rechargeOrderCouponList);
+        return getDataTable(rechargeOrderCouponList);
     }
 
     @ApiOperation("获取用户卡券数量")
@@ -46,8 +52,11 @@ public class RechargeOrderControllerApi extends BaseController {
 
     @ApiOperation("获取充值订单列表")
     @PostMapping("/findList")
-    public AjaxResult findList(@RequestBody RechargeOrder rechargeOrder) {
-        return success(rechargeOrderService.selectRechargeOrderList(rechargeOrder));
+    public TableDataInfo findList(@RequestBody RechargeOrder rechargeOrder) {
+        if(ServletUtils.getParameter(TableSupport.PAGE_NUM) != null){
+            startPage();
+        }
+        return getDataTable(rechargeOrderService.selectRechargeOrderList(rechargeOrder));
     }
 
     /**

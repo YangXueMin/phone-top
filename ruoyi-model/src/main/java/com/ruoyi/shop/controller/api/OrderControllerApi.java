@@ -2,9 +2,15 @@ package com.ruoyi.shop.controller.api;
 
 import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.page.TableSupport;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
@@ -15,10 +21,12 @@ import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yangxuemin
@@ -38,14 +46,23 @@ public class OrderControllerApi extends BaseController {
     private ISysUserService sysUserService;
     @Autowired
     private IRechargeOrderCouponService rechargeOrderCouponService;
+    @Autowired
+    private RedisCache redisCache;
+    @Value(value = "${user.password.maxRetryCount}")
+    private int maxRetryCount;
+    @Value(value = "${user.password.lockTime}")
+    private int lockTime;
 
     /**
      * 获取订单列表
      */
     @ApiOperation("获取订单列表")
     @PostMapping("/findList")
-    public AjaxResult findList(@RequestBody Order order) {
-        return success(orderService.selectOrderListApi(order));
+    public TableDataInfo findList(@RequestBody Order order) {
+        if(ServletUtils.getParameter(TableSupport.PAGE_NUM) != null){
+            startPage();
+        }
+        return getDataTable(orderService.selectOrderListApi(order));
     }
 
     /**
@@ -69,6 +86,21 @@ public class OrderControllerApi extends BaseController {
             Member member = memberService.selectMemberById(order.getMemberId());
             if (member.getBalance().compareTo(order.getMoney()) < 0) {
                 return warn("余额不足，请充值");
+            }
+            Integer retryCount = redisCache.getCacheObject(getCacheKey(order.getMemberId()));
+
+            if (retryCount == null) {
+                retryCount = 0;
+            }
+
+            if (retryCount >= maxRetryCount) {
+                return error("密码输入次数已超最大，请稍等或联系管理员");
+            }
+            boolean matches = SecurityUtils.matchesPassword(order.getPassword(), member.getPassword());
+            if(!matches){
+                retryCount = retryCount + 1;
+                redisCache.setCacheObject(getCacheKey(order.getMemberId()), retryCount, lockTime, TimeUnit.MINUTES);
+                return error("密码错误，请重新输入");
             }
         }
         //判断优惠券是否使用过
@@ -224,6 +256,16 @@ public class OrderControllerApi extends BaseController {
             return success(orderService.cancelOrder(order));
         }
         return warn("无权限");
+    }
+
+    /**
+     * 支付密码错误次数缓存键名
+     *
+     * @param id 会员ID
+     * @return 缓存键key
+     */
+    private String getCacheKey(Long id) {
+        return CacheConstants.PWD_ERR_PAY_KEY + id;
     }
 
 }

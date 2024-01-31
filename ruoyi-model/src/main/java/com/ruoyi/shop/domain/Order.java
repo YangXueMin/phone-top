@@ -194,6 +194,9 @@ public class Order extends BaseEntity {
     @ApiModelProperty("优惠券关系集合")
     private List<RechargeOrderCoupon> rechargeOrderCouponList;
 
+    @ApiModelProperty("输入密码")
+    private String password;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -400,5 +403,13 @@ public class Order extends BaseEntity {
 
     public void setRechargeOrderCouponList(List<RechargeOrderCoupon> rechargeOrderCouponList) {
         this.rechargeOrderCouponList = rechargeOrderCouponList;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
