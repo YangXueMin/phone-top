@@ -7,7 +7,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
+import com.ruoyi.shop.domain.RechargeOrderCoupon;
 import com.ruoyi.shop.service.IOrderService;
+import com.ruoyi.shop.service.IRechargeOrderCouponService;
 import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
@@ -15,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +36,8 @@ public class OrderControllerApi extends BaseController {
     private IMemberService memberService;
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private IRechargeOrderCouponService rechargeOrderCouponService;
 
     /**
      * 获取订单列表
@@ -65,6 +70,17 @@ public class OrderControllerApi extends BaseController {
             if (member.getBalance().compareTo(order.getMoney()) < 0) {
                 return warn("余额不足，请充值");
             }
+        }
+        //判断优惠券是否使用过
+        if (StringUtils.isNotBlank(order.getCouponList())) {
+            String[] couponList = order.getCouponList().split(",");
+            for (String couponId : couponList) {
+                RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponService.selectRechargeOrderCouponById(Long.parseLong(couponId));
+                if (rechargeOrderCoupon.getId() != null && !StringUtils.equals("1", rechargeOrderCoupon.getStatus())) {
+                    return warn("优惠券已使用或已过期，请重新选择");
+                }
+            }
+
         }
         return success(orderService.insertOrder(order));
     }

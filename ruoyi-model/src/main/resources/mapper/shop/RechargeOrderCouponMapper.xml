@@ -161,6 +161,16 @@
         where recharge_id = #{rechargeId}
     </update>
 
+    <update id="updateRechargeOrderCouponStatusByIds" parameterType="RechargeOrderCoupon">
+        update shop_recharge_order_coupon
+           set status = 3,
+            update_time = now()
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
     <delete id="deleteRechargeOrderCouponById" parameterType="Long">
         delete
         from shop_recharge_order_coupon

@@ -134,24 +134,6 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Order insertOrder(Order order) {
-        //判断优惠券是否使用过
-        if (StringUtils.isNotBlank(order.getCouponList())) {
-            String[] couponList = order.getCouponList().split(",");
-            List<String> couponIdList = new ArrayList<>();
-            for (String couponId : couponList) {
-                RechargeOrderCoupon rechargeOrderCoupon = rechargeOrderCouponMapper.selectRechargeOrderCouponById(Long.parseLong(couponId));
-                if (rechargeOrderCoupon.getId() != null && StringUtils.equals("1", rechargeOrderCoupon.getStatus())) {
-                    couponIdList.add(rechargeOrderCoupon.getId() + "");
-                }
-            }
-            if (couponIdList.size() > 0) {
-                order.setCouponList(String.join(",", couponIdList));
-                order.setPayType("2");
-            } else {
-                order.setCouponList(null);
-            }
-
-        }
         String orderNumber = SnowflakeGenerator.generateOrderNumber();
         Member member = memberMapper.selectMemberById(order.getMemberId());
         BigDecimal beforeBalance = member.getBalance();
@@ -202,15 +184,18 @@ public class OrderServiceImpl implements IOrderService {
                 if (ri > 0 && order.getCardId() != null) {
                     List<CardCoupon> cardCouponList = cardCouponMapper.selectCardCouponByCardId(order.getCardId());
                     for (CardCoupon cardCoupon : cardCouponList) {
-                        RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
-                        rechargeOrderCoupon.setCouponId(cardCoupon.getCouponId());
-                        rechargeOrderCoupon.setMemberId(order.getMemberId());
-                        rechargeOrderCoupon.setNum(cardCoupon.getNumber().intValue());
-                        rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
-                        rechargeOrderCoupon.setPayStatus("1");
-                        rechargeOrderCoupon.setStatus("1");
-                        rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
-                        rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+                        if(cardCoupon.getNumber() > 0){
+                            for (int i1 = 0; i1 < cardCoupon.getNumber().intValue(); i1++) {
+                                RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+                                rechargeOrderCoupon.setCouponId(cardCoupon.getCouponId());
+                                rechargeOrderCoupon.setMemberId(order.getMemberId());
+                                rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                                rechargeOrderCoupon.setPayStatus("1");
+                                rechargeOrderCoupon.setStatus("1");
+                                rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
+                                rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+                            }
+                        }
                     }
                 }
             }

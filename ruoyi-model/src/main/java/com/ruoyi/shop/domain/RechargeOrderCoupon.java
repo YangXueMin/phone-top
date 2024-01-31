@@ -64,7 +64,7 @@ public class RechargeOrderCoupon extends BaseEntity {
     @ApiModelProperty("优惠券")
     private Coupon coupon;
 
-    @ApiModelProperty("优惠券数量")
+    @ApiModelProperty("统计优惠券数量")
     private Integer num;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

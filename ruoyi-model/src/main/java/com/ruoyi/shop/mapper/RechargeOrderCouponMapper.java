@@ -69,6 +69,13 @@ public interface RechargeOrderCouponMapper {
      * @return 结果
      */
     public int updateRechargeOrderCouponPayStatusByRechargeId(RechargeOrderCoupon rechargeOrderCoupon);
+/**
+     * 更新优惠券状态
+     *
+     * @param ids 支付状态
+     * @return 结果
+     */
+    public int updateRechargeOrderCouponStatusByIds(Long[] ids);
 
     /**
      * 删除充值订单与优惠券关联

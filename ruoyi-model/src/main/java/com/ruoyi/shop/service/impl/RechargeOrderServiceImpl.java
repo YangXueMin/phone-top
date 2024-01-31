@@ -112,15 +112,18 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
         if (i > 0 && rechargeOrder.getCardId() != null) {
             List<CardCoupon> cardCouponList = cardCouponMapper.selectCardCouponByCardId(rechargeOrder.getCardId());
             for (CardCoupon cardCoupon : cardCouponList) {
-                RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
-                rechargeOrderCoupon.setCouponId(cardCoupon.getCouponId());
-                rechargeOrderCoupon.setMemberId(rechargeOrder.getMemberId());
-                rechargeOrderCoupon.setNum(cardCoupon.getNumber().intValue());
-                rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
-                rechargeOrderCoupon.setPayStatus("1");
-                rechargeOrderCoupon.setStatus("1");
-                rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
-                rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+                if(cardCoupon.getNumber() > 0){
+                    for (int i1 = 0; i1 < cardCoupon.getNumber().intValue(); i1++) {
+                        RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+                        rechargeOrderCoupon.setCouponId(cardCoupon.getCouponId());
+                        rechargeOrderCoupon.setMemberId(rechargeOrder.getMemberId());
+                        rechargeOrderCoupon.setRechargeId(rechargeOrder.getId());
+                        rechargeOrderCoupon.setPayStatus("1");
+                        rechargeOrderCoupon.setStatus("1");
+                        rechargeOrderCoupon.setCreateTime(DateUtils.getNowDate());
+                        rechargeOrderCouponMapper.insertRechargeOrderCoupon(rechargeOrderCoupon);
+                    }
+                }
             }
         }
         return rechargeOrder;

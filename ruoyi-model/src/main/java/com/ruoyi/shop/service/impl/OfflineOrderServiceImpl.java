@@ -15,6 +15,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.time.DateFormatUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.websocket.WebSocketServerMessage;
 import com.ruoyi.shop.domain.BalanceInfo;
@@ -115,6 +116,9 @@ public class OfflineOrderServiceImpl implements IOfflineOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateOfflineOrder(OfflineOrder offlineOrder) {
+        if (StringUtils.equals("2", offlineOrder.getOrderStatus())) {
+            offlineOrder.setPayTime(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_WECHAT_DATE,DateUtils.getNowDate()));
+        }
         offlineOrder.setUpdateTime(DateUtils.getNowDate());
         final int i = offlineOrderMapper.updateOfflineOrder(offlineOrder);
         if (i > 0) {
