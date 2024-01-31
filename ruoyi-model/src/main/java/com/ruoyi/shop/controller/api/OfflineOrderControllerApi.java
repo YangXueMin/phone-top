@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -103,7 +104,7 @@ public class OfflineOrderControllerApi extends BaseController {
             redisCache.setCacheObject(getCacheKey(offlineOrder.getMemberId()), retryCount, lockTime, TimeUnit.MINUTES);
             return error("密码错误，请重新输入");
         }
-        if (member.getBalance().compareTo(offlineOrder.getMoney()) < 1) {
+        if (member.getBalance().compareTo(offlineOrder.getMoney()) < 0) {
             return warn("余额不足，请充值");
         }
         final int i = offlineOrderService.updateOfflineOrder(offlineOrder);

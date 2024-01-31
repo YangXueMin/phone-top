@@ -29,14 +29,16 @@ public class RechargeOrderCouponTask {
         if(rechargeOrderCouponList != null && rechargeOrderCouponList.size() > 0){
             List<Long> idList = new ArrayList<>();
             for (RechargeOrderCoupon orderCoupon : rechargeOrderCouponList) {
-                if(orderCoupon.getCoupon() != null){
+                if(orderCoupon.getCoupon() != null && orderCoupon.getCreateTime() != null){
                     Date date = DateUtils.addDays(orderCoupon.getCreateTime(), orderCoupon.getCoupon().getTermValidity());
                     if(date.getTime() < DateUtils.getNowDate().getTime()){
                         idList.add(orderCoupon.getId());
                     }
                 }
             }
-            rechargeOrderCouponMapper.updateRechargeOrderCouponStatusByIds(idList.toArray(new Long[0]));
+            if(idList.size() > 0){
+                rechargeOrderCouponMapper.updateRechargeOrderCouponStatusByIds(idList.toArray(new Long[0]));
+            }
         }
     }
 }
