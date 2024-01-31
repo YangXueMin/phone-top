@@ -219,6 +219,12 @@
         where id = #{id}
     </update>
 
+    <update id="updateOfflineOrderStatus" parameterType="OfflineOrder">
+        update shop_offline_order
+        set order_status = 4
+        where order_status = 1 AND create_time &lt; DATE_SUB(NOW(), INTERVAL 10 MINUTE);
+    </update>
+
     <delete id="deleteOfflineOrderById" parameterType="Long">
         delete
         from shop_offline_order

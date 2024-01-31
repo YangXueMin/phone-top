@@ -53,6 +53,12 @@ public interface OfflineOrderMapper {
     public int updateOfflineOrder(OfflineOrder offlineOrder);
 
     /**
+     * 更新超时订单
+     * @return
+     */
+    public int updateOfflineOrderStatus();
+
+    /**
      * 删除线下订单
      *
      * @param id 线下订单主键

@@ -31,6 +31,14 @@ public interface IRechargeOrderService {
     public List<RechargeOrder> selectRechargeOrderList(RechargeOrder rechargeOrder);
 
     /**
+     * 查询充值记录列表
+     *
+     * @param rechargeOrder 充值记录
+     * @return 充值记录集合
+     */
+    public List<RechargeOrder> selectRechargeOrderListApi(RechargeOrder rechargeOrder);
+
+    /**
      * 查询总充值金额
      *
      * @param rechargeOrder 充值记录

@@ -133,6 +133,13 @@ public class WebSocketServerMessage {
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("★webSocket接收成功★内容为:" + message);
+        if(StringUtils.equals("ping",message)){
+            try {
+                session.getBasicRemote().sendText("pong");
+            } catch (IOException ignored) {
+                log.error("发送给{}的消息出错", session.getId());
+            }
+        }
         LoginUser loginUser = getUserBySession(session);
         if (ObjectUtil.isNull(loginUser)) {
             return;

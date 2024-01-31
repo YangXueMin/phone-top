@@ -5,6 +5,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
+import com.ruoyi.shop.mapper.OfflineOrderMapper;
 import com.ruoyi.shop.mapper.OrderMapper;
 import com.ruoyi.shop.mapper.RechargeOrderCouponMapper;
 import com.ruoyi.shop.mapper.RechargeOrderMapper;
@@ -28,6 +29,8 @@ public class OrderTask {
     private RechargeOrderMapper rechargeOrderMapper;
     @Autowired
     private RechargeOrderCouponMapper rechargeOrderCouponMapper;
+    @Autowired
+    private OfflineOrderMapper offlineOrderMapper;
 
     public void updateTimeOrderStatus() {
         System.out.println("更新订单状态");
@@ -56,5 +59,6 @@ public class OrderTask {
         }
         orderMapper.updateTimeOrderStatus();
         rechargeOrderMapper.updateTimeOrderStatus();
+        offlineOrderMapper.updateOfflineOrderStatus();
     }
 }

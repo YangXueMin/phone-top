@@ -85,6 +85,25 @@ public class RechargeOrderServiceImpl implements IRechargeOrderService {
             for (RechargeOrder order : rechargeOrderList) {
                 RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
                 rechargeOrderCoupon.setRechargeId(order.getId());
+                order.setCouponList(rechargeOrderCouponMapper.selectRechargeOrderCouponMemberList(rechargeOrderCoupon));
+            }
+        }
+        return rechargeOrderList;
+    }
+
+    /**
+     * 查询充值记录列表
+     *
+     * @param rechargeOrder 充值记录
+     * @return 充值记录
+     */
+    @Override
+    public List<RechargeOrder> selectRechargeOrderListApi(RechargeOrder rechargeOrder) {
+        List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectRechargeOrderList(rechargeOrder);
+        if (rechargeOrderList.size() > 0) {
+            for (RechargeOrder order : rechargeOrderList) {
+                RechargeOrderCoupon rechargeOrderCoupon = new RechargeOrderCoupon();
+                rechargeOrderCoupon.setRechargeId(order.getId());
                 order.setCouponList(rechargeOrderCouponMapper.selectRechargeOrderCouponList(rechargeOrderCoupon));
             }
         }

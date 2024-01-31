@@ -56,7 +56,7 @@ public class RechargeOrderControllerApi extends BaseController {
         if(ServletUtils.getParameter(TableSupport.PAGE_NUM) != null){
             startPage();
         }
-        return getDataTable(rechargeOrderService.selectRechargeOrderList(rechargeOrder));
+        return getDataTable(rechargeOrderService.selectRechargeOrderListApi(rechargeOrder));
     }
 
     /**
