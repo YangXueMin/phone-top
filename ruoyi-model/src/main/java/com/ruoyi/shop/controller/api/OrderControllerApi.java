@@ -84,7 +84,7 @@ public class OrderControllerApi extends BaseController {
         //如果是用余额支付，判断用户余额是否充足
         if (StringUtils.equals("1", order.getPayType()) && order.getCardId() == null) {
             Member member = memberService.selectMemberById(order.getMemberId());
-            if (member.getBalance().compareTo(order.getMoney()) < 0) {
+            if (member.getBalance().compareTo(order.getMoney()) < 1) {
                 return warn("余额不足，请充值");
             }
         }

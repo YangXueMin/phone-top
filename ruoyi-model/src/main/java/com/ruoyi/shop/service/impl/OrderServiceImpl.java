@@ -139,7 +139,7 @@ public class OrderServiceImpl implements IOrderService {
         BigDecimal beforeBalance = member.getBalance();
 
         if ((StringUtils.equals("1", order.getPayType()) || order.getMoney().compareTo(BigDecimal.ZERO) == 0)
-                && order.getMoney().compareTo(member.getBalance()) < 0) {
+                && order.getMoney().compareTo(member.getBalance()) < 1) {
             order.setOrderStatus("2");
             order.setCancelStatus("1");
             order.setPayTime(DateUtils.dateTimeNow());
@@ -199,7 +199,7 @@ public class OrderServiceImpl implements IOrderService {
                     }
                 }
             }
-            if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 0) {
+            if (StringUtils.equals("1", order.getPayType()) && order.getMoney().compareTo(member.getBalance()) < 1) {
                 member.setBalance(member.getBalance().subtract(order.getMoney()));
                 member.setUpdateTime(DateUtils.getNowDate());
                 memberMapper.updateMember(member);

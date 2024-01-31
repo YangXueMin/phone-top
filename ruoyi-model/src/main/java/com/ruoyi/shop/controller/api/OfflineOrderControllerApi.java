@@ -103,6 +103,9 @@ public class OfflineOrderControllerApi extends BaseController {
             redisCache.setCacheObject(getCacheKey(offlineOrder.getMemberId()), retryCount, lockTime, TimeUnit.MINUTES);
             return error("密码错误，请重新输入");
         }
+        if (member.getBalance().compareTo(offlineOrder.getMoney()) < 1) {
+            return warn("余额不足，请充值");
+        }
         final int i = offlineOrderService.updateOfflineOrder(offlineOrder);
         return success(i);
     }
