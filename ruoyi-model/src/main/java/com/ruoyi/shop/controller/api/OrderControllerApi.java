@@ -87,21 +87,6 @@ public class OrderControllerApi extends BaseController {
             if (member.getBalance().compareTo(order.getMoney()) < 0) {
                 return warn("余额不足，请充值");
             }
-            Integer retryCount = redisCache.getCacheObject(getCacheKey(order.getMemberId()));
-
-            if (retryCount == null) {
-                retryCount = 0;
-            }
-
-            if (retryCount >= maxRetryCount) {
-                return error("密码输入次数已超最大，请稍等或联系管理员");
-            }
-            boolean matches = SecurityUtils.matchesPassword(order.getPassword(), member.getPassword());
-            if(!matches){
-                retryCount = retryCount + 1;
-                redisCache.setCacheObject(getCacheKey(order.getMemberId()), retryCount, lockTime, TimeUnit.MINUTES);
-                return error("密码错误，请重新输入");
-            }
         }
         //判断优惠券是否使用过
         if (StringUtils.isNotBlank(order.getCouponList())) {
