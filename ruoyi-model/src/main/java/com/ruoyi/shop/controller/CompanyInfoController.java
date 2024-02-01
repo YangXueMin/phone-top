@@ -61,9 +61,20 @@ public class CompanyInfoController extends BaseController {
     @ApiOperation("获取企业信息配置详细信息")
     @ApiImplicitParam(name = "companyId", value = "企业ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('shop:companyInfo:query')")
-    @GetMapping(value = "/{companyId}")
+    @GetMapping(value = "getInfo/{companyId}")
     public AjaxResult getInfo(@PathVariable("companyId") Long companyId) {
         return success(companyInfoService.selectCompanyInfoByCompanyId(companyId));
+    }
+
+    /**
+     * 获取企业信息配置详细信息
+     */
+    @ApiOperation("获取企业信息配置详细信息")
+    @ApiImplicitParam(name = "companyId", value = "企业ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
+    @PreAuthorize("@ss.hasPermi('shop:companyInfo:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult get(@PathVariable("id") Long id) {
+        return success(companyInfoService.selectCompanyInfoById(id));
     }
 
     /**

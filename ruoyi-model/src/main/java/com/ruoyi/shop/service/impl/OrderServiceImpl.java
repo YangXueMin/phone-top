@@ -65,6 +65,8 @@ public class OrderServiceImpl implements IOrderService {
     private CardCouponMapper cardCouponMapper;
     @Autowired
     private ShopActivityMapper shopActivityMapper;
+    @Autowired
+    private ShopActivityGoodsMapper shopActivityGoodsMapper;
 
     /**
      * 查询订单记录
@@ -78,7 +80,18 @@ public class OrderServiceImpl implements IOrderService {
         if (order != null) {
             order.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(id));
             if (order.getActivityId() != null) {
-                order.setShopActivity(shopActivityMapper.selectShopActivityById(order.getActivityId()));
+                ShopActivity shopActivity = shopActivityMapper.selectShopActivityById(order.getActivityId());
+                if(shopActivity != null){
+                    ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
+                    shopActivityGoods.setActivityId(shopActivity.getId());
+                    List<ShopActivityGoods> shopActivityGoodsList = new ArrayList<>();
+                    for (OrderDetails orderDetails : order.getDetailsList()) {
+                        shopActivityGoods.setSpecsId(orderDetails.getSpecsId());
+                        shopActivityGoodsList.addAll(shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods));
+                    }
+                    shopActivity.setActivityGoodsList(shopActivityGoodsList);
+                }
+                order.setShopActivity(shopActivity);
             }
         }
         return order;
@@ -109,7 +122,18 @@ public class OrderServiceImpl implements IOrderService {
             for (Order orderData : orderList) {
                 orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
                 if (orderData.getActivityId() != null) {
-                    orderData.setShopActivity(shopActivityMapper.selectShopActivityById(orderData.getActivityId()));
+                    ShopActivity shopActivity = shopActivityMapper.selectShopActivityById(orderData.getActivityId());
+                    if(shopActivity != null){
+                        ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
+                        shopActivityGoods.setActivityId(shopActivity.getId());
+                        List<ShopActivityGoods> shopActivityGoodsList = new ArrayList<>();
+                        for (OrderDetails orderDetails : orderData.getDetailsList()) {
+                            shopActivityGoods.setSpecsId(orderDetails.getSpecsId());
+                            shopActivityGoodsList.addAll(shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods));
+                        }
+                        shopActivity.setActivityGoodsList(shopActivityGoodsList);
+                    }
+                    orderData.setShopActivity(shopActivity);
                 }
                 if (StringUtils.isNotBlank(order.getCouponList())) {
                     List<RechargeOrderCoupon> rechargeOrderCouponList = new ArrayList<>();
