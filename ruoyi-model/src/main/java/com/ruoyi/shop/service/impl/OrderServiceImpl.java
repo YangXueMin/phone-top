@@ -67,6 +67,10 @@ public class OrderServiceImpl implements IOrderService {
     private ShopActivityMapper shopActivityMapper;
     @Autowired
     private ShopActivityGoodsMapper shopActivityGoodsMapper;
+    @Autowired
+    private GoodsMapper goodsMapper;
+    @Autowired
+    private GoodsSpecsMapper goodsSpecsMapper;
 
     /**
      * 查询订单记录
@@ -79,20 +83,6 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderMapper.selectOrderById(id);
         if (order != null) {
             order.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(id));
-            if (order.getActivityId() != null) {
-                ShopActivity shopActivity = shopActivityMapper.selectShopActivityById(order.getActivityId());
-                if(shopActivity != null){
-                    ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
-                    shopActivityGoods.setActivityId(shopActivity.getId());
-                    List<ShopActivityGoods> shopActivityGoodsList = new ArrayList<>();
-                    for (OrderDetails orderDetails : order.getDetailsList()) {
-                        shopActivityGoods.setSpecsId(orderDetails.getSpecsId());
-                        shopActivityGoodsList.addAll(shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods));
-                    }
-                    shopActivity.setActivityGoodsList(shopActivityGoodsList);
-                }
-                order.setShopActivity(shopActivity);
-            }
         }
         return order;
     }
@@ -121,20 +111,6 @@ public class OrderServiceImpl implements IOrderService {
         if (orderList.size() > 0) {
             for (Order orderData : orderList) {
                 orderData.setDetailsList(orderDetailsMapper.selectOrderDetailsByOrderId(orderData.getId()));
-                if (orderData.getActivityId() != null) {
-                    ShopActivity shopActivity = shopActivityMapper.selectShopActivityById(orderData.getActivityId());
-                    if(shopActivity != null){
-                        ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
-                        shopActivityGoods.setActivityId(shopActivity.getId());
-                        List<ShopActivityGoods> shopActivityGoodsList = new ArrayList<>();
-                        for (OrderDetails orderDetails : orderData.getDetailsList()) {
-                            shopActivityGoods.setSpecsId(orderDetails.getSpecsId());
-                            shopActivityGoodsList.addAll(shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods));
-                        }
-                        shopActivity.setActivityGoodsList(shopActivityGoodsList);
-                    }
-                    orderData.setShopActivity(shopActivity);
-                }
                 if (StringUtils.isNotBlank(order.getCouponList())) {
                     List<RechargeOrderCoupon> rechargeOrderCouponList = new ArrayList<>();
                     String[] couponList = order.getCouponList().split(",");
@@ -173,12 +149,51 @@ public class OrderServiceImpl implements IOrderService {
         }
         order.setCreateTime(DateUtils.getNowDate());
         order.setOrderNumber(orderNumber);
+        //判断是否是活动订单
+        ShopActivity shopActivity = new ShopActivity();
+        if(order.getActivityId() != null){
+            shopActivity = shopActivityMapper.selectShopActivityById(order.getActivityId());
+            order.setActivityName(shopActivity.getActivityName());
+        }
         final int i = orderMapper.insertOrder(order);
         if (i > 0) {
             if (order.getDetailsList().size() > 0) {
                 for (OrderDetails orderDetails : order.getDetailsList()) {
                     orderDetails.setOrderId(order.getId());
                     orderDetails.setCreateTime(DateUtils.getNowDate());
+                    Goods goods = goodsMapper.selectGoodsById(orderDetails.getGoodsId());
+                    if(goods != null){
+                        orderDetails.setName(goods.getName());
+                        orderDetails.setDescribe(goods.getName());
+                        orderDetails.setClassId(goods.getClassId());
+                        orderDetails.setGoodsLabel(goods.getGoodsLabel());
+                        orderDetails.setPictures(goods.getPictures());
+                        orderDetails.setAttributeList(goods.getAttributeList());
+                        orderDetails.setDeliveryType(goods.getDeliveryType());
+                        orderDetails.setIsLimit(goods.getIsLimit());
+                        orderDetails.setLimitType(goods.getLimitType());
+                        orderDetails.setLimitNum(goods.getLimitNum());
+                    }
+
+                    GoodsSpecs goodsSpecs = goodsSpecsMapper.selectGoodsSpecsById(orderDetails.getSpecsId());
+                    if(goodsSpecs != null){
+                        orderDetails.setGoodsSpecs(goodsSpecs.getGoodsSpecs());
+                        orderDetails.setGoodsStock(goodsSpecs.getGoodsStock());
+                        if(order.getActivityId() != null){
+                            ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
+                            shopActivityGoods.setActivityId(shopActivity.getId());
+                            shopActivityGoods.setSpecsId(orderDetails.getSpecsId());
+                            final List<ShopActivityGoods> shopActivityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
+                            if(shopActivityGoodsList != null && shopActivityGoodsList.size() > 0){
+                                orderDetails.setGoodsPrice(shopActivityGoodsList.get(0).getBuyingPrice());
+                            }
+                        }else{
+                            orderDetails.setGoodsPrice(goodsSpecs.getGoodsPrice());
+                        }
+                        orderDetails.setGoodsDiscount(goodsSpecs.getGoodsDiscount());
+                        orderDetails.setGoodsNumber(goodsSpecs.getGoodsNumber());
+                    }
+
                     orderDetailsMapper.insertOrderDetails(orderDetails);
                 }
             }

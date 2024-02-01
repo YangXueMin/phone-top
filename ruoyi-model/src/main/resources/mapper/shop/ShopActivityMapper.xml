@@ -11,6 +11,7 @@
         <result property="shopName" column="shop_name_longitude_latitude"/>
         <result property="beginDate" column="begin_date"/>
         <result property="activityTime" column="activity_time"/>
+        <result property="activityStatus" column="activity_status"/>
         <result property="status" column="status"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
@@ -48,6 +49,7 @@
                a.shop_id,
                a.begin_date,
                a.activity_time,
+               a.activity_status,
                a.status,
                a.create_by,
                a.create_time,
@@ -103,6 +105,7 @@
             <if test="shopId != null">shop_id,</if>
             <if test="beginDate != null">begin_date,</if>
             <if test="activityTime != null">activity_time,</if>
+            <if test="activityStatus != null">activity_status,</if>
             <if test="status != null">status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -116,6 +119,7 @@
             <if test="shopId != null">#{shopId},</if>
             <if test="beginDate != null">#{beginDate},</if>
             <if test="activityTime != null">#{activityTime},</if>
+            <if test="activityStatus != null">#{activityStatus},</if>
             <if test="status != null">#{status},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -132,6 +136,7 @@
             <if test="shopId != null">shop_id = #{shopId},</if>
             <if test="beginDate != null">begin_date = #{beginDate},</if>
             <if test="activityTime != null">activity_time = #{activityTime},</if>
+            <if test="activityStatus != null">activity_status = #{activityStatus},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

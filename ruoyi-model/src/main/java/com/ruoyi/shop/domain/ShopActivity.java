@@ -63,6 +63,13 @@ public class ShopActivity extends BaseEntity {
     private Long activityTime;
 
     /**
+     * 活动状态
+     */
+    @Excel(name = "活动状态")
+    @ApiModelProperty("活动状态（未开始：-1，进行中：0，已结束：1）")
+    private String activityStatus;
+
+    /**
      * 状态
      */
     @Excel(name = "状态")
@@ -158,5 +165,13 @@ public class ShopActivity extends BaseEntity {
 
     public void setShopInfo(ShopInfo shopInfo) {
         this.shopInfo = shopInfo;
+    }
+
+    public String getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(String activityStatus) {
+        this.activityStatus = activityStatus;
     }
 }

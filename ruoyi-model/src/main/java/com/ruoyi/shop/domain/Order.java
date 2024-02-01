@@ -59,6 +59,13 @@ public class Order extends BaseEntity {
     private Long activityId;
 
     /**
+     * 活动名称
+     */
+    @Excel(name = "活动名称")
+    @ApiModelProperty("活动名称")
+    private String activityName;
+
+    /**
      * 订单编号
      */
     @Excel(name = "订单编号")
@@ -411,5 +418,13 @@ public class Order extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getActivityName() {
+        return activityName;
+    }
+
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
     }
 }

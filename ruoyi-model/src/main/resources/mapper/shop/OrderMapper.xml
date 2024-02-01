@@ -10,6 +10,7 @@
         <result property="memberId"    column="member_id"    />
         <result property="orderType"    column="order_type"    />
         <result property="activityId"    column="activity_id"    />
+        <result property="activityName" column="activity_name"/>
         <result property="orderNumber"    column="order_number"    />
         <result property="favourableMoney"    column="favourable_money"    />
         <result property="money"    column="money"    />
@@ -84,6 +85,7 @@
             a.member_id,
             a.order_type,
             a.activity_id,
+               a.activity_name,
             a.order_number,
             a.favourable_money,
             a.money,
@@ -201,6 +203,7 @@
             <if test="memberId != null">member_id,</if>
             <if test="orderType != null">order_type,</if>
             <if test="activityId != null">activity_id,</if>
+            <if test="activityName != null">activity_name,</if>
             <if test="orderNumber != null">order_number,</if>
             <if test="favourableMoney != null">favourable_money,</if>
             <if test="money != null">money,</if>
@@ -226,6 +229,7 @@
             <if test="memberId != null">#{memberId},</if>
             <if test="orderType != null">#{orderType},</if>
             <if test="activityId != null">#{activityId},</if>
+            <if test="activityName != null">#{activityName},</if>
             <if test="orderNumber != null">#{orderNumber},</if>
             <if test="favourableMoney != null">#{favourableMoney},</if>
             <if test="money != null">#{money},</if>
@@ -255,6 +259,7 @@
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="orderType != null">order_type = #{orderType},</if>
             <if test="activityId != null">activity_id = #{activityId},</if>
+            <if test="activityName != null">activity_name = #{activityName},</if>
             <if test="orderNumber != null">order_number = #{orderNumber},</if>
             <if test="favourableMoney != null">favourable_money = #{favourableMoney},</if>
             <if test="money != null">money = #{money},</if>

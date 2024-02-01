@@ -74,6 +74,7 @@ public class ShopActivityController extends BaseController {
     @Log(title = "活动管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ShopActivity shopActivity) {
+        shopActivity.setActivityStatus("-1");
         return toAjax(shopActivityService.insertShopActivity(shopActivity));
     }
 
