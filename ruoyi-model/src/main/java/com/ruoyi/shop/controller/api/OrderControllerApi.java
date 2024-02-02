@@ -14,8 +14,10 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Order;
 import com.ruoyi.shop.domain.RechargeOrderCoupon;
+import com.ruoyi.shop.domain.ShopActivity;
 import com.ruoyi.shop.service.IOrderService;
 import com.ruoyi.shop.service.IRechargeOrderCouponService;
+import com.ruoyi.shop.service.IShopActivityService;
 import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
@@ -46,6 +48,9 @@ public class OrderControllerApi extends BaseController {
     private ISysUserService sysUserService;
     @Autowired
     private IRechargeOrderCouponService rechargeOrderCouponService;
+    @Autowired
+    private IShopActivityService shopActivityService;
+
     @Autowired
     private RedisCache redisCache;
     @Value(value = "${user.password.maxRetryCount}")
@@ -98,6 +103,17 @@ public class OrderControllerApi extends BaseController {
                 }
             }
 
+        }
+        if(order.getActivityId() != null){
+            ShopActivity shopActivity = shopActivityService.selectShopActivityById(order.getActivityId());
+            if(shopActivity.getActivityStatus() != null){
+                if(StringUtils.equals("-1",shopActivity.getActivityStatus())){
+                    return warn("活动暂未开启");
+                }
+                if(StringUtils.equals("1",shopActivity.getActivityStatus())){
+                    return warn("活动已结束");
+                }
+            }
         }
         return success(orderService.insertOrder(order));
     }

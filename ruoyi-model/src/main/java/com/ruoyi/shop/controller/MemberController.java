@@ -100,12 +100,8 @@ public class MemberController extends BaseController {
     @Log(title = "会员重置密码", businessType = BusinessType.UPDATE)
     @GetMapping("/updateMemberPwd")
     public AjaxResult updatePwd(Long id) {
-        LoginUser loginUser = getLoginUser();
         String newPassword = "123456";
         if (memberService.resetMemberPwd(id, SecurityUtils.encryptPassword(newPassword)) > 0) {
-            // 更新缓存用户密码
-            loginUser.getMember().setPassword(SecurityUtils.encryptPassword(newPassword));
-            tokenService.setLoginUser(loginUser);
             return success();
         }
         return error("修改密码异常，请联系管理员");

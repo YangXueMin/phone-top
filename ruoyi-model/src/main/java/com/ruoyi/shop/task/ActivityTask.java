@@ -7,7 +7,10 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.framework.websocket.WebSocketServerMessage;
 import com.ruoyi.shop.domain.ShopActivity;
+import com.ruoyi.shop.domain.ShopActivityGoods;
+import com.ruoyi.shop.mapper.ShopActivityGoodsMapper;
 import com.ruoyi.shop.mapper.ShopActivityMapper;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +29,8 @@ import java.util.List;
 public class ActivityTask {
     @Autowired
     private ShopActivityMapper shopActivityMapper;
+    @Autowired
+    private ShopActivityGoodsMapper shopActivityGoodsMapper;
 
     public void findActivityMap() {
         ShopActivity shopActivity = new ShopActivity();
@@ -48,12 +53,19 @@ public class ActivityTask {
                     status = "1";
                 }
                 if(StringUtils.isBlank(activity.getActivityStatus()) || !StringUtils.equals(activity.getActivityStatus(),status)){
-                    activity.setStatus(status);
+                    activity.setActivityStatus(status);
                     shopActivityMapper.updateShopActivity(activity);
-                    JSONObject json = new JSONObject();
-                    json.put("id", activity.getId());
-                    json.put("status", status);
-                    jsonArray.add(json);
+                    ShopActivityGoods shopActivityGoods = new ShopActivityGoods();
+                    shopActivityGoods.setActivityId(activity.getId());
+                    final List<ShopActivityGoods> shopActivityGoodsList = shopActivityGoodsMapper.selectShopActivityGoodsList(shopActivityGoods);
+                    if(shopActivityGoodsList != null && shopActivityGoodsList.size() > 0){
+                        for (ShopActivityGoods activityGoods : shopActivityGoodsList) {
+                            JSONObject json = new JSONObject();
+                            json.put("id", activityGoods.getId());
+                            json.put("status", status);
+                            jsonArray.add(json);
+                        }
+                    }
                 }
             }
             if(jsonArray.size() > 0){

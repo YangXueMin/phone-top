@@ -47,6 +47,14 @@ public interface OrderDetailsMapper {
     Integer selectCountByGoodsId(@Param("goodsId")Long goodsId);
 
     /**
+     * 查询活动订单出售数据
+     * @param activityId
+     * @param specsId
+     * @return
+     */
+    Integer selectCountByActivityId(@Param("activityId")Long activityId,@Param("specsId")Long specsId);
+
+    /**
      * 新增订单详情
      *
      * @param orderDetails 订单详情

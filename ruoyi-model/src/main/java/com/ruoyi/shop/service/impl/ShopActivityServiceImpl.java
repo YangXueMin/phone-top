@@ -12,6 +12,7 @@ import com.ruoyi.common.utils.time.DateFormatUtil;
 import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.ShopActivityGoods;
 import com.ruoyi.shop.mapper.GoodsSpecsMapper;
+import com.ruoyi.shop.mapper.OrderDetailsMapper;
 import com.ruoyi.shop.mapper.ShopActivityGoodsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class ShopActivityServiceImpl implements IShopActivityService {
     private ShopActivityGoodsMapper shopActivityGoodsMapper;
     @Autowired
     private GoodsSpecsMapper goodsSpecsMapper;
+    @Autowired
+    private OrderDetailsMapper orderDetailsMapper;
 
     /**
      * 查询活动管理
@@ -89,6 +92,7 @@ public class ShopActivityServiceImpl implements IShopActivityService {
                     for (ShopActivityGoods activityGoods : activityGoodsList) {
                         if (activityGoods.getGoods() != null) {
                             activityGoods.getGoods().setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(activityGoods.getGoodsId()));
+                            activityGoods.setSellNumber(orderDetailsMapper.selectCountByActivityId(shopActivity.getId(),activityGoods.getSpecsId()));
                         }
                     }
                 }

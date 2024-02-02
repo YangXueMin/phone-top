@@ -87,6 +87,21 @@
         </where>
     </select>
 
+    <select id="selectCountByActivityId" resultType="integer">
+        SELECT count(a.specs_id)
+        FROM shop_order_details a
+        left JOIN shop_order o ON a.order_id = o.id
+        <where>
+            order_status ='2'
+            <if test="activityId != null">
+                AND o.activity_id = #{activityId}
+            </if>
+            <if test="specsId != null " >
+                AND a.specs_id = #{specsId}
+            </if>
+        </where>
+    </select>
+
     <select id="selectOrderDetailsById" parameterType="Long" resultMap="OrderDetailsResult">
         <include refid="selectOrderDetailsVo"/>
         where a.id = #{id}

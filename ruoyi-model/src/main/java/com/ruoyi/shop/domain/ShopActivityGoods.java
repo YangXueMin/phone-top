@@ -52,6 +52,9 @@ public class ShopActivityGoods extends BaseEntity{
     @ApiModelProperty("商品规格")
     private GoodsSpecs specs;
 
+    @ApiModelProperty("出售数量")
+    private Integer sellNumber;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -111,5 +114,13 @@ public class ShopActivityGoods extends BaseEntity{
 
     public void setSpecs(GoodsSpecs specs) {
         this.specs = specs;
+    }
+
+    public Integer getSellNumber() {
+        return sellNumber;
+    }
+
+    public void setSellNumber(Integer sellNumber) {
+        this.sellNumber = sellNumber;
     }
 }
