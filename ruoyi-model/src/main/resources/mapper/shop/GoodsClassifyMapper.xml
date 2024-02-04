@@ -45,6 +45,10 @@
         order by order_num DESC
     </select>
 
+    <select id="selectChildrenById" parameterType="Long" resultMap="GoodsClassifyResult">
+        select * from shop_goods_classify where find_in_set(#{classId}, ancestors)
+    </select>
+
     <select id="selectGoodsClassifyByClassId" parameterType="Long" resultMap="GoodsClassifyResult">
         <include refid="selectGoodsClassifyVo"/>
         where class_id = #{classId}
@@ -103,6 +107,19 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where class_id = #{classId}
+    </update>
+
+    <update id="updateChildren" parameterType="java.util.List">
+        update shop_goods_classify set ancestors =
+        <foreach collection="goodsClassifys" item="item" index="index"
+                 separator=" " open="case dept_id" close="end">
+            when #{item.classId} then #{item.ancestors}
+        </foreach>
+        where class_id in
+        <foreach collection="goodsClassifys" item="item" index="index"
+                 separator="," open="(" close=")">
+            #{item.classId}
+        </foreach>
     </update>
 
     <delete id="deleteGoodsClassifyByClassId" parameterType="Long">

@@ -131,7 +131,32 @@ public class GoodsClassifyServiceImpl implements IGoodsClassifyService {
     @Override
     public int updateGoodsClassify(GoodsClassify goodsClassify) {
         goodsClassify.setUpdateTime(DateUtils.getNowDate());
+        GoodsClassify newParentClassify = goodsClassifyMapper.selectGoodsClassifyByClassId(goodsClassify.getParentId());
+        GoodsClassify oldClassify = goodsClassifyMapper.selectGoodsClassifyByClassId(goodsClassify.getClassId());
+        if (StringUtils.isNotNull(newParentClassify) && StringUtils.isNotNull(oldClassify)) {
+            String newAncestors = newParentClassify.getAncestors() + "," + newParentClassify.getClassId();
+            String oldAncestors = oldClassify.getAncestors();
+            goodsClassify.setAncestors(newAncestors);
+            updateClassifyChildren(goodsClassify.getClassId(), newAncestors, oldAncestors);
+        }
         return goodsClassifyMapper.updateGoodsClassify(goodsClassify);
+    }
+
+    /**
+     * 修改子元素关系
+     *
+     * @param classId       被修改的类型ID
+     * @param newAncestors 新的父ID集合
+     * @param oldAncestors 旧的父ID集合
+     */
+    public void updateClassifyChildren(Long classId, String newAncestors, String oldAncestors) {
+        List<GoodsClassify> children = goodsClassifyMapper.selectChildrenById(classId);
+        for (GoodsClassify child : children) {
+            child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
+        }
+        if (children.size() > 0) {
+            goodsClassifyMapper.updateChildren(children);
+        }
     }
 
     /**

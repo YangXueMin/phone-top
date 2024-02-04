@@ -39,7 +39,6 @@ public class GoodsClassifyController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:classify:list')")
     @GetMapping("/list")
     public TableDataInfo list(GoodsClassify goodsClassify) {
-        startPage();
         List<GoodsClassify> list = goodsClassifyService.selectGoodsClassifyList(goodsClassify);
         return getDataTable(list);
     }

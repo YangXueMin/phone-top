@@ -33,6 +33,14 @@ public interface GoodsClassifyMapper
     public List<GoodsClassify> selectGoodsClassifyList(GoodsClassify goodsClassify);
 
     /**
+     * 根据ID查询所有子集合
+     *
+     * @param classId ID
+     * @return 部门列表
+     */
+    public List<GoodsClassify> selectChildrenById(Long classId);
+
+    /**
      * 是否存在子节点
      *
      * @param classId 分类ID
@@ -64,6 +72,14 @@ public interface GoodsClassifyMapper
      * @return 结果
      */
     public int updateGoodsClassify(GoodsClassify goodsClassify);
+
+    /**
+     * 修改子元素关系
+     *
+     * @param goodsClassifys 子元素
+     * @return 结果
+     */
+    public int updateChildren(@Param("goodsClassifys") List<GoodsClassify> goodsClassifys);
 
     /**
      * 删除商品分类

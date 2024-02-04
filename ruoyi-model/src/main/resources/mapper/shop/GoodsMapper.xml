@@ -71,7 +71,9 @@
             <if test="shopId != null "> and a.shop_id = #{shopId}</if>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
             <if test="describe != null  and describe != ''"> and a.describe_ = #{describe}</if>
-            <if test="classId != null "> and a.class_id = #{classId}</if>
+            <if test="classId != null ">
+                and  (gc.class_id = #{classId} OR gc.class_id IN ( SELECT t.class_id FROM shop_goods_classify t WHERE find_in_set(#{classId}, ancestors) ))
+             </if>
             <if test="goodsLabel != null  and goodsLabel != ''"> and a.goods_label = #{goodsLabel}</if>
             <if test="pictures != null  and pictures != ''"> and a.pictures = #{pictures}</if>
             <if test="attributeList != null  and attributeList != ''"> and a.attribute_list = #{attributeList}</if>
