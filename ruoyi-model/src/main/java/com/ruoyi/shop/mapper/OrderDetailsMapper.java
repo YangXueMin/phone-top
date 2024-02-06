@@ -47,6 +47,13 @@ public interface OrderDetailsMapper {
     Integer selectCountByGoodsId(@Param("goodsId")Long goodsId);
 
     /**
+     * 查询商品出售数量
+     * @param goodsId
+     * @return
+     */
+    Integer selectRemainCountByGoodsId(@Param("goodsId")Long goodsId,@Param("limitType") String limitType);
+
+    /**
      * 查询活动订单出售数据
      * @param activityId
      * @param specsId

@@ -76,13 +76,36 @@
     </select>
 
     <select id="selectCountByGoodsId" resultType="integer">
-        SELECT count(a.goods_id) AS number
-        FROM shop_order_details a
-        left join shop_order o ON a.order_id = o.id
+        SELECT count(goods_id) AS number
+        FROM shop_order_details
         <where>
             order_status ='2'
             <if test="goodsId != null " >
-                AND a.goods_id = #{goodsId}
+                AND goods_id = #{goodsId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRemainCountByGoodsId" resultType="integer">
+        SELECT count(goods_id) AS number
+        FROM shop_order_details a
+        <where>
+            order_status ='2'
+            <if test="goodsId != null " >
+                AND goods_id = #{goodsId}
+            </if>
+            <if test="limitType != null">
+                <choose>
+                    <when test="limitType == '1'.toString()">
+                       AND to_days(create_time) = to_days(now())
+                    </when>
+                    <when test="limitType == '2'.toString()">
+                        AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())
+                    </when>
+                    <otherwise>
+                        AND DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')
+                    </otherwise>
+                </choose>
             </if>
         </where>
     </select>

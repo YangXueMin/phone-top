@@ -115,7 +115,7 @@ public class Goods extends BaseEntity {
      */
     @Excel(name = "限制数量")
     @ApiModelProperty("限制数量")
-    private Long limitNum;
+    private Integer limitNum;
 
     @Excel(name = "商品状态")
     @ApiModelProperty("商品状态")
@@ -129,6 +129,9 @@ public class Goods extends BaseEntity {
 
     @ApiModelProperty("出售数量")
     private Integer sellNumber;
+
+    @ApiModelProperty("剩余数量")
+    private Integer remainLimitNum;
 
     public void setId(Long id) {
         this.id = id;
@@ -226,11 +229,11 @@ public class Goods extends BaseEntity {
         return limitType;
     }
 
-    public void setLimitNum(Long limitNum) {
+    public void setLimitNum(Integer limitNum) {
         this.limitNum = limitNum;
     }
 
-    public Long getLimitNum() {
+    public Integer getLimitNum() {
         return limitNum;
     }
 
@@ -271,5 +274,13 @@ public class Goods extends BaseEntity {
             return DictUtils.getDictLabel("shop_goods_label",goodsLabel);
         }
         return goodsLabelLabel;
+    }
+
+    public Integer getRemainLimitNum() {
+        return remainLimitNum;
+    }
+
+    public void setRemainLimitNum(Integer remainLimitNum) {
+        this.remainLimitNum = remainLimitNum;
     }
 }

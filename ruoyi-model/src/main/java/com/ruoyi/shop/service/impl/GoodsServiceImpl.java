@@ -2,6 +2,7 @@ package com.ruoyi.shop.service.impl;
 
 import com.ruoyi.common.annotation.ShopScope;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.shop.domain.Goods;
 import com.ruoyi.shop.domain.GoodsSpecs;
 import com.ruoyi.shop.mapper.GoodsMapper;
@@ -38,9 +39,16 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public Goods selectGoodsById(Long id) {
         Goods goods = goodsMapper.selectGoodsById(id);
-        if(goods != null){
+        if (goods != null) {
             goods.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(id));
             goods.setSellNumber(orderDetailsMapper.selectCountByGoodsId(id));
+            //根据商品限制情况获取售卖数量
+            if (StringUtils.equals("1", goods.getIsLimit())) {
+                Integer remainNumber = orderDetailsMapper.selectRemainCountByGoodsId(goods.getId(), goods.getLimitType());
+                goods.setRemainLimitNum(goods.getLimitNum() - remainNumber);
+            } else {
+                goods.setRemainLimitNum(-1);
+            }
         }
         return goods;
     }
@@ -55,7 +63,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @ShopScope(shopAlias = "a")
     public List<Goods> selectGoodsList(Goods goods) {
         List<Goods> goodsList = goodsMapper.selectGoodsList(goods);
-        if(goodsList.size() > 0){
+        if (goodsList.size() > 0) {
             for (Goods goodsData : goodsList) {
                 goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
                 goodsData.setSellNumber(orderDetailsMapper.selectCountByGoodsId(goods.getId()));
@@ -73,10 +81,17 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public List<Goods> selectGoodsListApi(Goods goods) {
         List<Goods> goodsList = goodsMapper.selectGoodsList(goods);
-        if(goodsList.size() > 0){
+        if (goodsList.size() > 0) {
             for (Goods goodsData : goodsList) {
                 goodsData.setSpecsList(goodsSpecsMapper.selectGoodsSpecsByGoodId(goodsData.getId()));
                 goodsData.setSellNumber(orderDetailsMapper.selectCountByGoodsId(goodsData.getId()));
+                //根据商品限制情况获取售卖数量
+                if (StringUtils.equals("1", goodsData.getIsLimit())) {
+                    Integer remainNumber = orderDetailsMapper.selectRemainCountByGoodsId(goodsData.getId(), goodsData.getLimitType());
+                    goodsData.setRemainLimitNum(goodsData.getLimitNum() - remainNumber);
+                } else {
+                    goodsData.setRemainLimitNum(-1);
+                }
             }
         }
         return goodsList;
@@ -135,7 +150,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteGoodsByIds(Long[] ids) {
         int i = goodsMapper.deleteGoodsByIds(ids);
-        if(i > 0){
+        if (i > 0) {
             goodsSpecsMapper.deleteGoodsSpecsByGoodIds(ids);
         }
         return i;
@@ -151,7 +166,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteGoodsById(Long id) {
         int i = goodsMapper.deleteGoodsById(id);
-        if(i > 0){
+        if (i > 0) {
             goodsSpecsMapper.deleteGoodsSpecsByGoodId(id);
         }
         return i;

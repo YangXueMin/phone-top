@@ -116,7 +116,7 @@ public class OrderDetails extends BaseEntity {
      */
     @Excel(name = "限制数量")
     @ApiModelProperty("限制数量")
-    private Long limitNum;
+    private Integer limitNum;
 
     /**
      * 规格ID
@@ -273,11 +273,11 @@ public class OrderDetails extends BaseEntity {
         this.limitType = limitType;
     }
 
-    public Long getLimitNum() {
+    public Integer getLimitNum() {
         return limitNum;
     }
 
-    public void setLimitNum(Long limitNum) {
+    public void setLimitNum(Integer limitNum) {
         this.limitNum = limitNum;
     }
 
