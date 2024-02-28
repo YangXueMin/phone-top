@@ -121,11 +121,6 @@ public class SysUser extends BaseEntity {
     private Long[] postIds;
 
     /**
-     * 商铺
-     */
-    private Long[] shopIds;
-
-    /**
      * 角色ID
      */
     private Long roleId;
@@ -296,14 +291,6 @@ public class SysUser extends BaseEntity {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
-    }
-
-    public Long[] getShopIds() {
-        return shopIds;
-    }
-
-    public void setShopIds(Long[] shopIds) {
-        this.shopIds = shopIds;
     }
 
     @Override

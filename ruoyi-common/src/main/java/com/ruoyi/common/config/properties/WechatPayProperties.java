@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "wechat.pay")
 public class WechatPayProperties {
     /**
-     * 小程序appid
+     * 小程序appid或公众号AppID
      */
     @Value("appId")
     private String appId;
     /**
-     * 小程序应用密钥
+     * 小程序或公众号应用密钥
      */
     @Value("appsecret")
     private String appSecret;

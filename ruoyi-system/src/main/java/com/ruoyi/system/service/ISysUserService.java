@@ -27,14 +27,6 @@ public interface ISysUserService {
     public List<SysUser> findUserList(SysUser user);
 
     /**
-     * 根据店铺ID获取用户集合
-     *
-     * @param shopId 店铺ID
-     * @return 用户信息集合信息
-     */
-    public List<SysUser> findUserListByShopId(Long shopId);
-
-    /**
      * 根据条件分页查询已分配用户角色列表
      *
      * @param user 用户信息
@@ -57,15 +49,6 @@ public interface ISysUserService {
      * @return 用户对象信息
      */
     public SysUser selectUserByUserName(String userName);
-
-    /**
-     * 通过用户ID获取店铺ID集合
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    public List<Long> findShopIdsByUserId(Long userId);
-
     /**
      * 通过用户ID查询用户
      *

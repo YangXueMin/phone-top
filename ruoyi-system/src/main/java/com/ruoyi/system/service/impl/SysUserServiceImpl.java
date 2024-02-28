@@ -1,18 +1,5 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.validation.Validator;
-
-import com.ruoyi.system.domain.SysUserShop;
-import com.ruoyi.system.mapper.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -25,8 +12,20 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
+import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户 业务层处理
@@ -51,9 +50,6 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
     private SysUserPostMapper userPostMapper;
-
-    @Autowired
-    private SysUserShopMapper userShopMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -85,19 +81,6 @@ public class SysUserServiceImpl implements ISysUserService {
         return userMapper.selectUserList(user);
     }
 
-    /**
-     * 根据店铺获取用户数据
-     * @param shopId 店铺ID
-     * @return
-     */
-    @Override
-    public List<SysUser> findUserListByShopId(Long shopId) {
-        List<Long> userIdList = userShopMapper.findUserIdsByShopId(shopId);
-        if(userIdList != null && userIdList.size() > 0){
-            return userMapper.selectUserByIdList(userIdList.toArray(new Long[0]));
-        }
-        return  new ArrayList<>();
-    }
 
     /**
      * 根据条件分页查询已分配用户角色列表
@@ -132,16 +115,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public SysUser selectUserByUserName(String userName) {
         SysUser sysUser = userMapper.selectUserByUserName(userName);
-        List<Long> shopIdList = userShopMapper.findShopIdsByUserId(sysUser.getUserId());
-        if(shopIdList != null && shopIdList.size() > 0){
-            sysUser.setShopIds(shopIdList.toArray(new Long[0]));
-        }
         return sysUser;
-    }
-
-    @Override
-    public List<Long> findShopIdsByUserId(Long userId) {
-        return userShopMapper.findShopIdsByUserId(userId);
     }
 
     /**
@@ -277,8 +251,6 @@ public class SysUserServiceImpl implements ISysUserService {
         insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
-        //新增用户与店铺关联
-        insertUserShop(user);
         return rows;
     }
 
@@ -311,10 +283,6 @@ public class SysUserServiceImpl implements ISysUserService {
         userPostMapper.deleteUserPostByUserId(userId);
         // 新增用户与岗位管理
         insertUserPost(user);
-        //删除用户与店铺管理
-        userShopMapper.deleteUserShopByUserId(userId);
-        //新增用户与商铺关联
-        insertUserShop(user);
         return userMapper.updateUser(user);
     }
 
@@ -418,26 +386,6 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     /**
-     * 新增用户店铺信息
-     *
-     * @param user 用户对象
-     */
-    public void insertUserShop(SysUser user) {
-        Long[] shops = user.getShopIds();
-        if (StringUtils.isNotEmpty(shops)) {
-            // 新增用户与岗位管理
-            List<SysUserShop> list = new ArrayList<>(shops.length);
-            for (Long shopId : shops) {
-                SysUserShop us = new SysUserShop();
-                us.setUserId(user.getUserId());
-                us.setShopId(shopId);
-                list.add(us);
-            }
-            userShopMapper.batchUserShop(list);
-        }
-    }
-
-    /**
      * 新增用户角色信息
      *
      * @param userId  用户ID
@@ -470,8 +418,6 @@ public class SysUserServiceImpl implements ISysUserService {
         userRoleMapper.deleteUserRoleByUserId(userId);
         // 删除用户与岗位表
         userPostMapper.deleteUserPostByUserId(userId);
-        //删除用户与店铺关联
-        userShopMapper.deleteUserShopByUserId(userId);
         return userMapper.deleteUserById(userId);
     }
 
@@ -492,8 +438,6 @@ public class SysUserServiceImpl implements ISysUserService {
         userRoleMapper.deleteUserRole(userIds);
         // 删除用户与岗位关联
         userPostMapper.deleteUserPost(userIds);
-        //删除用户与店铺关联
-        userShopMapper.deleteUserShop(userIds);
         return userMapper.deleteUserByIds(userIds);
     }
 

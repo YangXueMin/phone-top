@@ -4,26 +4,19 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.model.LoginMemberBody;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.SnowflakeGenerator;
-import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.authentication.MemberAuthenticationToken;
 import com.ruoyi.framework.security.handle.MemberAuthenticationProvider;
-import com.ruoyi.system.service.IMemberService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,7 +25,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 
 /**
  * @author yangxuemin
@@ -48,8 +40,6 @@ public class MemberLoginService {
     private MemberAuthenticationProvider authenticationManager;
     @Autowired
     private WechatConfiguration wechatConfiguration;
-    @Autowired
-    private IMemberService memberService;
 
     /**
      * 登录
@@ -69,21 +59,6 @@ public class MemberLoginService {
             openId = session.getOpenid();
         } catch (Exception e) {
             throw new InternalAuthenticationServiceException("获取openId错误.");
-        }
-        Member member = memberService.getMemberByOpenId(openId);
-        if (member == null) {
-            member = new Member();
-            member.setOpenId(openId);
-            member.setAvatar(loginMemberBody.getAvatarUrl());
-            member.setName(loginMemberBody.getNickName());
-            member.setMobile(loginMemberBody.getMobile());
-            member.setIsMember("0");
-            member.setBalance(BigDecimal.ZERO);
-            //生成唯一会员码
-            SnowflakeGenerator.setDatacenterId(1);
-            SnowflakeGenerator.setMachineId(1);
-            member.setNumber(SnowflakeGenerator.nextId().toString());
-            memberService.insertMember(member);
         }
         // 用户验证
         Authentication authentication;
@@ -133,11 +108,7 @@ public class MemberLoginService {
      * @param userId 用户ID
      */
     public void recordLoginInfo(Long userId) {
-        Member member = new Member();
-        member.setId(userId);
-        member.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
-        member.setLoginDate(DateUtils.getNowDate());
-        memberService.updateMember(member);
+
     }
 
 }

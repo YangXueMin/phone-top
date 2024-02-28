@@ -2,7 +2,6 @@ package com.ruoyi.framework.security.handle;
 
 import com.ruoyi.framework.security.authentication.MemberAuthenticationToken;
 import com.ruoyi.framework.web.service.MemberDetailsServiceImpl;
-import com.ruoyi.system.service.IMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,8 +25,6 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private MemberDetailsServiceImpl memberDetailsServiceImpl;
-    @Autowired
-    private IMemberService memberService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

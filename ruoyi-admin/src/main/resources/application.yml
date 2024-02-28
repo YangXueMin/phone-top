@@ -70,11 +70,11 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 127.0.0.1
+    host: 139.198.35.244
     # 端口，默认为6379
     port: 6666
     # 数据库索引
-    database: 1
+    database: 4
     # 密码
     password: 1q2w3e4r5t
     # 连接超时时间
@@ -134,20 +134,19 @@ wechat:
   open: true
   mp:
     enable: true
-    appId: wx63181c0cef0ae9c1
-    appSecret: 64c6e6b1856dd81514ee6693dec6cf9b
+    appId: wxbab60a2231517c66
+    appSecret: 732ac72a135a5da89ea668fcc3e2639b
     baseUrl:
     token:
     aesKey:
   pay:
     enable: false
-    appId: wx63181c0cef0ae9c1
-    appsecret: 64c6e6b1856dd81514ee6693dec6cf9b
+    appId: wxbab60a2231517c66
+    appsecret: 732ac72a135a5da89ea668fcc3e2639b
     #微信支付商户号
-    mchId: 1665678322
+    mchId: 1645605709
     #微信支付商户密钥
-    mchKey: mzx3rzcg0ymcvhkcrqlky2d1z8as5dby
-    mchKey3: ko1guc4xnyxc1kdjegggtljirs9m4xcx
+    mchKey: 4a53393645539e49c6d8517a5f1b589c
     #服务商模式下的子商户公众账号ID
     subAppId:
     #服务商模式下的子商户号
