@@ -16,7 +16,7 @@
         <result property="balance"    column="balance"    />
         <result property="openId"    column="open_id"    />
         <result property="isMember"    column="is_member"    />
-        <result property="userId"    column="user_id"    />
+        <result property="memberId"    column="member_id"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="loginIp"    column="login_ip"    />
         <result property="loginDate"    column="login_date"    />
@@ -40,7 +40,7 @@
             balance,
             open_id,
             is_member,
-            user_id,
+            member_id,
             del_flag,
             login_ip,
             login_date,
@@ -49,7 +49,7 @@
             update_by,
             update_time,
             remark
-        from shop_member
+        from phone_member
     </sql>
 
     <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">
@@ -61,7 +61,7 @@
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
             <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
             <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and login_date = #{loginDate}</if>
         </where>
@@ -81,11 +81,11 @@
     </select>
 
     <select id="checkMobileUnique" parameterType="String" resultMap="MemberResult">
-        select id, mobile from shop_member where mobile = #{mobile} and del_flag = '0' limit 1
+        select id, mobile from phone_member where mobile = #{mobile} and del_flag = '0' limit 1
     </select>
 
     <insert id="insertMember" parameterType="Member">
-        insert into shop_member
+        insert into phone_member
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="name != null and name != ''">name,</if>
@@ -98,7 +98,7 @@
             <if test="balance != null">balance,</if>
             <if test="openId != null">open_id,</if>
             <if test="isMember != null">is_member,</if>
-            <if test="userId != null">user_id,</if>
+            <if test="memberId != null">member_id,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="loginIp != null">login_ip,</if>
             <if test="loginDate != null">login_date,</if>
@@ -120,7 +120,7 @@
             <if test="balance != null">#{balance},</if>
             <if test="openId != null">#{openId},</if>
             <if test="isMember != null">#{isMember},</if>
-            <if test="userId != null">#{userId},</if>
+            <if test="memberId != null">#{memberId},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="loginIp != null">#{loginIp},</if>
             <if test="loginDate != null">#{loginDate},</if>
@@ -133,7 +133,7 @@
     </insert>
 
     <update id="updateMember" parameterType="Member">
-        update shop_member
+        update phone_member
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="avatar != null">avatar = #{avatar},</if>
@@ -145,7 +145,7 @@
             <if test="balance != null">balance = #{balance},</if>
             <if test="openId != null">open_id = #{openId},</if>
             <if test="isMember != null">is_member = #{isMember},</if>
-            <if test="userId != null">user_id = #{userId},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="loginIp != null">login_ip = #{loginIp},</if>
             <if test="loginDate != null">login_date = #{loginDate},</if>
@@ -159,15 +159,15 @@
     </update>
 
     <update id="resetMemberPwd" parameterType="Member">
-        update shop_member set password = #{password} where id = #{id}
+        update phone_member set password = #{password} where id = #{id}
     </update>
 
     <delete id="deleteMemberById" parameterType="Long">
-        delete from shop_member where id = #{id}
+        delete from phone_member where id = #{id}
     </delete>
 
     <delete id="deleteMemberByIds" parameterType="String">
-        delete from shop_member where id in
+        delete from phone_member where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

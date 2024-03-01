@@ -131,34 +131,32 @@ xss:
   urlPatterns: /system/*,/monitor/*,/tool/*
 
 wechat:
-  open: true
-  mp:
-    enable: true
-    appId: wxbab60a2231517c66
-    appSecret: 732ac72a135a5da89ea668fcc3e2639b
-    baseUrl:
-    token:
-    aesKey:
   pay:
     enable: false
-    appId: wxbab60a2231517c66
-    appsecret: 732ac72a135a5da89ea668fcc3e2639b
-    #微信支付商户号
-    mchId: 1645605709
-    #微信支付商户密钥
-    mchKey: 4a53393645539e49c6d8517a5f1b589c
-    #服务商模式下的子商户公众账号ID
-    subAppId:
-    #服务商模式下的子商户号
-    subMchId:
-    # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
-    keyPath: classpath:apiclient_cert.p12
-    # 交易类型
-    tradeType:
-    # 支付成功回调地址
-    paymentCallbackUrl: http://mdevgw.tuishou.shop/pay/app/accountManager/callback.json
-    # 退款成功回调地址
-    refundCallbackUrl:
+    useRedis: false
+    configs:
+      - appId: wxbab60a2231517c66 # 公众号的appid
+        appsecret: 732ac72a135a5da89ea668fcc3e2639b # 公众号的appsecret
+        # 接口配置里的Token值
+        token: 111
+        # 接口配置里的EncodingAESKey值
+        aesKey: 111
+        #微信支付商户号
+        mchId: 1645605709
+        #微信支付商户密钥
+        mchKey: 4a53393645539e49c6d8517a5f1b589c
+        #服务商模式下的子商户公众账号ID
+        subAppId:
+        #服务商模式下的子商户号
+        subMchId:
+        # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+        keyPath: classpath:apiclient_cert.p12
+        # 交易类型
+        tradeType:
+        # 支付成功回调地址
+        paymentCallbackUrl: http://mdevgw.tuishou.shop/pay/app/accountManager/callback.json
+        # 退款成功回调地址
+        refundCallbackUrl:
 
 # Minio配置
 minio:

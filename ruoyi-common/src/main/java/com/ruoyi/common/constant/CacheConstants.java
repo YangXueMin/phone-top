@@ -23,6 +23,11 @@ public class CacheConstants
     public static final String SYS_CONFIG_KEY = "sys_config:";
 
     /**
+     * 参数管理 cache key
+     */
+    public static final String WECHAT_CONFIG_KEY = "wechat_config:";
+
+    /**
      * 字典管理 cache key
      */
     public static final String SYS_DICT_KEY = "sys_dict:";

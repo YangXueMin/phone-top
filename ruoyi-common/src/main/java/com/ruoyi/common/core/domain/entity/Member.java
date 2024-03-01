@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 会员管理对象 shop_member
+ * 会员管理对象 phone_member
  *
  * @author ruoyi
  * @date 2024-01-04
@@ -73,9 +73,9 @@ public class Member extends BaseEntity {
     private BigDecimal balance;
 
     /**
-     * 小程序openId
+     * openId
      */
-    @Excel(name = "小程序openId")
+    @Excel(name = "openId")
     private String openId;
 
     /**
@@ -85,10 +85,10 @@ public class Member extends BaseEntity {
     private String isMember;
 
     /**
-     * 用户ID
+     * 邀请人ID
      */
-    @Excel(name = "用户ID")
-    private Long userId;
+    @Excel(name = "邀请人ID")
+    private Long memberId;
 
     /**
      * 删除标志（0代表存在 2代表删除）
@@ -107,11 +107,6 @@ public class Member extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginDate;
-
-    /**
-     * 用户
-     */
-    private SysUser sysUser;
 
     public Long getId() {
         return id;
@@ -193,12 +188,12 @@ public class Member extends BaseEntity {
         this.isMember = isMember;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public String getDelFlag() {
@@ -223,14 +218,6 @@ public class Member extends BaseEntity {
 
     public void setLoginDate(Date loginDate) {
         this.loginDate = loginDate;
-    }
-
-    public SysUser getSysUser() {
-        return sysUser;
-    }
-
-    public void setSysUser(SysUser sysUser) {
-        this.sysUser = sysUser;
     }
 
     public String getPassword() {

@@ -19,6 +19,9 @@ public class SysNotice extends BaseEntity
     /** 公告ID */
     private Long noticeId;
 
+    /** 公司ID */
+    private Long companyId;
+
     /** 公告标题 */
     private String noticeTitle;
 
@@ -82,6 +85,14 @@ public class SysNotice extends BaseEntity
     public String getStatus()
     {
         return status;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 
     @Override

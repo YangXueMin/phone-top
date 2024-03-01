@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WechatConfigMapper">
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="appSecret"    column="app_secret"    />
+        <result property="token"    column="token"    />
+        <result property="aesKey"    column="aes_key"    />
+        <result property="mchId"    column="mch_id"    />
+        <result property="mchKey"    column="mch_key"    />
+        <result property="keyPath"    column="key_path"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWechatConfigVo">
+        select
+            id,
+            company_id,
+            app_id,
+            app_secret,
+            token,
+            aes_key,
+            mch_id,
+            mch_key,
+            key_path,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from phone_wechat_config
+    </sql>
+
+    <select id="selectWechatConfigList" parameterType="WechatConfig" resultMap="WechatConfigResult">
+        <include refid="selectWechatConfigVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="appSecret != null  and appSecret != ''"> and app_secret = #{appSecret}</if>
+            <if test="token != null  and token != ''"> and token = #{token}</if>
+            <if test="aesKey != null  and aesKey != ''"> and aes_key = #{aesKey}</if>
+            <if test="mchId != null  and mchId != ''"> and mch_id = #{mchId}</if>
+            <if test="mchKey != null  and mchKey != ''"> and mch_key = #{mchKey}</if>
+            <if test="keyPath != null  and keyPath != ''"> and key_path = #{keyPath}</if>
+        </where>
+    </select>
+
+    <select id="selectWechatConfigById" parameterType="Long" resultMap="WechatConfigResult">
+        <include refid="selectWechatConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWechatConfig" parameterType="WechatConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_wechat_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="appSecret != null">app_secret,</if>
+            <if test="token != null">token,</if>
+            <if test="aesKey != null">aes_key,</if>
+            <if test="mchId != null">mch_id,</if>
+            <if test="mchKey != null">mch_key,</if>
+            <if test="keyPath != null">key_path,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="appSecret != null">#{appSecret},</if>
+            <if test="token != null">#{token},</if>
+            <if test="aesKey != null">#{aesKey},</if>
+            <if test="mchId != null">#{mchId},</if>
+            <if test="mchKey != null">#{mchKey},</if>
+            <if test="keyPath != null">#{keyPath},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWechatConfig" parameterType="WechatConfig">
+        update phone_wechat_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="appSecret != null">app_secret = #{appSecret},</if>
+            <if test="token != null">token = #{token},</if>
+            <if test="aesKey != null">aes_key = #{aesKey},</if>
+            <if test="mchId != null">mch_id = #{mchId},</if>
+            <if test="mchKey != null">mch_key = #{mchKey},</if>
+            <if test="keyPath != null">key_path = #{keyPath},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWechatConfigById" parameterType="Long">
+        delete from phone_wechat_config where id = #{id}
+    </delete>
+
+    <delete id="deleteWechatConfigByIds" parameterType="String">
+        delete from phone_wechat_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
