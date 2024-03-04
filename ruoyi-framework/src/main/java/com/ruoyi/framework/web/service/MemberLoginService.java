@@ -7,6 +7,7 @@ import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
@@ -17,6 +18,7 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.authentication.MemberAuthenticationToken;
 import com.ruoyi.framework.security.handle.MemberAuthenticationProvider;
 import com.ruoyi.system.service.IMemberService;
+import com.ruoyi.system.service.IWechatConfigService;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -47,6 +49,8 @@ public class MemberLoginService {
     private WechatConfiguration wechatConfiguration;
     @Autowired
     private IMemberService memberService;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 登录
@@ -54,15 +58,13 @@ public class MemberLoginService {
      * @return
      */
     public String memberLogin(String appId, String code, ModelMap map) {
-        if (!this.wechatConfiguration.wxMpService().switchover(appId)) {
-            throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appId));
-        }
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appId);
         //2.检查用户手机号是否已经注册,若未注册，直接注册成用户
         //调用微信登陆接口登陆成功自动生产token
         String openId, wxHeadImg, wxNickName;
         Integer wxSex;
         try {
-            WxOAuth2Service oAuth2Service = wechatConfiguration.wxMpService().getOAuth2Service();
+            WxOAuth2Service oAuth2Service = wechatConfiguration.wxMpService(wechatConfig).getOAuth2Service();
             WxOAuth2AccessToken wxOAuth2AccessToken = oAuth2Service.getAccessToken(code);
             WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(wxOAuth2AccessToken, null);
             openId = wxMpUser.getOpenid();

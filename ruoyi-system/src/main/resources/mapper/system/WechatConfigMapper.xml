@@ -7,6 +7,7 @@
     <resultMap type="WechatConfig" id="WechatConfigResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
+        <result property="title"    column="title"    />
         <result property="appId"    column="app_id"    />
         <result property="appSecret"    column="app_secret"    />
         <result property="token"    column="token"    />
@@ -25,6 +26,7 @@
         select
             id,
             company_id,
+            title,
             app_id,
             app_secret,
             token,
@@ -44,6 +46,7 @@
         <include refid="selectWechatConfigVo"/>
         <where>
             <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="appSecret != null  and appSecret != ''"> and app_secret = #{appSecret}</if>
             <if test="token != null  and token != ''"> and token = #{token}</if>
@@ -63,6 +66,7 @@
         insert into phone_wechat_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
+            <if test="title != null">title,</if>
             <if test="appId != null">app_id,</if>
             <if test="appSecret != null">app_secret,</if>
             <if test="token != null">token,</if>
@@ -78,6 +82,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
+            <if test="title != null">#{title},</if>
             <if test="appId != null">#{appId},</if>
             <if test="appSecret != null">#{appSecret},</if>
             <if test="token != null">#{token},</if>
@@ -97,6 +102,7 @@
         update phone_wechat_config
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="title != null">title = #{title},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="appSecret != null">app_secret = #{appSecret},</if>
             <if test="token != null">token = #{token},</if>

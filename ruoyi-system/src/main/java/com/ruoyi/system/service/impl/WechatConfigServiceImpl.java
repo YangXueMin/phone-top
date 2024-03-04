@@ -46,6 +46,23 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
         return wechatConfigMapper.selectWechatConfigById(id);
     }
 
+    @Override
+    public WechatConfig selectWechatConfigByAppId(String appId) {
+        WechatConfig wechatConfig;
+        if(redisCache.hasKey(getCacheKey(appId))){
+            wechatConfig = redisCache.getCacheObject(getCacheKey(appId));
+        }else{
+            wechatConfig = new WechatConfig();
+            wechatConfig.setAppId(appId);
+            List<WechatConfig> wechatConfigs = wechatConfigMapper.selectWechatConfigList(wechatConfig);
+            if(wechatConfigs.size() > 0){
+                wechatConfig = wechatConfigs.get(0);
+                redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
+            }
+        }
+        return wechatConfig;
+    }
+
     /**
      * 查询微信配置列表
      *
@@ -66,7 +83,11 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     @Override
     public int insertWechatConfig(WechatConfig wechatConfig) {
         wechatConfig.setCreateTime(DateUtils.getNowDate());
-        return wechatConfigMapper.insertWechatConfig(wechatConfig);
+        final int i = wechatConfigMapper.insertWechatConfig(wechatConfig);
+        if(i > 0){
+            redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
+        }
+        return i;
     }
 
     /**
@@ -78,7 +99,11 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     @Override
     public int updateWechatConfig(WechatConfig wechatConfig) {
         wechatConfig.setUpdateTime(DateUtils.getNowDate());
-        return wechatConfigMapper.updateWechatConfig(wechatConfig);
+        int i = wechatConfigMapper.updateWechatConfig(wechatConfig);
+        if(i > 0){
+            redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
+        }
+        return i;
     }
 
     /**
@@ -89,6 +114,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      */
     @Override
     public int deleteWechatConfigByIds(Long[] ids) {
+        clearConfigCache();
         return wechatConfigMapper.deleteWechatConfigByIds(ids);
     }
 
@@ -100,7 +126,12 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      */
     @Override
     public int deleteWechatConfigById(Long id) {
-        return wechatConfigMapper.deleteWechatConfigById(id);
+        final WechatConfig wechatConfig = wechatConfigMapper.selectWechatConfigById(id);
+        final int i = wechatConfigMapper.deleteWechatConfigById(id);
+        if(i > 0){
+            redisCache.deleteObject(getCacheKey(wechatConfig.getAppId()));
+        }
+        return i;
     }
 
     /**
@@ -110,7 +141,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     public void loadingConfigCache() {
         List<WechatConfig> configsList = wechatConfigMapper.selectWechatConfigList(new WechatConfig());
         for (WechatConfig config : configsList) {
-            redisCache.setCacheObject(getCacheKey(config.getCompanyId()), JSON.toJSONString(config));
+            redisCache.setCacheObject(getCacheKey(config.getAppId()), JSON.toJSONString(config));
         }
     }
 
@@ -138,7 +169,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      * @param configKey 参数键
      * @return 缓存键key
      */
-    private String getCacheKey(Long configKey) {
+    private String getCacheKey(String configKey) {
         return CacheConstants.WECHAT_CONFIG_KEY + configKey;
     }
 }

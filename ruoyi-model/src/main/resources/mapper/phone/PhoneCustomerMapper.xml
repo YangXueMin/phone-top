@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhoneCustomerMapper">
+
+    <resultMap type="PhoneCustomer" id="PhoneCustomerResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="customerBanner"    column="customer_banner"    />
+        <result property="customerQrCode"    column="customer_qr_code"    />
+        <result property="customerPhone"    column="customer_phone"    />
+        <result property="customerBusinessHours"    column="customer_business_hours"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPhoneCustomerVo">
+        select
+            id,
+            company_id,
+            app_id,
+            customer_banner,
+            customer_qr_code,
+            customer_phone,
+            customer_business_hours,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from phone_customer
+    </sql>
+
+    <select id="selectPhoneCustomerList" parameterType="PhoneCustomer" resultMap="PhoneCustomerResult">
+        <include refid="selectPhoneCustomerVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="customerBanner != null  and customerBanner != ''"> and customer_banner = #{customerBanner}</if>
+            <if test="customerQrCode != null  and customerQrCode != ''"> and customer_qr_code = #{customerQrCode}</if>
+            <if test="customerPhone != null  and customerPhone != ''"> and customer_phone = #{customerPhone}</if>
+            <if test="customerBusinessHours != null  and customerBusinessHours != ''"> and customer_business_hours = #{customerBusinessHours}</if>
+        </where>
+    </select>
+
+    <select id="selectPhoneCustomerById" parameterType="Long" resultMap="PhoneCustomerResult">
+        <include refid="selectPhoneCustomerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPhoneCustomer" parameterType="PhoneCustomer" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="customerBanner != null">customer_banner,</if>
+            <if test="customerQrCode != null">customer_qr_code,</if>
+            <if test="customerPhone != null">customer_phone,</if>
+            <if test="customerBusinessHours != null">customer_business_hours,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="customerBanner != null">#{customerBanner},</if>
+            <if test="customerQrCode != null">#{customerQrCode},</if>
+            <if test="customerPhone != null">#{customerPhone},</if>
+            <if test="customerBusinessHours != null">#{customerBusinessHours},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneCustomer" parameterType="PhoneCustomer">
+        update phone_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="customerBanner != null">customer_banner = #{customerBanner},</if>
+            <if test="customerQrCode != null">customer_qr_code = #{customerQrCode},</if>
+            <if test="customerPhone != null">customer_phone = #{customerPhone},</if>
+            <if test="customerBusinessHours != null">customer_business_hours = #{customerBusinessHours},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneCustomerById" parameterType="Long">
+        delete from phone_customer where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneCustomerByIds" parameterType="String">
+        delete from phone_customer where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

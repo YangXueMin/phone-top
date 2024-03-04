@@ -2,12 +2,10 @@ package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.Member;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.mapper.MemberMapper;
-import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +22,6 @@ import java.util.List;
 public class MemberServiceImpl implements IMemberService {
     @Autowired
     private MemberMapper memberMapper;
-    @Autowired
-    private SysUserMapper sysUserMapper;
 
     /**
      * 查询会员管理

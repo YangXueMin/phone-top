@@ -7,20 +7,23 @@ import com.baomidou.mybatisplus.extension.exceptions.ApiException;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
+import com.google.common.collect.Maps;
 import com.ruoyi.common.config.properties.WechatPayProperties;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.error.WxRuntimeException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -34,8 +37,12 @@ import java.util.stream.Collectors;
 @ConditionalOnClass(WxPayService.class)
 @RequiredArgsConstructor
 public class WechatConfiguration {
-    @Autowired
+    @Resource
     private WechatPayProperties payProperties;
+
+    private static Map<String, WxPayService> wxPayServicesMap = Maps.newHashMap();
+
+    private static Map<String, WxMpService> wxMpServicesMap = Maps.newHashMap();
 
     @Bean
     public WxMaService wxMaService() {
@@ -84,11 +91,41 @@ public class WechatConfiguration {
     }
 
     /**
+     * 获取支付类型
+     *
+     * @param wechatConfig
+     * @return WxPayService
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public synchronized WxPayService wxPayService(WechatConfig wechatConfig) {
+        //获取集合中的 WxPayService
+        if (wechatConfig != null) {
+            WxPayService wxPayService = wxPayServicesMap.get(wechatConfig.getAppId());
+            //集合中没有则创建
+            if (wxPayService == null) {
+                WxPayConfig wxPayConfig = new WxPayConfig();
+                wxPayConfig.setAppId(wechatConfig.getAppId());
+                wxPayConfig.setMchId(StringUtils.trimToNull(wechatConfig.getMchId()));
+                wxPayConfig.setMchKey(StringUtils.trimToNull(wechatConfig.getMchKey()));
+                wxPayConfig.setKeyPath(StringUtils.trimToNull(wechatConfig.getKeyPath()));
+                wxPayService = new WxPayServiceImpl();
+                wxPayService.setConfig(wxPayConfig);
+                wxPayServicesMap.put(wechatConfig.getAppId(), wxPayService);
+                return wxPayService;
+            }
+            return wxPayService;
+        }
+        return wxPayService();
+    }
+
+    /**
      * 获取公众号WxMpService
      *
      * @return
      */
     @Bean
+    @ConditionalOnMissingBean
     public WxMpService wxMpService() {
         // 代码里 getConfigs()处报错的同学，请注意仔细阅读项目说明，你的IDE需要引入lombok插件！！！！
         final List<WechatPayProperties.MpConfig> configs = this.payProperties.getConfigs();
@@ -106,6 +143,36 @@ public class WechatConfiguration {
                     return configStorage;
                 }).collect(Collectors.toMap(WxMpDefaultConfigImpl::getAppId, a -> a, (o, n) -> o)));
         return service;
+    }
+
+    /**
+     * 获取支付类型
+     *
+     * @param wechatConfig
+     * @return WxPayService
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public synchronized WxMpService wxMpService(WechatConfig wechatConfig) {
+        //获取集合中的 WxPayService
+        if (wechatConfig != null) {
+            WxMpService wxMpService = wxMpServicesMap.get(wechatConfig.getAppId());
+            //集合中没有则创建
+            if (wxMpService == null) {
+                WxMpDefaultConfigImpl mpConfig = new WxMpDefaultConfigImpl();
+                mpConfig.setAppId(StringUtils.trimToNull(wechatConfig.getAppId()));
+                mpConfig.setSecret(StringUtils.trimToNull(wechatConfig.getAppSecret()));
+                mpConfig.setToken(wechatConfig.getToken());
+                mpConfig.setAesKey(wechatConfig.getAesKey());
+                wxMpService = new WxMpServiceImpl();
+                //设置配置文件
+                wxMpService.setWxMpConfigStorage(mpConfig);
+                wxMpServicesMap.put(wechatConfig.getAppId(), wxMpService);
+                return wxMpService;
+            }
+            return wxMpService;
+        }
+        return wxMpService();
     }
 
 }

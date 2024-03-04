@@ -21,6 +21,10 @@ public class WechatConfig extends BaseEntity{
     @Excel(name = "公司ID")
     private Long companyId;
 
+    /** 公众号名称 */
+    @Excel(name = "公众号名称")
+    private String title;
+
     /** 公众号APPID */
     @Excel(name = "公众号APPID")
     private String appId;
@@ -112,5 +116,13 @@ public class WechatConfig extends BaseEntity{
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

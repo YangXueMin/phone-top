@@ -28,6 +28,21 @@ public class CacheConstants
     public static final String WECHAT_CONFIG_KEY = "wechat_config:";
 
     /**
+     * 参数管理 cache key
+     */
+    public static final String WECHAT_BANNER_CONFIG_KEY = "wechat_banner_config:";
+
+    /**
+     * 参数管理 cache key
+     */
+    public static final String WECHAT_CUSTOMER_CONFIG_KEY = "wechat_customer_config:";
+
+    /**
+     * 参数管理 cache key
+     */
+    public static final String WECHAT_COMPANY_CONFIG_KEY = "wechat_company_config:";
+
+    /**
      * 字典管理 cache key
      */
     public static final String SYS_DICT_KEY = "sys_dict:";

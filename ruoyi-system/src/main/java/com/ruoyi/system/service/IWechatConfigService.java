@@ -18,6 +18,13 @@ public interface IWechatConfigService
      * @return 微信配置
      */
     public WechatConfig selectWechatConfigById(Long id);
+    /**
+     * 查询微信配置
+     *
+     * @param appId 微信APPId
+     * @return 微信配置
+     */
+    public WechatConfig selectWechatConfigByAppId(String appId);
 
     /**
      * 查询微信配置列表
