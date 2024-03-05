@@ -1,0 +1,115 @@
+package com.ruoyi.phone.controller;
+
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.BusinessType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import com.ruoyi.phone.domain.PhoneCommissionConfig;
+import com.ruoyi.phone.service.IPhoneCommissionConfigService;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.core.page.TableDataInfo;
+
+/**
+ * 佣金生成记录Controller
+ *
+ * @author ruoyi
+ * @date 2024-03-05
+ */
+@Api("佣金生成记录")
+@RestController
+@RequestMapping("/phone/commissionConfig")
+public class PhoneCommissionConfigController extends BaseController {
+    @Autowired
+    private IPhoneCommissionConfigService phoneCommissionConfigService;
+
+    /**
+     * 查询佣金生成记录列表
+     */
+    @ApiOperation("查询佣金生成记录列表")
+    @PreAuthorize("@ss.hasPermi('phone:commissionConfig:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(PhoneCommissionConfig phoneCommissionConfig)
+    {
+        startPage();
+        List<PhoneCommissionConfig> list = phoneCommissionConfigService.selectPhoneCommissionConfigList(phoneCommissionConfig);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出佣金生成记录列表
+     */
+    @PreAuthorize("@ss.hasPermi('phone:commissionConfig:export')")
+    @Log(title = "佣金生成记录", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, PhoneCommissionConfig phoneCommissionConfig)
+    {
+        List<PhoneCommissionConfig> list = phoneCommissionConfigService.selectPhoneCommissionConfigList(phoneCommissionConfig);
+        ExcelUtil<PhoneCommissionConfig> util = new ExcelUtil<PhoneCommissionConfig>(PhoneCommissionConfig.class);
+        util.exportExcel(response, list, "佣金生成记录数据");
+    }
+
+    /**
+     * 获取佣金生成记录详细信息
+     */
+    @ApiOperation("获取佣金生成记录详细信息")
+    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
+    @PreAuthorize("@ss.hasPermi('phone:commissionConfig:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
+        return success(phoneCommissionConfigService.selectPhoneCommissionConfigById(id));
+    }
+
+    /**
+     * 新增佣金生成记录
+     */
+    @ApiOperation("新增佣金生成记录")
+    @PreAuthorize("@ss.hasPermi('phone:commissionConfig:add')")
+    @Log(title = "佣金生成记录", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody PhoneCommissionConfig phoneCommissionConfig)
+    {
+        return toAjax(phoneCommissionConfigService.insertPhoneCommissionConfig(phoneCommissionConfig));
+    }
+
+    /**
+     * 修改佣金生成记录
+     */
+    @ApiOperation("修改佣金生成记录")
+    @PreAuthorize("@ss.hasPermi('phone:commissionConfig:edit')")
+    @Log(title = "佣金生成记录", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody PhoneCommissionConfig phoneCommissionConfig)
+    {
+        return toAjax(phoneCommissionConfigService.updatePhoneCommissionConfig(phoneCommissionConfig));
+    }
+
+    /**
+     * 删除佣金生成记录
+     */
+    @ApiOperation("删除佣金生成记录")
+    @ApiImplicitParam(name = "ids", value = "ID数组", required = true, dataType = "Long[]", paramType = "path", dataTypeClass = Long.class)
+    @PreAuthorize("@ss.hasPermi('phone:commissionConfig:remove')")
+    @Log(title = "佣金生成记录", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
+    {
+        return toAjax(phoneCommissionConfigService.deletePhoneCommissionConfigByIds(ids));
+    }
+}

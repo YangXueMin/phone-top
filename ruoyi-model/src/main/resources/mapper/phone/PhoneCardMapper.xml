@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhoneCardMapper">
+
+    <resultMap type="PhoneCard" id="PhoneCardResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="price"    column="price"    />
+        <result property="status"    column="status"    />
+        <result property="cancelStatus"    column="cancel_status"    />
+        <result property="cancelTime"    column="cancel_time"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPhoneCardVo">
+        select
+            id,
+            company_id,
+            app_id,
+            card_no,
+            price,
+            status,
+            cancel_status,
+            cancel_time,
+            member_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from phone_card
+    </sql>
+
+    <select id="selectPhoneCardList" parameterType="PhoneCard" resultMap="PhoneCardResult">
+        <include refid="selectPhoneCardVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and cancel_status = #{cancelStatus}</if>
+            <if test="cancelTime != null "> and cancel_time = #{cancelTime}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+        </where>
+    </select>
+
+    <select id="selectPhoneCardById" parameterType="Long" resultMap="PhoneCardResult">
+        <include refid="selectPhoneCardVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPhoneCard" parameterType="PhoneCard" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="cardNo != null">card_no,</if>
+            <if test="price != null">price,</if>
+            <if test="status != null">status,</if>
+            <if test="cancelStatus != null">cancel_status,</if>
+            <if test="cancelTime != null">cancel_time,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="cardNo != null">#{cardNo},</if>
+            <if test="price != null">#{price},</if>
+            <if test="status != null">#{status},</if>
+            <if test="cancelStatus != null">#{cancelStatus},</if>
+            <if test="cancelTime != null">#{cancelTime},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneCard" parameterType="PhoneCard">
+        update phone_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="cardNo != null">card_no = #{cardNo},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="cancelStatus != null">cancel_status = #{cancelStatus},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneCardById" parameterType="Long">
+        delete from phone_card where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneCardByIds" parameterType="String">
+        delete from phone_card where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

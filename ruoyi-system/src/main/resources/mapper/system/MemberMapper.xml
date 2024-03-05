@@ -17,6 +17,7 @@
         <result property="openId"    column="open_id"    />
         <result property="isMember"    column="is_member"    />
         <result property="memberId"    column="member_id"    />
+        <result property="ancestors"    column="ancestors"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="loginIp"    column="login_ip"    />
         <result property="loginDate"    column="login_date"    />
@@ -41,6 +42,7 @@
             open_id,
             is_member,
             member_id,
+            ancestors,
             del_flag,
             login_ip,
             login_date,
@@ -62,6 +64,7 @@
             <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
             <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="ancestors != null "> and ancestors = #{ancestors}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and login_date = #{loginDate}</if>
         </where>
@@ -99,6 +102,7 @@
             <if test="openId != null">open_id,</if>
             <if test="isMember != null">is_member,</if>
             <if test="memberId != null">member_id,</if>
+            <if test="ancestors != null">ancestors,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="loginIp != null">login_ip,</if>
             <if test="loginDate != null">login_date,</if>
@@ -121,6 +125,7 @@
             <if test="openId != null">#{openId},</if>
             <if test="isMember != null">#{isMember},</if>
             <if test="memberId != null">#{memberId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="loginIp != null">#{loginIp},</if>
             <if test="loginDate != null">#{loginDate},</if>
@@ -146,6 +151,7 @@
             <if test="openId != null">open_id = #{openId},</if>
             <if test="isMember != null">is_member = #{isMember},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="loginIp != null">login_ip = #{loginIp},</if>
             <if test="loginDate != null">login_date = #{loginDate},</if>

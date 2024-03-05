@@ -91,6 +91,12 @@ public class Member extends BaseEntity {
     private Long memberId;
 
     /**
+     * 所有邀请人ID
+     */
+    @Excel(name = "所有邀请人ID")
+    private String ancestors;
+
+    /**
      * 删除标志（0代表存在 2代表删除）
      */
     private String delFlag;
@@ -226,5 +232,13 @@ public class Member extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAncestors() {
+        return ancestors;
+    }
+
+    public void setAncestors(String ancestors) {
+        this.ancestors = ancestors;
     }
 }

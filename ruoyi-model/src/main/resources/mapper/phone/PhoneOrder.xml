@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhoneOrderMapper">
+
+    <resultMap type="PhoneOrder" id="PhoneOrderResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="configId"    column="config_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="method"    column="method"    />
+        <result property="type"    column="type"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="residenceType"    column="residence_type"    />
+        <result property="area"    column="area"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="money"    column="money"    />
+        <result property="payMoney"    column="pay_money"    />
+        <result property="payBalance"    column="pay_balance"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="arrivalStatus"    column="arrival_status"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="payResult"    column="pay_result"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPhoneOrderVo">
+        select
+            id,
+            company_id,
+            config_id,
+            member_id,
+            order_no,
+            method,
+            type,
+            mobile,
+            account_number,
+            residence_type,
+            area,
+            card_no,
+            money,
+            pay_money,
+            pay_balance,
+            pay_type,
+            pay_status,
+            arrival_status,
+            pay_time,
+            pay_result,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from phone_order
+    </sql>
+
+    <select id="selectPhoneOrderList" parameterType="PhoneOrder" resultMap="PhoneOrderResult">
+        <include refid="selectPhoneOrderVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="configId != null "> and config_id = #{configId}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="method != null  and method != ''"> and method = #{method}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="accountNumber != null  and accountNumber != ''"> and account_number = #{accountNumber}</if>
+            <if test="residenceType != null  and residenceType != ''"> and residence_type = #{residenceType}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="payMoney != null "> and pay_money = #{payMoney}</if>
+            <if test="payBalance != null "> and pay_balance = #{payBalance}</if>
+            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+            <if test="arrivalStatus != null  and arrivalStatus != ''"> and arrival_status = #{arrivalStatus}</if>
+            <if test="payTime != null  and payTime != ''"> and pay_time = #{payTime}</if>
+            <if test="payResult != null  and payResult != ''"> and pay_result = #{payResult}</if>
+        </where>
+    </select>
+
+    <select id="selectPhoneOrderById" parameterType="Long" resultMap="PhoneOrderResult">
+        <include refid="selectPhoneOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPhoneOrder" parameterType="PhoneOrder">
+        insert into phone_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="configId != null">config_id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="method != null">method,</if>
+            <if test="type != null">type,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="accountNumber != null">account_number,</if>
+            <if test="residenceType != null">residence_type,</if>
+            <if test="area != null">area,</if>
+            <if test="cardNo != null">card_no,</if>
+            <if test="money != null">money,</if>
+            <if test="payMoney != null">pay_money,</if>
+            <if test="payBalance != null">pay_balance,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="arrivalStatus != null">arrival_status,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="payResult != null">pay_result,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="configId != null">#{configId},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="method != null">#{method},</if>
+            <if test="type != null">#{type},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="accountNumber != null">#{accountNumber},</if>
+            <if test="residenceType != null">#{residenceType},</if>
+            <if test="area != null">#{area},</if>
+            <if test="cardNo != null">#{cardNo},</if>
+            <if test="money != null">#{money},</if>
+            <if test="payMoney != null">#{payMoney},</if>
+            <if test="payBalance != null">#{payBalance},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="arrivalStatus != null">#{arrivalStatus},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="payResult != null">#{payResult},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneOrder" parameterType="PhoneOrder">
+        update phone_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="configId != null">config_id = #{configId},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="method != null">method = #{method},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="accountNumber != null">account_number = #{accountNumber},</if>
+            <if test="residenceType != null">residence_type = #{residenceType},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="cardNo != null">card_no = #{cardNo},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="payMoney != null">pay_money = #{payMoney},</if>
+            <if test="payBalance != null">pay_balance = #{payBalance},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="arrivalStatus != null">arrival_status = #{arrivalStatus},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="payResult != null">pay_result = #{payResult},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneOrderById" parameterType="Long">
+        delete from phone_order where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneOrderByIds" parameterType="String">
+        delete from phone_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

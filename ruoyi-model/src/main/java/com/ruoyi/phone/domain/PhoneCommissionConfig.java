@@ -1,0 +1,104 @@
+package com.ruoyi.phone.domain;
+
+import java.math.BigDecimal;
+import com.ruoyi.common.annotation.Excel;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 佣金生成记录对象 phone_commission_config
+ *
+ * @author ruoyi
+ * @date 2024-03-05
+ */
+@ApiModel(value = "PhoneCommissionConfig", description = "佣金生成记录")
+@ToString
+public class PhoneCommissionConfig extends BaseEntity{
+    private static final long serialVersionUID=1L;
+
+    /** 主键 */
+    private Long id;
+
+    /** 公司ID */
+    @Excel(name = "公司ID")
+    @ApiModelProperty("公司ID")
+    private Long companyId;
+
+    /** 公众号配置ID */
+    @Excel(name = "公众号配置ID")
+    @ApiModelProperty("公众号配置ID")
+    private Long configId;
+
+    /** 会员ID */
+    @Excel(name = "会员ID")
+    @ApiModelProperty("会员ID")
+    private Long memberId;
+
+    /** 佣金前金额 */
+    @Excel(name = "佣金前金额")
+    @ApiModelProperty("佣金前金额")
+    private BigDecimal commissionBefore;
+
+    /** 金额 */
+    @Excel(name = "金额")
+    @ApiModelProperty("金额")
+    private BigDecimal money;
+
+    /** 佣金后金额 */
+    @Excel(name = "佣金后金额")
+    @ApiModelProperty("佣金后金额")
+    private BigDecimal commissionAfter;
+
+    public void setId(Long id){
+        this.id = id;
+    }
+
+    public Long getId(){
+        return id;
+    }
+    public void setCompanyId(Long companyId){
+        this.companyId = companyId;
+    }
+
+    public Long getCompanyId(){
+        return companyId;
+    }
+    public void setConfigId(Long configId){
+        this.configId = configId;
+    }
+
+    public Long getConfigId(){
+        return configId;
+    }
+    public void setMemberId(Long memberId){
+        this.memberId = memberId;
+    }
+
+    public Long getMemberId(){
+        return memberId;
+    }
+    public void setCommissionBefore(BigDecimal commissionBefore){
+        this.commissionBefore = commissionBefore;
+    }
+
+    public BigDecimal getCommissionBefore(){
+        return commissionBefore;
+    }
+    public void setMoney(BigDecimal money){
+        this.money = money;
+    }
+
+    public BigDecimal getMoney(){
+        return money;
+    }
+    public void setCommissionAfter(BigDecimal commissionAfter){
+        this.commissionAfter = commissionAfter;
+    }
+
+    public BigDecimal getCommissionAfter(){
+        return commissionAfter;
+    }
+
+}
