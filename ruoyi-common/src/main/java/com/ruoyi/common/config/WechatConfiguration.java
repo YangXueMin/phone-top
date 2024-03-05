@@ -96,8 +96,6 @@ public class WechatConfiguration {
      * @param wechatConfig
      * @return WxPayService
      */
-    @Bean
-    @ConditionalOnMissingBean
     public synchronized WxPayService wxPayService(WechatConfig wechatConfig) {
         //获取集合中的 WxPayService
         if (wechatConfig != null) {
@@ -151,8 +149,6 @@ public class WechatConfiguration {
      * @param wechatConfig
      * @return WxPayService
      */
-    @Bean
-    @ConditionalOnMissingBean
     public synchronized WxMpService wxMpService(WechatConfig wechatConfig) {
         //获取集合中的 WxPayService
         if (wechatConfig != null) {

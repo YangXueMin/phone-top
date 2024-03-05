@@ -50,7 +50,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     public WechatConfig selectWechatConfigByAppId(String appId) {
         WechatConfig wechatConfig;
         if(redisCache.hasKey(getCacheKey(appId))){
-            wechatConfig = redisCache.getCacheObject(getCacheKey(appId));
+            wechatConfig = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(),WechatConfig.class);
         }else{
             wechatConfig = new WechatConfig();
             wechatConfig.setAppId(appId);

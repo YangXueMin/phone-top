@@ -50,7 +50,7 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     public PhoneBanner selectPhoneBannerByAppId(String appId) {
         PhoneBanner phoneBanner;
         if (redisCache.hasKey(getCacheKey(appId))) {
-            phoneBanner = redisCache.getCacheObject(getCacheKey(appId));
+            phoneBanner = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(),PhoneBanner.class);
         } else {
             phoneBanner = new PhoneBanner();
             phoneBanner.setAppId(appId);

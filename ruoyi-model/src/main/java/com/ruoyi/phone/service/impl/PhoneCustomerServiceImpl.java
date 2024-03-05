@@ -52,7 +52,7 @@ public class PhoneCustomerServiceImpl implements IPhoneCustomerService {
     public PhoneCustomer selectPhoneCustomerByAppId(String appId) {
         PhoneCustomer phoneCustomer;
         if (redisCache.hasKey(getCacheKey(appId))) {
-            phoneCustomer = redisCache.getCacheObject(getCacheKey(appId));
+            phoneCustomer = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(), PhoneCustomer.class);
         } else {
             phoneCustomer = new PhoneCustomer();
             phoneCustomer.setAppId(appId);

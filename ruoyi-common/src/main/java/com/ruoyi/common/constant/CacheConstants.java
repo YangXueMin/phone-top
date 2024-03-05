@@ -35,6 +35,11 @@ public class CacheConstants
     /**
      * 参数管理 cache key
      */
+    public static final String WECHAT_ACCESS_TOKEN_KEY = "wechat_accessToken:";
+
+    /**
+     * 参数管理 cache key
+     */
     public static final String WECHAT_CUSTOMER_CONFIG_KEY = "wechat_customer_config:";
 
     /**

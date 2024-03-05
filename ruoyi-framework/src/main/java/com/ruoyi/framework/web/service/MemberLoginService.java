@@ -3,12 +3,15 @@ package com.ruoyi.framework.web.service;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.MessageUtils;
@@ -51,6 +54,18 @@ public class MemberLoginService {
     private IMemberService memberService;
     @Autowired
     private IWechatConfigService wechatConfigService;
+    @Autowired
+    private RedisCache redisCache;
+
+    /**
+     * 设置cache key
+     *
+     * @param configKey 参数键
+     * @return 缓存键key
+     */
+    private String getCacheKey(String configKey) {
+        return CacheConstants.WECHAT_ACCESS_TOKEN_KEY + configKey;
+    }
 
     /**
      * 登录
@@ -65,8 +80,14 @@ public class MemberLoginService {
         Integer wxSex;
         try {
             WxOAuth2Service oAuth2Service = wechatConfiguration.wxMpService(wechatConfig).getOAuth2Service();
-            WxOAuth2AccessToken wxOAuth2AccessToken = oAuth2Service.getAccessToken(code);
-            WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(wxOAuth2AccessToken, null);
+            WxOAuth2AccessToken accessToken;
+            if (redisCache.hasKey(getCacheKey(appId))) {
+                accessToken = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(), WxOAuth2AccessToken.class);
+            } else {
+                accessToken = oAuth2Service.getAccessToken(code);
+                redisCache.setCacheObject(getCacheKey(appId), JSON.toJSONString(accessToken));
+            }
+            WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(accessToken, null);
             openId = wxMpUser.getOpenid();
             wxHeadImg = wxMpUser.getHeadImgUrl();
             wxSex = wxMpUser.getSex();
@@ -86,7 +107,7 @@ public class MemberLoginService {
             member.setAvatar(wxHeadImg);
             member.setName(wxNickName);
             member.setSex(wxSex + "");
-            if(map.get("mobile") != null){
+            if (map.get("mobile") != null) {
                 member.setMobile(map.get("mobile").toString());
             }
             member.setIsMember("0");

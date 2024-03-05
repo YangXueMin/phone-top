@@ -6,6 +6,7 @@ import com.ruoyi.phone.config.WxMpConfiguration;
 import com.ruoyi.system.service.IWechatConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +40,8 @@ public class WxPortalController {
             throw new IllegalArgumentException("请求参数非法，请核实!");
         }
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        if (wechatConfiguration.wxMpService(wechatConfig).checkSignature(timestamp, nonce, signature)) {
+        final WxMpService wxMpService = wechatConfiguration.wxMpService(wechatConfig);
+        if (wxMpService.checkSignature(timestamp, nonce, signature)) {
             return echostr;
         }
 

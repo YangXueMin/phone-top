@@ -43,6 +43,16 @@ public class CommonController {
     private EwmUtils ewmUtils;
 
     /**
+     * 网页授权域名，需要把用到的文件下载下来，文件名是需要请求的接口
+     * 返回的是文件对应的内容
+     */
+    @GetMapping("MP_verify_cXlH68VBATL5Mc34.txt")
+    private String returnConfigFile() {
+        //把 MP_verify_xxxxxx.txt 中的内容返回
+        return "cXlH68VBATL5Mc34";
+    }
+
+    /**
      * 通用下载请求
      *
      * @param fileName 文件名称

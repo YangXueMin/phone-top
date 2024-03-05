@@ -51,7 +51,7 @@ public class PhoneCompanyConfigServiceImpl implements IPhoneCompanyConfigService
     public PhoneCompanyConfig selectPhoneCompanyConfigByAppId(String appId) {
         PhoneCompanyConfig phoneCompanyConfig;
         if (redisCache.hasKey(getCacheKey(appId))) {
-            phoneCompanyConfig = redisCache.getCacheObject(getCacheKey(appId));
+            phoneCompanyConfig = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(),PhoneCompanyConfig.class);
         } else {
             phoneCompanyConfig = new PhoneCompanyConfig();
             phoneCompanyConfig.setAppId(appId);

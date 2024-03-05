@@ -25,7 +25,7 @@ public class MemberLoginController {
      * @return 结果
      */
     @PostMapping("memberLogin")
-    public AjaxResult memberLogin(@PathVariable String appid, @RequestParam String code, ModelMap map) {
+    public AjaxResult memberLogin(@RequestParam String appid, @RequestParam String code, ModelMap map) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = memberLoginService.memberLogin(appid, code, map);
