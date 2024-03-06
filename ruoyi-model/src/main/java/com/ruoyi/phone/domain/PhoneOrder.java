@@ -29,7 +29,7 @@ public class PhoneOrder extends BaseEntity{
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
-    private Long configId;
+    private String appId;
 
     /** 会员ID */
     @Excel(name = "会员ID")
@@ -42,14 +42,19 @@ public class PhoneOrder extends BaseEntity{
     private String orderNo;
 
     /** 充值方式（电网：0，快充：1，慢充：2） */
-    @Excel(name = "充值方式", readConverterExp = "电=网：0，快充：1，慢充：2")
+    @Excel(name = "充值方式", readConverterExp = "电网：0，快充：1，慢充：2")
     @ApiModelProperty("充值方式")
     private String method;
 
     /** 充值类型 */
     @Excel(name = "充值类型")
-    @ApiModelProperty("充值类型")
+    @ApiModelProperty("充值类型(1：手机，2：电网)")
     private String type;
+
+    /** 充值状态 */
+    @Excel(name = "充值状态")
+    @ApiModelProperty("充值状态(1:充值中，2：充值成功，3：充值失败)")
+    private String status;
 
     /** 手机号 */
     @Excel(name = "手机号")
@@ -93,12 +98,12 @@ public class PhoneOrder extends BaseEntity{
 
     /** 支付方式 */
     @Excel(name = "支付方式")
-    @ApiModelProperty("支付方式")
+    @ApiModelProperty("支付方式（1：线上支付，2：余额支付，3：组合支付）")
     private String payType;
 
-    /** 充值状态 */
-    @Excel(name = "充值状态")
-    @ApiModelProperty("充值状态")
+    /** 支付状态 */
+    @Excel(name = "支付状态")
+    @ApiModelProperty("支付状态(1:待支付，2：支付完成，3：已退款，4：已取消)")
     private String payStatus;
 
     /** 到账状态 */
@@ -130,13 +135,15 @@ public class PhoneOrder extends BaseEntity{
     public Long getCompanyId(){
         return companyId;
     }
-    public void setConfigId(Long configId){
-        this.configId = configId;
+
+    public String getAppId() {
+        return appId;
     }
 
-    public Long getConfigId(){
-        return configId;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
+
     public void setMemberId(Long memberId){
         this.memberId = memberId;
     }
@@ -257,4 +264,11 @@ public class PhoneOrder extends BaseEntity{
         return payResult;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

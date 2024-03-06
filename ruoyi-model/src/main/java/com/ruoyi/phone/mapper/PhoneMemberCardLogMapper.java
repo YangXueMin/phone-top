@@ -30,6 +30,14 @@ public interface PhoneMemberCardLogMapper
     public List<PhoneMemberCardLog> selectPhoneMemberCardLogList(PhoneMemberCardLog phoneMemberCardLog);
 
     /**
+     * 查询订单记录
+     *
+     * @param orderNo 订单号
+     * @return 会员卡充值记录集合
+     */
+    public List<PhoneMemberCardLog> selectPhoneMemberCardLogByOrderNo(String orderNo);
+
+    /**
      * 新增会员卡充值记录
      *
      * @param phoneMemberCardLog 会员卡充值记录

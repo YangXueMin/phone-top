@@ -1,6 +1,7 @@
 package com.ruoyi.phone.controller.api;
 
 import com.alibaba.fastjson2.JSON;
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -49,9 +50,8 @@ public class MemberCardControllerApi extends BaseController {
      * 获取会员卡管理详细信息
      */
     @ApiOperation("获取会员卡管理详细信息")
-    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    @GetMapping(value = "getInfo")
+    public AjaxResult getInfo(@RequestParam("id") Long id) {
         return success(phoneMemberCardService.selectPhoneMemberCardById(id));
     }
 
@@ -64,5 +64,29 @@ public class MemberCardControllerApi extends BaseController {
         logger.info("接收到参数：{}", JSON.toJSONString(phoneMemberCardLog));
         return success(phoneMemberCardLogService.insertPhoneMemberCardLog(phoneMemberCardLog));
     }
+
+    /**
+     * 发起支付
+     */
+    @ApiOperation("发起支付")
+    @PostMapping("/pay")
+    public AjaxResult pay(@RequestBody PhoneMemberCardLog phoneMemberCardLog) {
+        phoneMemberCardLog = phoneMemberCardLogService.selectPhoneMemberCardLogById(phoneMemberCardLog.getId());
+        if (phoneMemberCardLog == null) {
+            return warn("订单不存在");
+        }
+        WxPayMpOrderResult pay = phoneMemberCardLogService.pay(phoneMemberCardLog);
+        return success(pay);
+    }
+
+    /**
+     * 支付回调通知处理
+     */
+    @ApiOperation("支付回调通知处理")
+    @PostMapping("/payNotify")
+    public String payNotify(@RequestParam("appid") String appid, @RequestBody String xmlData) {
+        return phoneMemberCardLogService.payNotify(appid, xmlData);
+    }
+
 
 }

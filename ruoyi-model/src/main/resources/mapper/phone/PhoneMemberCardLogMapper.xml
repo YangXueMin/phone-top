@@ -72,6 +72,11 @@
         </where>
     </select>
 
+    <select id="selectPhoneMemberCardLogByOrderNo" parameterType="string" resultMap="PhoneMemberCardLogResult">
+        <include refid="selectPhoneMemberCardLogVo"/>
+        where order_no = #{orderNo}
+    </select>
+
     <select id="selectPhoneMemberCardLogById" parameterType="Long" resultMap="PhoneMemberCardLogResult">
         <include refid="selectPhoneMemberCardLogVo"/>
         where id = #{id}

@@ -7,11 +7,12 @@
     <resultMap type="PhoneOrder" id="PhoneOrderResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
-        <result property="configId"    column="config_id"    />
+        <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
         <result property="orderNo"    column="order_no"    />
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
         <result property="mobile"    column="mobile"    />
         <result property="accountNumber"    column="account_number"    />
         <result property="residenceType"    column="residence_type"    />
@@ -36,11 +37,12 @@
         select
             id,
             company_id,
-            config_id,
+            app_id,
             member_id,
             order_no,
             method,
             type,
+            status,
             mobile,
             account_number,
             residence_type,
@@ -66,11 +68,12 @@
         <include refid="selectPhoneOrderVo"/>
         <where>
             <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="configId != null "> and config_id = #{configId}</if>
+            <if test="appId != null "> and app_id = #{appId}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="method != null  and method != ''"> and method = #{method}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
             <if test="accountNumber != null  and accountNumber != ''"> and account_number = #{accountNumber}</if>
             <if test="residenceType != null  and residenceType != ''"> and residence_type = #{residenceType}</if>
@@ -97,11 +100,12 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="companyId != null">company_id,</if>
-            <if test="configId != null">config_id,</if>
+            <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="orderNo != null">order_no,</if>
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
             <if test="mobile != null">mobile,</if>
             <if test="accountNumber != null">account_number,</if>
             <if test="residenceType != null">residence_type,</if>
@@ -124,11 +128,12 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="companyId != null">#{companyId},</if>
-            <if test="configId != null">#{configId},</if>
+            <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="orderNo != null">#{orderNo},</if>
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
             <if test="mobile != null">#{mobile},</if>
             <if test="accountNumber != null">#{accountNumber},</if>
             <if test="residenceType != null">#{residenceType},</if>
@@ -154,11 +159,12 @@
         update phone_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
-            <if test="configId != null">config_id = #{configId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="status != null">type = #{status},</if>
             <if test="mobile != null">mobile = #{mobile},</if>
             <if test="accountNumber != null">account_number = #{accountNumber},</if>
             <if test="residenceType != null">residence_type = #{residenceType},</if>

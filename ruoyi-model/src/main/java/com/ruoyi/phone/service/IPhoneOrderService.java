@@ -1,6 +1,9 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.ruoyi.phone.domain.PhoneMemberCardLog;
 import com.ruoyi.phone.domain.PhoneOrder;
 
 /**
@@ -9,8 +12,7 @@ import com.ruoyi.phone.domain.PhoneOrder;
  * @author ruoyi
  * @date 2024-03-05
  */
-public interface IPhoneOrderService
-{
+public interface IPhoneOrderService {
     /**
      * 查询订单记录
      *
@@ -33,7 +35,7 @@ public interface IPhoneOrderService
      * @param phoneOrder 订单记录
      * @return 结果
      */
-    public int insertPhoneOrder(PhoneOrder phoneOrder);
+    public PhoneOrder insertPhoneOrder(PhoneOrder phoneOrder);
 
     /**
      * 修改订单记录
@@ -58,4 +60,20 @@ public interface IPhoneOrderService
      * @return 结果
      */
     public int deletePhoneOrderById(Long id);
+
+    /**
+     * 发起支付
+     *
+     * @param phoneOrder 发起支付
+     * @return 结果
+     */
+    public WxPayMpOrderResult pay(PhoneOrder phoneOrder);
+
+    /**
+     * 支付通知
+     *
+     * @param xmlData 支付通知
+     * @return 结果
+     */
+    public String payNotify(String appid,String xmlData);
 }

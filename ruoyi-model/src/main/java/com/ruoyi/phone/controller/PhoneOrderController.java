@@ -2,6 +2,7 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +45,7 @@ public class PhoneOrderController extends BaseController {
     @ApiOperation("查询订单记录列表")
     @PreAuthorize("@ss.hasPermi('phone:order:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PhoneOrder phoneOrder)
-    {
+    public TableDataInfo list(PhoneOrder phoneOrder) {
         startPage();
         List<PhoneOrder> list = phoneOrderService.selectPhoneOrderList(phoneOrder);
         return getDataTable(list);
@@ -57,8 +57,7 @@ public class PhoneOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:order:export')")
     @Log(title = "订单记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PhoneOrder phoneOrder)
-    {
+    public void export(HttpServletResponse response, PhoneOrder phoneOrder) {
         List<PhoneOrder> list = phoneOrderService.selectPhoneOrderList(phoneOrder);
         ExcelUtil<PhoneOrder> util = new ExcelUtil<PhoneOrder>(PhoneOrder.class);
         util.exportExcel(response, list, "订单记录数据");
@@ -71,8 +70,7 @@ public class PhoneOrderController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('phone:order:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(phoneOrderService.selectPhoneOrderById(id));
     }
 
@@ -83,9 +81,8 @@ public class PhoneOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:order:add')")
     @Log(title = "订单记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PhoneOrder phoneOrder)
-    {
-        return toAjax(phoneOrderService.insertPhoneOrder(phoneOrder));
+    public AjaxResult add(@RequestBody PhoneOrder phoneOrder) {
+        return success(phoneOrderService.insertPhoneOrder(phoneOrder));
     }
 
     /**
@@ -95,8 +92,7 @@ public class PhoneOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:order:edit')")
     @Log(title = "订单记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PhoneOrder phoneOrder)
-    {
+    public AjaxResult edit(@RequestBody PhoneOrder phoneOrder) {
         return toAjax(phoneOrderService.updatePhoneOrder(phoneOrder));
     }
 
@@ -108,8 +104,7 @@ public class PhoneOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:order:remove')")
     @Log(title = "订单记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(phoneOrderService.deletePhoneOrderByIds(ids));
     }
 }
