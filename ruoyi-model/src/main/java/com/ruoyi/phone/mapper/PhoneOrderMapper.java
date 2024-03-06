@@ -30,6 +30,14 @@ public interface PhoneOrderMapper
     public List<PhoneOrder> selectPhoneOrderList(PhoneOrder phoneOrder);
 
     /**
+     * 查询订单记录列表
+     *
+     * @param orderNo 订单编号
+     * @return 订单记录集合
+     */
+    public List<PhoneOrder> selectPhoneOrderListByOrderNo(String orderNo);
+
+    /**
      * 新增订单记录
      *
      * @param phoneOrder 订单记录

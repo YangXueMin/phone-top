@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,7 @@ import com.ruoyi.phone.service.IPhoneBalanceLogService;
  * @date 2024-03-05
  */
 @Service
-public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
-{
+public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
     @Autowired
     private PhoneBalanceLogMapper phoneBalanceLogMapper;
 
@@ -27,8 +27,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
      * @return 余额充值记录
      */
     @Override
-    public PhoneBalanceLog selectPhoneBalanceLogById(Long id)
-    {
+    public PhoneBalanceLog selectPhoneBalanceLogById(Long id) {
         return phoneBalanceLogMapper.selectPhoneBalanceLogById(id);
     }
 
@@ -39,8 +38,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
      * @return 余额充值记录
      */
     @Override
-    public List<PhoneBalanceLog> selectPhoneBalanceLogList(PhoneBalanceLog phoneBalanceLog)
-    {
+    public List<PhoneBalanceLog> selectPhoneBalanceLogList(PhoneBalanceLog phoneBalanceLog) {
         return phoneBalanceLogMapper.selectPhoneBalanceLogList(phoneBalanceLog);
     }
 
@@ -51,8 +49,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
      * @return 结果
      */
     @Override
-    public int insertPhoneBalanceLog(PhoneBalanceLog phoneBalanceLog)
-    {
+    public int insertPhoneBalanceLog(PhoneBalanceLog phoneBalanceLog) {
         phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
         return phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
     }
@@ -64,8 +61,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
      * @return 结果
      */
     @Override
-    public int updatePhoneBalanceLog(PhoneBalanceLog phoneBalanceLog)
-    {
+    public int updatePhoneBalanceLog(PhoneBalanceLog phoneBalanceLog) {
         phoneBalanceLog.setUpdateTime(DateUtils.getNowDate());
         return phoneBalanceLogMapper.updatePhoneBalanceLog(phoneBalanceLog);
     }
@@ -77,8 +73,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
      * @return 结果
      */
     @Override
-    public int deletePhoneBalanceLogByIds(Long[] ids)
-    {
+    public int deletePhoneBalanceLogByIds(Long[] ids) {
         return phoneBalanceLogMapper.deletePhoneBalanceLogByIds(ids);
     }
 
@@ -89,8 +84,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService
      * @return 结果
      */
     @Override
-    public int deletePhoneBalanceLogById(Long id)
-    {
+    public int deletePhoneBalanceLogById(Long id) {
         return phoneBalanceLogMapper.deletePhoneBalanceLogById(id);
     }
 }

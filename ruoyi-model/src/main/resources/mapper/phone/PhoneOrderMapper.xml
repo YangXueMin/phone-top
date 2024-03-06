@@ -90,6 +90,11 @@
         </where>
     </select>
 
+    <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
+        <include refid="selectPhoneOrderVo"/>
+        where order_no = #{orderNo}
+    </select>
+
     <select id="selectPhoneOrderById" parameterType="Long" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         where id = #{id}

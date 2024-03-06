@@ -1,7 +1,11 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhonePriceMapper;
@@ -15,10 +19,11 @@ import com.ruoyi.phone.service.IPhonePriceService;
  * @date 2024-03-05
  */
 @Service
-public class PhonePriceServiceImpl implements IPhonePriceService
-{
+public class PhonePriceServiceImpl implements IPhonePriceService {
     @Autowired
     private PhonePriceMapper phonePriceMapper;
+    @Autowired
+    private ISysDeptService sysDeptService;
 
     /**
      * 查询价格配置
@@ -27,8 +32,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService
      * @return 价格配置
      */
     @Override
-    public PhonePrice selectPhonePriceById(Long id)
-    {
+    public PhonePrice selectPhonePriceById(Long id) {
         return phonePriceMapper.selectPhonePriceById(id);
     }
 
@@ -39,8 +43,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService
      * @return 价格配置
      */
     @Override
-    public List<PhonePrice> selectPhonePriceList(PhonePrice phonePrice)
-    {
+    public List<PhonePrice> selectPhonePriceList(PhonePrice phonePrice) {
         return phonePriceMapper.selectPhonePriceList(phonePrice);
     }
 
@@ -51,8 +54,11 @@ public class PhonePriceServiceImpl implements IPhonePriceService
      * @return 结果
      */
     @Override
-    public int insertPhonePrice(PhonePrice phonePrice)
-    {
+    public int insertPhonePrice(PhonePrice phonePrice) {
+        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
+        if(company != null && !company.getDeptId().equals(100L)){
+            phonePrice.setCompanyId(company.getDeptId());
+        }
         phonePrice.setCreateTime(DateUtils.getNowDate());
         return phonePriceMapper.insertPhonePrice(phonePrice);
     }
@@ -64,8 +70,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService
      * @return 结果
      */
     @Override
-    public int updatePhonePrice(PhonePrice phonePrice)
-    {
+    public int updatePhonePrice(PhonePrice phonePrice) {
         phonePrice.setUpdateTime(DateUtils.getNowDate());
         return phonePriceMapper.updatePhonePrice(phonePrice);
     }
@@ -77,8 +82,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService
      * @return 结果
      */
     @Override
-    public int deletePhonePriceByIds(Long[] ids)
-    {
+    public int deletePhonePriceByIds(Long[] ids) {
         return phonePriceMapper.deletePhonePriceByIds(ids);
     }
 
@@ -89,8 +93,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService
      * @return 结果
      */
     @Override
-    public int deletePhonePriceById(Long id)
-    {
+    public int deletePhonePriceById(Long id) {
         return phonePriceMapper.deletePhonePriceById(id);
     }
 }

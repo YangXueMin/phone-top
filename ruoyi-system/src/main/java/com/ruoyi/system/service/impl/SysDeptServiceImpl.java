@@ -35,6 +35,17 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Autowired
     private SysRoleMapper roleMapper;
 
+    @Override
+    public SysDept selectCompany(Long deptId) {
+        SysDept sysDept = deptMapper.selectDeptById(deptId);
+        final String[] split = sysDept.getAncestors().split(",");
+        long parentId = 100L;
+        if (split.length > 3) {
+            parentId = Long.parseLong(split[2]);
+        }
+        return deptMapper.selectDeptById(parentId);
+    }
+
     /**
      * 查询部门管理数据
      *

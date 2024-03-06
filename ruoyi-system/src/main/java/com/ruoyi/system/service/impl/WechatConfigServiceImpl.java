@@ -2,10 +2,13 @@ package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.constant.CacheConstants;
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.mapper.WechatConfigMapper;
+import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     private WechatConfigMapper wechatConfigMapper;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private ISysDeptService sysDeptService;
 
     /**
      * 项目启动时，初始化参数到缓存
@@ -49,13 +54,13 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     @Override
     public WechatConfig selectWechatConfigByAppId(String appId) {
         WechatConfig wechatConfig;
-        if(redisCache.hasKey(getCacheKey(appId))){
-            wechatConfig = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(),WechatConfig.class);
-        }else{
+        if (redisCache.hasKey(getCacheKey(appId))) {
+            wechatConfig = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(), WechatConfig.class);
+        } else {
             wechatConfig = new WechatConfig();
             wechatConfig.setAppId(appId);
             List<WechatConfig> wechatConfigs = wechatConfigMapper.selectWechatConfigList(wechatConfig);
-            if(wechatConfigs.size() > 0){
+            if (wechatConfigs.size() > 0) {
                 wechatConfig = wechatConfigs.get(0);
                 redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
             }
@@ -82,9 +87,13 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      */
     @Override
     public int insertWechatConfig(WechatConfig wechatConfig) {
+        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
+        if(company != null && !company.getDeptId().equals(100L)){
+            wechatConfig.setCompanyId(company.getDeptId());
+        }
         wechatConfig.setCreateTime(DateUtils.getNowDate());
         final int i = wechatConfigMapper.insertWechatConfig(wechatConfig);
-        if(i > 0){
+        if (i > 0) {
             redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
         }
         return i;
@@ -100,7 +109,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     public int updateWechatConfig(WechatConfig wechatConfig) {
         wechatConfig.setUpdateTime(DateUtils.getNowDate());
         int i = wechatConfigMapper.updateWechatConfig(wechatConfig);
-        if(i > 0){
+        if (i > 0) {
             redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
         }
         return i;
@@ -128,7 +137,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     public int deleteWechatConfigById(Long id) {
         final WechatConfig wechatConfig = wechatConfigMapper.selectWechatConfigById(id);
         final int i = wechatConfigMapper.deleteWechatConfigById(id);
-        if(i > 0){
+        if (i > 0) {
             redisCache.deleteObject(getCacheKey(wechatConfig.getAppId()));
         }
         return i;

@@ -2,11 +2,14 @@ package com.ruoyi.phone.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.constant.CacheConstants;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.phone.domain.PhoneBanner;
 import com.ruoyi.phone.mapper.PhoneBannerMapper;
 import com.ruoyi.phone.service.IPhoneBannerService;
+import com.ruoyi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,8 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     private PhoneBannerMapper phoneBannerMapper;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private ISysDeptService sysDeptService;
 
     /**
      * 查询banner轮播配置
@@ -42,7 +47,7 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     public List<PhoneBanner> selectPhoneBannerByAppId(String appId) {
         List<PhoneBanner> bannerList;
         if (redisCache.hasKey(getCacheKey(appId))) {
-            bannerList = JSON.parseArray(redisCache.getCacheObject(getCacheKey(appId)).toString(),PhoneBanner.class);
+            bannerList = JSON.parseArray(redisCache.getCacheObject(getCacheKey(appId)).toString(), PhoneBanner.class);
         } else {
             PhoneBanner phoneBanner = new PhoneBanner();
             phoneBanner.setAppId(appId);
@@ -74,6 +79,10 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
      */
     @Override
     public int insertPhoneBanner(PhoneBanner phoneBanner) {
+        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
+        if(company != null && !company.getDeptId().equals(100L)){
+            phoneBanner.setCompanyId(company.getDeptId());
+        }
         phoneBanner.setCreateTime(DateUtils.getNowDate());
         final int i = phoneBannerMapper.insertPhoneBanner(phoneBanner);
         if (i > 0) {

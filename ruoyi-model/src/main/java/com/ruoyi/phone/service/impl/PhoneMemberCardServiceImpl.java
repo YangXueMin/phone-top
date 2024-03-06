@@ -1,7 +1,11 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneMemberCardMapper;
@@ -15,10 +19,11 @@ import com.ruoyi.phone.service.IPhoneMemberCardService;
  * @date 2024-03-04
  */
 @Service
-public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
-{
+public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService {
     @Autowired
     private PhoneMemberCardMapper phoneMemberCardMapper;
+    @Autowired
+    private ISysDeptService sysDeptService;
 
     /**
      * 查询会员卡管理
@@ -27,8 +32,7 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
      * @return 会员卡管理
      */
     @Override
-    public PhoneMemberCard selectPhoneMemberCardById(Long id)
-    {
+    public PhoneMemberCard selectPhoneMemberCardById(Long id) {
         return phoneMemberCardMapper.selectPhoneMemberCardById(id);
     }
 
@@ -39,8 +43,7 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
      * @return 会员卡管理
      */
     @Override
-    public List<PhoneMemberCard> selectPhoneMemberCardList(PhoneMemberCard phoneMemberCard)
-    {
+    public List<PhoneMemberCard> selectPhoneMemberCardList(PhoneMemberCard phoneMemberCard) {
         return phoneMemberCardMapper.selectPhoneMemberCardList(phoneMemberCard);
     }
 
@@ -51,8 +54,11 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
      * @return 结果
      */
     @Override
-    public int insertPhoneMemberCard(PhoneMemberCard phoneMemberCard)
-    {
+    public int insertPhoneMemberCard(PhoneMemberCard phoneMemberCard) {
+        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
+        if(company != null && !company.getDeptId().equals(100L)){
+            phoneMemberCard.setCompanyId(company.getDeptId());
+        }
         phoneMemberCard.setCreateTime(DateUtils.getNowDate());
         return phoneMemberCardMapper.insertPhoneMemberCard(phoneMemberCard);
     }
@@ -64,8 +70,7 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
      * @return 结果
      */
     @Override
-    public int updatePhoneMemberCard(PhoneMemberCard phoneMemberCard)
-    {
+    public int updatePhoneMemberCard(PhoneMemberCard phoneMemberCard) {
         phoneMemberCard.setUpdateTime(DateUtils.getNowDate());
         return phoneMemberCardMapper.updatePhoneMemberCard(phoneMemberCard);
     }
@@ -77,8 +82,7 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
      * @return 结果
      */
     @Override
-    public int deletePhoneMemberCardByIds(Long[] ids)
-    {
+    public int deletePhoneMemberCardByIds(Long[] ids) {
         return phoneMemberCardMapper.deletePhoneMemberCardByIds(ids);
     }
 
@@ -89,8 +93,7 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService
      * @return 结果
      */
     @Override
-    public int deletePhoneMemberCardById(Long id)
-    {
+    public int deletePhoneMemberCardById(Long id) {
         return phoneMemberCardMapper.deletePhoneMemberCardById(id);
     }
 }

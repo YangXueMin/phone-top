@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.constant.CacheConstants;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.phone.domain.PhoneBanner;
+import com.ruoyi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneCustomerMapper;
@@ -28,6 +31,8 @@ public class PhoneCustomerServiceImpl implements IPhoneCustomerService {
     private PhoneCustomerMapper phoneCustomerMapper;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private ISysDeptService sysDeptService;
 
     /**
      * 项目启动时，初始化参数到缓存
@@ -84,6 +89,10 @@ public class PhoneCustomerServiceImpl implements IPhoneCustomerService {
      */
     @Override
     public int insertPhoneCustomer(PhoneCustomer phoneCustomer) {
+        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
+        if(company != null && !company.getDeptId().equals(100L)){
+            phoneCustomer.setCompanyId(company.getDeptId());
+        }
         phoneCustomer.setCreateTime(DateUtils.getNowDate());
         final int i = phoneCustomerMapper.insertPhoneCustomer(phoneCustomer);
         if (i > 0) {

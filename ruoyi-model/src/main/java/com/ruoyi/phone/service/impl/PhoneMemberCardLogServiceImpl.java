@@ -12,6 +12,7 @@ import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.phone.domain.PhoneBalanceLog;
@@ -81,20 +82,28 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
     @Transactional(rollbackFor = Exception.class)
     public PhoneMemberCardLog insertPhoneMemberCardLog(PhoneMemberCardLog phoneMemberCardLog) {
         phoneMemberCardLog.setCreateTime(DateUtils.getNowDate());
+        phoneMemberCardLog.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         Member member = memberMapper.selectMemberById(phoneMemberCardLog.getMemberId());
         BigDecimal balance = member.getBalance();
         //如果不是在线支付，需要判断余额是否充足
-        if (!StringUtils.equals("1", phoneMemberCardLog.getPayType())) {
+        if (StringUtils.equals("1", phoneMemberCardLog.getPayType())) {
+            phoneMemberCardLog.setPayStatus("1");
+            phoneMemberCardLog.setBalanceMoney(BigDecimal.ZERO);
+            phoneMemberCardLog.setMoney(phoneMemberCardLog.getTotalMoney());
+        } else {
+            BigDecimal money;
             if (phoneMemberCardLog.getTotalMoney().compareTo(member.getBalance()) > 0) {
                 member.setBalance(BigDecimal.ZERO);
                 phoneMemberCardLog.setPayStatus("1");
                 phoneMemberCardLog.setMoney(phoneMemberCardLog.getTotalMoney().subtract(balance));
                 phoneMemberCardLog.setBalanceMoney(balance);
+                money = balance;
             } else {
                 member.setBalance(balance.subtract(phoneMemberCardLog.getTotalMoney()));
                 phoneMemberCardLog.setBalanceMoney(phoneMemberCardLog.getTotalMoney());
                 phoneMemberCardLog.setPayStatus("2");
                 phoneMemberCardLog.setMoney(BigDecimal.ZERO);
+                money = phoneMemberCardLog.getTotalMoney();
             }
             memberMapper.updateMember(member);
             //添加余额变更记录
@@ -104,14 +113,10 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
             phoneBalanceLog.setMemberId(member.getMemberId());
             phoneBalanceLog.setType("2");
             phoneBalanceLog.setBalanceAfter(balance);
-            phoneBalanceLog.setMoney(phoneMemberCardLog.getMoney());
+            phoneBalanceLog.setMoney(money);
             phoneBalanceLog.setBalanceBefore(member.getBalance());
             phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
             phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
-        } else {
-            phoneMemberCardLog.setPayStatus("1");
-            phoneMemberCardLog.setBalanceMoney(BigDecimal.ZERO);
-            phoneMemberCardLog.setMoney(phoneMemberCardLog.getTotalMoney());
         }
         phoneMemberCardLogMapper.insertPhoneMemberCardLog(phoneMemberCardLog);
         return phoneMemberCardLog;
