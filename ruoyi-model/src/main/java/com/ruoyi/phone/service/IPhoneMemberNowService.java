@@ -20,6 +20,14 @@ public interface IPhoneMemberNowService
     public PhoneMemberNow selectPhoneMemberNowById(Long id);
 
     /**
+     * 查询用户须知配置
+     *
+     * @param appId 微信appId
+     * @return 用户须知配置
+     */
+    public PhoneMemberNow selectPhoneMemberNowByAppId(String appId);
+
+    /**
      * 查询用户须知配置列表
      *
      * @param phoneMemberNow 用户须知配置

@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.service.IMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +22,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class MemberDetailsServiceImpl implements UserDetailsService {
+    @Autowired
+    private IMemberService memberService;
 
     @Override
     public UserDetails loadUserByUsername(String openId) throws UsernameNotFoundException {
-        //因为是微信小程序登录，上面形参其实是openId
-
+        //因为是微信公众号登录，上面形参其实是openId
+        Member member = memberService.getMemberByOpenId(openId);
+        if (StringUtils.isNull(member)) {
+            throw new ServiceException("登录用户不存在");
+        } else if (StringUtils.equals("2", member.getDelFlag())) {
+            log.info("登录用户：{} 已被删除.", member.getName());
+            throw new ServiceException("对不起，您的账号：" + member.getName() + " 已被删除");
+        }
         //返回UserDetails用户对象
         return createLoginUser(new Member());
     }

@@ -1,9 +1,8 @@
 package com.ruoyi.phone.service;
 
-import java.util.List;
-
 import com.ruoyi.phone.domain.PhoneCompanyConfig;
-import com.ruoyi.phone.domain.PhoneCustomer;
+
+import java.util.List;
 
 /**
  * 企业配置Service接口

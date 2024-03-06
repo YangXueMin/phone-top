@@ -7,7 +7,7 @@
     <resultMap type="PhoneBalanceLog" id="PhoneBalanceLogResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
-        <result property="configId"    column="config_id"    />
+        <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
         <result property="type"    column="type"    />
         <result property="balanceBefore"    column="balance_before"    />
@@ -26,7 +26,7 @@
         select
             id,
             company_id,
-            config_id,
+            app_id,
             member_id,
             type,
             balance_before,
@@ -46,7 +46,7 @@
         <include refid="selectPhoneBalanceLogVo"/>
         <where>
             <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="configId != null "> and config_id = #{configId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="balanceBefore != null "> and balance_before = #{balanceBefore}</if>
@@ -66,7 +66,7 @@
         insert into phone_balance_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
-            <if test="configId != null">config_id,</if>
+            <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="type != null">type,</if>
             <if test="balanceBefore != null">balance_before,</if>
@@ -82,7 +82,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
-            <if test="configId != null">#{configId},</if>
+            <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="type != null">#{type},</if>
             <if test="balanceBefore != null">#{balanceBefore},</if>
@@ -102,7 +102,7 @@
         update phone_balance_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
-            <if test="configId != null">config_id = #{configId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="type != null">type = #{type},</if>
             <if test="balanceBefore != null">balance_before = #{balanceBefore},</if>

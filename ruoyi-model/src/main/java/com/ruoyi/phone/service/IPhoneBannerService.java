@@ -1,9 +1,8 @@
 package com.ruoyi.phone.service;
 
-import java.util.List;
-
-import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.phone.domain.PhoneBanner;
+
+import java.util.List;
 
 /**
  * banner轮播配置Service接口
@@ -28,7 +27,7 @@ public interface IPhoneBannerService
      * @param appId 微信APPId
      * @return 微信配置
      */
-    public PhoneBanner selectPhoneBannerByAppId(String appId);
+    public List<PhoneBanner> selectPhoneBannerByAppId(String appId);
 
     /**
      * 查询banner轮播配置列表
@@ -71,17 +70,7 @@ public interface IPhoneBannerService
     public int deletePhoneBannerById(Long id);
 
     /**
-     * 加载参数缓存数据
-     */
-    public void loadingConfigCache();
-
-    /**
      * 清空参数缓存数据
      */
     public void clearConfigCache();
-
-    /**
-     * 重置参数缓存数据
-     */
-    public void resetConfigCache();
 }

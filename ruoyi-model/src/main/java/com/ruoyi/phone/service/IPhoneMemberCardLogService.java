@@ -33,7 +33,7 @@ public interface IPhoneMemberCardLogService
      * @param phoneMemberCardLog 会员卡充值记录
      * @return 结果
      */
-    public int insertPhoneMemberCardLog(PhoneMemberCardLog phoneMemberCardLog);
+    public PhoneMemberCardLog insertPhoneMemberCardLog(PhoneMemberCardLog phoneMemberCardLog);
 
     /**
      * 修改会员卡充值记录

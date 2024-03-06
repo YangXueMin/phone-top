@@ -44,6 +44,14 @@ public interface IPhoneCardService
     public int updatePhoneCard(PhoneCard phoneCard);
 
     /**
+     * 核销卡
+     *
+     * @param phoneCard 核销卡
+     * @return 结果
+     */
+    public int cancel(PhoneCard phoneCard);
+
+    /**
      * 批量删除卡密管理
      *
      * @param ids 需要删除的卡密管理主键集合

@@ -2,6 +2,7 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +45,7 @@ public class PhoneBalanceLogController extends BaseController {
     @ApiOperation("查询余额充值记录列表")
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PhoneBalanceLog phoneBalanceLog)
-    {
+    public TableDataInfo list(PhoneBalanceLog phoneBalanceLog) {
         startPage();
         List<PhoneBalanceLog> list = phoneBalanceLogService.selectPhoneBalanceLogList(phoneBalanceLog);
         return getDataTable(list);
@@ -57,8 +57,7 @@ public class PhoneBalanceLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:export')")
     @Log(title = "余额充值记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PhoneBalanceLog phoneBalanceLog)
-    {
+    public void export(HttpServletResponse response, PhoneBalanceLog phoneBalanceLog) {
         List<PhoneBalanceLog> list = phoneBalanceLogService.selectPhoneBalanceLogList(phoneBalanceLog);
         ExcelUtil<PhoneBalanceLog> util = new ExcelUtil<PhoneBalanceLog>(PhoneBalanceLog.class);
         util.exportExcel(response, list, "余额充值记录数据");
@@ -71,8 +70,7 @@ public class PhoneBalanceLogController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(phoneBalanceLogService.selectPhoneBalanceLogById(id));
     }
 
@@ -83,8 +81,7 @@ public class PhoneBalanceLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:add')")
     @Log(title = "余额充值记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PhoneBalanceLog phoneBalanceLog)
-    {
+    public AjaxResult add(@RequestBody PhoneBalanceLog phoneBalanceLog) {
         return toAjax(phoneBalanceLogService.insertPhoneBalanceLog(phoneBalanceLog));
     }
 
@@ -95,8 +92,7 @@ public class PhoneBalanceLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:edit')")
     @Log(title = "余额充值记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PhoneBalanceLog phoneBalanceLog)
-    {
+    public AjaxResult edit(@RequestBody PhoneBalanceLog phoneBalanceLog) {
         return toAjax(phoneBalanceLogService.updatePhoneBalanceLog(phoneBalanceLog));
     }
 
@@ -108,8 +104,7 @@ public class PhoneBalanceLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:remove')")
     @Log(title = "余额充值记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(phoneBalanceLogService.deletePhoneBalanceLogByIds(ids));
     }
 }

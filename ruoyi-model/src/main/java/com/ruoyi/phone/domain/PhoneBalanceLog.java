@@ -29,7 +29,7 @@ public class PhoneBalanceLog extends BaseEntity{
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
-    private Long configId;
+    private String appId;
 
     /** 会员ID */
     @Excel(name = "会员ID")
@@ -80,12 +80,12 @@ public class PhoneBalanceLog extends BaseEntity{
     public Long getCompanyId(){
         return companyId;
     }
-    public void setConfigId(Long configId){
-        this.configId = configId;
+    public void setAppId(String appId){
+        this.appId = appId;
     }
 
-    public Long getConfigId(){
-        return configId;
+    public String getAppId(){
+        return appId;
     }
     public void setMemberId(Long memberId){
         this.memberId = memberId;

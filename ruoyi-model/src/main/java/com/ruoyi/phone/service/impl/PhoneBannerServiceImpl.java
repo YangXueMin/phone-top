@@ -28,14 +28,6 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     private RedisCache redisCache;
 
     /**
-     * 项目启动时，初始化参数到缓存
-     */
-    @PostConstruct
-    public void init() {
-        loadingConfigCache();
-    }
-
-    /**
      * 查询banner轮播配置
      *
      * @param id banner轮播配置主键
@@ -47,20 +39,20 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     }
 
     @Override
-    public PhoneBanner selectPhoneBannerByAppId(String appId) {
-        PhoneBanner phoneBanner;
+    public List<PhoneBanner> selectPhoneBannerByAppId(String appId) {
+        List<PhoneBanner> bannerList;
         if (redisCache.hasKey(getCacheKey(appId))) {
-            phoneBanner = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(),PhoneBanner.class);
+            bannerList = JSON.parseArray(redisCache.getCacheObject(getCacheKey(appId)).toString(),PhoneBanner.class);
         } else {
-            phoneBanner = new PhoneBanner();
+            PhoneBanner phoneBanner = new PhoneBanner();
             phoneBanner.setAppId(appId);
-            List<PhoneBanner> phoneBannerList = phoneBannerMapper.selectPhoneBannerList(phoneBanner);
-            if (phoneBannerList.size() > 0) {
-                phoneBanner = phoneBannerList.get(0);
-                redisCache.setCacheObject(getCacheKey(appId), JSON.toJSONString(phoneBanner));
+            phoneBanner.setStatus("1");
+            bannerList = phoneBannerMapper.selectPhoneBannerList(phoneBanner);
+            if (bannerList.size() > 0) {
+                redisCache.setCacheObject(getCacheKey(appId), JSON.toJSONString(bannerList));
             }
         }
-        return phoneBanner;
+        return bannerList;
     }
 
     /**
@@ -85,7 +77,7 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
         phoneBanner.setCreateTime(DateUtils.getNowDate());
         final int i = phoneBannerMapper.insertPhoneBanner(phoneBanner);
         if (i > 0) {
-            redisCache.setCacheObject(getCacheKey(phoneBanner.getAppId()), JSON.toJSONString(phoneBanner));
+            redisCache.deleteObject(getCacheKey(phoneBanner.getAppId()));
         }
         return i;
     }
@@ -101,7 +93,7 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
         phoneBanner.setUpdateTime(DateUtils.getNowDate());
         final int i = phoneBannerMapper.updatePhoneBanner(phoneBanner);
         if (i > 0) {
-            redisCache.setCacheObject(getCacheKey(phoneBanner.getAppId()), JSON.toJSONString(phoneBanner));
+            redisCache.deleteObject(getCacheKey(phoneBanner.getAppId()));
         }
         return i;
     }
@@ -135,23 +127,9 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     }
 
     @Override
-    public void loadingConfigCache() {
-        List<PhoneBanner> phoneBannerList = phoneBannerMapper.selectPhoneBannerList(new PhoneBanner());
-        for (PhoneBanner banner : phoneBannerList) {
-            redisCache.setCacheObject(getCacheKey(banner.getAppId()), JSON.toJSONString(banner));
-        }
-    }
-
-    @Override
     public void clearConfigCache() {
         Collection<String> keys = redisCache.keys(CacheConstants.WECHAT_BANNER_CONFIG_KEY + "*");
         redisCache.deleteObject(keys);
-    }
-
-    @Override
-    public void resetConfigCache() {
-        clearConfigCache();
-        loadingConfigCache();
     }
 
     /**

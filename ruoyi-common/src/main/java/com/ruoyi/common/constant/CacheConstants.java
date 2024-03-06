@@ -45,6 +45,11 @@ public class CacheConstants
     /**
      * 参数管理 cache key
      */
+    public static final String WECHAT_MEMBER_NOW_KEY = "wechat_member_now:";
+
+    /**
+     * 参数管理 cache key
+     */
     public static final String WECHAT_COMPANY_CONFIG_KEY = "wechat_company_config:";
 
     /**

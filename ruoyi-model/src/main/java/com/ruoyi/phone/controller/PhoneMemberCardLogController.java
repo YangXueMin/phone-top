@@ -2,6 +2,7 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +45,7 @@ public class PhoneMemberCardLogController extends BaseController {
     @ApiOperation("查询会员卡充值记录列表")
     @PreAuthorize("@ss.hasPermi('phone:cardLog:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PhoneMemberCardLog phoneMemberCardLog)
-    {
+    public TableDataInfo list(PhoneMemberCardLog phoneMemberCardLog) {
         startPage();
         List<PhoneMemberCardLog> list = phoneMemberCardLogService.selectPhoneMemberCardLogList(phoneMemberCardLog);
         return getDataTable(list);
@@ -57,8 +57,7 @@ public class PhoneMemberCardLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:cardLog:export')")
     @Log(title = "会员卡充值记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PhoneMemberCardLog phoneMemberCardLog)
-    {
+    public void export(HttpServletResponse response, PhoneMemberCardLog phoneMemberCardLog) {
         List<PhoneMemberCardLog> list = phoneMemberCardLogService.selectPhoneMemberCardLogList(phoneMemberCardLog);
         ExcelUtil<PhoneMemberCardLog> util = new ExcelUtil<PhoneMemberCardLog>(PhoneMemberCardLog.class);
         util.exportExcel(response, list, "会员卡充值记录数据");
@@ -71,8 +70,7 @@ public class PhoneMemberCardLogController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('phone:cardLog:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(phoneMemberCardLogService.selectPhoneMemberCardLogById(id));
     }
 
@@ -83,9 +81,8 @@ public class PhoneMemberCardLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:cardLog:add')")
     @Log(title = "会员卡充值记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PhoneMemberCardLog phoneMemberCardLog)
-    {
-        return toAjax(phoneMemberCardLogService.insertPhoneMemberCardLog(phoneMemberCardLog));
+    public AjaxResult add(@RequestBody PhoneMemberCardLog phoneMemberCardLog) {
+        return success(phoneMemberCardLogService.insertPhoneMemberCardLog(phoneMemberCardLog));
     }
 
     /**
@@ -95,8 +92,7 @@ public class PhoneMemberCardLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:cardLog:edit')")
     @Log(title = "会员卡充值记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PhoneMemberCardLog phoneMemberCardLog)
-    {
+    public AjaxResult edit(@RequestBody PhoneMemberCardLog phoneMemberCardLog) {
         return toAjax(phoneMemberCardLogService.updatePhoneMemberCardLog(phoneMemberCardLog));
     }
 
@@ -108,8 +104,7 @@ public class PhoneMemberCardLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:cardLog:remove')")
     @Log(title = "会员卡充值记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(phoneMemberCardLogService.deletePhoneMemberCardLogByIds(ids));
     }
 }

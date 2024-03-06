@@ -7,10 +7,14 @@
     <resultMap type="PhoneMemberCardLog" id="PhoneMemberCardLogResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
-        <result property="configId"    column="config_id"    />
+        <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="payType"    column="pay_type"    />
         <result property="orderNo"    column="order_no"    />
         <result property="money"    column="money"    />
+        <result property="balanceMoney"    column="balance_money"    />
+        <result property="totalMoney"    column="total_money"    />
         <result property="cardId"    column="card_id"    />
         <result property="buyDay"    column="buy_day"    />
         <result property="cardName"    column="card_name"    />
@@ -27,10 +31,14 @@
         select
             id,
             company_id,
-            config_id,
+            app_id,
             member_id,
+            pay_status,
+            pay_type,
             order_no,
             money,
+            balance_money,
+            total_money,
             card_id,
             buy_day,
             card_name,
@@ -48,10 +56,14 @@
         <include refid="selectPhoneMemberCardLogVo"/>
         <where>
             <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="configId != null "> and config_id = #{configId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="money != null "> and money = #{money}</if>
+            <if test="balanceMoney != null "> and balance_money = #{balanceMoney}</if>
+            <if test="totalMoney != null "> and total_money = #{totalMoney}</if>
             <if test="cardId != null "> and card_id = #{cardId}</if>
             <if test="buyDay != null "> and buy_day = #{buyDay}</if>
             <if test="cardName != null  and cardName != ''"> and card_name like concat('%', #{cardName}, '%')</if>
@@ -69,10 +81,14 @@
         insert into phone_member_card_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
-            <if test="configId != null">config_id,</if>
+            <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="payType != null">pay_type,</if>
             <if test="orderNo != null">order_no,</if>
             <if test="money != null">money,</if>
+            <if test="balanceMoney != null">balance_money,</if>
+            <if test="totalMoney != null">total_money,</if>
             <if test="cardId != null">card_id,</if>
             <if test="buyDay != null">buy_day,</if>
             <if test="cardName != null">card_name,</if>
@@ -86,10 +102,14 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
-            <if test="configId != null">#{configId},</if>
+            <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="payType != null">#{payType},</if>
             <if test="orderNo != null">#{orderNo},</if>
             <if test="money != null">#{money},</if>
+            <if test="balanceMoney != null">#{balanceMoney},</if>
+            <if test="totalMoney != null">#{totalMoney},</if>
             <if test="cardId != null">#{cardId},</if>
             <if test="buyDay != null">#{buyDay},</if>
             <if test="cardName != null">#{cardName},</if>
@@ -107,10 +127,14 @@
         update phone_member_card_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
-            <if test="configId != null">config_id = #{configId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="money != null">money = #{money},</if>
+            <if test="balanceMoney != null">balance_money = #{balanceMoney},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
             <if test="cardId != null">card_id = #{cardId},</if>
             <if test="buyDay != null">buy_day = #{buyDay},</if>
             <if test="cardName != null">card_name = #{cardName},</if>

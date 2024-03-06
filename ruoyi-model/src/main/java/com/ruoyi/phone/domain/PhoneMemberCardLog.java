@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 会员卡充值记录对象 phone_member_card_log
  *
  * @author ruoyi
- * @date 2024-03-05
+ * @date 2024-03-06
  */
 @ApiModel(value = "PhoneMemberCardLog", description = "会员卡充值记录")
 @ToString
@@ -29,22 +29,42 @@ public class PhoneMemberCardLog extends BaseEntity{
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
-    private Long configId;
+    private String appId;
 
     /** 会员ID */
     @Excel(name = "会员ID")
     @ApiModelProperty("会员ID")
     private Long memberId;
 
+    /** 支付状态 */
+    @Excel(name = "支付状态")
+    @ApiModelProperty("支付状态")
+    private String payStatus;
+
+    /** 支付方式 */
+    @Excel(name = "支付方式")
+    @ApiModelProperty("支付方式")
+    private String payType;
+
     /** 订单ID */
     @Excel(name = "订单ID")
     @ApiModelProperty("订单ID")
     private String orderNo;
 
-    /** 金额 */
-    @Excel(name = "金额")
-    @ApiModelProperty("金额")
+    /** 剩余金额 */
+    @Excel(name = "剩余金额")
+    @ApiModelProperty("剩余金额")
     private BigDecimal money;
+
+    /** 余额支付金额 */
+    @Excel(name = "余额支付金额")
+    @ApiModelProperty("余额支付金额")
+    private BigDecimal balanceMoney;
+
+    /** 总金额 */
+    @Excel(name = "总金额")
+    @ApiModelProperty("总金额")
+    private BigDecimal totalMoney;
 
     /** 会员卡ID */
     @Excel(name = "会员卡ID")
@@ -85,12 +105,12 @@ public class PhoneMemberCardLog extends BaseEntity{
     public Long getCompanyId(){
         return companyId;
     }
-    public void setConfigId(Long configId){
-        this.configId = configId;
+    public void setAppId(String appId){
+        this.appId = appId;
     }
 
-    public Long getConfigId(){
-        return configId;
+    public String getAppId(){
+        return appId;
     }
     public void setMemberId(Long memberId){
         this.memberId = memberId;
@@ -98,6 +118,20 @@ public class PhoneMemberCardLog extends BaseEntity{
 
     public Long getMemberId(){
         return memberId;
+    }
+    public void setPayStatus(String payStatus){
+        this.payStatus = payStatus;
+    }
+
+    public String getPayStatus(){
+        return payStatus;
+    }
+    public void setPayType(String payType){
+        this.payType = payType;
+    }
+
+    public String getPayType(){
+        return payType;
     }
     public void setOrderNo(String orderNo){
         this.orderNo = orderNo;
@@ -112,6 +146,20 @@ public class PhoneMemberCardLog extends BaseEntity{
 
     public BigDecimal getMoney(){
         return money;
+    }
+    public void setBalanceMoney(BigDecimal balanceMoney){
+        this.balanceMoney = balanceMoney;
+    }
+
+    public BigDecimal getBalanceMoney(){
+        return balanceMoney;
+    }
+    public void setTotalMoney(BigDecimal totalMoney){
+        this.totalMoney = totalMoney;
+    }
+
+    public BigDecimal getTotalMoney(){
+        return totalMoney;
     }
     public void setCardId(Long cardId){
         this.cardId = cardId;

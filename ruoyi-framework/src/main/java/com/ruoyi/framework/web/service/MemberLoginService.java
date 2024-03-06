@@ -14,8 +14,11 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.authentication.MemberAuthenticationToken;
@@ -35,6 +38,7 @@ import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yangxuemin
@@ -85,7 +89,7 @@ public class MemberLoginService {
                 accessToken = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(), WxOAuth2AccessToken.class);
             } else {
                 accessToken = oAuth2Service.getAccessToken(code);
-                redisCache.setCacheObject(getCacheKey(appId), JSON.toJSONString(accessToken));
+                redisCache.setCacheObject(getCacheKey(appId), JSON.toJSONString(accessToken),1, TimeUnit.HOURS);
             }
             WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(accessToken, null);
             openId = wxMpUser.getOpenid();
@@ -104,15 +108,17 @@ public class MemberLoginService {
             SnowflakeGenerator.setMachineId(1);
             member.setNumber(SnowflakeGenerator.nextId().toString());
         } else {
-            member.setAvatar(wxHeadImg);
-            member.setName(wxNickName);
-            member.setSex(wxSex + "");
             if (map.get("mobile") != null) {
                 member.setMobile(map.get("mobile").toString());
             }
             member.setIsMember("0");
             member.setBalance(BigDecimal.ZERO);
         }
+        member.setCompanyId(wechatConfig.getCompanyId());
+        member.setAppId(appId);
+        member.setAvatar(wxHeadImg);
+        member.setName(wxNickName);
+        member.setSex(wxSex + "");
         if (member.getId() != null) {
             memberService.updateMember(member);
         } else {
@@ -166,7 +172,11 @@ public class MemberLoginService {
      * @param userId 用户ID
      */
     public void recordLoginInfo(Long userId) {
-
+        Member member = new Member();
+        member.setId(userId);
+        member.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
+        member.setLoginDate(DateUtils.getNowDate());
+        memberService.updateMember(member);
     }
 
 }

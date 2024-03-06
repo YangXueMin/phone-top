@@ -2,6 +2,7 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +45,7 @@ public class PhoneBannerController extends BaseController {
     @ApiOperation("查询banner轮播配置列表")
     @PreAuthorize("@ss.hasPermi('phone:banner:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PhoneBanner phoneBanner)
-    {
+    public TableDataInfo list(PhoneBanner phoneBanner) {
         startPage();
         List<PhoneBanner> list = phoneBannerService.selectPhoneBannerList(phoneBanner);
         return getDataTable(list);
@@ -57,8 +57,7 @@ public class PhoneBannerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:banner:export')")
     @Log(title = "banner轮播配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PhoneBanner phoneBanner)
-    {
+    public void export(HttpServletResponse response, PhoneBanner phoneBanner) {
         List<PhoneBanner> list = phoneBannerService.selectPhoneBannerList(phoneBanner);
         ExcelUtil<PhoneBanner> util = new ExcelUtil<PhoneBanner>(PhoneBanner.class);
         util.exportExcel(response, list, "banner轮播配置数据");
@@ -71,8 +70,7 @@ public class PhoneBannerController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('phone:banner:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(phoneBannerService.selectPhoneBannerById(id));
     }
 
@@ -83,8 +81,7 @@ public class PhoneBannerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:banner:add')")
     @Log(title = "banner轮播配置", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PhoneBanner phoneBanner)
-    {
+    public AjaxResult add(@RequestBody PhoneBanner phoneBanner) {
         return toAjax(phoneBannerService.insertPhoneBanner(phoneBanner));
     }
 
@@ -95,8 +92,7 @@ public class PhoneBannerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:banner:edit')")
     @Log(title = "banner轮播配置", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PhoneBanner phoneBanner)
-    {
+    public AjaxResult edit(@RequestBody PhoneBanner phoneBanner) {
         return toAjax(phoneBannerService.updatePhoneBanner(phoneBanner));
     }
 
@@ -108,8 +104,7 @@ public class PhoneBannerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:banner:remove')")
     @Log(title = "banner轮播配置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(phoneBannerService.deletePhoneBannerByIds(ids));
     }
 }
