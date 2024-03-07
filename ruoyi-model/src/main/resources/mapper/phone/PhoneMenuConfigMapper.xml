@@ -9,6 +9,7 @@
         <result property="companyId"    column="company_id"    />
         <result property="appId"    column="app_id"    />
         <result property="title"    column="title"    />
+        <result property="banner"    column="banner"    />
         <result property="url"    column="url"    />
         <result property="status"    column="status"    />
         <result property="orderNum"    column="order_num"    />
@@ -31,6 +32,7 @@
             a.company_id,
             a.app_id,
             a.title,
+               a.banner,
             a.url,
             a.status,
             a.order_num,
@@ -67,6 +69,7 @@
             <if test="companyId != null">company_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="title != null">title,</if>
+            <if test="banner != null">banner,</if>
             <if test="url != null">url,</if>
             <if test="status != null">status,</if>
             <if test="orderNum != null">order_num,</if>
@@ -80,6 +83,7 @@
             <if test="companyId != null">#{companyId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="title != null">#{title},</if>
+            <if test="banner != null">#{banner},</if>
             <if test="url != null">#{url},</if>
             <if test="status != null">#{status},</if>
             <if test="orderNum != null">#{orderNum},</if>
@@ -97,6 +101,7 @@
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="title != null">title = #{title},</if>
+            <if test="banner != null">banner = #{banner},</if>
             <if test="url != null">url = #{url},</if>
             <if test="status != null">status = #{status},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>

@@ -41,6 +41,11 @@ public class PhoneMenuConfig extends BaseEntity{
     /** 图标 */
     @Excel(name = "图标")
     @ApiModelProperty("图标")
+    private String banner;
+
+    /** 外链 */
+    @Excel(name = "外链")
+    @ApiModelProperty("外链")
     private String url;
 
     /** 状态 */
@@ -114,6 +119,14 @@ public class PhoneMenuConfig extends BaseEntity{
 
     public WechatConfig getWechatConfig() {
         return wechatConfig;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
     }
 
     public void setWechatConfig(WechatConfig wechatConfig) {
