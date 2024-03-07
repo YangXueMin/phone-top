@@ -17,20 +17,11 @@ public class MemberAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
     private final Object principal;
     private Object memberBody;
-    private String appId;
 
     public MemberAuthenticationToken(Object principal,Object memberBody) {
         super(null);
         this.principal = principal;
         this.memberBody = memberBody;
-        this.setAuthenticated(false);
-    }
-
-    public MemberAuthenticationToken(Object principal,Object memberBody,String appId) {
-        super(null);
-        this.principal = principal;
-        this.memberBody = memberBody;
-        this.appId = appId;
         this.setAuthenticated(false);
     }
 

@@ -12,12 +12,12 @@
         <result property="orderNo"    column="order_no"    />
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
-        <result property="status"    column="status"    />
         <result property="mobile"    column="mobile"    />
         <result property="accountNumber"    column="account_number"    />
         <result property="residenceType"    column="residence_type"    />
         <result property="area"    column="area"    />
         <result property="cardNo"    column="card_no"    />
+        <result property="topUpMoney"    column="top_up_money"    />
         <result property="money"    column="money"    />
         <result property="payMoney"    column="pay_money"    />
         <result property="payBalance"    column="pay_balance"    />
@@ -42,12 +42,12 @@
             order_no,
             method,
             type,
-            status,
             mobile,
             account_number,
             residence_type,
             area,
             card_no,
+            top_up_money,
             money,
             pay_money,
             pay_balance,
@@ -68,17 +68,17 @@
         <include refid="selectPhoneOrderVo"/>
         <where>
             <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="method != null  and method != ''"> and method = #{method}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
             <if test="accountNumber != null  and accountNumber != ''"> and account_number = #{accountNumber}</if>
             <if test="residenceType != null  and residenceType != ''"> and residence_type = #{residenceType}</if>
             <if test="area != null  and area != ''"> and area = #{area}</if>
             <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="topUpMoney != null "> and top_up_money = #{topUpMoney}</if>
             <if test="money != null "> and money = #{money}</if>
             <if test="payMoney != null "> and pay_money = #{payMoney}</if>
             <if test="payBalance != null "> and pay_balance = #{payBalance}</if>
@@ -88,11 +88,6 @@
             <if test="payTime != null  and payTime != ''"> and pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and pay_result = #{payResult}</if>
         </where>
-    </select>
-
-    <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
-        <include refid="selectPhoneOrderVo"/>
-        where order_no = #{orderNo}
     </select>
 
     <select id="selectPhoneOrderById" parameterType="Long" resultMap="PhoneOrderResult">
@@ -110,12 +105,12 @@
             <if test="orderNo != null">order_no,</if>
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
-            <if test="status != null">status,</if>
             <if test="mobile != null">mobile,</if>
             <if test="accountNumber != null">account_number,</if>
             <if test="residenceType != null">residence_type,</if>
             <if test="area != null">area,</if>
             <if test="cardNo != null">card_no,</if>
+            <if test="topUpMoney != null">top_up_money,</if>
             <if test="money != null">money,</if>
             <if test="payMoney != null">pay_money,</if>
             <if test="payBalance != null">pay_balance,</if>
@@ -138,12 +133,12 @@
             <if test="orderNo != null">#{orderNo},</if>
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
-            <if test="status != null">#{status},</if>
             <if test="mobile != null">#{mobile},</if>
             <if test="accountNumber != null">#{accountNumber},</if>
             <if test="residenceType != null">#{residenceType},</if>
             <if test="area != null">#{area},</if>
             <if test="cardNo != null">#{cardNo},</if>
+            <if test="topUpMoney != null">#{topUpMoney},</if>
             <if test="money != null">#{money},</if>
             <if test="payMoney != null">#{payMoney},</if>
             <if test="payBalance != null">#{payBalance},</if>
@@ -169,12 +164,12 @@
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>
-            <if test="status != null">type = #{status},</if>
             <if test="mobile != null">mobile = #{mobile},</if>
             <if test="accountNumber != null">account_number = #{accountNumber},</if>
             <if test="residenceType != null">residence_type = #{residenceType},</if>
             <if test="area != null">area = #{area},</if>
             <if test="cardNo != null">card_no = #{cardNo},</if>
+            <if test="topUpMoney != null">top_up_money = #{topUpMoney},</if>
             <if test="money != null">money = #{money},</if>
             <if test="payMoney != null">pay_money = #{payMoney},</if>
             <if test="payBalance != null">pay_balance = #{payBalance},</if>

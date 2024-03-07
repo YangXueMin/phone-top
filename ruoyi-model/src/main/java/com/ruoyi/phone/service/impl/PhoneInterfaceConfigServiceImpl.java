@@ -1,6 +1,8 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,7 @@ import com.ruoyi.phone.service.IPhoneInterfaceConfigService;
  * @date 2024-03-07
  */
 @Service
-public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigService
-{
+public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigService {
     @Autowired
     private PhoneInterfaceConfigMapper phoneInterfaceConfigMapper;
 
@@ -27,8 +28,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 接口地址配置
      */
     @Override
-    public PhoneInterfaceConfig selectPhoneInterfaceConfigById(Long id)
-    {
+    public PhoneInterfaceConfig selectPhoneInterfaceConfigById(Long id) {
         return phoneInterfaceConfigMapper.selectPhoneInterfaceConfigById(id);
     }
 
@@ -39,8 +39,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 接口地址配置
      */
     @Override
-    public List<PhoneInterfaceConfig> selectPhoneInterfaceConfigList(PhoneInterfaceConfig phoneInterfaceConfig)
-    {
+    public List<PhoneInterfaceConfig> selectPhoneInterfaceConfigList(PhoneInterfaceConfig phoneInterfaceConfig) {
         return phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
     }
 
@@ -51,8 +50,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 结果
      */
     @Override
-    public int insertPhoneInterfaceConfig(PhoneInterfaceConfig phoneInterfaceConfig)
-    {
+    public int insertPhoneInterfaceConfig(PhoneInterfaceConfig phoneInterfaceConfig) {
         phoneInterfaceConfig.setCreateTime(DateUtils.getNowDate());
         return phoneInterfaceConfigMapper.insertPhoneInterfaceConfig(phoneInterfaceConfig);
     }
@@ -64,8 +62,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 结果
      */
     @Override
-    public int updatePhoneInterfaceConfig(PhoneInterfaceConfig phoneInterfaceConfig)
-    {
+    public int updatePhoneInterfaceConfig(PhoneInterfaceConfig phoneInterfaceConfig) {
         phoneInterfaceConfig.setUpdateTime(DateUtils.getNowDate());
         return phoneInterfaceConfigMapper.updatePhoneInterfaceConfig(phoneInterfaceConfig);
     }
@@ -77,8 +74,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 结果
      */
     @Override
-    public int deletePhoneInterfaceConfigByIds(Long[] ids)
-    {
+    public int deletePhoneInterfaceConfigByIds(Long[] ids) {
         return phoneInterfaceConfigMapper.deletePhoneInterfaceConfigByIds(ids);
     }
 
@@ -89,8 +85,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 结果
      */
     @Override
-    public int deletePhoneInterfaceConfigById(Long id)
-    {
+    public int deletePhoneInterfaceConfigById(Long id) {
         return phoneInterfaceConfigMapper.deletePhoneInterfaceConfigById(id);
     }
 }

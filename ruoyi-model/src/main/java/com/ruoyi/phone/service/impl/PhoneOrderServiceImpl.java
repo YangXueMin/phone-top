@@ -85,7 +85,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
         BigDecimal balance = member.getBalance();
-        phoneOrder.setStatus("1");
+        phoneOrder.setArrivalStatus("1");
         if(StringUtils.equals("1",phoneOrder.getPayType())){
             phoneOrder.setPayMoney(phoneOrder.getMoney());
             phoneOrder.setPayBalance(BigDecimal.ZERO);
