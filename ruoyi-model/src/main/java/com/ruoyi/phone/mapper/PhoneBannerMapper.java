@@ -1,6 +1,7 @@
 package com.ruoyi.phone.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.phone.domain.PhoneBanner;
 
@@ -11,8 +12,7 @@ import com.ruoyi.phone.domain.PhoneBanner;
  * @date 2024-03-04
  */
 @Mapper
-public interface PhoneBannerMapper
-{
+public interface PhoneBannerMapper {
     /**
      * 查询banner轮播配置
      *
