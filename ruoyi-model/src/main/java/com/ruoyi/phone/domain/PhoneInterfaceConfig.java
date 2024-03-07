@@ -31,7 +31,7 @@ public class PhoneInterfaceConfig extends BaseEntity{
     private String appId;
 
     /** 类型（电费：1，快充：2，慢充：3） */
-    @Excel(name = "类型", readConverterExp = "电=费：1，快充：2，慢充：3")
+    @Excel(name = "类型", readConverterExp = "电费：1，快充：2，慢充：3")
     @ApiModelProperty("类型")
     private String type;
 
@@ -42,7 +42,7 @@ public class PhoneInterfaceConfig extends BaseEntity{
 
     /** 接口类型 */
     @Excel(name = "接口类型")
-    @ApiModelProperty("接口类型")
+    @ApiModelProperty("接口类型(系统：1，大猿人：2)")
     private String interfaceType;
 
     /** 接口地址 */

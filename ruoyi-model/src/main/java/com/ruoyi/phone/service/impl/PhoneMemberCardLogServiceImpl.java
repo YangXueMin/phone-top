@@ -14,21 +14,23 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.phone.domain.PhoneBalanceLog;
+import com.ruoyi.phone.domain.PhoneCommissionConfig;
+import com.ruoyi.phone.domain.PhoneMemberCard;
 import com.ruoyi.phone.domain.PhoneMemberCardLog;
-import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
+import com.ruoyi.phone.mapper.PhoneCommissionConfigMapper;
 import com.ruoyi.phone.mapper.PhoneMemberCardLogMapper;
+import com.ruoyi.phone.mapper.PhoneMemberCardMapper;
 import com.ruoyi.phone.service.IPhoneMemberCardLogService;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IWechatConfigService;
-import com.ruoyi.system.service.impl.WechatConfigServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,9 +48,11 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
     @Autowired
     private MemberMapper memberMapper;
     @Autowired
-    private PhoneBalanceLogMapper phoneBalanceLogMapper;
-    @Autowired
     private IWechatConfigService wechatConfigService;
+    @Autowired
+    private PhoneMemberCardMapper phoneMemberCardMapper;
+    @Autowired
+    private PhoneCommissionConfigMapper phoneCommissionConfigMapper;
 
     /**
      * 查询会员卡充值记录
@@ -81,43 +85,10 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PhoneMemberCardLog insertPhoneMemberCardLog(PhoneMemberCardLog phoneMemberCardLog) {
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMemberCardLog.getAppId());
+        phoneMemberCardLog.setCompanyId(wechatConfig.getCompanyId());
         phoneMemberCardLog.setCreateTime(DateUtils.getNowDate());
         phoneMemberCardLog.setOrderNo(SnowflakeGenerator.generateOrderNumber());
-        Member member = memberMapper.selectMemberById(phoneMemberCardLog.getMemberId());
-        BigDecimal balance = member.getBalance();
-        //如果不是在线支付，需要判断余额是否充足
-        if (StringUtils.equals("1", phoneMemberCardLog.getPayType())) {
-            phoneMemberCardLog.setPayStatus("1");
-            phoneMemberCardLog.setBalanceMoney(BigDecimal.ZERO);
-            phoneMemberCardLog.setMoney(phoneMemberCardLog.getTotalMoney());
-        } else {
-            BigDecimal money;
-            if (phoneMemberCardLog.getTotalMoney().compareTo(member.getBalance()) > 0) {
-                member.setBalance(BigDecimal.ZERO);
-                phoneMemberCardLog.setPayStatus("1");
-                phoneMemberCardLog.setMoney(phoneMemberCardLog.getTotalMoney().subtract(balance));
-                phoneMemberCardLog.setBalanceMoney(balance);
-                money = balance;
-            } else {
-                member.setBalance(balance.subtract(phoneMemberCardLog.getTotalMoney()));
-                phoneMemberCardLog.setBalanceMoney(phoneMemberCardLog.getTotalMoney());
-                phoneMemberCardLog.setPayStatus("2");
-                phoneMemberCardLog.setMoney(BigDecimal.ZERO);
-                money = phoneMemberCardLog.getTotalMoney();
-            }
-            memberMapper.updateMember(member);
-            //添加余额变更记录
-            PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-            phoneBalanceLog.setCompanyId(phoneMemberCardLog.getCompanyId());
-            phoneBalanceLog.setAppId(phoneMemberCardLog.getAppId());
-            phoneBalanceLog.setMemberId(member.getMemberId());
-            phoneBalanceLog.setType("2");
-            phoneBalanceLog.setBalanceAfter(balance);
-            phoneBalanceLog.setMoney(money);
-            phoneBalanceLog.setBalanceBefore(member.getBalance());
-            phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
-            phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
-        }
         phoneMemberCardLogMapper.insertPhoneMemberCardLog(phoneMemberCardLog);
         return phoneMemberCardLog;
     }
@@ -195,12 +166,23 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                 List<PhoneMemberCardLog> cardLogList = phoneMemberCardLogMapper.selectPhoneMemberCardLogByOrderNo(notifyResult.getOutTradeNo());
                 if (cardLogList != null && cardLogList.size() > 0) {
                     PhoneMemberCardLog phoneMemberCardLog = cardLogList.get(0);
+                    Member member = memberMapper.selectMemberById(phoneMemberCardLog.getId());
                     if (StringUtils.equals("1", phoneMemberCardLog.getPayStatus())) {
                         phoneMemberCardLog.setPayStatus("2");
                         phoneMemberCardLog.setPayTime(notifyResult.getTimeEnd());
                         phoneMemberCardLog.setPayResult(JSON.toJSONString(notifyResult));
                         phoneMemberCardLog.setUpdateTime(DateUtils.getNowDate());
                         phoneMemberCardLogMapper.updatePhoneMemberCardLog(phoneMemberCardLog);
+                        BigDecimal balance = member.getBalance();
+                        member.setIsMember("1");
+                        Date endDate = DateUtils.getNowDate();
+                        if (member.getExpirationTime() != null) {
+                            endDate = member.getExpirationTime();
+                        }
+                        member.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
+                        member.setBalance(balance.add(phoneMemberCardLog.getTotalMoney()));
+                        memberMapper.updateMember(member);
+                        updateUserInfo(phoneMemberCardLog, member);
                     }
                 }
                 return WxPayNotifyResponse.success("成功");
@@ -209,5 +191,49 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
             e.printStackTrace();
         }
         return WxPayNotifyResponse.fail("失败");
+    }
+
+    public void updateUserInfo(PhoneMemberCardLog phoneMemberCardLog, Member member) {
+        if (StringUtils.equals("2", phoneMemberCardLog.getPayStatus())) {
+            //如果是被推荐用户获取上级
+            if (member.getMemberId() != null) {
+                //获取佣金
+                final PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
+                if (phoneMemberCard != null) {
+                    Member agency = memberMapper.selectMemberById(member.getMemberId());
+                    if (agency != null) {
+                        BigDecimal agencyBalance = agency.getCommissionBalance();
+                        agency.setCommissionBalance(agencyBalance.add(phoneMemberCard.getDirectCommission()));
+                        memberMapper.updateMember(agency);
+                        //添加佣金记录
+                        PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
+                        phoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
+                        phoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
+                        phoneCommissionConfig.setCommissionBefore(agencyBalance);
+                        phoneCommissionConfig.setMoney(phoneMemberCard.getDirectCommission());
+                        phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
+                        phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                        phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
+                        if (agency.getMemberId() != null) {
+                            Member secondary = memberMapper.selectMemberById(member.getMemberId());
+                            if (secondary != null) {
+                                BigDecimal secondaryBalance = secondary.getCommissionBalance();
+                                secondary.setCommissionBalance(secondaryBalance.add(phoneMemberCard.getIndirectCommission()));
+                                memberMapper.updateMember(secondary);
+                                //添加佣金记录
+                                PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
+                                secondaryPhoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
+                                secondaryPhoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
+                                secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
+                                secondaryPhoneCommissionConfig.setMoney(phoneMemberCard.getIndirectCommission());
+                                secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
+                                secondaryPhoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                                phoneCommissionConfigMapper.insertPhoneCommissionConfig(secondaryPhoneCommissionConfig);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

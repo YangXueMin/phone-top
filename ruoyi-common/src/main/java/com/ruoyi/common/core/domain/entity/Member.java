@@ -81,6 +81,12 @@ public class Member extends BaseEntity {
     private BigDecimal balance;
 
     /**
+     * 佣金余额
+     */
+    @Excel(name = "佣金余额")
+    private BigDecimal commissionBalance;
+
+    /**
      * openId
      */
     @Excel(name = "openId")
@@ -91,6 +97,11 @@ public class Member extends BaseEntity {
      */
     @Excel(name = "是否会员")
     private String isMember;
+
+    /** 到期时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "到期时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date expirationTime;
 
     /**
      * 是否拉黑
@@ -278,5 +289,21 @@ public class Member extends BaseEntity {
 
     public void setIsBlacklist(String isBlacklist) {
         this.isBlacklist = isBlacklist;
+    }
+
+    public BigDecimal getCommissionBalance() {
+        return commissionBalance;
+    }
+
+    public void setCommissionBalance(BigDecimal commissionBalance) {
+        this.commissionBalance = commissionBalance;
+    }
+
+    public Date getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(Date expirationTime) {
+        this.expirationTime = expirationTime;
     }
 }

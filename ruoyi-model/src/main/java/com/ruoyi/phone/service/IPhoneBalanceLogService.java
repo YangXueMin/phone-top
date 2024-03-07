@@ -1,7 +1,10 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
+import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.phone.domain.PhoneBalanceLog;
+import com.ruoyi.phone.domain.PhoneOrder;
 
 /**
  * 余额充值记录Service接口
@@ -33,7 +36,7 @@ public interface IPhoneBalanceLogService
      * @param phoneBalanceLog 余额充值记录
      * @return 结果
      */
-    public int insertPhoneBalanceLog(PhoneBalanceLog phoneBalanceLog);
+    public PhoneBalanceLog insertPhoneBalanceLog(PhoneBalanceLog phoneBalanceLog);
 
     /**
      * 修改余额充值记录
@@ -58,4 +61,20 @@ public interface IPhoneBalanceLogService
      * @return 结果
      */
     public int deletePhoneBalanceLogById(Long id);
+
+    /**
+     * 发起支付
+     *
+     * @param phoneBalanceLog 发起支付
+     * @return 结果
+     */
+    public WxPayMpOrderResult pay(PhoneBalanceLog phoneBalanceLog);
+
+    /**
+     * 支付通知
+     *
+     * @param xmlData 支付通知
+     * @return 结果
+     */
+    public String payNotify(String appid,String xmlData);
 }

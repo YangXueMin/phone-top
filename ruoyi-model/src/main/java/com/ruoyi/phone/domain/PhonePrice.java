@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 价格配置对象 phone_price
  *
  * @author ruoyi
- * @date 2024-03-05
+ * @date 2024-03-07
  */
 @ApiModel(value = "PhonePrice", description = "价格配置")
 @ToString
@@ -60,6 +60,16 @@ public class PhonePrice extends BaseEntity{
     @Excel(name = "会员价")
     @ApiModelProperty("会员价")
     private BigDecimal memberPrice;
+
+    /** 直推佣金 */
+    @Excel(name = "直推佣金")
+    @ApiModelProperty("直推佣金")
+    private BigDecimal directCommission;
+
+    /** 间推佣金 */
+    @Excel(name = "间推佣金")
+    @ApiModelProperty("间推佣金")
+    private BigDecimal indirectCommission;
 
     /** 显示顺序 */
     @Excel(name = "显示顺序")
@@ -128,6 +138,20 @@ public class PhonePrice extends BaseEntity{
 
     public BigDecimal getMemberPrice(){
         return memberPrice;
+    }
+    public void setDirectCommission(BigDecimal directCommission){
+        this.directCommission = directCommission;
+    }
+
+    public BigDecimal getDirectCommission(){
+        return directCommission;
+    }
+    public void setIndirectCommission(BigDecimal indirectCommission){
+        this.indirectCommission = indirectCommission;
+    }
+
+    public BigDecimal getIndirectCommission(){
+        return indirectCommission;
     }
     public void setOrderNum(Long orderNum){
         this.orderNum = orderNum;

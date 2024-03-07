@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 余额充值记录对象 phone_balance_log
  *
  * @author ruoyi
- * @date 2024-03-05
+ * @date 2024-03-07
  */
 @ApiModel(value = "PhoneBalanceLog", description = "余额充值记录")
 @ToString
@@ -36,6 +36,11 @@ public class PhoneBalanceLog extends BaseEntity{
     @ApiModelProperty("会员ID")
     private Long memberId;
 
+    /** 订单编号 */
+    @Excel(name = "订单编号")
+    @ApiModelProperty("订单编号")
+    private String orderNo;
+
     /** 变更类型（充值，消费） */
     @Excel(name = "变更类型", readConverterExp = "充=值，消费")
     @ApiModelProperty("变更类型")
@@ -55,6 +60,11 @@ public class PhoneBalanceLog extends BaseEntity{
     @Excel(name = "变更后金额")
     @ApiModelProperty("变更后金额")
     private BigDecimal balanceAfter;
+
+    /** 支付状态（待支付：1，已支付：2，已退款：3，已取消:4） */
+    @Excel(name = "支付状态", readConverterExp = "待=支付：1，已支付：2，已退款：3，已取消:4")
+    @ApiModelProperty("支付状态")
+    private String payStatus;
 
     /** 支付时间 */
     @Excel(name = "支付时间")
@@ -94,6 +104,13 @@ public class PhoneBalanceLog extends BaseEntity{
     public Long getMemberId(){
         return memberId;
     }
+    public void setOrderNo(String orderNo){
+        this.orderNo = orderNo;
+    }
+
+    public String getOrderNo(){
+        return orderNo;
+    }
     public void setType(String type){
         this.type = type;
     }
@@ -121,6 +138,13 @@ public class PhoneBalanceLog extends BaseEntity{
 
     public BigDecimal getBalanceAfter(){
         return balanceAfter;
+    }
+    public void setPayStatus(String payStatus){
+        this.payStatus = payStatus;
+    }
+
+    public String getPayStatus(){
+        return payStatus;
     }
     public void setPayTime(String payTime){
         this.payTime = payTime;

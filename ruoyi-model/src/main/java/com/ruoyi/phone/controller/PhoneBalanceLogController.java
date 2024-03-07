@@ -82,7 +82,7 @@ public class PhoneBalanceLogController extends BaseController {
     @Log(title = "余额充值记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PhoneBalanceLog phoneBalanceLog) {
-        return toAjax(phoneBalanceLogService.insertPhoneBalanceLog(phoneBalanceLog));
+        return success(phoneBalanceLogService.insertPhoneBalanceLog(phoneBalanceLog));
     }
 
     /**

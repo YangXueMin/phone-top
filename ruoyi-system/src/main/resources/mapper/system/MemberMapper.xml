@@ -18,6 +18,7 @@
         <result property="balance"    column="balance"    />
         <result property="openId"    column="open_id"    />
         <result property="isMember"    column="is_member"    />
+        <result property="expirationTime"    column="expiration_time"    />
         <result property="isBlacklist"    column="is_blacklist"    />
         <result property="memberId"    column="member_id"    />
         <result property="ancestors"    column="ancestors"    />
@@ -46,6 +47,7 @@
             balance,
             open_id,
             is_member,
+            expiration_time,
             is_blacklist,
             member_id,
             ancestors,
@@ -112,6 +114,7 @@
             <if test="balance != null">balance,</if>
             <if test="openId != null">open_id,</if>
             <if test="isMember != null">is_member,</if>
+            <if test="expirationTime != null">expiration_time,</if>
             <if test="isBlacklist != null">is_blacklist,</if>
             <if test="memberId != null">member_id,</if>
             <if test="ancestors != null">ancestors,</if>
@@ -138,6 +141,7 @@
             <if test="balance != null">#{balance},</if>
             <if test="openId != null">#{openId},</if>
             <if test="isMember != null">#{isMember},</if>
+            <if test="expirationTime != null">#{expirationTime},</if>
             <if test="isBlacklist != null">#{isBlacklist},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="ancestors != null">#{ancestors},</if>
@@ -167,6 +171,7 @@
             <if test="balance != null">balance = #{balance},</if>
             <if test="openId != null">open_id = #{openId},</if>
             <if test="isMember != null">is_member = #{isMember},</if>
+            <if test="expirationTime != null">expiration_time = #{expirationTime},</if>
             <if test="isBlacklist != null">is_blacklist = #{isBlacklist},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="ancestors != null">ancestors = #{ancestors},</if>

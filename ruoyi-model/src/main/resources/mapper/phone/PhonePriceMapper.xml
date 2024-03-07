@@ -14,6 +14,8 @@
         <result property="discount"    column="discount"    />
         <result property="sellPrice"    column="sell_price"    />
         <result property="memberPrice"    column="member_price"    />
+        <result property="directCommission"    column="direct_commission"    />
+        <result property="indirectCommission"    column="indirect_commission"    />
         <result property="orderNum"    column="order_num"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -33,6 +35,8 @@
             discount,
             sell_price,
             member_price,
+            direct_commission,
+            indirect_commission,
             order_num,
             create_by,
             create_time,
@@ -53,6 +57,8 @@
             <if test="discount != null "> and discount = #{discount}</if>
             <if test="sellPrice != null "> and sell_price = #{sellPrice}</if>
             <if test="memberPrice != null "> and member_price = #{memberPrice}</if>
+            <if test="directCommission != null "> and direct_commission = #{directCommission}</if>
+            <if test="indirectCommission != null "> and indirect_commission = #{indirectCommission}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
     </select>
@@ -73,6 +79,8 @@
             <if test="discount != null">discount,</if>
             <if test="sellPrice != null">sell_price,</if>
             <if test="memberPrice != null">member_price,</if>
+            <if test="directCommission != null">direct_commission,</if>
+            <if test="indirectCommission != null">indirect_commission,</if>
             <if test="orderNum != null">order_num,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -89,6 +97,8 @@
             <if test="discount != null">#{discount},</if>
             <if test="sellPrice != null">#{sellPrice},</if>
             <if test="memberPrice != null">#{memberPrice},</if>
+            <if test="directCommission != null">#{directCommission},</if>
+            <if test="indirectCommission != null">#{indirectCommission},</if>
             <if test="orderNum != null">#{orderNum},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -109,6 +119,8 @@
             <if test="discount != null">discount = #{discount},</if>
             <if test="sellPrice != null">sell_price = #{sellPrice},</if>
             <if test="memberPrice != null">member_price = #{memberPrice},</if>
+            <if test="directCommission != null">direct_commission = #{directCommission},</if>
+            <if test="indirectCommission != null">indirect_commission = #{indirectCommission},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

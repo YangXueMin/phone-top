@@ -41,6 +41,11 @@ public class PhoneCoupon extends BaseEntity{
     @ApiModelProperty("有效期")
     private Long termValidity;
 
+    /** 充值金额 */
+    @Excel(name = "充值金额")
+    @ApiModelProperty("充值金额")
+    private BigDecimal rechargeAmount;
+
     /** 满多少元 */
     @Excel(name = "满多少元")
     @ApiModelProperty("满多少元")
@@ -52,7 +57,7 @@ public class PhoneCoupon extends BaseEntity{
     private BigDecimal minusMoney;
 
     /** 发放方式（邀请：1，充值：2） */
-    @Excel(name = "发放方式", readConverterExp = "邀请：1，充值：2")
+    @Excel(name = "发放方式", readConverterExp = "邀请：1，充值：2,首单：3")
     @ApiModelProperty("发放方式")
     private String distributionMode;
 
@@ -62,7 +67,7 @@ public class PhoneCoupon extends BaseEntity{
     private Long number;
 
     /** 状态（正常：1，停用：2） */
-    @Excel(name = "状态", readConverterExp = "正常：1，停用：2")
+    @Excel(name = "状态", readConverterExp = "正=常：1，停用：2")
     @ApiModelProperty("状态")
     private String status;
 
@@ -100,6 +105,13 @@ public class PhoneCoupon extends BaseEntity{
 
     public Long getTermValidity(){
         return termValidity;
+    }
+    public void setRechargeAmount(BigDecimal rechargeAmount){
+        this.rechargeAmount = rechargeAmount;
+    }
+
+    public BigDecimal getRechargeAmount(){
+        return rechargeAmount;
     }
     public void setFullMoney(BigDecimal fullMoney){
         this.fullMoney = fullMoney;

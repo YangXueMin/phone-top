@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
@@ -17,17 +18,15 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.phone.domain.PhoneBalanceLog;
-import com.ruoyi.phone.domain.PhoneMemberCardLog;
-import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
+import com.ruoyi.phone.domain.*;
+import com.ruoyi.phone.mapper.*;
+import com.ruoyi.phone.service.*;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.phone.mapper.PhoneOrderMapper;
-import com.ruoyi.phone.domain.PhoneOrder;
-import com.ruoyi.phone.service.IPhoneOrderService;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -48,6 +47,16 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     private PhoneBalanceLogMapper phoneBalanceLogMapper;
     @Autowired
     private IWechatConfigService wechatConfigService;
+    @Autowired
+    private PhoneInterfaceConfigMapper phoneInterfaceConfigMapper;
+    @Autowired
+    private PhonePriceMapper phonePriceMapper;
+    @Autowired
+    private PhoneCommissionConfigMapper phoneCommissionConfigMapper;
+    @Autowired
+    private PhoneCouponMapper phoneCouponMapper;
+    @Autowired
+    private PhoneMemberCouponMapper phoneMemberCouponMapper;
 
     /**
      * 查询订单记录
@@ -80,17 +89,19 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PhoneOrder insertPhoneOrder(PhoneOrder phoneOrder) {
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneOrder.getAppId());
+        phoneOrder.setCompanyId(wechatConfig.getCompanyId());
         phoneOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         phoneOrder.setCreateTime(DateUtils.getNowDate());
 
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
         BigDecimal balance = member.getBalance();
         phoneOrder.setArrivalStatus("1");
-        if(StringUtils.equals("1",phoneOrder.getPayType())){
+        if (StringUtils.equals("1", phoneOrder.getPayType())) {
             phoneOrder.setPayMoney(phoneOrder.getMoney());
             phoneOrder.setPayBalance(BigDecimal.ZERO);
             phoneOrder.setPayStatus("1");
-        }else{
+        } else {
             BigDecimal money;
             if (phoneOrder.getMoney().compareTo(member.getBalance()) > 0) {
                 member.setBalance(BigDecimal.ZERO);
@@ -119,6 +130,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
         }
         phoneOrderMapper.insertPhoneOrder(phoneOrder);
+        updateMemberInfo(phoneOrder, member);
         return phoneOrder;
     }
 
@@ -177,18 +189,18 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         //小程序用户openid
         request.setOpenid(member.getOpenId());
         StringBuilder sb = new StringBuilder();
-        if(StringUtils.equals("0",phoneOrder.getMethod())){
-            if(StringUtils.equals("4",phoneOrder.getType())){
+        if (StringUtils.equals("0", phoneOrder.getMethod())) {
+            if (StringUtils.equals("4", phoneOrder.getType())) {
                 sb.append("国家电网电费缴存");
-            }else{
+            } else {
                 sb.append("南方电网电费缴存");
             }
-        }else{
-            if(StringUtils.equals("1",phoneOrder.getType())){
+        } else {
+            if (StringUtils.equals("1", phoneOrder.getType())) {
                 sb.append("移动话费缴存");
-            }else if(StringUtils.equals("2",phoneOrder.getType())){
+            } else if (StringUtils.equals("2", phoneOrder.getType())) {
                 sb.append("联通话费缴存");
-            }else{
+            } else {
                 sb.append("电信话费缴存");
             }
         }
@@ -212,11 +224,13 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 if (phoneOrderList != null && phoneOrderList.size() > 0) {
                     PhoneOrder phoneOrder = phoneOrderList.get(0);
                     if (!StringUtils.equals("2", phoneOrder.getPayStatus())) {
+                        Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
                         phoneOrder.setPayStatus("2");
                         phoneOrder.setPayTime(notifyResult.getTimeEnd());
                         phoneOrder.setPayResult(JSON.toJSONString(notifyResult));
                         phoneOrder.setUpdateTime(DateUtils.getNowDate());
                         phoneOrderMapper.updatePhoneOrder(phoneOrder);
+                        updateMemberInfo(phoneOrder, member);
                     }
                 }
                 return WxPayNotifyResponse.success("成功");
@@ -225,5 +239,118 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             e.printStackTrace();
         }
         return WxPayNotifyResponse.fail("失败");
+    }
+
+    /**
+     * 更新会员相关数据
+     *
+     * @param phoneOrder
+     * @param member
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMemberInfo(PhoneOrder phoneOrder, Member member) {
+        if (StringUtils.equals("2", phoneOrder.getPayStatus())) {
+            //如果是直充
+            PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
+            phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
+            phoneInterfaceConfig.setType(phoneOrder.getMethod());
+            List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
+            if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
+                phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
+                if (StringUtils.equals("2", phoneInterfaceConfig.getInterfaceType())) {
+                    //TODO 调用第三方接口
+                }
+            }
+            //如果是被推荐用户获取上级
+            if (member.getMemberId() != null) {
+                //获取佣金
+                final PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
+                if (phonePrice != null) {
+                    Member agency = memberMapper.selectMemberById(member.getMemberId());
+                    if (agency != null) {
+                        BigDecimal agencyBalance = agency.getCommissionBalance();
+                        agency.setCommissionBalance(agencyBalance.add(phonePrice.getDirectCommission()));
+                        memberMapper.updateMember(agency);
+                        //添加佣金记录
+                        PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
+                        phoneCommissionConfig.setCompanyId(phoneOrder.getCompanyId());
+                        phoneCommissionConfig.setAppId(phoneOrder.getAppId());
+                        phoneCommissionConfig.setCommissionBefore(agencyBalance);
+                        phoneCommissionConfig.setMoney(phonePrice.getDirectCommission());
+                        phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
+                        phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                        phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
+                        if (agency.getMemberId() != null) {
+                            Member secondary = memberMapper.selectMemberById(member.getMemberId());
+                            if (secondary != null) {
+                                BigDecimal secondaryBalance = secondary.getCommissionBalance();
+                                secondary.setCommissionBalance(secondaryBalance.add(phonePrice.getIndirectCommission()));
+                                memberMapper.updateMember(secondary);
+                                //添加佣金记录
+                                PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
+                                secondaryPhoneCommissionConfig.setCompanyId(phoneOrder.getCompanyId());
+                                secondaryPhoneCommissionConfig.setAppId(phoneOrder.getAppId());
+                                secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
+                                secondaryPhoneCommissionConfig.setMoney(phonePrice.getIndirectCommission());
+                                secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
+                                secondaryPhoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                                phoneCommissionConfigMapper.insertPhoneCommissionConfig(secondaryPhoneCommissionConfig);
+                            }
+                        }
+                    }
+                }
+            }
+            //送优惠券
+            PhoneCoupon phoneCoupon = new PhoneCoupon();
+            phoneCoupon.setAppId(phoneOrder.getAppId());
+            List<PhoneCoupon> phoneCouponList = phoneCouponMapper.selectPhoneCouponList(phoneCoupon);
+            if (phoneCouponList.size() > 0) {
+                List<PhoneMemberCoupon> memberCouponList = new ArrayList<>();
+                for (PhoneCoupon coupon : phoneCouponList) {
+                    switch (coupon.getDistributionMode()) {
+                        case "1":
+                            //充值送
+                            if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
+                                phoneMemberCoupon.setCompanyId(phoneOrder.getCompanyId());
+                                phoneMemberCoupon.setAppId(phoneOrder.getAppId());
+                                phoneMemberCoupon.setMemberId(member.getId());
+                                phoneMemberCoupon.setCouponId(coupon.getId());
+                                phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
+                                phoneMemberCoupon.setStatus("1");
+                                phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
+                                memberCouponList.add(phoneMemberCoupon);
+                            }
+                            break;
+                        case "3":
+                            //首单送
+                            PhoneOrder queryOrder = new PhoneOrder();
+                            queryOrder.setMemberId(member.getId());
+                            List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
+                            if (phoneOrderList.size() == 1) {
+                                if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                    PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
+                                    phoneMemberCoupon.setCompanyId(phoneOrder.getCompanyId());
+                                    phoneMemberCoupon.setAppId(phoneOrder.getAppId());
+                                    phoneMemberCoupon.setMemberId(member.getId());
+                                    phoneMemberCoupon.setCouponId(coupon.getId());
+                                    phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
+                                    phoneMemberCoupon.setStatus("1");
+                                    phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
+                                    memberCouponList.add(phoneMemberCoupon);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if(memberCouponList.size() > 0){
+                    for (PhoneMemberCoupon phoneMemberCoupon : memberCouponList) {
+                        phoneMemberCouponMapper.insertPhoneMemberCoupon(phoneMemberCoupon);
+                    }
+                }
+            }
+        }
     }
 }

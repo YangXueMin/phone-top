@@ -30,6 +30,14 @@ public interface PhoneBalanceLogMapper
     public List<PhoneBalanceLog> selectPhoneBalanceLogList(PhoneBalanceLog phoneBalanceLog);
 
     /**
+     * 查询余额充值记录列表
+     *
+     * @param phoneBalanceLog 余额充值记录
+     * @return 余额充值记录集合
+     */
+    public List<PhoneBalanceLog> selectPhoneBalanceLogByOrderNo(String orderNo);
+
+    /**
      * 新增余额充值记录
      *
      * @param phoneBalanceLog 余额充值记录

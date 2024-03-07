@@ -9,6 +9,7 @@
         <result property="companyId"    column="company_id"    />
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
+        <result property="priceId"    column="price_id"    />
         <result property="orderNo"    column="order_no"    />
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
@@ -39,6 +40,7 @@
             company_id,
             app_id,
             member_id,
+            price_id,
             order_no,
             method,
             type,
@@ -70,6 +72,7 @@
             <if test="companyId != null "> and company_id = #{companyId}</if>
             <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="priceId != null "> and price_id = #{priceId}</if>
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="method != null  and method != ''"> and method = #{method}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
@@ -90,6 +93,11 @@
         </where>
     </select>
 
+    <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
+        <include refid="selectPhoneOrderVo"/>
+        where order_no = #{orderNo}
+    </select>
+
     <select id="selectPhoneOrderById" parameterType="Long" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         where id = #{id}
@@ -102,6 +110,7 @@
             <if test="companyId != null">company_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
+            <if test="priceId != null">price_id,</if>
             <if test="orderNo != null">order_no,</if>
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
@@ -130,6 +139,7 @@
             <if test="companyId != null">#{companyId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
+            <if test="priceId != null">#{priceId},</if>
             <if test="orderNo != null">#{orderNo},</if>
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
@@ -161,6 +171,7 @@
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="priceId != null">price_id = #{priceId},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>

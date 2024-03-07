@@ -36,6 +36,11 @@ public class PhoneOrder extends BaseEntity{
     @ApiModelProperty("会员ID")
     private Long memberId;
 
+    /** 价格ID */
+    @Excel(name = "价格ID")
+    @ApiModelProperty("价格ID")
+    private Long priceId;
+
     /** 订单号 */
     @Excel(name = "订单号")
     @ApiModelProperty("订单号")
@@ -269,4 +274,11 @@ public class PhoneOrder extends BaseEntity{
         return payResult;
     }
 
+    public Long getPriceId() {
+        return priceId;
+    }
+
+    public void setPriceId(Long priceId) {
+        this.priceId = priceId;
+    }
 }

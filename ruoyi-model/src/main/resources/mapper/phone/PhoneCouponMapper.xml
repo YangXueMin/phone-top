@@ -10,6 +10,7 @@
         <result property="appId"    column="app_id"    />
         <result property="title"    column="title"    />
         <result property="termValidity"    column="term_validity"    />
+        <result property="rechargeAmount"    column="recharge_amount"    />
         <result property="fullMoney"    column="full_money"    />
         <result property="minusMoney"    column="minus_money"    />
         <result property="distributionMode"    column="distribution_mode"    />
@@ -29,6 +30,7 @@
             app_id,
             title,
             term_validity,
+            recharge_amount,
             full_money,
             minus_money,
             distribution_mode,
@@ -49,6 +51,7 @@
             <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="termValidity != null "> and term_validity = #{termValidity}</if>
+            <if test="rechargeAmount != null "> and recharge_amount = #{rechargeAmount}</if>
             <if test="fullMoney != null "> and full_money = #{fullMoney}</if>
             <if test="minusMoney != null "> and minus_money = #{minusMoney}</if>
             <if test="distributionMode != null  and distributionMode != ''"> and distribution_mode = #{distributionMode}</if>
@@ -69,6 +72,7 @@
             <if test="appId != null">app_id,</if>
             <if test="title != null">title,</if>
             <if test="termValidity != null">term_validity,</if>
+            <if test="rechargeAmount != null">recharge_amount,</if>
             <if test="fullMoney != null">full_money,</if>
             <if test="minusMoney != null">minus_money,</if>
             <if test="distributionMode != null">distribution_mode,</if>
@@ -85,6 +89,7 @@
             <if test="appId != null">#{appId},</if>
             <if test="title != null">#{title},</if>
             <if test="termValidity != null">#{termValidity},</if>
+            <if test="rechargeAmount != null">#{rechargeAmount},</if>
             <if test="fullMoney != null">#{fullMoney},</if>
             <if test="minusMoney != null">#{minusMoney},</if>
             <if test="distributionMode != null">#{distributionMode},</if>
@@ -105,6 +110,7 @@
             <if test="appId != null">app_id = #{appId},</if>
             <if test="title != null">title = #{title},</if>
             <if test="termValidity != null">term_validity = #{termValidity},</if>
+            <if test="rechargeAmount != null">recharge_amount = #{rechargeAmount},</if>
             <if test="fullMoney != null">full_money = #{fullMoney},</if>
             <if test="minusMoney != null">minus_money = #{minusMoney},</if>
             <if test="distributionMode != null">distribution_mode = #{distributionMode},</if>

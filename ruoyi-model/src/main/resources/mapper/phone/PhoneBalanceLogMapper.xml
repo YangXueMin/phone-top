@@ -9,10 +9,12 @@
         <result property="companyId"    column="company_id"    />
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
+        <result property="orderNo"    column="order_no"    />
         <result property="type"    column="type"    />
         <result property="balanceBefore"    column="balance_before"    />
         <result property="money"    column="money"    />
         <result property="balanceAfter"    column="balance_after"    />
+        <result property="payStatus"    column="pay_status"    />
         <result property="payTime"    column="pay_time"    />
         <result property="payResult"    column="pay_result"    />
         <result property="createBy"    column="create_by"    />
@@ -28,10 +30,12 @@
             company_id,
             app_id,
             member_id,
+            order_no,
             type,
             balance_before,
             money,
             balance_after,
+            pay_status,
             pay_time,
             pay_result,
             create_by,
@@ -48,13 +52,20 @@
             <if test="companyId != null "> and company_id = #{companyId}</if>
             <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
             <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="balanceBefore != null "> and balance_before = #{balanceBefore}</if>
             <if test="money != null "> and money = #{money}</if>
             <if test="balanceAfter != null "> and balance_after = #{balanceAfter}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
             <if test="payTime != null  and payTime != ''"> and pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and pay_result = #{payResult}</if>
         </where>
+    </select>
+
+    <select id="selectPhoneBalanceLogByOrderNo" parameterType="string" resultMap="PhoneBalanceLogResult">
+        <include refid="selectPhoneBalanceLogVo"/>
+        where order_no = #{orderNo}
     </select>
 
     <select id="selectPhoneBalanceLogById" parameterType="Long" resultMap="PhoneBalanceLogResult">
@@ -68,10 +79,12 @@
             <if test="companyId != null">company_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
+            <if test="orderNo != null">order_no,</if>
             <if test="type != null">type,</if>
             <if test="balanceBefore != null">balance_before,</if>
             <if test="money != null">money,</if>
             <if test="balanceAfter != null">balance_after,</if>
+            <if test="payStatus != null">pay_status,</if>
             <if test="payTime != null">pay_time,</if>
             <if test="payResult != null">pay_result,</if>
             <if test="createBy != null">create_by,</if>
@@ -84,10 +97,12 @@
             <if test="companyId != null">#{companyId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
+            <if test="orderNo != null">#{orderNo},</if>
             <if test="type != null">#{type},</if>
             <if test="balanceBefore != null">#{balanceBefore},</if>
             <if test="money != null">#{money},</if>
             <if test="balanceAfter != null">#{balanceAfter},</if>
+            <if test="payStatus != null">#{payStatus},</if>
             <if test="payTime != null">#{payTime},</if>
             <if test="payResult != null">#{payResult},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -104,10 +119,12 @@
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="type != null">type = #{type},</if>
             <if test="balanceBefore != null">balance_before = #{balanceBefore},</if>
             <if test="money != null">money = #{money},</if>
             <if test="balanceAfter != null">balance_after = #{balanceAfter},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
             <if test="payTime != null">pay_time = #{payTime},</if>
             <if test="payResult != null">pay_result = #{payResult},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
