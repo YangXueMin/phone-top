@@ -30,68 +30,75 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectMemberVo">
         select
-            id,
-           company_id,
-           app_id,
-            name,
-            avatar,
-            number,
-            password,
-            mobile,
-            sex,
-            birthday,
-            balance,
-            open_id,
-            is_member,
-            expiration_time,
-            is_blacklist,
-            member_id,
-            ancestors,
-            del_flag,
-            login_ip,
-            login_date,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_member
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.name,
+            a.avatar,
+            a.number,
+            a.password,
+            a.mobile,
+            a.sex,
+            a.birthday,
+            a.balance,
+            a.open_id,
+            a.is_member,
+            a.expiration_time,
+            a.is_blacklist,
+            a.member_id,
+            a.ancestors,
+            a.del_flag,
+            a.login_ip,
+            a.login_date,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_member a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">
         <include refid="selectMemberVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null and appId != ''"> and app_id = #{appId}</if>
-            <if test="number != null "> and number = #{number}</if>
-            <if test="mobile != null  and mobile != ''"> and mobile like concat('%', #{mobile}, '%')</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
-            <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
-            <if test="isBlacklist != null  and isBlacklist != ''"> and is_blacklist = #{isBlacklist}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
-            <if test="ancestors != null "> and ancestors = #{ancestors}</if>
-            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="loginDate != null "> and login_date = #{loginDate}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="number != null "> and a.number = #{number}</if>
+            <if test="mobile != null  and mobile != ''"> and a.mobile like concat('%', #{mobile}, '%')</if>
+            <if test="sex != null  and sex != ''"> and a.sex = #{sex}</if>
+            <if test="openId != null  and openId != ''"> and a.open_id = #{openId}</if>
+            <if test="isMember != null  and isMember != ''"> and a.is_member = #{isMember}</if>
+            <if test="isBlacklist != null  and isBlacklist != ''"> and a.is_blacklist = #{isBlacklist}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="ancestors != null "> and a.ancestors = #{ancestors}</if>
+            <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
+            <if test="loginDate != null "> and a.login_date = #{loginDate}</if>
         </where>
-        order by create_time DESC
+        order by a.create_time DESC
     </select>
 
     <select id="selectMemberListByOpenId" parameterType="Member" resultMap="MemberResult">
         <include refid="selectMemberVo"/>
         <where>
-            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="openId != null  and openId != ''"> and a.open_id = #{openId}</if>
         </where>
     </select>
 
     <select id="selectMemberById" parameterType="Long" resultMap="MemberResult">
         <include refid="selectMemberVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <select id="checkMobileUnique" parameterType="String" resultMap="MemberResult">

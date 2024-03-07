@@ -19,44 +19,51 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectPhoneInterfaceConfigVo">
         select
-            id,
-            company_id,
-            app_id,
-            type,
-            switch_type,
-            interface_type,
-            interface_url,
-            mch_id,
-            api_key,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_interface_config
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.type,
+            a.switch_type,
+            a.interface_type,
+            a.interface_url,
+            a.mch_id,
+            a.api_key,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_interface_config a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectPhoneInterfaceConfigList" parameterType="PhoneInterfaceConfig" resultMap="PhoneInterfaceConfigResult">
         <include refid="selectPhoneInterfaceConfigVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="switchType != null  and switchType != ''"> and switch_type = #{switchType}</if>
-            <if test="interfaceType != null  and interfaceType != ''"> and interface_type = #{interfaceType}</if>
-            <if test="interfaceUrl != null  and interfaceUrl != ''"> and interface_url = #{interfaceUrl}</if>
-            <if test="mchId != null  and mchId != ''"> and mch_id = #{mchId}</if>
-            <if test="apiKey != null  and apiKey != ''"> and api_key = #{apiKey}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
+            <if test="switchType != null  and switchType != ''"> and a.switch_type = #{switchType}</if>
+            <if test="interfaceType != null  and interfaceType != ''"> and a.interface_type = #{interfaceType}</if>
+            <if test="interfaceUrl != null  and interfaceUrl != ''"> and a.interface_url = #{interfaceUrl}</if>
+            <if test="mchId != null  and mchId != ''"> and a.mch_id = #{mchId}</if>
+            <if test="apiKey != null  and apiKey != ''"> and a.api_key = #{apiKey}</if>
         </where>
     </select>
 
     <select id="selectPhoneInterfaceConfigById" parameterType="Long" resultMap="PhoneInterfaceConfigResult">
         <include refid="selectPhoneInterfaceConfigVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneInterfaceConfig" parameterType="PhoneInterfaceConfig" useGeneratedKeys="true" keyProperty="id">

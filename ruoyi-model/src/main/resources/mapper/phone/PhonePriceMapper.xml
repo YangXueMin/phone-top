@@ -22,50 +22,57 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectPhonePriceVo">
         select
-            id,
-            company_id,
-            config_id,
-            method,
-            type,
-            original_price,
-            discount,
-            sell_price,
-            member_price,
-            direct_commission,
-            indirect_commission,
-            order_num,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_price
+            a.id,
+            a.company_id,
+            a.config_id,
+            a.method,
+            a.type,
+            a.original_price,
+            a.discount,
+            a.sell_price,
+            a.member_price,
+            a.direct_commission,
+            a.indirect_commission,
+            a.order_num,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_price a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectPhonePriceList" parameterType="PhonePrice" resultMap="PhonePriceResult">
         <include refid="selectPhonePriceVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="configId != null "> and config_id = #{configId}</if>
-            <if test="method != null  and method != ''"> and method = #{method}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="originalPrice != null "> and original_price = #{originalPrice}</if>
-            <if test="discount != null "> and discount = #{discount}</if>
-            <if test="sellPrice != null "> and sell_price = #{sellPrice}</if>
-            <if test="memberPrice != null "> and member_price = #{memberPrice}</if>
-            <if test="directCommission != null "> and direct_commission = #{directCommission}</if>
-            <if test="indirectCommission != null "> and indirect_commission = #{indirectCommission}</if>
-            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="configId != null "> and a.config_id = #{configId}</if>
+            <if test="method != null  and method != ''"> and a.method = #{method}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
+            <if test="originalPrice != null "> and a.original_price = #{originalPrice}</if>
+            <if test="discount != null "> and a.discount = #{discount}</if>
+            <if test="sellPrice != null "> and a.sell_price = #{sellPrice}</if>
+            <if test="memberPrice != null "> and a.member_price = #{memberPrice}</if>
+            <if test="directCommission != null "> and a.direct_commission = #{directCommission}</if>
+            <if test="indirectCommission != null "> and a.indirect_commission = #{indirectCommission}</if>
+            <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
         </where>
     </select>
 
     <select id="selectPhonePriceById" parameterType="Long" resultMap="PhonePriceResult">
         <include refid="selectPhonePriceVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhonePrice" parameterType="PhonePrice" useGeneratedKeys="true" keyProperty="id">

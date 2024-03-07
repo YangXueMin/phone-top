@@ -21,48 +21,55 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectPhoneCouponVo">
         select
-            id,
-            company_id,
-            app_id,
-            title,
-            term_validity,
-            recharge_amount,
-            full_money,
-            minus_money,
-            distribution_mode,
-            number,
-            status,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_coupon
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.title,
+            a.term_validity,
+            a.recharge_amount,
+            a.full_money,
+            a.minus_money,
+            a.distribution_mode,
+            a.number,
+            a.status,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_coupon a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectPhoneCouponList" parameterType="PhoneCoupon" resultMap="PhoneCouponResult">
         <include refid="selectPhoneCouponVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="termValidity != null "> and term_validity = #{termValidity}</if>
-            <if test="rechargeAmount != null "> and recharge_amount = #{rechargeAmount}</if>
-            <if test="fullMoney != null "> and full_money = #{fullMoney}</if>
-            <if test="minusMoney != null "> and minus_money = #{minusMoney}</if>
-            <if test="distributionMode != null  and distributionMode != ''"> and distribution_mode = #{distributionMode}</if>
-            <if test="number != null "> and number = #{number}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="termValidity != null "> and a.term_validity = #{termValidity}</if>
+            <if test="rechargeAmount != null "> and a.recharge_amount = #{rechargeAmount}</if>
+            <if test="fullMoney != null "> and a.full_money = #{fullMoney}</if>
+            <if test="minusMoney != null "> and a.minus_money = #{minusMoney}</if>
+            <if test="distributionMode != null  and distributionMode != ''"> and a.distribution_mode = #{distributionMode}</if>
+            <if test="number != null "> and a.number = #{number}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
     </select>
 
     <select id="selectPhoneCouponById" parameterType="Long" resultMap="PhoneCouponResult">
         <include refid="selectPhoneCouponVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneCoupon" parameterType="PhoneCoupon" useGeneratedKeys="true" keyProperty="id">

@@ -139,6 +139,8 @@ public class Member extends BaseEntity {
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginDate;
 
+    private WechatConfig wechatConfig;
+
     public Long getId() {
         return id;
     }
@@ -305,5 +307,13 @@ public class Member extends BaseEntity {
 
     public void setExpirationTime(Date expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
     }
 }

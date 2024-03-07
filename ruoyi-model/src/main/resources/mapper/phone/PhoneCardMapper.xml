@@ -19,44 +19,74 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
     </resultMap>
 
     <sql id="selectPhoneCardVo">
         select
-            id,
-            company_id,
-            app_id,
-            card_no,
-            price,
-            status,
-            cancel_status,
-            cancel_time,
-            member_id,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_card
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.card_no,
+            a.price,
+            a.status,
+            a.cancel_status,
+            a.cancel_time,
+            a.member_id,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle,
+            m.name AS memberName,
+            m.avatar AS memberAvatar,
+            m.number,
+            m.mobile AS memberMobile,
+            m.sex,
+            m.birthday,
+            m.balance,
+            m.open_id,
+            m.is_member
+        from phone_card  a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectPhoneCardList" parameterType="PhoneCard" resultMap="PhoneCardResult">
         <include refid="selectPhoneCardVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
-            <if test="price != null "> and price = #{price}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="cancelStatus != null  and cancelStatus != ''"> and cancel_status = #{cancelStatus}</if>
-            <if test="cancelTime != null "> and cancel_time = #{cancelTime}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and a.card_no = #{cardNo}</if>
+            <if test="price != null "> and a.price = #{price}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
+            <if test="cancelTime != null "> and a.cancel_time = #{cancelTime}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
         </where>
     </select>
 
     <select id="selectPhoneCardById" parameterType="Long" resultMap="PhoneCardResult">
         <include refid="selectPhoneCardVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneCard" parameterType="PhoneCard" useGeneratedKeys="true" keyProperty="id">

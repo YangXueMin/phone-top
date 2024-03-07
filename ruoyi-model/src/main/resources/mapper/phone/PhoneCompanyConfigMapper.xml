@@ -20,46 +20,53 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectPhoneCompanyConfigVo">
         select
-            id,
-            company_id,
-            app_id,
-            promotion_poster,
-            slow_charging_content,
-            quick_charge_content,
-            electricity_content,
-            share_title,
-            share_content,
-            share_photo,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_company_config
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.promotion_poster,
+            a.slow_charging_content,
+            a.quick_charge_content,
+            a.electricity_content,
+            a.share_title,
+            a.share_content,
+            a.share_photo,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_company_config a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectPhoneCompanyConfigList" parameterType="PhoneCompanyConfig" resultMap="PhoneCompanyConfigResult">
         <include refid="selectPhoneCompanyConfigVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="promotionPoster != null  and promotionPoster != ''"> and promotion_poster = #{promotionPoster}</if>
-            <if test="slowChargingContent != null  and slowChargingContent != ''"> and slow_charging_content = #{slowChargingContent}</if>
-            <if test="quickChargeContent != null  and quickChargeContent != ''"> and quick_charge_content = #{quickChargeContent}</if>
-            <if test="electricityContent != null  and electricityContent != ''"> and electricity_content = #{electricityContent}</if>
-            <if test="shareTitle != null  and shareTitle != ''"> and share_title = #{shareTitle}</if>
-            <if test="shareContent != null  and shareContent != ''"> and share_content = #{shareContent}</if>
-            <if test="sharePhoto != null  and sharePhoto != ''"> and share_photo = #{sharePhoto}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="promotionPoster != null  and promotionPoster != ''"> and a.promotion_poster = #{promotionPoster}</if>
+            <if test="slowChargingContent != null  and slowChargingContent != ''"> and a.slow_charging_content = #{slowChargingContent}</if>
+            <if test="quickChargeContent != null  and quickChargeContent != ''"> and a.quick_charge_content = #{quickChargeContent}</if>
+            <if test="electricityContent != null  and electricityContent != ''"> and a.electricity_content = #{electricityContent}</if>
+            <if test="shareTitle != null  and shareTitle != ''"> and a.share_title = #{shareTitle}</if>
+            <if test="shareContent != null  and shareContent != ''"> and a.share_content = #{shareContent}</if>
+            <if test="sharePhoto != null  and sharePhoto != ''"> and a.share_photo = #{sharePhoto}</if>
         </where>
     </select>
 
     <select id="selectPhoneCompanyConfigById" parameterType="Long" resultMap="PhoneCompanyConfigResult">
         <include refid="selectPhoneCompanyConfigVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneCompanyConfig" parameterType="PhoneCompanyConfig" useGeneratedKeys="true" keyProperty="id">

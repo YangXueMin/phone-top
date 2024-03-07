@@ -1,6 +1,7 @@
 package com.ruoyi.phone.domain;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -64,6 +65,9 @@ public class PhoneCompanyConfig extends BaseEntity{
     @Excel(name = "分享图片")
     @ApiModelProperty("分享图片")
     private String sharePhoto;
+
+    @ApiModelProperty("微信配置")
+    private WechatConfig wechatConfig;
 
     public void setId(Long id){
         this.id = id;
@@ -136,4 +140,11 @@ public class PhoneCompanyConfig extends BaseEntity{
         return sharePhoto;
     }
 
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
+    }
 }

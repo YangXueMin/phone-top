@@ -16,38 +16,45 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectPhoneMemberNowVo">
         select
-            id,
-            company_id,
-            app_id,
-            title,
-            content,
-            status,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_member_now
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.title,
+            a.content,
+            a.status,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_member_now  a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectPhoneMemberNowList" parameterType="PhoneMemberNow" resultMap="PhoneMemberNowResult">
         <include refid="selectPhoneMemberNowVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="content != null  and content != ''"> and a.content = #{content}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
     </select>
 
     <select id="selectPhoneMemberNowById" parameterType="Long" resultMap="PhoneMemberNowResult">
         <include refid="selectPhoneMemberNowVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneMemberNow" parameterType="PhoneMemberNow" useGeneratedKeys="true" keyProperty="id">

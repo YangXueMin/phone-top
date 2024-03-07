@@ -2,6 +2,7 @@ package com.ruoyi.phone.domain;
 
 import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -70,6 +71,9 @@ public class PhoneCoupon extends BaseEntity{
     @Excel(name = "状态", readConverterExp = "正=常：1，停用：2")
     @ApiModelProperty("状态")
     private String status;
+
+    @ApiModelProperty("微信配置")
+    private WechatConfig wechatConfig;
 
     public void setId(Long id){
         this.id = id;
@@ -149,4 +153,11 @@ public class PhoneCoupon extends BaseEntity{
         return status;
     }
 
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
+    }
 }

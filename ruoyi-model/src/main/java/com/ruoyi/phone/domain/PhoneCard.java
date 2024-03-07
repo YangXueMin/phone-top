@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -63,6 +65,12 @@ public class PhoneCard extends BaseEntity{
     @Excel(name = "核销会员ID")
     @ApiModelProperty("核销会员ID")
     private Long memberId;
+
+    @ApiModelProperty("微信配置")
+    private WechatConfig wechatConfig;
+
+    @ApiModelProperty("会员信息")
+    private Member member;
 
     public void setId(Long id){
         this.id = id;
@@ -128,4 +136,19 @@ public class PhoneCard extends BaseEntity{
         return memberId;
     }
 
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

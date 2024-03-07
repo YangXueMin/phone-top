@@ -32,75 +32,106 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
     </resultMap>
 
     <sql id="selectPhoneOrderVo">
         select
-            id,
-            company_id,
-            app_id,
-            member_id,
-            price_id,
-            order_no,
-            method,
-            type,
-            mobile,
-            account_number,
-            residence_type,
-            area,
-            card_no,
-            top_up_money,
-            money,
-            pay_money,
-            pay_balance,
-            pay_type,
-            pay_status,
-            arrival_status,
-            pay_time,
-            pay_result,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_order
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.member_id,
+            a.price_id,
+            a.order_no,
+            a.method,
+            a.type,
+            a.mobile,
+            a.account_number,
+            a.residence_type,
+            a.area,
+            a.card_no,
+            a.top_up_money,
+            a.money,
+            a.pay_money,
+            a.pay_balance,
+            a.pay_type,
+            a.pay_status,
+            a.arrival_status,
+            a.pay_time,
+            a.pay_result,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle,
+            m.name AS memberName,
+            m.avatar AS memberAvatar,
+            m.number,
+            m.mobile AS memberMobile,
+            m.sex,
+            m.birthday,
+            m.balance,
+            m.open_id,
+            m.is_member
+        from phone_order a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join phone_member m ON m.id = a.member_id
     </sql>
 
     <select id="selectPhoneOrderList" parameterType="PhoneOrder" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
-            <if test="priceId != null "> and price_id = #{priceId}</if>
-            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
-            <if test="method != null  and method != ''"> and method = #{method}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
-            <if test="accountNumber != null  and accountNumber != ''"> and account_number = #{accountNumber}</if>
-            <if test="residenceType != null  and residenceType != ''"> and residence_type = #{residenceType}</if>
-            <if test="area != null  and area != ''"> and area = #{area}</if>
-            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
-            <if test="topUpMoney != null "> and top_up_money = #{topUpMoney}</if>
-            <if test="money != null "> and money = #{money}</if>
-            <if test="payMoney != null "> and pay_money = #{payMoney}</if>
-            <if test="payBalance != null "> and pay_balance = #{payBalance}</if>
-            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
-            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
-            <if test="arrivalStatus != null  and arrivalStatus != ''"> and arrival_status = #{arrivalStatus}</if>
-            <if test="payTime != null  and payTime != ''"> and pay_time = #{payTime}</if>
-            <if test="payResult != null  and payResult != ''"> and pay_result = #{payResult}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="priceId != null "> and a.price_id = #{priceId}</if>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+            <if test="method != null  and method != ''"> and a.method = #{method}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
+            <if test="mobile != null  and mobile != ''"> and a.mobile = #{mobile}</if>
+            <if test="accountNumber != null  and accountNumber != ''"> and a.account_number = #{accountNumber}</if>
+            <if test="residenceType != null  and residenceType != ''"> and a.residence_type = #{residenceType}</if>
+            <if test="area != null  and area != ''"> and a.area = #{area}</if>
+            <if test="cardNo != null  and cardNo != ''"> and a.card_no = #{cardNo}</if>
+            <if test="topUpMoney != null "> and a.top_up_money = #{topUpMoney}</if>
+            <if test="money != null "> and a.money = #{money}</if>
+            <if test="payMoney != null "> and a.pay_money = #{payMoney}</if>
+            <if test="payBalance != null "> and a.pay_balance = #{payBalance}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
+            <if test="payStatus != null  and payStatus != ''"> and a.pay_status = #{payStatus}</if>
+            <if test="arrivalStatus != null  and arrivalStatus != ''"> and a.arrival_status = #{arrivalStatus}</if>
+            <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
+            <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
         </where>
     </select>
 
     <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
-        where order_no = #{orderNo}
+        where a.order_no = #{orderNo}
     </select>
 
     <select id="selectPhoneOrderById" parameterType="Long" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneOrder" parameterType="PhoneOrder">

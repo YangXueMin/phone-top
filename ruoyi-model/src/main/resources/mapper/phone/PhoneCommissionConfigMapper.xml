@@ -17,40 +17,71 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
     </resultMap>
 
     <sql id="selectPhoneCommissionConfigVo">
         select
-            id,
-            company_id,
-            app_id,
-            member_id,
-            commission_before,
-            money,
-            commission_after,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_commission_config
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.member_id,
+            a.commission_before,
+            a.money,
+            a.commission_after,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle,
+            m.name AS memberName,
+            m.avatar AS memberAvatar,
+            m.number,
+            m.mobile AS memberMobile,
+            m.sex,
+            m.birthday,
+            m.balance,
+            m.open_id,
+            m.is_member
+        from phone_commission_config  a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join phone_member m ON m.id = a.member_id
     </sql>
 
     <select id="selectPhoneCommissionConfigList" parameterType="PhoneCommissionConfig" resultMap="PhoneCommissionConfigResult">
         <include refid="selectPhoneCommissionConfigVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null "> and app_id = #{appId}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
-            <if test="commissionBefore != null "> and commission_before = #{commissionBefore}</if>
-            <if test="money != null "> and money = #{money}</if>
-            <if test="commissionAfter != null "> and commission_after = #{commissionAfter}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null "> and a.app_id = #{appId}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="commissionBefore != null "> and a.commission_before = #{commissionBefore}</if>
+            <if test="money != null "> and a.money = #{money}</if>
+            <if test="commissionAfter != null "> and a.commission_after = #{commissionAfter}</if>
         </where>
     </select>
 
     <select id="selectPhoneCommissionConfigById" parameterType="Long" resultMap="PhoneCommissionConfigResult">
         <include refid="selectPhoneCommissionConfigVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneCommissionConfig" parameterType="PhoneCommissionConfig" useGeneratedKeys="true" keyProperty="id">

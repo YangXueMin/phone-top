@@ -25,61 +25,92 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
     </resultMap>
 
     <sql id="selectPhoneMemberCardLogVo">
         select
-            id,
-            company_id,
-            app_id,
-            member_id,
-            pay_status,
-            pay_type,
-            order_no,
-            money,
-            balance_money,
-            total_money,
-            card_id,
-            buy_day,
-            card_name,
-            pay_time,
-            pay_result,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_member_card_log
+            a.id,
+            a.company_id,
+            a.app_id,
+            a.member_id,
+            a.pay_status,
+            a.pay_type,
+            a.order_no,
+            a.money,
+            a.balance_money,
+            a.total_money,
+            a.card_id,
+            a.buy_day,
+            a.card_name,
+            a.pay_time,
+            a.pay_result,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle,
+            m.name AS memberName,
+            m.avatar AS memberAvatar,
+            m.number,
+            m.mobile AS memberMobile,
+            m.sex,
+            m.birthday,
+            m.balance,
+            m.open_id,
+            m.is_member
+        from phone_member_card_log a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join phone_member m ON m.id = a.member_id
     </sql>
 
     <select id="selectPhoneMemberCardLogList" parameterType="PhoneMemberCardLog" resultMap="PhoneMemberCardLogResult">
         <include refid="selectPhoneMemberCardLogVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
-            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
-            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
-            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
-            <if test="money != null "> and money = #{money}</if>
-            <if test="balanceMoney != null "> and balance_money = #{balanceMoney}</if>
-            <if test="totalMoney != null "> and total_money = #{totalMoney}</if>
-            <if test="cardId != null "> and card_id = #{cardId}</if>
-            <if test="buyDay != null "> and buy_day = #{buyDay}</if>
-            <if test="cardName != null  and cardName != ''"> and card_name like concat('%', #{cardName}, '%')</if>
-            <if test="payTime != null  and payTime != ''"> and pay_time = #{payTime}</if>
-            <if test="payResult != null  and payResult != ''"> and pay_result = #{payResult}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="payStatus != null  and payStatus != ''"> and a.pay_status = #{payStatus}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+            <if test="money != null "> and a.money = #{money}</if>
+            <if test="balanceMoney != null "> and a.balance_money = #{balanceMoney}</if>
+            <if test="totalMoney != null "> and a.total_money = #{totalMoney}</if>
+            <if test="cardId != null "> and a.card_id = #{cardId}</if>
+            <if test="buyDay != null "> and a.buy_day = #{buyDay}</if>
+            <if test="cardName != null  and cardName != ''"> and a.card_name like concat('%', #{cardName}, '%')</if>
+            <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
+            <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
         </where>
     </select>
 
     <select id="selectPhoneMemberCardLogByOrderNo" parameterType="string" resultMap="PhoneMemberCardLogResult">
         <include refid="selectPhoneMemberCardLogVo"/>
-        where order_no = #{orderNo}
+        where a.order_no = #{orderNo}
     </select>
 
     <select id="selectPhoneMemberCardLogById" parameterType="Long" resultMap="PhoneMemberCardLogResult">
         <include refid="selectPhoneMemberCardLogVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneMemberCardLog" parameterType="PhoneMemberCardLog" useGeneratedKeys="true" keyProperty="id">
