@@ -2,6 +2,7 @@ package com.ruoyi.phone.domain;
 
 import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
