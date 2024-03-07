@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhoneMemberCouponMapper">
+
+    <resultMap type="PhoneMemberCoupon" id="PhoneMemberCouponResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="couponId"    column="coupon_id"    />
+        <result property="expirationTime"    column="expiration_time"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPhoneMemberCouponVo">
+        select
+            id,
+            member_id,
+            company_id,
+            app_id,
+            coupon_id,
+            expiration_time,
+            status,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from phone_member_coupon
+    </sql>
+
+    <select id="selectPhoneMemberCouponList" parameterType="PhoneMemberCoupon" resultMap="PhoneMemberCouponResult">
+        <include refid="selectPhoneMemberCouponVo"/>
+        <where>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="couponId != null "> and coupon_id = #{couponId}</if>
+            <if test="expirationTime != null "> and expiration_time = #{expirationTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPhoneMemberCouponById" parameterType="Long" resultMap="PhoneMemberCouponResult">
+        <include refid="selectPhoneMemberCouponVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPhoneMemberCoupon" parameterType="PhoneMemberCoupon" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_member_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">member_id,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="expirationTime != null">expiration_time,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">#{memberId},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="couponId != null">#{couponId},</if>
+            <if test="expirationTime != null">#{expirationTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneMemberCoupon" parameterType="PhoneMemberCoupon">
+        update phone_member_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="expirationTime != null">expiration_time = #{expirationTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneMemberCouponById" parameterType="Long">
+        delete from phone_member_coupon where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneMemberCouponByIds" parameterType="String">
+        delete from phone_member_coupon where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

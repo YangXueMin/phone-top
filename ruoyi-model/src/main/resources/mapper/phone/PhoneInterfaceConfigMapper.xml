@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhoneInterfaceConfigMapper">
+
+    <resultMap type="PhoneInterfaceConfig" id="PhoneInterfaceConfigResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="type"    column="type"    />
+        <result property="switchType"    column="switch_type"    />
+        <result property="interfaceType"    column="interface_type"    />
+        <result property="interfaceUrl"    column="interface_url"    />
+        <result property="mchId"    column="mch_id"    />
+        <result property="apiKey"    column="api_key"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPhoneInterfaceConfigVo">
+        select
+            id,
+            company_id,
+            app_id,
+            type,
+            switch_type,
+            interface_type,
+            interface_url,
+            mch_id,
+            api_key,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from phone_interface_config
+    </sql>
+
+    <select id="selectPhoneInterfaceConfigList" parameterType="PhoneInterfaceConfig" resultMap="PhoneInterfaceConfigResult">
+        <include refid="selectPhoneInterfaceConfigVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="switchType != null  and switchType != ''"> and switch_type = #{switchType}</if>
+            <if test="interfaceType != null  and interfaceType != ''"> and interface_type = #{interfaceType}</if>
+            <if test="interfaceUrl != null  and interfaceUrl != ''"> and interface_url = #{interfaceUrl}</if>
+            <if test="mchId != null  and mchId != ''"> and mch_id = #{mchId}</if>
+            <if test="apiKey != null  and apiKey != ''"> and api_key = #{apiKey}</if>
+        </where>
+    </select>
+
+    <select id="selectPhoneInterfaceConfigById" parameterType="Long" resultMap="PhoneInterfaceConfigResult">
+        <include refid="selectPhoneInterfaceConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPhoneInterfaceConfig" parameterType="PhoneInterfaceConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_interface_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="type != null">type,</if>
+            <if test="switchType != null">switch_type,</if>
+            <if test="interfaceType != null">interface_type,</if>
+            <if test="interfaceUrl != null">interface_url,</if>
+            <if test="mchId != null">mch_id,</if>
+            <if test="apiKey != null">api_key,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="switchType != null">#{switchType},</if>
+            <if test="interfaceType != null">#{interfaceType},</if>
+            <if test="interfaceUrl != null">#{interfaceUrl},</if>
+            <if test="mchId != null">#{mchId},</if>
+            <if test="apiKey != null">#{apiKey},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneInterfaceConfig" parameterType="PhoneInterfaceConfig">
+        update phone_interface_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="switchType != null">switch_type = #{switchType},</if>
+            <if test="interfaceType != null">interface_type = #{interfaceType},</if>
+            <if test="interfaceUrl != null">interface_url = #{interfaceUrl},</if>
+            <if test="mchId != null">mch_id = #{mchId},</if>
+            <if test="apiKey != null">api_key = #{apiKey},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneInterfaceConfigById" parameterType="Long">
+        delete from phone_interface_config where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneInterfaceConfigByIds" parameterType="String">
+        delete from phone_interface_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

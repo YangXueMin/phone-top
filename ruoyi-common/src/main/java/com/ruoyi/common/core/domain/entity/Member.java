@@ -93,6 +93,12 @@ public class Member extends BaseEntity {
     private String isMember;
 
     /**
+     * 是否拉黑
+     */
+    @Excel(name = "是否拉黑")
+    private String isBlacklist;
+
+    /**
      * 邀请人ID
      */
     @Excel(name = "邀请人ID")
@@ -264,5 +270,13 @@ public class Member extends BaseEntity {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public String getIsBlacklist() {
+        return isBlacklist;
+    }
+
+    public void setIsBlacklist(String isBlacklist) {
+        this.isBlacklist = isBlacklist;
     }
 }

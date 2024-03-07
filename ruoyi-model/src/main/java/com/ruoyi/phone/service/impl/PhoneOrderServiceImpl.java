@@ -177,10 +177,20 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         //小程序用户openid
         request.setOpenid(member.getOpenId());
         StringBuilder sb = new StringBuilder();
-        if(StringUtils.equals("1",phoneOrder.getType())){
-            sb.append("手机充值");
+        if(StringUtils.equals("0",phoneOrder.getMethod())){
+            if(StringUtils.equals("4",phoneOrder.getType())){
+                sb.append("国家电网电费缴存");
+            }else{
+                sb.append("南方电网电费缴存");
+            }
         }else{
-            sb.append("电费充值");
+            if(StringUtils.equals("1",phoneOrder.getType())){
+                sb.append("移动话费缴存");
+            }else if(StringUtils.equals("2",phoneOrder.getType())){
+                sb.append("联通话费缴存");
+            }else{
+                sb.append("电信话费缴存");
+            }
         }
         request.setBody(sb.toString());
         try {

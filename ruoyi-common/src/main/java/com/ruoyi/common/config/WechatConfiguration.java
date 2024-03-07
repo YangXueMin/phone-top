@@ -65,32 +65,6 @@ public class WechatConfiguration {
     }
 
     /**
-     * 获取WxPayService
-     *
-     * @return
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public WxPayService wxPayService() {
-        List<WechatPayProperties.MpConfig> configs = this.payProperties.getConfigs();
-        if (configs == null) {
-            throw new ApiException("没有微信小程序配置啊");
-        }
-        WxPayService wxPayService = new WxPayServiceImpl();
-        this.payProperties.getConfigs().stream().forEach(merchant -> {
-            WxPayConfig payConfig = new WxPayConfig();
-            payConfig.setAppId(StringUtils.trimToNull(merchant.getAppId()));
-            payConfig.setMchId(StringUtils.trimToNull(merchant.getMchId()));
-            payConfig.setMchKey(StringUtils.trimToNull(merchant.getMchKey()));
-            payConfig.setKeyPath(StringUtils.trimToNull(merchant.getKeyPath()));
-            wxPayService.addConfig(merchant.getMchId(), payConfig);
-            // 可以指定是否使用沙箱环境
-            payConfig.setUseSandboxEnv(false);
-        });
-        return wxPayService;
-    }
-
-    /**
      * 获取支付类型
      *
      * @param wechatConfig
@@ -114,33 +88,7 @@ public class WechatConfiguration {
             }
             return wxPayService;
         }
-        return wxPayService();
-    }
-
-    /**
-     * 获取公众号WxMpService
-     *
-     * @return
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public WxMpService wxMpService() {
-        // 代码里 getConfigs()处报错的同学，请注意仔细阅读项目说明，你的IDE需要引入lombok插件！！！！
-        final List<WechatPayProperties.MpConfig> configs = this.payProperties.getConfigs();
-        if (configs == null) {
-            throw new RuntimeException("文件加载异常");
-        }
-        WxMpService service = new WxMpServiceImpl();
-        service.setMultiConfigStorages(configs
-                .stream().map(a -> {
-                    WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
-                    configStorage.setAppId(a.getAppId());
-                    configStorage.setSecret(a.getSecret());
-                    configStorage.setToken(a.getToken());
-                    configStorage.setAesKey(a.getAesKey());
-                    return configStorage;
-                }).collect(Collectors.toMap(WxMpDefaultConfigImpl::getAppId, a -> a, (o, n) -> o)));
-        return service;
+        return null;
     }
 
     /**
@@ -168,7 +116,7 @@ public class WechatConfiguration {
             }
             return wxMpService;
         }
-        return wxMpService();
+        return null;
     }
 
 }

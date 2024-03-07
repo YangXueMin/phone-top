@@ -35,7 +35,6 @@ public class WxMpConfiguration {
     private final ScanHandler scanHandler;
 
 
-    @Bean
     public WxMpMessageRouter messageRouter(WxMpService wxMpService) {
         final WxMpMessageRouter newRouter = new WxMpMessageRouter(wxMpService);
 

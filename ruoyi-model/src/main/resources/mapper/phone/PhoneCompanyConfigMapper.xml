@@ -11,6 +11,7 @@
         <result property="promotionPoster"    column="promotion_poster"    />
         <result property="slowChargingContent"    column="slow_charging_content"    />
         <result property="quickChargeContent"    column="quick_charge_content"    />
+        <result property="electricityContent"    column="electricity_content"    />
         <result property="shareTitle"    column="share_title"    />
         <result property="shareContent"    column="share_content"    />
         <result property="sharePhoto"    column="share_photo"    />
@@ -29,6 +30,7 @@
             promotion_poster,
             slow_charging_content,
             quick_charge_content,
+            electricity_content,
             share_title,
             share_content,
             share_photo,
@@ -48,6 +50,7 @@
             <if test="promotionPoster != null  and promotionPoster != ''"> and promotion_poster = #{promotionPoster}</if>
             <if test="slowChargingContent != null  and slowChargingContent != ''"> and slow_charging_content = #{slowChargingContent}</if>
             <if test="quickChargeContent != null  and quickChargeContent != ''"> and quick_charge_content = #{quickChargeContent}</if>
+            <if test="electricityContent != null  and electricityContent != ''"> and electricity_content = #{electricityContent}</if>
             <if test="shareTitle != null  and shareTitle != ''"> and share_title = #{shareTitle}</if>
             <if test="shareContent != null  and shareContent != ''"> and share_content = #{shareContent}</if>
             <if test="sharePhoto != null  and sharePhoto != ''"> and share_photo = #{sharePhoto}</if>
@@ -67,6 +70,7 @@
             <if test="promotionPoster != null">promotion_poster,</if>
             <if test="slowChargingContent != null">slow_charging_content,</if>
             <if test="quickChargeContent != null">quick_charge_content,</if>
+            <if test="electricityContent != null">electricity_content,</if>
             <if test="shareTitle != null">share_title,</if>
             <if test="shareContent != null">share_content,</if>
             <if test="sharePhoto != null">share_photo,</if>
@@ -82,6 +86,7 @@
             <if test="promotionPoster != null">#{promotionPoster},</if>
             <if test="slowChargingContent != null">#{slowChargingContent},</if>
             <if test="quickChargeContent != null">#{quickChargeContent},</if>
+            <if test="electricityContent != null">#{electricityContent},</if>
             <if test="shareTitle != null">#{shareTitle},</if>
             <if test="shareContent != null">#{shareContent},</if>
             <if test="sharePhoto != null">#{sharePhoto},</if>
@@ -101,6 +106,7 @@
             <if test="promotionPoster != null">promotion_poster = #{promotionPoster},</if>
             <if test="slowChargingContent != null">slow_charging_content = #{slowChargingContent},</if>
             <if test="quickChargeContent != null">quick_charge_content = #{quickChargeContent},</if>
+            <if test="electricityContent != null">electricity_content = #{electricityContent},</if>
             <if test="shareTitle != null">share_title = #{shareTitle},</if>
             <if test="shareContent != null">share_content = #{shareContent},</if>
             <if test="sharePhoto != null">share_photo = #{sharePhoto},</if>

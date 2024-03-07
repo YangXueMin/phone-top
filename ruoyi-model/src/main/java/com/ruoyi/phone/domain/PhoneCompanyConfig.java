@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 企业配置对象 phone_company_config
  *
  * @author ruoyi
- * @date 2024-03-04
+ * @date 2024-03-07
  */
 @ApiModel(value = "PhoneCompanyConfig", description = "企业配置")
 @ToString
@@ -44,6 +44,11 @@ public class PhoneCompanyConfig extends BaseEntity{
     @Excel(name = "快充简介")
     @ApiModelProperty("快充简介")
     private String quickChargeContent;
+
+    /** 电费简介 */
+    @Excel(name = "电费简介")
+    @ApiModelProperty("电费简介")
+    private String electricityContent;
 
     /** 分享标题 */
     @Excel(name = "分享标题")
@@ -101,6 +106,13 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public String getQuickChargeContent(){
         return quickChargeContent;
+    }
+    public void setElectricityContent(String electricityContent){
+        this.electricityContent = electricityContent;
+    }
+
+    public String getElectricityContent(){
+        return electricityContent;
     }
     public void setShareTitle(String shareTitle){
         this.shareTitle = shareTitle;

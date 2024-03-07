@@ -7,8 +7,8 @@
     <resultMap type="PhoneMemberCard" id="PhoneMemberCardResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
-        <result property="configId"    column="config_id"    />
-        <result property="titile"    column="titile"    />
+        <result property="appId"    column="app_id"    />
+        <result property="title"    column="title"    />
         <result property="content"    column="content"    />
         <result property="memberDay"    column="member_day"    />
         <result property="orderNum"    column="order_num"    />
@@ -30,8 +30,8 @@
         select
             id,
             company_id,
-            config_id,
-            titile,
+            app_id,
+            title,
             content,
             member_day,
             order_num,
@@ -54,8 +54,8 @@
         <include refid="selectPhoneMemberCardVo"/>
         <where>
             <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="configId != null "> and config_id = #{configId}</if>
-            <if test="titile != null  and titile != ''"> and titile = #{titile}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="memberDay != null "> and member_day = #{memberDay}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
@@ -78,8 +78,8 @@
         insert into phone_member_card
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
-            <if test="configId != null">config_id,</if>
-            <if test="titile != null">titile,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="title != null">title,</if>
             <if test="content != null">content,</if>
             <if test="memberDay != null">member_day,</if>
             <if test="orderNum != null">order_num,</if>
@@ -98,8 +98,8 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
-            <if test="configId != null">#{configId},</if>
-            <if test="titile != null">#{titile},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="title != null">#{title},</if>
             <if test="content != null">#{content},</if>
             <if test="memberDay != null">#{memberDay},</if>
             <if test="orderNum != null">#{orderNum},</if>
@@ -122,8 +122,8 @@
         update phone_member_card
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
-            <if test="configId != null">config_id = #{configId},</if>
-            <if test="titile != null">titile = #{titile},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="title != null">title = #{title},</if>
             <if test="content != null">content = #{content},</if>
             <if test="memberDay != null">member_day = #{memberDay},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>

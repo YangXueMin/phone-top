@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 会员卡管理对象 phone_member_card
  *
  * @author ruoyi
- * @date 2024-03-04
+ * @date 2024-03-07
  */
 @ApiModel(value = "PhoneMemberCard", description = "会员卡管理")
 @ToString
@@ -29,12 +29,12 @@ public class PhoneMemberCard extends BaseEntity{
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
-    private Long configId;
+    private String appId;
 
     /** 会员卡标题 */
     @Excel(name = "会员卡标题")
     @ApiModelProperty("会员卡标题")
-    private String titile;
+    private String title;
 
     /** 会员卡内容 */
     @Excel(name = "会员卡内容")
@@ -100,19 +100,19 @@ public class PhoneMemberCard extends BaseEntity{
     public Long getCompanyId(){
         return companyId;
     }
-    public void setConfigId(Long configId){
-        this.configId = configId;
+    public void setAppId(String appId){
+        this.appId = appId;
     }
 
-    public Long getConfigId(){
-        return configId;
+    public String getAppId(){
+        return appId;
     }
-    public void setTitile(String titile){
-        this.titile = titile;
+    public void setTitle(String title){
+        this.title = title;
     }
 
-    public String getTitile(){
-        return titile;
+    public String getTitle(){
+        return title;
     }
     public void setContent(String content){
         this.content = content;

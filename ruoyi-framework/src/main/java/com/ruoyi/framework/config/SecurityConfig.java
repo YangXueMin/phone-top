@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 微信登录认证
      */
     @Autowired
-    private WxAuthenticationProvider wxAuthenticationProvider;
+    private MemberAuthenticationProvider memberAuthenticationProvider;
 
     /**
      * 微信用户登录成功处理类
@@ -188,6 +188,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-        auth.authenticationProvider(wxAuthenticationProvider);
+        auth.authenticationProvider(memberAuthenticationProvider);
     }
 }
