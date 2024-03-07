@@ -3,10 +3,12 @@ package com.ruoyi.phone.domain;
 import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 优惠券管理对象 phone_coupon
@@ -59,8 +61,13 @@ public class PhoneCoupon extends BaseEntity{
 
     /** 发放方式（邀请：1，充值：2） */
     @Excel(name = "发放方式", readConverterExp = "邀请：1，充值：2,首单：3")
-    @ApiModelProperty("发放方式")
+    @ApiModelProperty("发放方式（字典值：phone_distribution_mode）")
     private String distributionMode;
+
+    /** 发放方式（邀请：1，充值：2） */
+    @Excel(name = "发放方式", readConverterExp = "邀请：1，充值：2,首单：3")
+    @ApiModelProperty("发放方式")
+    private String distributionModeLabel;
 
     /** 发放数量 */
     @Excel(name = "发放数量")
@@ -68,9 +75,14 @@ public class PhoneCoupon extends BaseEntity{
     private Long number;
 
     /** 状态（正常：1，停用：2） */
-    @Excel(name = "状态", readConverterExp = "正=常：1，停用：2")
-    @ApiModelProperty("状态")
+    @Excel(name = "状态", readConverterExp = "正常：1，停用：2")
+    @ApiModelProperty("状态(字典值：phone_status)")
     private String status;
+
+    /** 状态（正常：1，停用：2） */
+    @Excel(name = "状态", readConverterExp = "正常：1，停用：2")
+    @ApiModelProperty("状态")
+    private String statusLabel;
 
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
@@ -159,5 +171,27 @@ public class PhoneCoupon extends BaseEntity{
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public String getDistributionModeLabel() {
+        if(StringUtils.isNotBlank(distributionMode)){
+            return DictUtils.getDictLabel("phone_distribution_mod",distributionMode);
+        }
+        return distributionModeLabel;
+    }
+
+    public void setDistributionModeLabel(String distributionModeLabel) {
+        this.distributionModeLabel = distributionModeLabel;
+    }
+
+    public String getStatusLabel() {
+        if(StringUtils.isNotBlank(status)){
+            return DictUtils.getDictLabel("phone_status",status);
+        }
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel = statusLabel;
     }
 }

@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 卡密管理对象 phone_card
@@ -50,10 +52,20 @@ public class PhoneCard extends BaseEntity{
     @ApiModelProperty("状态")
     private String status;
 
+    /** 状态 */
+    @Excel(name = "状态")
+    @ApiModelProperty("状态(字典值：phone_status)")
+    private String statusLabel;
+
     /** 核销状态 */
     @Excel(name = "核销状态")
     @ApiModelProperty("核销状态")
     private String cancelStatus;
+
+    /** 核销状态 */
+    @Excel(name = "核销状态")
+    @ApiModelProperty("核销状态（字典值：phone_cancel_status）")
+    private String cancelStatusLabel;
 
     /** 核销时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -150,5 +162,27 @@ public class PhoneCard extends BaseEntity{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getStatusLabel() {
+        if(StringUtils.isNotBlank(status)){
+            return DictUtils.getDictLabel("phone_status",status);
+        }
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel = statusLabel;
+    }
+
+    public String getCancelStatusLabel() {
+        if(StringUtils.isNotBlank(cancelStatus)){
+            return DictUtils.getDictLabel("phone_cancel_status",cancelStatus);
+        }
+        return cancelStatusLabel;
+    }
+
+    public void setCancelStatusLabel(String cancelStatusLabel) {
+        this.cancelStatusLabel = cancelStatusLabel;
     }
 }

@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 订单记录对象 phone_order
@@ -49,14 +51,24 @@ public class PhoneOrder extends BaseEntity{
     private String orderNo;
 
     /** 充值方式（电网：0，快充：1，慢充：2） */
-    @Excel(name = "充值方式", readConverterExp = "电=网：0，快充：1，慢充：2")
-    @ApiModelProperty("充值方式")
+    @Excel(name = "充值方式", readConverterExp = "电费：0，快充：1，慢充：2")
+    @ApiModelProperty("充值方式（字典值：phone_pay_method）")
     private String method;
 
-    /** 充值类型（话费：移动：1，联通：2：电信：3，电费：国家电网：4，南方电网：5） */
-    @Excel(name = "充值类型", readConverterExp = "话=费：移动：1，联通：2：电信：3，电费：国家电网：4，南方电网：5")
-    @ApiModelProperty("充值类型")
+    /** 充值方式（电网：0，快充：1，慢充：2） */
+    @Excel(name = "充值方式", readConverterExp = "电费：0，快充：1，慢充：2")
+    @ApiModelProperty("充值方式")
+    private String methodLabel;
+
+    /** 类型(移动、联通、电信、国家电网、南方电网) */
+    @Excel(name = "类型(移动、联通、电信、国家电网、南方电网)")
+    @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
     private String type;
+
+    /** 类型(移动、联通、电信、国家电网、南方电网) */
+    @Excel(name = "类型(移动、联通、电信、国家电网、南方电网)")
+    @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
+    private String typeLabel;
 
     /** 手机号 */
     @Excel(name = "手机号")
@@ -69,7 +81,7 @@ public class PhoneOrder extends BaseEntity{
     private String accountNumber;
 
     /** 住宅类型（住宅：1，店铺：2，企事业：3，默认：0） */
-    @Excel(name = "住宅类型", readConverterExp = "住=宅：1，店铺：2，企事业：3，默认：0")
+    @Excel(name = "住宅类型", readConverterExp = "住宅：1，店铺：2，企事业：3，默认：0")
     @ApiModelProperty("住宅类型")
     private String residenceType;
 
@@ -105,18 +117,33 @@ public class PhoneOrder extends BaseEntity{
 
     /** 支付方式（1：线上支付，2：余额支付，3：组合支付） */
     @Excel(name = "支付方式", readConverterExp = "1=：线上支付，2：余额支付，3：组合支付")
-    @ApiModelProperty("支付方式")
+    @ApiModelProperty("支付方式（字典值：phone_pay_type）")
     private String payType;
+
+    /** 支付方式（1：线上支付，2：余额支付，3：组合支付） */
+    @Excel(name = "支付方式", readConverterExp = "1=：线上支付，2：余额支付，3：组合支付")
+    @ApiModelProperty("支付方式（字典值：phone_pay_type）")
+    private String payTypeLabel;
 
     /** 支付状态(1:待支付，2：支付完成，3：已退款，4：已取消) */
     @Excel(name = "支付状态(1:待支付，2：支付完成，3：已退款，4：已取消)")
-    @ApiModelProperty("支付状态(1:待支付，2：支付完成，3：已退款，4：已取消)")
+    @ApiModelProperty("支付状态(字典值：phone_pay_status 1:待支付，2：支付完成，3：已退款，4：已取消)")
     private String payStatus;
+
+    /** 支付状态(1:待支付，2：支付完成，3：已退款，4：已取消) */
+    @Excel(name = "支付状态(1:待支付，2：支付完成，3：已退款，4：已取消)")
+    @ApiModelProperty("支付状态(字典值：phone_pay_status 1:待支付，2：支付完成，3：已退款，4：已取消)")
+    private String payStatusLabel;
 
     /** 到账状态(1:充值中，2：充值成功，3：充 */
     @Excel(name = "到账状态(1:充值中，2：充值成功，3：充")
-    @ApiModelProperty("到账状态(1:充值中，2：充值成功，3：充")
+    @ApiModelProperty("到账状态(字典值：phone_arrival_status 1:充值中，2：充值成功，3：充")
     private String arrivalStatus;
+
+    /** 到账状态(1:充值中，2：充值成功，3：充 */
+    @Excel(name = "到账状态(1:充值中，2：充值成功，3：充")
+    @ApiModelProperty("到账状态(字典值：phone_arrival_status 1:充值中，2：充值成功，3：充")
+    private String arrivalStatusLabel;
 
     /** 支付时间 */
     @Excel(name = "支付时间")
@@ -304,5 +331,59 @@ public class PhoneOrder extends BaseEntity{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+    public String getMethodLabel() {
+        if(StringUtils.isNotBlank(method)){
+            return DictUtils.getDictLabel("phone_pay_method",method);
+        }
+        return methodLabel;
+    }
+
+    public void setMethodLabel(String methodLabel) {
+        this.methodLabel = methodLabel;
+    }
+
+    public String getTypeLabel() {
+        if(StringUtils.isNotBlank(type)){
+            return DictUtils.getDictLabel("phone_order_pay_type",type);
+        }
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
+    }
+
+    public String getPayTypeLabel() {
+        if(StringUtils.isNotBlank(payType)){
+            return DictUtils.getDictLabel("phone_pay_type",payType);
+        }
+        return payTypeLabel;
+    }
+
+    public void setPayTypeLabel(String payTypeLabel) {
+        this.payTypeLabel = payTypeLabel;
+    }
+
+    public String getPayStatusLabel() {
+        if(StringUtils.isNotBlank(payStatus)){
+            return DictUtils.getDictLabel("phone_pay_status",payStatus);
+        }
+        return payStatusLabel;
+    }
+
+    public void setPayStatusLabel(String payStatusLabel) {
+        this.payStatusLabel = payStatusLabel;
+    }
+
+    public String getArrivalStatusLabel() {
+        if(StringUtils.isNotBlank(arrivalStatus)){
+            return DictUtils.getDictLabel("phone_arrival_status",arrivalStatus);
+        }
+        return arrivalStatusLabel;
+    }
+
+    public void setArrivalStatusLabel(String arrivalStatusLabel) {
+        this.arrivalStatusLabel = arrivalStatusLabel;
     }
 }

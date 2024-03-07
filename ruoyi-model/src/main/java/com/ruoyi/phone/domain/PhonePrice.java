@@ -3,10 +3,12 @@ package com.ruoyi.phone.domain;
 import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 价格配置对象 phone_price
@@ -33,14 +35,24 @@ public class PhonePrice extends BaseEntity{
     private Long configId;
 
     /** 充值方式（电网：0，快充：1，慢充：2） */
-    @Excel(name = "充值方式", readConverterExp = "电=网：0，快充：1，慢充：2")
-    @ApiModelProperty("充值方式")
+    @Excel(name = "充值方式", readConverterExp = "电费：0，快充：1，慢充：2")
+    @ApiModelProperty("充值方式（字典值：phone_pay_method）")
     private String method;
+
+    /** 充值方式（电网：0，快充：1，慢充：2） */
+    @Excel(name = "充值方式", readConverterExp = "电费：0，快充：1，慢充：2")
+    @ApiModelProperty("充值方式")
+    private String methodLabel;
 
     /** 类型(移动、联通、电信、国家电网、南方电网) */
     @Excel(name = "类型(移动、联通、电信、国家电网、南方电网)")
-    @ApiModelProperty("类型(移动、联通、电信、国家电网、南方电网)")
+    @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
     private String type;
+
+    /** 类型(移动、联通、电信、国家电网、南方电网) */
+    @Excel(name = "类型(移动、联通、电信、国家电网、南方电网)")
+    @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
+    private String typeLabel;
 
     /** 原价 */
     @Excel(name = "原价")
@@ -171,5 +183,27 @@ public class PhonePrice extends BaseEntity{
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public String getMethodLabel() {
+        if(StringUtils.isNotBlank(method)){
+            return DictUtils.getDictLabel("phone_pay_method",method);
+        }
+        return methodLabel;
+    }
+
+    public void setMethodLabel(String methodLabel) {
+        this.methodLabel = methodLabel;
+    }
+
+    public String getTypeLabel() {
+        if(StringUtils.isNotBlank(type)){
+            return DictUtils.getDictLabel("phone_order_pay_type",type);
+        }
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
     }
 }

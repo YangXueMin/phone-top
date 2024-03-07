@@ -2,10 +2,12 @@ package com.ruoyi.phone.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 用户须知配置对象 phone_member_now
@@ -43,8 +45,13 @@ public class PhoneMemberNow extends BaseEntity{
 
     /** 状态 */
     @Excel(name = "状态")
-    @ApiModelProperty("状态")
+    @ApiModelProperty("状态(字典值：phone_status)")
     private String status;
+
+    /** 状态 */
+    @Excel(name = "状态")
+    @ApiModelProperty("状态")
+    private String statusLabel;
 
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
@@ -98,5 +105,16 @@ public class PhoneMemberNow extends BaseEntity{
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public String getStatusLabel() {
+        if(StringUtils.isNotBlank(status)){
+            return DictUtils.getDictLabel("phone_status",status);
+        }
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel = statusLabel;
     }
 }

@@ -49,7 +49,7 @@ public class PhoneMemberCoupon extends BaseEntity{
     private Date expirationTime;
 
     /** 使用状态（待使用：1，已使用：2，已过期：3，已失效：4） */
-    @Excel(name = "使用状态", readConverterExp = "待=使用：1，已使用：2，已过期：3，已失效：4")
+    @Excel(name = "使用状态", readConverterExp = "待使用：1，已使用：2，已过期：3，已失效：4")
     @ApiModelProperty("使用状态")
     private String status;
 

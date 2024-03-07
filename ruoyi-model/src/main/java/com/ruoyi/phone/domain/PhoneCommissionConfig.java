@@ -1,6 +1,7 @@
 package com.ruoyi.phone.domain;
 
 import java.math.BigDecimal;
+
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -17,38 +18,52 @@ import com.ruoyi.common.core.domain.BaseEntity;
  */
 @ApiModel(value = "PhoneCommissionConfig", description = "佣金生成记录")
 @ToString
-public class PhoneCommissionConfig extends BaseEntity{
-    private static final long serialVersionUID=1L;
+public class PhoneCommissionConfig extends BaseEntity {
+    private static final long serialVersionUID = 1L;
 
-    /** 主键 */
+    /**
+     * 主键
+     */
     private Long id;
 
-    /** 公司ID */
+    /**
+     * 公司ID
+     */
     @Excel(name = "公司ID")
     @ApiModelProperty("公司ID")
     private Long companyId;
 
-    /** 公众号配置ID */
+    /**
+     * 公众号配置ID
+     */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
     private String appId;
 
-    /** 会员ID */
+    /**
+     * 会员ID
+     */
     @Excel(name = "会员ID")
     @ApiModelProperty("会员ID")
     private Long memberId;
 
-    /** 佣金前金额 */
+    /**
+     * 佣金前金额
+     */
     @Excel(name = "佣金前金额")
     @ApiModelProperty("佣金前金额")
     private BigDecimal commissionBefore;
 
-    /** 金额 */
+    /**
+     * 金额
+     */
     @Excel(name = "金额")
     @ApiModelProperty("金额")
     private BigDecimal money;
 
-    /** 佣金后金额 */
+    /**
+     * 佣金后金额
+     */
     @Excel(name = "佣金后金额")
     @ApiModelProperty("佣金后金额")
     private BigDecimal commissionAfter;
@@ -59,18 +74,19 @@ public class PhoneCommissionConfig extends BaseEntity{
     @ApiModelProperty("会员信息")
     private Member member;
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
-    public void setCompanyId(Long companyId){
+
+    public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
 
-    public Long getCompanyId(){
+    public Long getCompanyId() {
         return companyId;
     }
 
@@ -82,32 +98,35 @@ public class PhoneCommissionConfig extends BaseEntity{
         this.appId = appId;
     }
 
-    public void setMemberId(Long memberId){
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 
-    public Long getMemberId(){
+    public Long getMemberId() {
         return memberId;
     }
-    public void setCommissionBefore(BigDecimal commissionBefore){
+
+    public void setCommissionBefore(BigDecimal commissionBefore) {
         this.commissionBefore = commissionBefore;
     }
 
-    public BigDecimal getCommissionBefore(){
+    public BigDecimal getCommissionBefore() {
         return commissionBefore;
     }
-    public void setMoney(BigDecimal money){
+
+    public void setMoney(BigDecimal money) {
         this.money = money;
     }
 
-    public BigDecimal getMoney(){
+    public BigDecimal getMoney() {
         return money;
     }
-    public void setCommissionAfter(BigDecimal commissionAfter){
+
+    public void setCommissionAfter(BigDecimal commissionAfter) {
         this.commissionAfter = commissionAfter;
     }
 
-    public BigDecimal getCommissionAfter(){
+    public BigDecimal getCommissionAfter() {
         return commissionAfter;
     }
 

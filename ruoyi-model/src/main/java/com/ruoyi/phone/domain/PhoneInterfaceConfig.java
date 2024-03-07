@@ -2,10 +2,12 @@ package com.ruoyi.phone.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 接口地址配置对象 phone_interface_config
@@ -33,18 +35,28 @@ public class PhoneInterfaceConfig extends BaseEntity{
 
     /** 类型（电费：1，快充：2，慢充：3） */
     @Excel(name = "类型", readConverterExp = "电费：1，快充：2，慢充：3")
-    @ApiModelProperty("类型")
+    @ApiModelProperty("类型（字典：phone_pay_method）")
     private String type;
 
+    /** 类型（电费：1，快充：2，慢充：3） */
+    @Excel(name = "类型", readConverterExp = "电费：1，快充：2，慢充：3")
+    @ApiModelProperty("类型")
+    private String typeLabel;
+
     /** 开关类型（开：1，关:2） */
-    @Excel(name = "开关类型", readConverterExp = "开=：1，关:2")
+    @Excel(name = "开关类型", readConverterExp = "开1，关:2")
     @ApiModelProperty("开关类型")
     private String switchType;
 
     /** 接口类型 */
     @Excel(name = "接口类型")
-    @ApiModelProperty("接口类型(系统：1，大猿人：2)")
+    @ApiModelProperty("接口类型(字典值：phone_interface_type 系统：1，大猿人：2)")
     private String interfaceType;
+
+    /** 接口类型 */
+    @Excel(name = "接口类型")
+    @ApiModelProperty("接口类型(系统：1，大猿人：2)")
+    private String interfaceTypeLabel;
 
     /** 接口地址 */
     @Excel(name = "接口地址")
@@ -134,5 +146,27 @@ public class PhoneInterfaceConfig extends BaseEntity{
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public String getTypeLabel() {
+        if(StringUtils.isNotBlank(type)){
+            return DictUtils.getDictLabel("phone_pay_method",type);
+        }
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
+    }
+
+    public String getInterfaceTypeLabel() {
+        if(StringUtils.isNotBlank(interfaceType)){
+            return DictUtils.getDictLabel("phone_interface_type",interfaceType);
+        }
+        return interfaceTypeLabel;
+    }
+
+    public void setInterfaceTypeLabel(String interfaceTypeLabel) {
+        this.interfaceTypeLabel = interfaceTypeLabel;
     }
 }

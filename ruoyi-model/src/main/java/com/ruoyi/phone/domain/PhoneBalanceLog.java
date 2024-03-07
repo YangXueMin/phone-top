@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -44,9 +46,14 @@ public class PhoneBalanceLog extends BaseEntity{
     private String orderNo;
 
     /** 变更类型（充值，消费） */
-    @Excel(name = "变更类型", readConverterExp = "充=值，消费")
-    @ApiModelProperty("变更类型")
+    @Excel(name = "变更类型", readConverterExp = "充值，消费")
+    @ApiModelProperty("变更类型（字典：phone_balance_type）")
     private String type;
+
+    /** 变更类型（充值，消费） */
+    @Excel(name = "变更类型", readConverterExp = "充值，消费")
+    @ApiModelProperty("变更类型")
+    private String typeLabel;
 
     /** 变更前金额 */
     @Excel(name = "变更前金额")
@@ -65,8 +72,13 @@ public class PhoneBalanceLog extends BaseEntity{
 
     /** 支付状态（待支付：1，已支付：2，已退款：3，已取消:4） */
     @Excel(name = "支付状态", readConverterExp = "待=支付：1，已支付：2，已退款：3，已取消:4")
-    @ApiModelProperty("支付状态")
+    @ApiModelProperty("支付状态(字典值：phone_pay_status)")
     private String payStatus;
+
+    /** 支付状态（待支付：1，已支付：2，已退款：3，已取消:4） */
+    @Excel(name = "支付状态", readConverterExp = "待支付：1，已支付：2，已退款：3，已取消:4")
+    @ApiModelProperty("支付状态")
+    private String payStatusLabel;
 
     /** 支付时间 */
     @Excel(name = "支付时间")
@@ -183,5 +195,27 @@ public class PhoneBalanceLog extends BaseEntity{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getTypeLabel() {
+        if(StringUtils.isNotBlank(type)){
+            return DictUtils.getDictLabel("phone_pay_status",type);
+        }
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
+    }
+
+    public String getPayStatusLabel() {
+        if(StringUtils.isNotBlank(payStatus)){
+            return DictUtils.getDictLabel("phone_pay_status",payStatus);
+        }
+        return payStatusLabel;
+    }
+
+    public void setPayStatusLabel(String payStatusLabel) {
+        this.payStatusLabel = payStatusLabel;
     }
 }
