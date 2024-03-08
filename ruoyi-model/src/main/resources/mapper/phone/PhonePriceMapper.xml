@@ -7,9 +7,10 @@
     <resultMap type="PhonePrice" id="PhonePriceResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
-        <result property="configId"    column="config_id"    />
+        <result property="appId"    column="app_id"    />
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
+        <result property="typeId"    column="type_id"    />
         <result property="originalPrice"    column="original_price"    />
         <result property="discount"    column="discount"    />
         <result property="sellPrice"    column="sell_price"    />
@@ -33,9 +34,10 @@
         select
             a.id,
             a.company_id,
-            a.config_id,
+            a.app_id,
             a.method,
             a.type,
+            a.type_id,
             a.original_price,
             a.discount,
             a.sell_price,
@@ -57,9 +59,10 @@
         <include refid="selectPhonePriceVo"/>
         <where>
             <if test="companyId != null "> and a.company_id = #{companyId}</if>
-            <if test="configId != null "> and a.config_id = #{configId}</if>
+            <if test="appId != null "> and a.app_id = #{appId}</if>
             <if test="method != null  and method != ''"> and a.method = #{method}</if>
             <if test="type != null  and type != ''"> and a.type = #{type}</if>
+            <if test="typeId != null "> and a.typeId = #{type}</if>
             <if test="originalPrice != null "> and a.original_price = #{originalPrice}</if>
             <if test="discount != null "> and a.discount = #{discount}</if>
             <if test="sellPrice != null "> and a.sell_price = #{sellPrice}</if>
@@ -79,9 +82,10 @@
         insert into phone_price
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
-            <if test="configId != null">config_id,</if>
+            <if test="appId != null">app_id,</if>
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
+            <if test="typeId != null">type_id,</if>
             <if test="originalPrice != null">original_price,</if>
             <if test="discount != null">discount,</if>
             <if test="sellPrice != null">sell_price,</if>
@@ -97,9 +101,10 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
-            <if test="configId != null">#{configId},</if>
+            <if test="appId != null">#{appId},</if>
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
+            <if test="typeId != null">#{typeId},</if>
             <if test="originalPrice != null">#{originalPrice},</if>
             <if test="discount != null">#{discount},</if>
             <if test="sellPrice != null">#{sellPrice},</if>
@@ -119,9 +124,10 @@
         update phone_price
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
-            <if test="configId != null">config_id = #{configId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
             <if test="originalPrice != null">original_price = #{originalPrice},</if>
             <if test="discount != null">discount = #{discount},</if>
             <if test="sellPrice != null">sell_price = #{sellPrice},</if>

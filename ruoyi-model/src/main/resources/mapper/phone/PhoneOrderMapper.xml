@@ -34,6 +34,7 @@
         <result property="remark"    column="remark"    />
         <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
         <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+        <association property="phonePrice"    column="price_id" javaType="PhonePrice" resultMap="PhonePriceResult" />
     </resultMap>
 
     <resultMap type="WechatConfig" id="WechatConfigResult">
@@ -51,6 +52,17 @@
         <result property="balance"    column="balance"    />
         <result property="openId"    column="open_id"    />
         <result property="isMember"    column="is_member"    />
+    </resultMap>
+
+    <resultMap type="PhonePrice" id="PhonePriceResult">
+        <result property="type"    column="type"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="originalPrice"    column="original_price"    />
+        <result property="discount"    column="discount"    />
+        <result property="sellPrice"    column="sell_price"    />
+        <result property="memberPrice"    column="member_price"    />
+        <result property="directCommission"    column="direct_commission"    />
+        <result property="indirectCommission"    column="indirect_commission"    />
     </resultMap>
 
     <sql id="selectPhoneOrderVo">
@@ -91,10 +103,21 @@
             m.birthday,
             m.balance,
             m.open_id,
-            m.is_member
+            m.is_member,
+            p.method,
+            p.type,
+            p.type_id,
+            p.original_price,
+            p.discount,
+            p.sell_price,
+            p.member_price,
+            p.direct_commission,
+            p.indirect_commission,
+            p.order_num
         from phone_order a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                  left join phone_member m ON m.id = a.member_id
+                left join phone_price p ON p.id = a.price_id
     </sql>
 
     <select id="selectPhoneOrderList" parameterType="PhoneOrder" resultMap="PhoneOrderResult">

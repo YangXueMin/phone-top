@@ -161,6 +161,9 @@ public class PhoneOrder extends BaseEntity{
     @ApiModelProperty("会员信息")
     private Member member;
 
+    @ApiModelProperty("价格信息")
+    private PhonePrice phonePrice;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -337,6 +340,14 @@ public class PhoneOrder extends BaseEntity{
             return DictUtils.getDictLabel("phone_pay_method",method);
         }
         return methodLabel;
+    }
+
+    public PhonePrice getPhonePrice() {
+        return phonePrice;
+    }
+
+    public void setPhonePrice(PhonePrice phonePrice) {
+        this.phonePrice = phonePrice;
     }
 
     public void setMethodLabel(String methodLabel) {

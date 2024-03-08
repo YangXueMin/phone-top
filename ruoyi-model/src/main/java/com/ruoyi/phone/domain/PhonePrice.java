@@ -32,7 +32,12 @@ public class PhonePrice extends BaseEntity{
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
-    private Long configId;
+    private String appId;
+
+    /** 类型ID */
+    @Excel(name = "类型ID")
+    @ApiModelProperty("类型ID")
+    private Long typeId;
 
     /** 充值方式（电网：0，快充：1，慢充：2） */
     @Excel(name = "充值方式", readConverterExp = "电费：0，快充：1，慢充：2")
@@ -106,13 +111,15 @@ public class PhonePrice extends BaseEntity{
     public Long getCompanyId(){
         return companyId;
     }
-    public void setConfigId(Long configId){
-        this.configId = configId;
+
+    public String getAppId() {
+        return appId;
     }
 
-    public Long getConfigId(){
-        return configId;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
+
     public void setMethod(String method){
         this.method = method;
     }
@@ -205,5 +212,13 @@ public class PhonePrice extends BaseEntity{
 
     public void setTypeLabel(String typeLabel) {
         this.typeLabel = typeLabel;
+    }
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
     }
 }
