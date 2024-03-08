@@ -55,7 +55,8 @@
     </resultMap>
 
     <resultMap type="PhonePrice" id="PhonePriceResult">
-        <result property="type"    column="type"    />
+        <result property="method"    column="priceMethod"    />
+        <result property="type"    column="priceType"    />
         <result property="typeId"    column="type_id"    />
         <result property="originalPrice"    column="original_price"    />
         <result property="discount"    column="discount"    />
@@ -104,8 +105,8 @@
             m.balance,
             m.open_id,
             m.is_member,
-            p.method,
-            p.type,
+            p.method AS priceMethod,
+            p.type AS priceType,
             p.type_id,
             p.original_price,
             p.discount,
