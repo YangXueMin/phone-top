@@ -70,7 +70,7 @@
             <if test="appId != null "> and a.app_id = #{appId}</if>
             <if test="method != null  and method != ''"> and a.method = #{method}</if>
             <if test="type != null  and type != ''"> and a.type = #{type}</if>
-            <if test="typeId != null "> and a.typeId = #{type}</if>
+            <if test="typeId != null "> and a.type_id = #{typeId}</if>
             <if test="originalPrice != null "> and a.original_price = #{originalPrice}</if>
             <if test="discount != null "> and a.discount = #{discount}</if>
             <if test="sellPrice != null "> and a.sell_price = #{sellPrice}</if>
