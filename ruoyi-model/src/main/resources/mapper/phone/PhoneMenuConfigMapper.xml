@@ -32,7 +32,7 @@
             a.company_id,
             a.app_id,
             a.title,
-               a.banner,
+            a.banner,
             a.url,
             a.status,
             a.order_num,
@@ -56,6 +56,7 @@
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
         </where>
+        order by a.order_num
     </select>
 
     <select id="selectPhoneMenuConfigById" parameterType="Long" resultMap="PhoneMenuConfigResult">

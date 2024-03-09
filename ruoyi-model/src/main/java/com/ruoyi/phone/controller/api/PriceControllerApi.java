@@ -48,10 +48,8 @@ public class PriceControllerApi extends BaseController {
      */
     @ApiOperation("查询价格配置列表")
     @GetMapping("/list")
-    public TableDataInfo list(PhonePrice phonePrice) {
-        startPage();
-        List<PhonePrice> list = phonePriceService.selectPhonePriceList(phonePrice);
-        return getDataTable(list);
+    public AjaxResult list(PhonePrice phonePrice) {
+        return success(phonePriceService.selectPhonePriceListApi(phonePrice));
     }
 
     /**

@@ -59,6 +59,7 @@
             <if test="mchId != null  and mchId != ''"> and a.mch_id = #{mchId}</if>
             <if test="apiKey != null  and apiKey != ''"> and a.api_key = #{apiKey}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="selectPhoneInterfaceConfigById" parameterType="Long" resultMap="PhoneInterfaceConfigResult">

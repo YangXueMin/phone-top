@@ -1,6 +1,8 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.phone.domain.PhonePrice;
 
 /**
@@ -26,6 +28,14 @@ public interface IPhonePriceService
      * @return 价格配置集合
      */
     public List<PhonePrice> selectPhonePriceList(PhonePrice phonePrice);
+
+    /**
+     * 查询价格配置列表
+     *
+     * @param phonePrice 价格配置
+     * @return 价格配置集合
+     */
+    public Map<String,List<PhonePrice>> selectPhonePriceListApi(PhonePrice phonePrice);
 
     /**
      * 新增价格配置

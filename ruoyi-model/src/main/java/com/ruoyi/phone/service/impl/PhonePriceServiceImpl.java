@@ -1,6 +1,8 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.utils.DateUtils;
@@ -45,6 +47,12 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
     @Override
     public List<PhonePrice> selectPhonePriceList(PhonePrice phonePrice) {
         return phonePriceMapper.selectPhonePriceList(phonePrice);
+    }
+
+    @Override
+    public Map<String, List<PhonePrice>> selectPhonePriceListApi(PhonePrice phonePrice) {
+        List<PhonePrice> phonePriceList = phonePriceMapper.selectPhonePriceList(phonePrice);
+        return phonePriceList.stream().collect(Collectors.groupingBy(k-> k.getPhonePriceType().getTitle()));
     }
 
     /**

@@ -117,6 +117,9 @@ public class PhonePrice extends BaseEntity{
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
 
+    @ApiModelProperty("价格类型")
+    private PhonePriceType phonePriceType;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -272,5 +275,13 @@ public class PhonePrice extends BaseEntity{
 
     public void setSuperMemberIndirectCommission(BigDecimal superMemberIndirectCommission) {
         this.superMemberIndirectCommission = superMemberIndirectCommission;
+    }
+
+    public PhonePriceType getPhonePriceType() {
+        return phonePriceType;
+    }
+
+    public void setPhonePriceType(PhonePriceType phonePriceType) {
+        this.phonePriceType = phonePriceType;
     }
 }

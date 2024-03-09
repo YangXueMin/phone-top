@@ -50,6 +50,7 @@
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
         </where>
+        ORDER BY a.order_num
     </select>
 
     <select id="selectPhonePriceTypeById" parameterType="Long" resultMap="PhonePriceTypeResult">

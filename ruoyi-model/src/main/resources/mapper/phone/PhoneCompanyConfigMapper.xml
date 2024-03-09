@@ -62,6 +62,7 @@
             <if test="shareContent != null  and shareContent != ''"> and a.share_content = #{shareContent}</if>
             <if test="sharePhoto != null  and sharePhoto != ''"> and a.share_photo = #{sharePhoto}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="selectPhoneCompanyConfigById" parameterType="Long" resultMap="PhoneCompanyConfigResult">

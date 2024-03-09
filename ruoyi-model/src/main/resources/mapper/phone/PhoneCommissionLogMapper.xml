@@ -77,6 +77,7 @@
             <if test="money != null "> and a.money = #{money}</if>
             <if test="commissionAfter != null "> and a.commission_after = #{commissionAfter}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="selectPhoneCommissionLogById" parameterType="Long" resultMap="PhoneCommissionLogResult">

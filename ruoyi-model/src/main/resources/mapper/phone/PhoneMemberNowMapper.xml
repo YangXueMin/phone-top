@@ -50,6 +50,7 @@
             <if test="content != null  and content != ''"> and a.content = #{content}</if>
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="selectPhoneMemberNowById" parameterType="Long" resultMap="PhoneMemberNowResult">

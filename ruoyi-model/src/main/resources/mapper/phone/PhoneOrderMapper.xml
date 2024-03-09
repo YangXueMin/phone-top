@@ -154,6 +154,7 @@
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
