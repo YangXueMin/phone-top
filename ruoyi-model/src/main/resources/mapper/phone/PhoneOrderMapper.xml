@@ -64,6 +64,10 @@
         <result property="memberPrice"    column="member_price"    />
         <result property="directCommission"    column="direct_commission"    />
         <result property="indirectCommission"    column="indirect_commission"    />
+        <result property="memberDirectCommission"    column="member_direct_commission"    />
+        <result property="memberIndirectCommission"    column="member_indirect_commission"    />
+        <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
+        <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
     </resultMap>
 
     <sql id="selectPhoneOrderVo">
@@ -114,6 +118,10 @@
             p.member_price,
             p.direct_commission,
             p.indirect_commission,
+            p.member_direct_commission,
+            p.member_indirect_commission,
+            p.super_member_direct_commission,
+            p.super_member_indirect_commission,
             p.order_num
         from phone_order a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id

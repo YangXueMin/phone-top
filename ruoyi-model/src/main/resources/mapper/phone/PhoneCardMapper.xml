@@ -68,6 +68,7 @@
             m.is_member
         from phone_card  a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join phone_member m ON m.id = a.member_id
     </sql>
 
     <select id="selectPhoneCardList" parameterType="PhoneCard" resultMap="PhoneCardResult">
