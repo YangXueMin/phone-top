@@ -89,6 +89,26 @@ public class PhonePrice extends BaseEntity{
     @ApiModelProperty("间推佣金")
     private BigDecimal indirectCommission;
 
+    /** 会员高级直推佣金 */
+    @Excel(name = "会员直推佣金")
+    @ApiModelProperty("会员直推佣金")
+    private BigDecimal memberDirectCommission;
+
+    /** 会员间推佣金 */
+    @Excel(name = "会员间推佣金")
+    @ApiModelProperty("会员间推佣金")
+    private BigDecimal memberIndirectCommission;
+
+    /** 超级会员直推佣金 */
+    @Excel(name = "超级会员直推佣金")
+    @ApiModelProperty("超级会员直推佣金")
+    private BigDecimal superMemberDirectCommission;
+
+    /** 超级会员间推佣金 */
+    @Excel(name = "超级会员间推佣金")
+    @ApiModelProperty("超级会员间推佣金")
+    private BigDecimal superMemberIndirectCommission;
+
     /** 显示顺序 */
     @Excel(name = "显示顺序")
     @ApiModelProperty("显示顺序")
@@ -220,5 +240,37 @@ public class PhonePrice extends BaseEntity{
 
     public void setTypeId(Long typeId) {
         this.typeId = typeId;
+    }
+
+    public BigDecimal getMemberDirectCommission() {
+        return memberDirectCommission;
+    }
+
+    public void setMemberDirectCommission(BigDecimal memberDirectCommission) {
+        this.memberDirectCommission = memberDirectCommission;
+    }
+
+    public BigDecimal getMemberIndirectCommission() {
+        return memberIndirectCommission;
+    }
+
+    public void setMemberIndirectCommission(BigDecimal memberIndirectCommission) {
+        this.memberIndirectCommission = memberIndirectCommission;
+    }
+
+    public BigDecimal getSuperMemberDirectCommission() {
+        return superMemberDirectCommission;
+    }
+
+    public void setSuperMemberDirectCommission(BigDecimal superMemberDirectCommission) {
+        this.superMemberDirectCommission = superMemberDirectCommission;
+    }
+
+    public BigDecimal getSuperMemberIndirectCommission() {
+        return superMemberIndirectCommission;
+    }
+
+    public void setSuperMemberIndirectCommission(BigDecimal superMemberIndirectCommission) {
+        this.superMemberIndirectCommission = superMemberIndirectCommission;
     }
 }

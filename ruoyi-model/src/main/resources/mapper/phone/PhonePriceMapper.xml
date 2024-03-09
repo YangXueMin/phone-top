@@ -17,6 +17,10 @@
         <result property="memberPrice"    column="member_price"    />
         <result property="directCommission"    column="direct_commission"    />
         <result property="indirectCommission"    column="indirect_commission"    />
+        <result property="memberDirectCommission"    column="member_direct_commission"    />
+        <result property="memberIndirectCommission"    column="member_indirect_commission"    />
+        <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
+        <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
         <result property="orderNum"    column="order_num"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -44,6 +48,10 @@
             a.member_price,
             a.direct_commission,
             a.indirect_commission,
+            a.member_direct_commission,
+            a.member_indirect_commission,
+            a.super_member_direct_commission,
+            a.super_member_indirect_commission,
             a.order_num,
             a.create_by,
             a.create_time,
@@ -92,6 +100,10 @@
             <if test="memberPrice != null">member_price,</if>
             <if test="directCommission != null">direct_commission,</if>
             <if test="indirectCommission != null">indirect_commission,</if>
+            <if test="memberDirectCommission != null">member_direct_commission,</if>
+            <if test="memberIndirectCommission != null">member_indirect_commission,</if>
+            <if test="superMemberDirectCommission != null">super_member_direct_commission,</if>
+            <if test="superMemberIndirectCommission != null">super_member_indirect_commission,</if>
             <if test="orderNum != null">order_num,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -111,6 +123,10 @@
             <if test="memberPrice != null">#{memberPrice},</if>
             <if test="directCommission != null">#{directCommission},</if>
             <if test="indirectCommission != null">#{indirectCommission},</if>
+            <if test="memberDirectCommission != null">#{memberDirectCommission},</if>
+            <if test="memberIndirectCommission != null">#{memberIndirectCommission},</if>
+            <if test="superMemberDirectCommission != null">#{memberDirectCommission},</if>
+            <if test="superMemberIndirectCommission != null">#{superMemberIndirectCommission},</if>
             <if test="orderNum != null">#{orderNum},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -134,6 +150,10 @@
             <if test="memberPrice != null">member_price = #{memberPrice},</if>
             <if test="directCommission != null">direct_commission = #{directCommission},</if>
             <if test="indirectCommission != null">indirect_commission = #{indirectCommission},</if>
+            <if test="memberDirectCommission != null">member_direct_commission = #{memberDirectCommission},</if>
+            <if test="memberIndirectCommission != null">member_indirect_commission = #{memberIndirectCommission},</if>
+            <if test="superMemberDirectCommission != null">super_member_direct_commission = #{superMemberDirectCommission},</if>
+            <if test="superMemberIndirectCommission != null">super_member_indirect_commission = #{superMemberIndirectCommission},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

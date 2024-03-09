@@ -8,6 +8,7 @@
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
         <result property="appId"    column="app_id"    />
+        <result property="memberType"    column="member_type"    />
         <result property="title"    column="title"    />
         <result property="content"    column="content"    />
         <result property="memberDay"    column="member_day"    />
@@ -16,6 +17,10 @@
         <result property="buyingPrice"    column="buying_price"    />
         <result property="directCommission"    column="direct_commission"    />
         <result property="indirectCommission"    column="indirect_commission"    />
+        <result property="memberDirectCommission"    column="member_direct_commission"    />
+        <result property="memberIndirectCommission"    column="member_indirect_commission"    />
+        <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
+        <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
         <result property="type"    column="type"    />
         <result property="method"    column="method"    />
         <result property="status"    column="status"    />
@@ -36,6 +41,7 @@
             a.id,
             a.company_id,
             a.app_id,
+            a.member_type,
             a.title,
             a.content,
             a.member_day,
@@ -44,6 +50,10 @@
             a.buying_price,
             a.direct_commission,
             a.indirect_commission,
+            a.member_direct_commission,
+            a.member_indirect_commission,
+            a.super_member_direct_commission,
+            a.super_member_indirect_commission,
             a.type,
             a.method,
             a.status,
@@ -62,6 +72,7 @@
         <where>
             <if test="companyId != null "> and a.company_id = #{companyId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="memberType != null  and memberType != ''"> and a.member_type = #{memberType}</if>
             <if test="title != null  and title != ''"> and a.title = #{title}</if>
             <if test="content != null  and content != ''"> and a.content = #{content}</if>
             <if test="memberDay != null "> and a.member_day = #{memberDay}</if>
@@ -86,6 +97,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
             <if test="appId != null">app_id,</if>
+            <if test="memberType != null">member_type,</if>
             <if test="title != null">title,</if>
             <if test="content != null">content,</if>
             <if test="memberDay != null">member_day,</if>
@@ -94,6 +106,10 @@
             <if test="buyingPrice != null">buying_price,</if>
             <if test="directCommission != null">direct_commission,</if>
             <if test="indirectCommission != null">indirect_commission,</if>
+            <if test="memberDirectCommission != null">member_direct_commission,</if>
+            <if test="memberIndirectCommission != null">member_indirect_commission,</if>
+            <if test="superMemberDirectCommission != null">super_member_direct_commission,</if>
+            <if test="superMemberIndirectCommission != null">super_member_indirect_commission,</if>
             <if test="type != null">type,</if>
             <if test="method != null">method,</if>
             <if test="status != null">status,</if>
@@ -106,6 +122,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
             <if test="appId != null">#{appId},</if>
+            <if test="memberType != null">#{memberType},</if>
             <if test="title != null">#{title},</if>
             <if test="content != null">#{content},</if>
             <if test="memberDay != null">#{memberDay},</if>
@@ -114,6 +131,10 @@
             <if test="buyingPrice != null">#{buyingPrice},</if>
             <if test="directCommission != null">#{directCommission},</if>
             <if test="indirectCommission != null">#{indirectCommission},</if>
+            <if test="memberDirectCommission != null">#{memberDirectCommission},</if>
+            <if test="memberIndirectCommission != null">#{memberIndirectCommission},</if>
+            <if test="superMemberDirectCommission != null">#{memberDirectCommission},</if>
+            <if test="superMemberIndirectCommission != null">#{superMemberIndirectCommission},</if>
             <if test="type != null">#{type},</if>
             <if test="method != null">#{method},</if>
             <if test="status != null">#{status},</if>
@@ -130,6 +151,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="appId != null">app_id = #{appId},</if>
+            <if test="memberType != null">member_type = #{memberType},</if>
             <if test="title != null">title = #{title},</if>
             <if test="content != null">content = #{content},</if>
             <if test="memberDay != null">member_day = #{memberDay},</if>
@@ -138,6 +160,10 @@
             <if test="buyingPrice != null">buying_price = #{buyingPrice},</if>
             <if test="directCommission != null">direct_commission = #{directCommission},</if>
             <if test="indirectCommission != null">indirect_commission = #{indirectCommission},</if>
+            <if test="memberDirectCommission != null">member_direct_commission = #{memberDirectCommission},</if>
+            <if test="memberIndirectCommission != null">member_indirect_commission = #{memberIndirectCommission},</if>
+            <if test="superMemberDirectCommission != null">super_member_direct_commission = #{superMemberDirectCommission},</if>
+            <if test="superMemberIndirectCommission != null">super_member_indirect_commission = #{superMemberIndirectCommission},</if>
             <if test="type != null">type = #{type},</if>
             <if test="method != null">method = #{method},</if>
             <if test="status != null">status = #{status},</if>

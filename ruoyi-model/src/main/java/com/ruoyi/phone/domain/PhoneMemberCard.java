@@ -32,6 +32,11 @@ public class PhoneMemberCard extends BaseEntity{
     @ApiModelProperty("公众号配置ID")
     private String appId;
 
+    /** 会员卡类型 */
+    @Excel(name = "会员卡类型")
+    @ApiModelProperty("会员卡类型")
+    private String memberType;
+
     /** 会员卡标题 */
     @Excel(name = "会员卡标题")
     @ApiModelProperty("会员卡标题")
@@ -71,6 +76,26 @@ public class PhoneMemberCard extends BaseEntity{
     @Excel(name = "间推佣金")
     @ApiModelProperty("间推佣金")
     private BigDecimal indirectCommission;
+
+    /** 会员高级直推佣金 */
+    @Excel(name = "会员直推佣金")
+    @ApiModelProperty("会员直推佣金")
+    private BigDecimal memberDirectCommission;
+
+    /** 会员间推佣金 */
+    @Excel(name = "会员间推佣金")
+    @ApiModelProperty("会员间推佣金")
+    private BigDecimal memberIndirectCommission;
+
+    /** 超级会员直推佣金 */
+    @Excel(name = "超级会员直推佣金")
+    @ApiModelProperty("超级会员直推佣金")
+    private BigDecimal superMemberDirectCommission;
+
+    /** 超级会员间推佣金 */
+    @Excel(name = "超级会员间推佣金")
+    @ApiModelProperty("超级会员间推佣金")
+    private BigDecimal superMemberIndirectCommission;
 
     /** 充值类型 */
     @Excel(name = "充值类型")
@@ -195,5 +220,45 @@ public class PhoneMemberCard extends BaseEntity{
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public BigDecimal getMemberDirectCommission() {
+        return memberDirectCommission;
+    }
+
+    public void setMemberDirectCommission(BigDecimal memberDirectCommission) {
+        this.memberDirectCommission = memberDirectCommission;
+    }
+
+    public BigDecimal getMemberIndirectCommission() {
+        return memberIndirectCommission;
+    }
+
+    public void setMemberIndirectCommission(BigDecimal memberIndirectCommission) {
+        this.memberIndirectCommission = memberIndirectCommission;
+    }
+
+    public BigDecimal getSuperMemberDirectCommission() {
+        return superMemberDirectCommission;
+    }
+
+    public void setSuperMemberDirectCommission(BigDecimal superMemberDirectCommission) {
+        this.superMemberDirectCommission = superMemberDirectCommission;
+    }
+
+    public BigDecimal getSuperMemberIndirectCommission() {
+        return superMemberIndirectCommission;
+    }
+
+    public void setSuperMemberIndirectCommission(BigDecimal superMemberIndirectCommission) {
+        this.superMemberIndirectCommission = superMemberIndirectCommission;
+    }
+
+    public String getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(String memberType) {
+        this.memberType = memberType;
     }
 }

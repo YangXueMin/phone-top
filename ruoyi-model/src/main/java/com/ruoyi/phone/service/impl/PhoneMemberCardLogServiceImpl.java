@@ -166,6 +166,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                 List<PhoneMemberCardLog> cardLogList = phoneMemberCardLogMapper.selectPhoneMemberCardLogByOrderNo(notifyResult.getOutTradeNo());
                 if (cardLogList != null && cardLogList.size() > 0) {
                     PhoneMemberCardLog phoneMemberCardLog = cardLogList.get(0);
+                    PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
                     Member member = memberMapper.selectMemberById(phoneMemberCardLog.getId());
                     if (StringUtils.equals("1", phoneMemberCardLog.getPayStatus())) {
                         phoneMemberCardLog.setPayStatus("2");
@@ -173,16 +174,23 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                         phoneMemberCardLog.setPayResult(JSON.toJSONString(notifyResult));
                         phoneMemberCardLog.setUpdateTime(DateUtils.getNowDate());
                         phoneMemberCardLogMapper.updatePhoneMemberCardLog(phoneMemberCardLog);
-                        BigDecimal balance = member.getBalance();
-                        member.setIsMember("1");
                         Date endDate = DateUtils.getNowDate();
-                        if (member.getExpirationTime() != null) {
-                            endDate = member.getExpirationTime();
+                        if (StringUtils.equals("2", phoneMemberCard.getMemberType())) {
+                            //如果是高级会员
+                            member.setIsSuperMember("1");
+                            if (member.getSuperExpirationTime() != null) {
+                                endDate = member.getSuperExpirationTime();
+                            }
+                            member.setSuperExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
+                        } else {
+                            member.setIsMember("1");
+                            if (member.getExpirationTime() != null) {
+                                endDate = member.getExpirationTime();
+                            }
+                            member.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
                         }
-                        member.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
-                        member.setBalance(balance.add(phoneMemberCardLog.getTotalMoney()));
                         memberMapper.updateMember(member);
-                        updateUserInfo(phoneMemberCardLog, member);
+                        updateUserInfo(phoneMemberCardLog, phoneMemberCard, member);
                     }
                 }
                 return WxPayNotifyResponse.success("成功");
@@ -193,43 +201,51 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
         return WxPayNotifyResponse.fail("失败");
     }
 
-    public void updateUserInfo(PhoneMemberCardLog phoneMemberCardLog, Member member) {
+    public void updateUserInfo(PhoneMemberCardLog phoneMemberCardLog, PhoneMemberCard phoneMemberCard, Member member) {
         if (StringUtils.equals("2", phoneMemberCardLog.getPayStatus())) {
             //如果是被推荐用户获取上级
             if (member.getMemberId() != null) {
-                //获取佣金
-                final PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
-                if (phoneMemberCard != null) {
-                    Member agency = memberMapper.selectMemberById(member.getMemberId());
-                    if (agency != null) {
-                        BigDecimal agencyBalance = agency.getCommissionBalance();
-                        agency.setCommissionBalance(agencyBalance.add(phoneMemberCard.getDirectCommission()));
-                        memberMapper.updateMember(agency);
-                        //添加佣金记录
-                        PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
-                        phoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
-                        phoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
-                        phoneCommissionConfig.setCommissionBefore(agencyBalance);
-                        phoneCommissionConfig.setMoney(phoneMemberCard.getDirectCommission());
-                        phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
-                        phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
-                        phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
-                        if (agency.getMemberId() != null) {
-                            Member secondary = memberMapper.selectMemberById(member.getMemberId());
-                            if (secondary != null) {
-                                BigDecimal secondaryBalance = secondary.getCommissionBalance();
-                                secondary.setCommissionBalance(secondaryBalance.add(phoneMemberCard.getIndirectCommission()));
-                                memberMapper.updateMember(secondary);
-                                //添加佣金记录
-                                PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
-                                secondaryPhoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
-                                secondaryPhoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
-                                secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
-                                secondaryPhoneCommissionConfig.setMoney(phoneMemberCard.getIndirectCommission());
-                                secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
-                                secondaryPhoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
-                                phoneCommissionConfigMapper.insertPhoneCommissionConfig(secondaryPhoneCommissionConfig);
+                Member agency = memberMapper.selectMemberById(member.getMemberId());
+                if (agency != null) {
+                    BigDecimal agencyBalance = agency.getCommissionBalance();
+                    BigDecimal directCommission = phoneMemberCard.getDirectCommission();
+                    if (StringUtils.equals("1", agency.getIsSuperMember())) {
+                        directCommission = phoneMemberCard.getSuperMemberDirectCommission();
+                    }else if(StringUtils.equals("1",agency.getIsMember())){
+                        directCommission = phoneMemberCard.getMemberDirectCommission();
+                    }
+                    agency.setCommissionBalance(agencyBalance.add(directCommission));
+                    memberMapper.updateMember(agency);
+                    //添加佣金记录
+                    PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
+                    phoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
+                    phoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
+                    phoneCommissionConfig.setCommissionBefore(agencyBalance);
+                    phoneCommissionConfig.setMoney(directCommission);
+                    phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
+                    phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                    phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
+                    if (agency.getMemberId() != null) {
+                        Member secondary = memberMapper.selectMemberById(member.getMemberId());
+                        if (secondary != null) {
+                            BigDecimal secondaryBalance = secondary.getCommissionBalance();
+                            BigDecimal secondaryDirectCommission = phoneMemberCard.getIndirectCommission();
+                            if (StringUtils.equals("1", secondary.getIsSuperMember())) {
+                                secondaryDirectCommission = phoneMemberCard.getSuperMemberIndirectCommission();
+                            }else if(StringUtils.equals("1",secondary.getIsMember())){
+                                secondaryDirectCommission = phoneMemberCard.getMemberIndirectCommission();
                             }
+                            secondary.setCommissionBalance(secondaryBalance.add(secondaryDirectCommission));
+                            memberMapper.updateMember(secondary);
+                            //添加佣金记录
+                            PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
+                            secondaryPhoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
+                            secondaryPhoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
+                            secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
+                            secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);
+                            secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
+                            secondaryPhoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                            phoneCommissionConfigMapper.insertPhoneCommissionConfig(secondaryPhoneCommissionConfig);
                         }
                     }
                 }

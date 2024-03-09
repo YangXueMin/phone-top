@@ -104,6 +104,17 @@ public class Member extends BaseEntity {
     private Date expirationTime;
 
     /**
+     * 是否会员
+     */
+    @Excel(name = "是否超级会员")
+    private String isSuperMember;
+
+    /** 超级会员到期时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "超级会员到期时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date superExpirationTime;
+
+    /**
      * 是否拉黑
      */
     @Excel(name = "是否拉黑")
@@ -315,5 +326,21 @@ public class Member extends BaseEntity {
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public String getIsSuperMember() {
+        return isSuperMember;
+    }
+
+    public void setIsSuperMember(String isSuperMember) {
+        this.isSuperMember = isSuperMember;
+    }
+
+    public Date getSuperExpirationTime() {
+        return superExpirationTime;
+    }
+
+    public void setSuperExpirationTime(Date superExpirationTime) {
+        this.superExpirationTime = superExpirationTime;
     }
 }

@@ -48,9 +48,9 @@ public class PhoneMemberCardLog extends BaseEntity{
     @ApiModelProperty("支付方式")
     private String payType;
 
-    /** 订单ID */
-    @Excel(name = "订单ID")
-    @ApiModelProperty("订单ID")
+    /** 订单编号 */
+    @Excel(name = "订单编号")
+    @ApiModelProperty("订单编号")
     private String orderNo;
 
     /** 剩余金额 */

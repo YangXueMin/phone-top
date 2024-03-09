@@ -269,14 +269,20 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     Member agency = memberMapper.selectMemberById(member.getMemberId());
                     if (agency != null) {
                         BigDecimal agencyBalance = agency.getCommissionBalance();
-                        agency.setCommissionBalance(agencyBalance.add(phonePrice.getDirectCommission()));
+                        BigDecimal directCommission = phonePrice.getDirectCommission();
+                        if (StringUtils.equals("1", agency.getIsSuperMember())) {
+                            directCommission = phonePrice.getSuperMemberDirectCommission();
+                        }else if(StringUtils.equals("1",agency.getIsMember())){
+                            directCommission = phonePrice.getMemberDirectCommission();
+                        }
+                        agency.setCommissionBalance(agencyBalance.add(directCommission));
                         memberMapper.updateMember(agency);
                         //添加佣金记录
                         PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
                         phoneCommissionConfig.setCompanyId(phoneOrder.getCompanyId());
                         phoneCommissionConfig.setAppId(phoneOrder.getAppId());
                         phoneCommissionConfig.setCommissionBefore(agencyBalance);
-                        phoneCommissionConfig.setMoney(phonePrice.getDirectCommission());
+                        phoneCommissionConfig.setMoney(directCommission);
                         phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
                         phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
                         phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
@@ -284,14 +290,20 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                             Member secondary = memberMapper.selectMemberById(member.getMemberId());
                             if (secondary != null) {
                                 BigDecimal secondaryBalance = secondary.getCommissionBalance();
-                                secondary.setCommissionBalance(secondaryBalance.add(phonePrice.getIndirectCommission()));
+                                BigDecimal secondaryDirectCommission = phonePrice.getIndirectCommission();
+                                if (StringUtils.equals("1", secondary.getIsSuperMember())) {
+                                    secondaryDirectCommission = phonePrice.getSuperMemberIndirectCommission();
+                                }else if(StringUtils.equals("1",secondary.getIsMember())){
+                                    secondaryDirectCommission = phonePrice.getMemberIndirectCommission();
+                                }
+                                secondary.setCommissionBalance(secondaryBalance.add(secondaryDirectCommission));
                                 memberMapper.updateMember(secondary);
                                 //添加佣金记录
                                 PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
                                 secondaryPhoneCommissionConfig.setCompanyId(phoneOrder.getCompanyId());
                                 secondaryPhoneCommissionConfig.setAppId(phoneOrder.getAppId());
                                 secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
-                                secondaryPhoneCommissionConfig.setMoney(phonePrice.getIndirectCommission());
+                                secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);
                                 secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
                                 secondaryPhoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
                                 phoneCommissionConfigMapper.insertPhoneCommissionConfig(secondaryPhoneCommissionConfig);

@@ -19,6 +19,8 @@
         <result property="openId"    column="open_id"    />
         <result property="isMember"    column="is_member"    />
         <result property="expirationTime"    column="expiration_time"    />
+        <result property="isSuperMember"    column="is_super_member"    />
+        <result property="superExpirationTime"    column="super_expiration_time"    />
         <result property="isBlacklist"    column="is_blacklist"    />
         <result property="memberId"    column="member_id"    />
         <result property="ancestors"    column="ancestors"    />
@@ -53,6 +55,8 @@
             a.open_id,
             a.is_member,
             a.expiration_time,
+            a.is_super_member,
+            a.super_expiration_time,
             a.is_blacklist,
             a.member_id,
             a.ancestors,
@@ -80,6 +84,7 @@
             <if test="sex != null  and sex != ''"> and a.sex = #{sex}</if>
             <if test="openId != null  and openId != ''"> and a.open_id = #{openId}</if>
             <if test="isMember != null  and isMember != ''"> and a.is_member = #{isMember}</if>
+            <if test="isSuperMember != null  and isSuperMember != ''"> and a.is_super_member = #{isSuperMember}</if>
             <if test="isBlacklist != null  and isBlacklist != ''"> and a.is_blacklist = #{isBlacklist}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
             <if test="ancestors != null "> and a.ancestors = #{ancestors}</if>
@@ -122,6 +127,8 @@
             <if test="openId != null">open_id,</if>
             <if test="isMember != null">is_member,</if>
             <if test="expirationTime != null">expiration_time,</if>
+            <if test="isSuperMember != null">is_super_member,</if>
+            <if test="superExpirationTime != null">super_expiration_time,</if>
             <if test="isBlacklist != null">is_blacklist,</if>
             <if test="memberId != null">member_id,</if>
             <if test="ancestors != null">ancestors,</if>
@@ -149,6 +156,8 @@
             <if test="openId != null">#{openId},</if>
             <if test="isMember != null">#{isMember},</if>
             <if test="expirationTime != null">#{expirationTime},</if>
+            <if test="isSuperMember != null">#{isSuperMember},</if>
+            <if test="superExpirationTime != null">#{superExpirationTime},</if>
             <if test="isBlacklist != null">#{isBlacklist},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="ancestors != null">#{ancestors},</if>
@@ -179,6 +188,8 @@
             <if test="openId != null">open_id = #{openId},</if>
             <if test="isMember != null">is_member = #{isMember},</if>
             <if test="expirationTime != null">expiration_time = #{expirationTime},</if>
+            <if test="isSuperMember != null">is_super_member = #{isSuperMember},</if>
+            <if test="superExpirationTime != null">super_expiration_time = #{superExpirationTime},</if>
             <if test="isBlacklist != null">is_blacklist = #{isBlacklist},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="ancestors != null">ancestors = #{ancestors},</if>
