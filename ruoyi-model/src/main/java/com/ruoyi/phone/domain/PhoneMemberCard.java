@@ -3,6 +3,8 @@ package com.ruoyi.phone.domain;
 import java.math.BigDecimal;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -36,6 +38,11 @@ public class PhoneMemberCard extends BaseEntity{
     @Excel(name = "会员卡类型")
     @ApiModelProperty("会员卡类型")
     private String memberType;
+
+    /** 会员卡类型 */
+    @Excel(name = "会员卡类型")
+    @ApiModelProperty("会员卡类型")
+    private String memberTypeLabel;
 
     /** 会员卡标题 */
     @Excel(name = "会员卡标题")
@@ -260,5 +267,16 @@ public class PhoneMemberCard extends BaseEntity{
 
     public void setMemberType(String memberType) {
         this.memberType = memberType;
+    }
+
+    public String getMemberTypeLabel() {
+        if(StringUtils.isNotBlank(memberType)){
+            return DictUtils.getDictLabel("phone_member_card",memberType);
+        }
+        return memberTypeLabel;
+    }
+
+    public void setMemberTypeLabel(String memberTypeLabel) {
+        this.memberTypeLabel = memberTypeLabel;
     }
 }
