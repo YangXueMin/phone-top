@@ -2,6 +2,8 @@ package com.ruoyi.system.domain;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -22,6 +24,9 @@ public class SysNotice extends BaseEntity
     /** 公司ID */
     private Long companyId;
 
+    /** 微信ID */
+    private String appId;
+
     /** 公告标题 */
     private String noticeTitle;
 
@@ -33,6 +38,8 @@ public class SysNotice extends BaseEntity
 
     /** 公告状态（0正常 1关闭） */
     private String status;
+
+    private WechatConfig wechatConfig;
 
     public Long getNoticeId()
     {
@@ -93,6 +100,22 @@ public class SysNotice extends BaseEntity
 
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
     }
 
     @Override
