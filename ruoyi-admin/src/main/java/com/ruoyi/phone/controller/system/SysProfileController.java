@@ -1,6 +1,8 @@
 package com.ruoyi.phone.controller.system;
 
 import com.qcloud.cos.transfer.Upload;
+import com.ruoyi.common.config.MinioConfig;
+import com.ruoyi.common.utils.file.MinioUtil;
 import com.ruoyi.common.utils.file.TxCosUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,15 +122,16 @@ public class SysProfileController extends BaseController {
         if (!file.isEmpty()) {
             LoginUser loginUser = getLoginUser();
             // 上传并返回新文件名称
-            String fileName = UUID.randomUUID() + file.getName();
-            Upload upload = TxCosUtils.upload(fileName, file.getInputStream());
-            if (upload != null) {
-                String avatar = TxCosUtils.URL + fileName;
-                if (userService.updateUserAvatar(loginUser.getUsername(), avatar)) {
+            // 上传文件路径
+            String fileName = UUID.randomUUID() + "." + FileUploadUtils.getExtension(file);
+            // 上传并返回新文件名称
+            String url = MinioUtil.uploadFile(MinioConfig.getBucketName(), fileName, file);
+            if (url != null) {
+                if (userService.updateUserAvatar(loginUser.getUsername(), url)) {
                     AjaxResult ajax = AjaxResult.success();
-                    ajax.put("imgUrl", avatar);
+                    ajax.put("imgUrl", url);
                     // 更新缓存用户头像
-                    loginUser.getUser().setAvatar(avatar);
+                    loginUser.getUser().setAvatar(url);
                     tokenService.setLoginUser(loginUser);
                     return ajax;
                 }
