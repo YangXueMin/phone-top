@@ -112,6 +112,7 @@ public class MemberLoginService {
                 member.setMobile(map.get("mobile").toString());
             }
             member.setIsMember("0");
+            member.setIsSuperMember("0");
             member.setIsBlacklist("0");
             member.setBalance(BigDecimal.ZERO);
         }

@@ -8,7 +8,6 @@ import com.ruoyi.phone.domain.PhoneCommissionLog;
 import com.ruoyi.phone.service.IPhoneCommissionLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +43,7 @@ public class PhoneCommissionControllerApi extends BaseController {
         query.setMemberId(phoneCommissionLog.getMemberId());
         query.setAuditStatus("1");
         List<PhoneCommissionLog> phoneCommissionLogList = phoneCommissionLogService.selectPhoneCommissionLogList(query);
-        if(phoneCommissionLogList.size() > 0){
+        if (phoneCommissionLogList.size() > 0) {
             return error("有待审批的佣金提现记录，请联系客服");
         }
         return success(phoneCommissionLogService.insertPhoneCommissionLog(phoneCommissionLog));

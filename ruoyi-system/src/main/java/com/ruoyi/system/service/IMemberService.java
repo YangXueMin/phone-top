@@ -95,4 +95,11 @@ public interface IMemberService {
      * @return
      */
     Member getMemberInfo();
+
+    /**
+     * 获取下级列表
+     * @param type
+     * @return
+     */
+    List<Member> findSubordinateList(String type);
 }

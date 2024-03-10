@@ -133,4 +133,18 @@ public class MemberServiceImpl implements IMemberService {
         Long id = SecurityUtils.getLoginUser().getUserId();
         return memberMapper.selectMemberById(id);
     }
+
+    @Override
+    public List<Member> findSubordinateList(String type) {
+        Member member = new Member();
+        Long id = SecurityUtils.getLoginUser().getUserId();
+        if(StringUtils.equals("1",type)){
+            member.setMemberId(id);
+        }else {
+            member.setAncestors(id.toString());
+        }
+        return memberMapper.selectMemberList(member);
+    }
+
+
 }

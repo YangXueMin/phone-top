@@ -41,7 +41,7 @@ public class MemberControllerApi extends BaseController {
                 && UserConstants.NOT_UNIQUE.equals(memberService.checkMobileUnique(member))) {
             return error("修改用户'" + member.getName() + "'失败，手机号码已存在");
         }
-        if(StringUtils.isNotBlank(member.getPassword())){
+        if (StringUtils.isNotBlank(member.getPassword())) {
             member.setPassword(SecurityUtils.encryptPassword(member.getPassword()));
         }
         final int i = memberService.updateMember(member);
@@ -79,6 +79,15 @@ public class MemberControllerApi extends BaseController {
     @PostMapping("/getMemberInfo")
     public AjaxResult getMemberInfo() {
         return success(memberService.getMemberInfo());
+    }
+
+    /**
+     * 获取会员下级
+     */
+    @ApiOperation("获取会员下级")
+    @PostMapping("/findSubordinateList")
+    public AjaxResult findSubordinateList(@RequestParam("type") String type) {
+        return success(memberService.findSubordinateList(type));
     }
 
 }

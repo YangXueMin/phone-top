@@ -1,7 +1,6 @@
 package com.ruoyi.phone.handler;
 
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.config.builder.TextBuilder;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -58,6 +57,7 @@ public class SubscribeHandler extends AbstractHandler {
                     member.setNumber(SnowflakeGenerator.nextId().toString());
                 } else {
                     member.setIsMember("0");
+                    member.setIsSuperMember("0");
                     member.setIsBlacklist("0");
                     member.setBalance(BigDecimal.ZERO);
                 }
@@ -98,6 +98,9 @@ public class SubscribeHandler extends AbstractHandler {
     private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage)
             throws Exception {
         //TODO
+        System.out.println(wxMessage.getFromUser());
+        Member fromMember = memberService.getMemberByOpenId(wxMessage.getFromUser());
+
         return null;
     }
 
