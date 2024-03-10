@@ -87,6 +87,12 @@ public class Member extends BaseEntity {
     private BigDecimal commissionBalance;
 
     /**
+     * 提现金额
+     */
+    @Excel(name = "提现金额")
+    private BigDecimal withdrawalAmount;
+
+    /**
      * openId
      */
     @Excel(name = "openId")
@@ -342,5 +348,13 @@ public class Member extends BaseEntity {
 
     public void setSuperExpirationTime(Date superExpirationTime) {
         this.superExpirationTime = superExpirationTime;
+    }
+
+    public BigDecimal getWithdrawalAmount() {
+        return withdrawalAmount;
+    }
+
+    public void setWithdrawalAmount(BigDecimal withdrawalAmount) {
+        this.withdrawalAmount = withdrawalAmount;
     }
 }

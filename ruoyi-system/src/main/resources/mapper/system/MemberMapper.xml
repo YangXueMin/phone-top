@@ -16,6 +16,8 @@
         <result property="sex"    column="sex"    />
         <result property="birthday"    column="birthday"    />
         <result property="balance"    column="balance"    />
+        <result property="commissionBalance"    column="commission_balance"    />
+        <result property="withdrawalAmount"    column="withdrawal_amount"    />
         <result property="openId"    column="open_id"    />
         <result property="isMember"    column="is_member"    />
         <result property="expirationTime"    column="expiration_time"    />
@@ -52,6 +54,8 @@
             a.sex,
             a.birthday,
             a.balance,
+            a.commission_balance,
+            a.withdrawal_amount,
             a.open_id,
             a.is_member,
             a.expiration_time,
@@ -124,6 +128,8 @@
             <if test="sex != null">sex,</if>
             <if test="birthday != null">birthday,</if>
             <if test="balance != null">balance,</if>
+            <if test="commissionBalance != null">commission_balance,</if>
+            <if test="withdrawalAmount != null">withdrawal_amount,</if>
             <if test="openId != null">open_id,</if>
             <if test="isMember != null">is_member,</if>
             <if test="expirationTime != null">expiration_time,</if>
@@ -153,6 +159,8 @@
             <if test="sex != null">#{sex},</if>
             <if test="birthday != null">#{birthday},</if>
             <if test="balance != null">#{balance},</if>
+            <if test="commissionBalance != null">#{commission_balance},</if>
+            <if test="withdrawalAmount != null">#{withdrawal_amount},</if>
             <if test="openId != null">#{openId},</if>
             <if test="isMember != null">#{isMember},</if>
             <if test="expirationTime != null">#{expirationTime},</if>
@@ -185,6 +193,8 @@
             <if test="sex != null">sex = #{sex},</if>
             <if test="birthday != null">birthday = #{birthday},</if>
             <if test="balance != null">balance = #{balance},</if>
+            <if test="commissionBalance != null">commission_balance = #{commissionBalance},</if>
+            <if test="withdrawalAmount != null">withdrawal_amount = #{withdrawalAmount},</if>
             <if test="openId != null">open_id = #{openId},</if>
             <if test="isMember != null">is_member = #{isMember},</if>
             <if test="expirationTime != null">expiration_time = #{expirationTime},</if>

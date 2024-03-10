@@ -33,7 +33,7 @@ public interface IPhoneCommissionLogService
      * @param phoneCommissionLog 佣金提现记录
      * @return 结果
      */
-    public int insertPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog);
+    public PhoneCommissionLog insertPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog);
 
     /**
      * 修改佣金提现记录
@@ -42,6 +42,14 @@ public interface IPhoneCommissionLogService
      * @return 结果
      */
     public int updatePhoneCommissionLog(PhoneCommissionLog phoneCommissionLog);
+
+    /**
+     * 审批佣金提现记录
+     *
+     * @param phoneCommissionLog 审批佣金提现记录
+     * @return 结果
+     */
+    public int auditPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog);
 
     /**
      * 批量删除佣金提现记录

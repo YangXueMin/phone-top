@@ -36,7 +36,7 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
             throw new ServiceException("对不起，您的账号：" + member.getName() + " 已被删除");
         }
         //返回UserDetails用户对象
-        return createLoginUser(new Member());
+        return createLoginUser(member);
     }
 
     public UserDetails createLoginUser(Member member) {

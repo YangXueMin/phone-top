@@ -1,12 +1,18 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneCommissionLogMapper;
 import com.ruoyi.phone.domain.PhoneCommissionLog;
 import com.ruoyi.phone.service.IPhoneCommissionLogService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 佣金提现记录Service业务层处理
@@ -15,10 +21,11 @@ import com.ruoyi.phone.service.IPhoneCommissionLogService;
  * @date 2024-03-05
  */
 @Service
-public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
-{
+public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService {
     @Autowired
     private PhoneCommissionLogMapper phoneCommissionLogMapper;
+    @Autowired
+    private MemberMapper memberMapper;
 
     /**
      * 查询佣金提现记录
@@ -27,8 +34,7 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 佣金提现记录
      */
     @Override
-    public PhoneCommissionLog selectPhoneCommissionLogById(Long id)
-    {
+    public PhoneCommissionLog selectPhoneCommissionLogById(Long id) {
         return phoneCommissionLogMapper.selectPhoneCommissionLogById(id);
     }
 
@@ -39,8 +45,7 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 佣金提现记录
      */
     @Override
-    public List<PhoneCommissionLog> selectPhoneCommissionLogList(PhoneCommissionLog phoneCommissionLog)
-    {
+    public List<PhoneCommissionLog> selectPhoneCommissionLogList(PhoneCommissionLog phoneCommissionLog) {
         return phoneCommissionLogMapper.selectPhoneCommissionLogList(phoneCommissionLog);
     }
 
@@ -51,10 +56,16 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 结果
      */
     @Override
-    public int insertPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog)
-    {
+    public PhoneCommissionLog insertPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog) {
         phoneCommissionLog.setCreateTime(DateUtils.getNowDate());
-        return phoneCommissionLogMapper.insertPhoneCommissionLog(phoneCommissionLog);
+        phoneCommissionLog.setAuditStatus("1");
+        Member member = memberMapper.selectMemberById(phoneCommissionLog.getMemberId());
+        if (member != null) {
+            phoneCommissionLog.setCommissionBefore(member.getCommissionBalance());
+            phoneCommissionLog.setCommissionAfter(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
+        }
+        final int i = phoneCommissionLogMapper.insertPhoneCommissionLog(phoneCommissionLog);
+        return phoneCommissionLog;
     }
 
     /**
@@ -64,9 +75,24 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 结果
      */
     @Override
-    public int updatePhoneCommissionLog(PhoneCommissionLog phoneCommissionLog)
-    {
+    public int updatePhoneCommissionLog(PhoneCommissionLog phoneCommissionLog) {
         phoneCommissionLog.setUpdateTime(DateUtils.getNowDate());
+        return phoneCommissionLogMapper.updatePhoneCommissionLog(phoneCommissionLog);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int auditPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog) {
+        phoneCommissionLog.setUpdateTime(DateUtils.getNowDate());
+        phoneCommissionLog.setAuditId(SecurityUtils.getUserId());
+        phoneCommissionLog.setAuditTime(DateUtils.getNowDate());
+        if (StringUtils.equals("2", phoneCommissionLog.getAuditStatus())) {
+            //修改会员的佣金，并修改会员的体现佣金
+            Member member = memberMapper.selectMemberById(phoneCommissionLog.getMemberId());
+            member.setCommissionBalance(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
+            member.setWithdrawalAmount(member.getWithdrawalAmount().add(phoneCommissionLog.getMoney()));
+            memberMapper.updateMember(member);
+        }
         return phoneCommissionLogMapper.updatePhoneCommissionLog(phoneCommissionLog);
     }
 
@@ -77,8 +103,7 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 结果
      */
     @Override
-    public int deletePhoneCommissionLogByIds(Long[] ids)
-    {
+    public int deletePhoneCommissionLogByIds(Long[] ids) {
         return phoneCommissionLogMapper.deletePhoneCommissionLogByIds(ids);
     }
 
@@ -89,8 +114,7 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 结果
      */
     @Override
-    public int deletePhoneCommissionLogById(Long id)
-    {
+    public int deletePhoneCommissionLogById(Long id) {
         return phoneCommissionLogMapper.deletePhoneCommissionLogById(id);
     }
 }

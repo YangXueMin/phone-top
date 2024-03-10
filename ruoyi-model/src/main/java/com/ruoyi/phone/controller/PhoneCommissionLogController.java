@@ -85,7 +85,7 @@ public class PhoneCommissionLogController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody PhoneCommissionLog phoneCommissionLog)
     {
-        return toAjax(phoneCommissionLogService.insertPhoneCommissionLog(phoneCommissionLog));
+        return success(phoneCommissionLogService.insertPhoneCommissionLog(phoneCommissionLog));
     }
 
     /**

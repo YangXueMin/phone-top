@@ -7,11 +7,14 @@
     <resultMap type="PhoneCommissionLog" id="PhoneCommissionLogResult">
         <result property="id"    column="id"    />
         <result property="companyId"    column="company_id"    />
-        <result property="configId"    column="config_id"    />
+        <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
         <result property="commissionBefore"    column="commission_before"    />
         <result property="money"    column="money"    />
         <result property="commissionAfter"    column="commission_after"    />
+        <result property="auditStatus"    column="audit_status"    />
+        <result property="auditId"    column="audit_id"    />
+        <result property="auditTime"    column="audit_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -42,11 +45,14 @@
         select
             a.id,
             a.company_id,
-            a.config_id,
+            a.app_id,
             a.member_id,
             a.commission_before,
             a.money,
             a.commission_after,
+            a.audit_status,
+            a.audit_id,
+            a.audit_time,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -76,6 +82,9 @@
             <if test="commissionBefore != null "> and a.commission_before = #{commissionBefore}</if>
             <if test="money != null "> and a.money = #{money}</if>
             <if test="commissionAfter != null "> and a.commission_after = #{commissionAfter}</if>
+            <if test="auditStatus != null  and auditStatus != ''"> and a.audit_status = #{auditStatus}</if>
+            <if test="auditId != null "> and a.audit_id = #{auditId}</if>
+            <if test="auditTime != null "> and a.audit_time = #{auditTime}</if>
         </where>
         ORDER BY a.create_time DESC
     </select>
@@ -89,11 +98,14 @@
         insert into phone_commission_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="companyId != null">company_id,</if>
-            <if test="configId != null">config_id,</if>
+            <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="commissionBefore != null">commission_before,</if>
             <if test="money != null">money,</if>
             <if test="commissionAfter != null">commission_after,</if>
+            <if test="auditStatus != null">audit_status,</if>
+            <if test="auditId != null">audit_id,</if>
+            <if test="auditTime != null">audit_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -102,11 +114,14 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyId != null">#{companyId},</if>
-            <if test="configId != null">#{configId},</if>
+            <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="commissionBefore != null">#{commissionBefore},</if>
             <if test="money != null">#{money},</if>
             <if test="commissionAfter != null">#{commissionAfter},</if>
+            <if test="auditStatus != null">#{auditStatus},</if>
+            <if test="auditId != null">#{auditId},</if>
+            <if test="auditTime != null">#{auditTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -119,11 +134,14 @@
         update phone_commission_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="companyId != null">company_id = #{companyId},</if>
-            <if test="configId != null">config_id = #{configId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="commissionBefore != null">commission_before = #{commissionBefore},</if>
             <if test="money != null">money = #{money},</if>
             <if test="commissionAfter != null">commission_after = #{commissionAfter},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="auditId != null">audit_id = #{auditId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

@@ -132,7 +132,7 @@ public class MemberLoginService {
             //此处会让人很迷惑，特别是对新手来说。其实就是调用了AppUserDetailsServiceImpl中的loadUserByUsername方法
             //而这个方法的是通过AppAuthenticationProvider中去发起的。所以这个authenticationManager  其实就是注入的AppAuthenticationProvider
             //这个地方一定要注意！！！！！
-            authentication = authenticationManager.authenticate(new MemberAuthenticationToken(openId, code));
+            authentication = authenticationManager.authenticate(new MemberAuthenticationToken(openId, member));
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(code, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
