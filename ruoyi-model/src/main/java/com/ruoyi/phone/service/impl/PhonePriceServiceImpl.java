@@ -52,7 +52,12 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
     @Override
     public Map<String, List<PhonePrice>> selectPhonePriceListApi(PhonePrice phonePrice) {
         List<PhonePrice> phonePriceList = phonePriceMapper.selectPhonePriceList(phonePrice);
-        return phonePriceList.stream().collect(Collectors.groupingBy(PhonePrice::getTypeTitle));
+        return phonePriceList.stream().collect(Collectors.groupingBy(k-> {
+            if(k.getPhonePriceType() != null){
+               return k.getPhonePriceType().getTitle();
+            }
+            return "默认";
+        }));
     }
 
     /**

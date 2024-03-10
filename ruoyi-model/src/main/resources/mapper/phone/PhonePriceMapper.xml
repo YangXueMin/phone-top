@@ -22,13 +22,13 @@
         <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
         <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
         <result property="orderNum"    column="order_num"    />
-        <result property="typeTitle"    column="typeTitle"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="phonePriceType"    column="type_id" javaType="PhonePriceType" resultMap="PhonePriceTypeResult" />
     </resultMap>
 
     <resultMap type="WechatConfig" id="WechatConfigResult">
