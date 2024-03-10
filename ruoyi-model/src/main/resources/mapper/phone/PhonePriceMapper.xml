@@ -22,6 +22,7 @@
         <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
         <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
         <result property="orderNum"    column="order_num"    />
+        <result property="typeTitle"    column="typeTitle"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -37,7 +38,7 @@
     <resultMap type="PhonePriceType" id="PhonePriceTypeResult">
         <result property="title"    column="typeTitle"    />
         <result property="status"    column="typeStatus"    />
-        <result property="orderNum"    column="order_num"    />
+        <result property="orderNum"    column="typeOrderNum"    />
     </resultMap>
 
     <sql id="selectPhonePriceVo">
@@ -67,7 +68,7 @@
             wc.title as wxTitle,
             t.title AS typeTitle,
             t.status AS typeStatus,
-            t.order_num
+            t.order_num AS typeOrderNum
         from phone_price a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                 left join phone_price_type t ON t.id = a.type_id

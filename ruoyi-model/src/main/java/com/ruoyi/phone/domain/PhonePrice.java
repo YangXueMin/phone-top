@@ -120,6 +120,9 @@ public class PhonePrice extends BaseEntity{
     @ApiModelProperty("价格类型")
     private PhonePriceType phonePriceType;
 
+    @ApiModelProperty("价格类型标题")
+    private String typeTitle;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -283,5 +286,13 @@ public class PhonePrice extends BaseEntity{
 
     public void setPhonePriceType(PhonePriceType phonePriceType) {
         this.phonePriceType = phonePriceType;
+    }
+
+    public String getTypeTitle() {
+        return typeTitle;
+    }
+
+    public void setTypeTitle(String typeTitle) {
+        this.typeTitle = typeTitle;
     }
 }
