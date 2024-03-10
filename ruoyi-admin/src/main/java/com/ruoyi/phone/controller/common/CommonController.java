@@ -2,14 +2,12 @@ package com.ruoyi.phone.controller.common;
 
 
 import com.qcloud.cos.transfer.Upload;
+import com.ruoyi.common.config.MinioConfig;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.file.FileUploadUtils;
-import com.ruoyi.common.utils.file.FileUtils;
-import com.ruoyi.common.utils.file.MimeTypeUtils;
-import com.ruoyi.common.utils.file.TxCosUtils;
+import com.ruoyi.common.utils.file.*;
 import com.ruoyi.common.utils.qrCode.EwmEntity;
 import com.ruoyi.common.utils.qrCode.EwmUtils;
 import com.ruoyi.common.utils.uuid.UUID;
@@ -17,6 +15,7 @@ import com.ruoyi.framework.config.ServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,10 +84,9 @@ public class CommonController {
     public AjaxResult uploadFile(MultipartFile file) throws Exception {
         try {
             // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
+            String fileName = UUID.randomUUID() + "." + FileUploadUtils.getExtension(file);
             // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+            String url = MinioUtil.uploadFile(MinioConfig.getBucketName(), fileName, file);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("url", url);

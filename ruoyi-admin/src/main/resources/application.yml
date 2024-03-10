@@ -163,4 +163,4 @@ minio:
   url: https://minio.yangxuemin.mobi        #使用域名只能使用https
   accessKey: admin
   secretKey: admin123
-  bucketName: party-building
+  bucketName: phone-up
