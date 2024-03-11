@@ -30,16 +30,6 @@ public class CardControllerApi extends BaseController {
     }
 
     /**
-     * 根据公司ID和卡密编号获取数据
-     */
-    @ApiOperation("根据公司ID和卡密编号获取数据")
-    @GetMapping("/list")
-    public AjaxResult list(PhoneCard phoneCard) {
-        List<PhoneCard> list = phoneCardService.selectPhoneCardList(phoneCard);
-        return success(list);
-    }
-
-    /**
      * 核销卡
      */
     @ApiOperation("核销卡")
