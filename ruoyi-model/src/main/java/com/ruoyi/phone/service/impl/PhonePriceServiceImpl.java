@@ -1,5 +1,6 @@
 package com.ruoyi.phone.service.impl;
 
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,6 +74,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
             phonePrice.setCompanyId(company.getDeptId());
         }
         phonePrice.setCreateTime(DateUtils.getNowDate());
+        phonePrice.setSellPrice(phonePrice.getOriginalPrice().multiply(phonePrice.getDiscount()).setScale(2, RoundingMode.HALF_UP));
         return phonePriceMapper.insertPhonePrice(phonePrice);
     }
 

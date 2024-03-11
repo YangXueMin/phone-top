@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,11 +99,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
         if (StringUtils.equals("1", member.getIsSuperMember())) {
-            phoneOrder.setMoney(phonePrice.getSuperMemberPrice());
+            phoneOrder.setMoney(phonePrice.getOriginalPrice().multiply(phonePrice.getSuperMemberPrice()).setScale(2, RoundingMode.HALF_UP));
         } else if (StringUtils.equals("2", member.getIsMember())) {
-            phoneOrder.setMoney(phonePrice.getMemberPrice());
+            phoneOrder.setMoney(phonePrice.getOriginalPrice().multiply(phonePrice.getMemberPrice()).setScale(2, RoundingMode.HALF_UP));
         } else {
-            phoneOrder.setMoney(phonePrice.getSellPrice());
+            phoneOrder.setMoney(phonePrice.getOriginalPrice().multiply(phonePrice.getDiscount()).setScale(2, RoundingMode.HALF_UP));
         }
 
         BigDecimal balance = member.getBalance();
