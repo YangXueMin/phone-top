@@ -74,14 +74,14 @@
             m.balance,
             m.open_id,
             m.is_member,
-            a.title as coupon_title,
-            a.term_validity,
-            a.recharge_amount,
-            a.full_money,
-            a.minus_money,
-            a.distribution_mode,
-            a.number as coupon_number,
-            a.status as coupon_status
+            c.title as coupon_title,
+            c.term_validity,
+            c.recharge_amount,
+            c.full_money,
+            c.minus_money,
+            c.distribution_mode,
+            c.number as coupon_number,
+            c.status as coupon_status
         from phone_member_coupon a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                  left join phone_member m ON m.id = a.member_id
