@@ -10,6 +10,7 @@
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
         <result property="priceId"    column="price_id"    />
+        <result property="couponId"    column="coupon_id"    />
         <result property="orderNo"    column="order_no"    />
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
@@ -77,6 +78,7 @@
             a.app_id,
             a.member_id,
             a.price_id,
+            a.coupon_id,
             a.order_no,
             a.method,
             a.type,
@@ -175,6 +177,7 @@
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="priceId != null">price_id,</if>
+            <if test="couponId != null">coupon_id,</if>
             <if test="orderNo != null">order_no,</if>
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
@@ -204,6 +207,7 @@
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="priceId != null">#{priceId},</if>
+            <if test="couponId != null">#{couponId},</if>
             <if test="orderNo != null">#{orderNo},</if>
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
@@ -236,6 +240,7 @@
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="priceId != null">price_id = #{priceId},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>

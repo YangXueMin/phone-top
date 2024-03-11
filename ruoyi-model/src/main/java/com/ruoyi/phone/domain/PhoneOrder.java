@@ -45,6 +45,11 @@ public class PhoneOrder extends BaseEntity{
     @ApiModelProperty("价格ID")
     private Long priceId;
 
+    /** 优惠券ID */
+    @Excel(name = "优惠券ID")
+    @ApiModelProperty("优惠券ID")
+    private Long couponId;
+
     /** 订单号 */
     @Excel(name = "订单号")
     @ApiModelProperty("订单号")
@@ -396,5 +401,13 @@ public class PhoneOrder extends BaseEntity{
 
     public void setArrivalStatusLabel(String arrivalStatusLabel) {
         this.arrivalStatusLabel = arrivalStatusLabel;
+    }
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
     }
 }

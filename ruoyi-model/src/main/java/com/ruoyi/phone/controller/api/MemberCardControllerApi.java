@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -84,8 +85,8 @@ public class MemberCardControllerApi extends BaseController {
      */
     @ApiOperation("支付回调通知处理")
     @PostMapping("/payNotify")
-    public String payNotify(@RequestParam("appid") String appid, @RequestBody String xmlData) {
-        return phoneMemberCardLogService.payNotify(appid, xmlData);
+    public String payNotify(@RequestBody String xmlData) {
+        return phoneMemberCardLogService.payNotify( xmlData);
     }
 
 

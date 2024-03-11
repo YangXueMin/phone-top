@@ -75,5 +75,5 @@ public interface IPhoneMemberCardLogService
      * @param xmlData 支付通知
      * @return 结果
      */
-    public String payNotify(String appid,String xmlData);
+    public String payNotify(String xmlData);
 }

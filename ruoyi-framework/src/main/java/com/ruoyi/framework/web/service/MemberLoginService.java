@@ -107,10 +107,6 @@ public class MemberLoginService {
             SnowflakeGenerator.setDatacenterId(1);
             SnowflakeGenerator.setMachineId(1);
             member.setNumber(SnowflakeGenerator.nextId().toString());
-        } else {
-            if (map.get("mobile") != null) {
-                member.setMobile(map.get("mobile").toString());
-            }
             member.setIsMember("0");
             member.setIsSuperMember("0");
             member.setIsBlacklist("0");

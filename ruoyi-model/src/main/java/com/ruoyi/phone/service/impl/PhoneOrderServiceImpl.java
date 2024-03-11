@@ -105,6 +105,17 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         } else {
             phoneOrder.setMoney(phonePrice.getOriginalPrice().multiply(phonePrice.getDiscount()).setScale(2, RoundingMode.HALF_UP));
         }
+        if (phoneOrder.getCouponId() != null && phoneOrder.getCouponId() != 0L) {
+            PhoneMemberCoupon phoneMemberCoupon = phoneMemberCouponMapper.selectPhoneMemberCouponById(phoneOrder.getCouponId());
+            if (phoneMemberCoupon != null) {
+                final PhoneCoupon phoneCoupon = phoneCouponMapper.selectPhoneCouponById(phoneMemberCoupon.getCouponId());
+                if (phoneCoupon != null) {
+                    phoneOrder.setMoney(phoneOrder.getMoney().subtract(phoneCoupon.getMinusMoney()));
+                }
+                phoneMemberCoupon.setStatus("2");
+                phoneMemberCouponMapper.updatePhoneMemberCoupon(phoneMemberCoupon);
+            }
+        }
 
         BigDecimal balance = member.getBalance();
         phoneOrder.setArrivalStatus("1");
@@ -197,7 +208,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         request.setNotifyUrl(Constants.URL + "/api/phone/memberCard/payNotify?appid=" + phoneOrder.getAppId());
         //公众号支付
         request.setTradeType("JSAPI");
-        //小程序用户openid
+        //微信公众号用户openid
         request.setOpenid(member.getOpenId());
         StringBuilder sb = new StringBuilder();
         if (StringUtils.equals("0", phoneOrder.getMethod())) {
@@ -226,28 +237,23 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     }
 
     @Override
-    public String payNotify(String appid, String xmlData) {
-        try {
-            final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-            WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService(wechatConfig).parseOrderNotifyResult(xmlData);
-            if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
-                List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(notifyResult.getOutTradeNo());
-                if (phoneOrderList != null && phoneOrderList.size() > 0) {
-                    PhoneOrder phoneOrder = phoneOrderList.get(0);
-                    if (!StringUtils.equals("2", phoneOrder.getPayStatus())) {
-                        Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
-                        phoneOrder.setPayStatus("2");
-                        phoneOrder.setPayTime(notifyResult.getTimeEnd());
-                        phoneOrder.setPayResult(JSON.toJSONString(notifyResult));
-                        phoneOrder.setUpdateTime(DateUtils.getNowDate());
-                        phoneOrderMapper.updatePhoneOrder(phoneOrder);
-                        updateMemberInfo(phoneOrder, member);
-                    }
+    public String payNotify(String xmlData) {
+        WxPayOrderNotifyResult notifyResult = WxPayOrderNotifyResult.fromXML(xmlData);
+        if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
+            List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(notifyResult.getOutTradeNo());
+            if (phoneOrderList != null && phoneOrderList.size() > 0) {
+                PhoneOrder phoneOrder = phoneOrderList.get(0);
+                if (!StringUtils.equals("2", phoneOrder.getPayStatus())) {
+                    Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
+                    phoneOrder.setPayStatus("2");
+                    phoneOrder.setPayTime(notifyResult.getTimeEnd());
+                    phoneOrder.setPayResult(JSON.toJSONString(notifyResult));
+                    phoneOrder.setUpdateTime(DateUtils.getNowDate());
+                    phoneOrderMapper.updatePhoneOrder(phoneOrder);
+                    updateMemberInfo(phoneOrder, member);
                 }
-                return WxPayNotifyResponse.success("成功");
             }
-        } catch (WxPayException e) {
-            e.printStackTrace();
+            return WxPayNotifyResponse.success("成功");
         }
         return WxPayNotifyResponse.fail("失败");
     }

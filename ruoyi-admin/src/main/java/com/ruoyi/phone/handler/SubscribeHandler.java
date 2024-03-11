@@ -55,7 +55,6 @@ public class SubscribeHandler extends AbstractHandler {
                     SnowflakeGenerator.setDatacenterId(1);
                     SnowflakeGenerator.setMachineId(1);
                     member.setNumber(SnowflakeGenerator.nextId().toString());
-                } else {
                     member.setIsMember("0");
                     member.setIsSuperMember("0");
                     member.setIsBlacklist("0");

@@ -89,6 +89,13 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
         phoneMemberCardLog.setCompanyId(wechatConfig.getCompanyId());
         phoneMemberCardLog.setCreateTime(DateUtils.getNowDate());
         phoneMemberCardLog.setOrderNo(SnowflakeGenerator.generateOrderNumber());
+        PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
+        phoneMemberCardLog.setTotalMoney(phoneMemberCard.getBuyingPrice());
+        phoneMemberCardLog.setCardName(phoneMemberCard.getTitle());
+        phoneMemberCardLog.setBuyDay(phoneMemberCard.getMemberDay());
+        phoneMemberCardLog.setPayStatus("1");
+        phoneMemberCardLog.setPayType("1");
+        phoneMemberCardLog.setMemberId(SecurityUtils.getUserId());
         phoneMemberCardLogMapper.insertPhoneMemberCardLog(phoneMemberCardLog);
         return phoneMemberCardLog;
     }
@@ -138,7 +145,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
         //订单号
         request.setOutTradeNo(phoneMemberCardLog.getOrderNo());
         //金额，以分为单位
-        request.setTotalFee(phoneMemberCardLog.getMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+        request.setTotalFee(phoneMemberCardLog.getTotalMoney().multiply(BigDecimal.valueOf(100L)).intValue());
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
@@ -158,45 +165,40 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
     }
 
     @Override
-    public String payNotify(String appid, String xmlData) {
-        try {
-            final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-            WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService(wechatConfig).parseOrderNotifyResult(xmlData);
-            if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
-                List<PhoneMemberCardLog> cardLogList = phoneMemberCardLogMapper.selectPhoneMemberCardLogByOrderNo(notifyResult.getOutTradeNo());
-                if (cardLogList != null && cardLogList.size() > 0) {
-                    PhoneMemberCardLog phoneMemberCardLog = cardLogList.get(0);
-                    PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
-                    Member member = memberMapper.selectMemberById(phoneMemberCardLog.getId());
-                    if (StringUtils.equals("1", phoneMemberCardLog.getPayStatus())) {
-                        phoneMemberCardLog.setPayStatus("2");
-                        phoneMemberCardLog.setPayTime(notifyResult.getTimeEnd());
-                        phoneMemberCardLog.setPayResult(JSON.toJSONString(notifyResult));
-                        phoneMemberCardLog.setUpdateTime(DateUtils.getNowDate());
-                        phoneMemberCardLogMapper.updatePhoneMemberCardLog(phoneMemberCardLog);
-                        Date endDate = DateUtils.getNowDate();
-                        if (StringUtils.equals("2", phoneMemberCard.getMemberType())) {
-                            //如果是高级会员
-                            member.setIsSuperMember("1");
-                            if (member.getSuperExpirationTime() != null) {
-                                endDate = member.getSuperExpirationTime();
-                            }
-                            member.setSuperExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
-                        } else {
-                            member.setIsMember("1");
-                            if (member.getExpirationTime() != null) {
-                                endDate = member.getExpirationTime();
-                            }
-                            member.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
+    public String payNotify(String xmlData) {
+        WxPayOrderNotifyResult notifyResult = WxPayOrderNotifyResult.fromXML(xmlData);
+        if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
+            List<PhoneMemberCardLog> cardLogList = phoneMemberCardLogMapper.selectPhoneMemberCardLogByOrderNo(notifyResult.getOutTradeNo());
+            if (cardLogList != null && cardLogList.size() > 0) {
+                PhoneMemberCardLog phoneMemberCardLog = cardLogList.get(0);
+                PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
+                Member member = memberMapper.selectMemberById(phoneMemberCardLog.getMemberId());
+                if (StringUtils.equals("1", phoneMemberCardLog.getPayStatus())) {
+                    phoneMemberCardLog.setPayStatus("2");
+                    phoneMemberCardLog.setPayTime(notifyResult.getTimeEnd());
+                    phoneMemberCardLog.setPayResult(JSON.toJSONString(notifyResult));
+                    phoneMemberCardLog.setUpdateTime(DateUtils.getNowDate());
+                    phoneMemberCardLogMapper.updatePhoneMemberCardLog(phoneMemberCardLog);
+                    Date endDate = DateUtils.getNowDate();
+                    if (StringUtils.equals("2", phoneMemberCard.getMemberType())) {
+                        //如果是高级会员
+                        member.setIsSuperMember("1");
+                        if (member.getSuperExpirationTime() != null) {
+                            endDate = member.getSuperExpirationTime();
                         }
-                        memberMapper.updateMember(member);
-                        updateUserInfo(phoneMemberCardLog, phoneMemberCard, member);
+                        member.setSuperExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
+                    } else {
+                        member.setIsMember("1");
+                        if (member.getExpirationTime() != null) {
+                            endDate = member.getExpirationTime();
+                        }
+                        member.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(endDate, phoneMemberCardLog.getBuyDay().intValue())));
                     }
+                    memberMapper.updateMember(member);
+                    updateUserInfo(phoneMemberCardLog, phoneMemberCard, member);
                 }
-                return WxPayNotifyResponse.success("成功");
             }
-        } catch (WxPayException e) {
-            e.printStackTrace();
+            return WxPayNotifyResponse.success("成功");
         }
         return WxPayNotifyResponse.fail("失败");
     }

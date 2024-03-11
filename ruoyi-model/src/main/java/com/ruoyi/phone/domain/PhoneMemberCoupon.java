@@ -3,6 +3,8 @@ package com.ruoyi.phone.domain;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -52,6 +54,15 @@ public class PhoneMemberCoupon extends BaseEntity{
     @Excel(name = "使用状态", readConverterExp = "待使用：1，已使用：2，已过期：3，已失效：4")
     @ApiModelProperty("使用状态")
     private String status;
+
+    @ApiModelProperty("微信配置")
+    private WechatConfig wechatConfig;
+
+    @ApiModelProperty("会员信息")
+    private Member member;
+
+    @ApiModelProperty("优惠券信息")
+    private PhoneCoupon phoneCoupon;
 
     public void setId(Long id){
         this.id = id;
@@ -103,4 +114,27 @@ public class PhoneMemberCoupon extends BaseEntity{
         return status;
     }
 
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public PhoneCoupon getPhoneCoupon() {
+        return phoneCoupon;
+    }
+
+    public void setPhoneCoupon(PhoneCoupon phoneCoupon) {
+        this.phoneCoupon = phoneCoupon;
+    }
 }

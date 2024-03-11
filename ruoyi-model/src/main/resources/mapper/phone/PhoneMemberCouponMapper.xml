@@ -17,41 +17,93 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+        <association property="phoneCoupon"    column="coupon_id" javaType="PhoneCoupon" resultMap="PhoneCouponResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id"    column="member_id"    />
+        <result property="name"    column="memberName"    />
+        <result property="avatar"    column="memberAvatar"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="memberMobile"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="balance"    column="balance"    />
+        <result property="openId"    column="open_id"    />
+        <result property="isMember"    column="is_member"    />
+    </resultMap>
+
+    <resultMap type="PhoneCoupon" id="PhoneCouponResult">
+        <result property="title"    column="coupon_title"    />
+        <result property="termValidity"    column="term_validity"    />
+        <result property="rechargeAmount"    column="recharge_amount"    />
+        <result property="fullMoney"    column="full_money"    />
+        <result property="minusMoney"    column="minus_money"    />
+        <result property="distributionMode"    column="distribution_mode"    />
+        <result property="number"    column="coupon_number"    />
+        <result property="status"    column="coupon_status"    />
     </resultMap>
 
     <sql id="selectPhoneMemberCouponVo">
         select
-            id,
-            member_id,
-            company_id,
-            app_id,
-            coupon_id,
-            expiration_time,
-            status,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_member_coupon
+            a.id,
+            a.member_id,
+            a.company_id,
+            a.app_id,
+            a.coupon_id,
+            a.expiration_time,
+            a.status,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle,
+            m.name AS memberName,
+            m.avatar AS memberAvatar,
+            m.number,
+            m.mobile AS memberMobile,
+            m.sex,
+            m.birthday,
+            m.balance,
+            m.open_id,
+            m.is_member,
+            a.title as coupon_title,
+            a.term_validity,
+            a.recharge_amount,
+            a.full_money,
+            a.minus_money,
+            a.distribution_mode,
+            a.number as coupon_number,
+            a.status as coupon_status
+        from phone_member_coupon a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join phone_member m ON m.id = a.member_id
+                left join phone_coupon c ON c.id = a.coupon_id
     </sql>
 
     <select id="selectPhoneMemberCouponList" parameterType="PhoneMemberCoupon" resultMap="PhoneMemberCouponResult">
         <include refid="selectPhoneMemberCouponVo"/>
         <where>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="couponId != null "> and coupon_id = #{couponId}</if>
-            <if test="expirationTime != null "> and expiration_time = #{expirationTime}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="couponId != null "> and a.coupon_id = #{couponId}</if>
+            <if test="expirationTime != null "> and a.expiration_time = #{expirationTime}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
         ORDER BY a.create_time DESC
     </select>
 
     <select id="selectPhoneMemberCouponById" parameterType="Long" resultMap="PhoneMemberCouponResult">
         <include refid="selectPhoneMemberCouponVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertPhoneMemberCoupon" parameterType="PhoneMemberCoupon" useGeneratedKeys="true" keyProperty="id">
