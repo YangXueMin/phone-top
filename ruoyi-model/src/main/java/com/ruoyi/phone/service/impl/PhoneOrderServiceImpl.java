@@ -94,7 +94,17 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         phoneOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         phoneOrder.setCreateTime(DateUtils.getNowDate());
 
+        PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
+
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
+        if (StringUtils.equals("1", member.getIsSuperMember())) {
+            phoneOrder.setMoney(phonePrice.getSuperMemberPrice());
+        } else if (StringUtils.equals("2", member.getIsMember())) {
+            phoneOrder.setMoney(phonePrice.getMemberPrice());
+        } else {
+            phoneOrder.setMoney(phonePrice.getSellPrice());
+        }
+
         BigDecimal balance = member.getBalance();
         phoneOrder.setArrivalStatus("1");
         if (StringUtils.equals("1", phoneOrder.getPayType())) {
@@ -272,7 +282,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         BigDecimal directCommission = phonePrice.getDirectCommission();
                         if (StringUtils.equals("1", agency.getIsSuperMember())) {
                             directCommission = phonePrice.getSuperMemberDirectCommission();
-                        }else if(StringUtils.equals("1",agency.getIsMember())){
+                        } else if (StringUtils.equals("1", agency.getIsMember())) {
                             directCommission = phonePrice.getMemberDirectCommission();
                         }
                         agency.setCommissionBalance(agencyBalance.add(directCommission));
@@ -293,7 +303,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 BigDecimal secondaryDirectCommission = phonePrice.getIndirectCommission();
                                 if (StringUtils.equals("1", secondary.getIsSuperMember())) {
                                     secondaryDirectCommission = phonePrice.getSuperMemberIndirectCommission();
-                                }else if(StringUtils.equals("1",secondary.getIsMember())){
+                                } else if (StringUtils.equals("1", secondary.getIsMember())) {
                                     secondaryDirectCommission = phonePrice.getMemberIndirectCommission();
                                 }
                                 secondary.setCommissionBalance(secondaryBalance.add(secondaryDirectCommission));
@@ -357,7 +367,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                             break;
                     }
                 }
-                if(memberCouponList.size() > 0){
+                if (memberCouponList.size() > 0) {
                     for (PhoneMemberCoupon phoneMemberCoupon : memberCouponList) {
                         phoneMemberCouponMapper.insertPhoneMemberCoupon(phoneMemberCoupon);
                     }

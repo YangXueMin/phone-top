@@ -25,6 +25,11 @@ public class CacheConstants
     /**
      * 参数管理 cache key
      */
+    public static final String WECHAT_JSAPI_KEY = "wechat_jsapi:";
+
+    /**
+     * 参数管理 cache key
+     */
     public static final String WECHAT_CONFIG_KEY = "wechat_config:";
 
     /**

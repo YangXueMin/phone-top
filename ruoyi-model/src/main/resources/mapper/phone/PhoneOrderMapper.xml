@@ -167,7 +167,7 @@
         where a.id = #{id}
     </select>
 
-    <insert id="insertPhoneOrder" parameterType="PhoneOrder">
+    <insert id="insertPhoneOrder" parameterType="PhoneOrder" useGeneratedKeys="true" keyProperty="id">
         insert into phone_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

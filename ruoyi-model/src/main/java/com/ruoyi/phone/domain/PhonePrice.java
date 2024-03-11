@@ -79,6 +79,11 @@ public class PhonePrice extends BaseEntity{
     @ApiModelProperty("会员价")
     private BigDecimal memberPrice;
 
+    /** 超级会员价 */
+    @Excel(name = "超级会员价")
+    @ApiModelProperty("超级会员价")
+    private BigDecimal superMemberPrice;
+
     /** 直推佣金 */
     @Excel(name = "直推佣金")
     @ApiModelProperty("直推佣金")
@@ -283,5 +288,13 @@ public class PhonePrice extends BaseEntity{
 
     public void setPhonePriceType(PhonePriceType phonePriceType) {
         this.phonePriceType = phonePriceType;
+    }
+
+    public BigDecimal getSuperMemberPrice() {
+        return superMemberPrice;
+    }
+
+    public void setSuperMemberPrice(BigDecimal superMemberPrice) {
+        this.superMemberPrice = superMemberPrice;
     }
 }

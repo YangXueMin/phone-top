@@ -15,6 +15,7 @@
         <result property="discount"    column="discount"    />
         <result property="sellPrice"    column="sell_price"    />
         <result property="memberPrice"    column="member_price"    />
+        <result property="superMemberPrice"    column="super_member_price"    />
         <result property="directCommission"    column="direct_commission"    />
         <result property="indirectCommission"    column="indirect_commission"    />
         <result property="memberDirectCommission"    column="member_direct_commission"    />
@@ -53,6 +54,7 @@
             a.discount,
             a.sell_price,
             a.member_price,
+            a.super_member_price,
             a.direct_commission,
             a.indirect_commission,
             a.member_direct_commission,
@@ -110,6 +112,7 @@
             <if test="discount != null">discount,</if>
             <if test="sellPrice != null">sell_price,</if>
             <if test="memberPrice != null">member_price,</if>
+            <if test="superMemberPrice != null">super_member_price,</if>
             <if test="directCommission != null">direct_commission,</if>
             <if test="indirectCommission != null">indirect_commission,</if>
             <if test="memberDirectCommission != null">member_direct_commission,</if>
@@ -133,6 +136,7 @@
             <if test="discount != null">#{discount},</if>
             <if test="sellPrice != null">#{sellPrice},</if>
             <if test="memberPrice != null">#{memberPrice},</if>
+            <if test="superMemberPrice != null">#{superMemberPrice},</if>
             <if test="directCommission != null">#{directCommission},</if>
             <if test="indirectCommission != null">#{indirectCommission},</if>
             <if test="memberDirectCommission != null">#{memberDirectCommission},</if>
@@ -160,6 +164,7 @@
             <if test="discount != null">discount = #{discount},</if>
             <if test="sellPrice != null">sell_price = #{sellPrice},</if>
             <if test="memberPrice != null">member_price = #{memberPrice},</if>
+            <if test="superMemberPrice != null">super_member_price = #{superMemberPrice},</if>
             <if test="directCommission != null">direct_commission = #{directCommission},</if>
             <if test="indirectCommission != null">indirect_commission = #{indirectCommission},</if>
             <if test="memberDirectCommission != null">member_direct_commission = #{memberDirectCommission},</if>

@@ -58,7 +58,7 @@
         where a.id = #{id}
     </select>
 
-    <insert id="insertPhonePriceType" parameterType="PhonePriceType">
+    <insert id="insertPhonePriceType" parameterType="PhonePriceType" useGeneratedKeys="true" keyProperty="id">
         insert into phone_price_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
