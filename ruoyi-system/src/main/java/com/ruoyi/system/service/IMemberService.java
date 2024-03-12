@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.entity.Member;
+import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 
 import java.util.List;
 
@@ -102,4 +103,9 @@ public interface IMemberService {
      * @return
      */
     List<Member> findSubordinateList(String type);
+
+    /**
+     * 获取推广二维码
+     */
+    String getQrCode();
 }

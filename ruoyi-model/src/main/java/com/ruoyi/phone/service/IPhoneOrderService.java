@@ -30,6 +30,14 @@ public interface IPhoneOrderService {
     public List<PhoneOrder> selectPhoneOrderList(PhoneOrder phoneOrder);
 
     /**
+     * 查询订单记录列表
+     *
+     * @param phoneOrder 订单记录
+     * @return 订单记录集合
+     */
+    public Integer selectPhoneOrderCount(PhoneOrder phoneOrder);
+
+    /**
      * 新增订单记录
      *
      * @param phoneOrder 订单记录

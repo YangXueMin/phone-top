@@ -132,7 +132,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
-        request.setNotifyUrl(Constants.URL + "/api/phone/memberCard/payNotify?appid=" + phoneBalanceLog.getAppId());
+        request.setNotifyUrl(Constants.URL + "/api/phone/balance/payNotify?appid=" + phoneBalanceLog.getAppId());
         //公众号支付
         request.setTradeType("JSAPI");
         //小程序用户openid
@@ -148,33 +148,28 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
     }
 
     @Override
-    public String payNotify(String appid, String xmlData) {
-        try {
-            final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-            WxPayOrderNotifyResult notifyResult = wechatConfiguration.wxPayService(wechatConfig).parseOrderNotifyResult(xmlData);
-            if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
-                List<PhoneBalanceLog> phoneBalanceLogList = phoneBalanceLogMapper.selectPhoneBalanceLogByOrderNo(notifyResult.getOutTradeNo());
-                if (phoneBalanceLogList != null && phoneBalanceLogList.size() > 0) {
-                    PhoneBalanceLog phoneBalanceLog = phoneBalanceLogList.get(0);
-                    if (!StringUtils.equals("2", phoneBalanceLog.getPayStatus())) {
-                        Member member = memberMapper.selectMemberById(phoneBalanceLog.getMemberId());
-                        BigDecimal balance = member.getBalance();
-                        phoneBalanceLog.setBalanceBefore(balance);
-                        phoneBalanceLog.setBalanceAfter(balance.add(phoneBalanceLog.getMoney()));
-                        phoneBalanceLog.setPayStatus("2");
-                        phoneBalanceLog.setPayTime(notifyResult.getTimeEnd());
-                        phoneBalanceLog.setPayResult(JSON.toJSONString(notifyResult));
-                        phoneBalanceLog.setUpdateTime(DateUtils.getNowDate());
-                        phoneBalanceLogMapper.updatePhoneBalanceLog(phoneBalanceLog);
-                        //更新用户余额
-                        member.setBalance(balance.add(phoneBalanceLog.getMoney()));
-                        memberMapper.updateMember(member);
-                    }
+    public String payNotify(String xmlData) {
+        WxPayOrderNotifyResult notifyResult = WxPayOrderNotifyResult.fromXML(xmlData);
+        if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
+            List<PhoneBalanceLog> phoneBalanceLogList = phoneBalanceLogMapper.selectPhoneBalanceLogByOrderNo(notifyResult.getOutTradeNo());
+            if (phoneBalanceLogList != null && phoneBalanceLogList.size() > 0) {
+                PhoneBalanceLog phoneBalanceLog = phoneBalanceLogList.get(0);
+                if (!StringUtils.equals("2", phoneBalanceLog.getPayStatus())) {
+                    Member member = memberMapper.selectMemberById(phoneBalanceLog.getMemberId());
+                    BigDecimal balance = member.getBalance();
+                    phoneBalanceLog.setBalanceBefore(balance);
+                    phoneBalanceLog.setBalanceAfter(balance.add(phoneBalanceLog.getMoney()));
+                    phoneBalanceLog.setPayStatus("2");
+                    phoneBalanceLog.setPayTime(notifyResult.getTimeEnd());
+                    phoneBalanceLog.setPayResult(JSON.toJSONString(notifyResult));
+                    phoneBalanceLog.setUpdateTime(DateUtils.getNowDate());
+                    phoneBalanceLogMapper.updatePhoneBalanceLog(phoneBalanceLog);
+                    //更新用户余额
+                    member.setBalance(balance.add(phoneBalanceLog.getMoney()));
+                    memberMapper.updateMember(member);
                 }
-                return WxPayNotifyResponse.success("成功");
             }
-        } catch (WxPayException e) {
-            e.printStackTrace();
+            return WxPayNotifyResponse.success("成功");
         }
         return WxPayNotifyResponse.fail("失败");
     }

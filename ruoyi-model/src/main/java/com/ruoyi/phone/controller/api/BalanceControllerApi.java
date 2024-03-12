@@ -70,7 +70,7 @@ public class BalanceControllerApi extends BaseController {
      */
     @ApiOperation("支付回调通知处理")
     @PostMapping("/payNotify")
-    public String payNotify(@RequestParam("appid") String appid, @RequestBody String xmlData) {
-        return phoneBalanceLogService.payNotify(appid, xmlData);
+    public String payNotify( @RequestBody String xmlData) {
+        return phoneBalanceLogService.payNotify( xmlData);
     }
 }

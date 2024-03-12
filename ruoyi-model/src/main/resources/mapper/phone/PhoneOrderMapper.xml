@@ -159,6 +159,37 @@
         ORDER BY a.create_time DESC
     </select>
 
+    <select id="selectPhoneOrderCount" parameterType="PhoneOrder" resultType="java.lang.Integer">
+        select count(a.id)
+        from phone_order a
+        left join phone_wechat_config wc ON wc.app_id = a.app_id
+        left join phone_member m ON m.id = a.member_id
+        left join phone_price p ON p.id = a.price_id
+        <where>
+            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="priceId != null "> and a.price_id = #{priceId}</if>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+            <if test="method != null  and method != ''"> and a.method = #{method}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
+            <if test="mobile != null  and mobile != ''"> and a.mobile = #{mobile}</if>
+            <if test="accountNumber != null  and accountNumber != ''"> and a.account_number = #{accountNumber}</if>
+            <if test="residenceType != null  and residenceType != ''"> and a.residence_type = #{residenceType}</if>
+            <if test="area != null  and area != ''"> and a.area = #{area}</if>
+            <if test="cardNo != null  and cardNo != ''"> and a.card_no = #{cardNo}</if>
+            <if test="topUpMoney != null "> and a.top_up_money = #{topUpMoney}</if>
+            <if test="money != null "> and a.money = #{money}</if>
+            <if test="payMoney != null "> and a.pay_money = #{payMoney}</if>
+            <if test="payBalance != null "> and a.pay_balance = #{payBalance}</if>
+            <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
+            <if test="payStatus != null  and payStatus != ''"> and a.pay_status = #{payStatus}</if>
+            <if test="arrivalStatus != null  and arrivalStatus != ''"> and a.arrival_status = #{arrivalStatus}</if>
+            <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
+            <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
+        </where>
+    </select>
+
     <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         where a.order_no = #{orderNo}

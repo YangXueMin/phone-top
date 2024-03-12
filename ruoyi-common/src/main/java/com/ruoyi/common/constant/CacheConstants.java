@@ -40,6 +40,11 @@ public class CacheConstants
     /**
      * 参数管理 cache key
      */
+    public static final String MEMBER_QR_CODE_KEY = "member_qr_code:";
+
+    /**
+     * 参数管理 cache key
+     */
     public static final String WECHAT_ACCESS_TOKEN_KEY = "wechat_accessToken:";
 
     /**

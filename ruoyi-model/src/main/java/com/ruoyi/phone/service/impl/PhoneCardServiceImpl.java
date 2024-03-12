@@ -66,6 +66,7 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
         phoneCard.setCreateTime(DateUtils.getNowDate());
         String cardNo = CardGenerator.generateCard(8);
         phoneCard.setCardNo(cardNo);
+        phoneCard.setCancelStatus("1");
         return phoneCardMapper.insertPhoneCard(phoneCard);
     }
 
@@ -87,7 +88,7 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
         phoneCard.setCancelStatus("1");
         phoneCard.setCancelTime(DateUtils.getNowDate());
         final int i = phoneCardMapper.updatePhoneCard(phoneCard);
-        if(i > 0){
+        if (i > 0) {
             final Member member = memberMapper.selectMemberById(phoneCard.getMemberId());
             BigDecimal balance = member.getBalance();
             member.setBalance(member.getBalance().add(phoneCard.getPrice()));

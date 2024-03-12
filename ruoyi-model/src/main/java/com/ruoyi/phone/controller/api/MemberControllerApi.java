@@ -90,4 +90,13 @@ public class MemberControllerApi extends BaseController {
         return success(memberService.findSubordinateList(type));
     }
 
+    /**
+     * 生成推广二维码
+     */
+    @ApiOperation("生成推广二维码")
+    @PostMapping("/getQrCode")
+    public AjaxResult getQrCode() {
+        return success(memberService.getQrCode());
+    }
+
 }

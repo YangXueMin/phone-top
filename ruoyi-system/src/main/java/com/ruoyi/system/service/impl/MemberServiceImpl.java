@@ -1,16 +1,28 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.img.ImgUtil;
+import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.qrCode.EwmUtils;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IMemberService;
+import com.ruoyi.system.service.IWechatConfigService;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 会员管理Service业务层处理
@@ -22,6 +34,14 @@ import java.util.List;
 public class MemberServiceImpl implements IMemberService {
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private WechatConfiguration wechatConfiguration;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
+    @Autowired
+    private RedisCache redisCache;
+    @Autowired
+    private EwmUtils ewmUtils;
 
     /**
      * 查询会员管理
@@ -138,13 +158,40 @@ public class MemberServiceImpl implements IMemberService {
     public List<Member> findSubordinateList(String type) {
         Member member = new Member();
         Long id = SecurityUtils.getLoginUser().getUserId();
-        if(StringUtils.equals("1",type)){
+        if (StringUtils.equals("1", type)) {
             member.setMemberId(id);
-        }else {
+        } else {
             member.setAncestors(id.toString());
         }
         return memberMapper.selectMemberList(member);
     }
 
+    @Override
+    public String getQrCode() {
+        Member member = SecurityUtils.getLoginUser().getMember();
+        if (redisCache.hasKey(getCacheKey(member.getOpenId()))) {
+            final WxMpQrCodeTicket wxMpQrCodeTicket = JSON.parseObject(redisCache.getCacheObject(getCacheKey(member.getOpenId())).toString(), WxMpQrCodeTicket.class);
+            return ewmUtils.generateBase64(wxMpQrCodeTicket.getUrl(), ImgUtil.IMAGE_TYPE_PNG);
+        }
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(member.getAppId());
+        WxMpService wxMpService = wechatConfiguration.wxMpService(wechatConfig);
+        try {
+            WxMpQrCodeTicket wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(member.getOpenId(), null);
+            redisCache.setCacheObject(getCacheKey(member.getOpenId()), JSON.toJSONString(wxMpQrCodeTicket), 20, TimeUnit.DAYS);
+            return ewmUtils.generateBase64(wxMpQrCodeTicket.getUrl(), ImgUtil.IMAGE_TYPE_PNG);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    /**
+     * 设置cache key
+     *
+     * @param configKey 参数键
+     * @return 缓存键key
+     */
+    private String getCacheKey(String configKey) {
+        return CacheConstants.MEMBER_QR_CODE_KEY + configKey;
+    }
 }

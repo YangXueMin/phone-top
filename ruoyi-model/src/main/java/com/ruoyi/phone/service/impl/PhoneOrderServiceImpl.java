@@ -81,6 +81,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         return phoneOrderMapper.selectPhoneOrderList(phoneOrder);
     }
 
+    @Override
+    public Integer selectPhoneOrderCount(PhoneOrder phoneOrder) {
+        return phoneOrderMapper.selectPhoneOrderCount(phoneOrder);
+    }
+
     /**
      * 新增订单记录
      *

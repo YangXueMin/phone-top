@@ -41,6 +41,15 @@ public class OrderControllerApi extends BaseController {
     }
 
     /**
+     * 获取订单记录数量
+     */
+    @ApiOperation("获取订单记录数量")
+    @GetMapping("/getCount")
+    public AjaxResult getCount(PhoneOrder phoneOrder) {
+        return success(phoneOrderService.selectPhoneOrderCount(phoneOrder));
+    }
+
+    /**
      * 获取订单记录详细信息
      */
     @ApiOperation("获取订单记录详细信息")
