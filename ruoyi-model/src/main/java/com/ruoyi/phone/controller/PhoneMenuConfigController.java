@@ -2,6 +2,8 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,7 @@ public class PhoneMenuConfigController extends BaseController {
      */
     @ApiOperation("查询小程序菜单配置列表")
     @PreAuthorize("@ss.hasPermi('phone:menuConfig:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @GetMapping("/list")
     public TableDataInfo list(PhoneMenuConfig phoneMenuConfig)
     {
@@ -56,6 +59,7 @@ public class PhoneMenuConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('phone:menuConfig:export')")
     @Log(title = "小程序菜单配置", businessType = BusinessType.EXPORT)
+    @DataScope(deptAlias = "d", userAlias = "a")
     @PostMapping("/export")
     public void export(HttpServletResponse response, PhoneMenuConfig phoneMenuConfig)
     {

@@ -2,10 +2,13 @@ package com.ruoyi.phone.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneMemberCardMapper;
@@ -23,7 +26,7 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService {
     @Autowired
     private PhoneMemberCardMapper phoneMemberCardMapper;
     @Autowired
-    private ISysDeptService sysDeptService;
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询会员卡管理
@@ -55,10 +58,8 @@ public class PhoneMemberCardServiceImpl implements IPhoneMemberCardService {
      */
     @Override
     public int insertPhoneMemberCard(PhoneMemberCard phoneMemberCard) {
-        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
-        if(company != null && !company.getDeptId().equals(100L)){
-            phoneMemberCard.setCompanyId(company.getDeptId());
-        }
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMemberCard.getAppId());
+        phoneMemberCard.setDeptId(wechatConfig.getDeptId());
         phoneMemberCard.setCreateTime(DateUtils.getNowDate());
         return phoneMemberCardMapper.insertPhoneMemberCard(phoneMemberCard);
     }

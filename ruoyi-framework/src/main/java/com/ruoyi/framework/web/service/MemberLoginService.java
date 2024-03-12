@@ -108,11 +108,12 @@ public class MemberLoginService {
             SnowflakeGenerator.setMachineId(1);
             member.setNumber(SnowflakeGenerator.nextId().toString());
             member.setIsMember("0");
+            member.setAncestors("0,");
             member.setIsSuperMember("0");
             member.setIsBlacklist("0");
             member.setBalance(BigDecimal.ZERO);
         }
-        member.setCompanyId(wechatConfig.getCompanyId());
+        member.setDeptId(wechatConfig.getDeptId());
         member.setAppId(appId);
         member.setAvatar(wxHeadImg);
         member.setName(wxNickName);

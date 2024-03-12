@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhoneCommissionLog;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhoneCommissionLog;
  * @author ruoyi
  * @date 2024-03-05
  */
-public interface IPhoneCommissionLogService
-{
+public interface IPhoneCommissionLogService {
     /**
      * 查询佣金提现记录
      *

@@ -3,6 +3,7 @@ package com.ruoyi.phone.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +45,7 @@ public class PhoneBalanceLogController extends BaseController {
      */
     @ApiOperation("查询余额充值记录列表")
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @GetMapping("/list")
     public TableDataInfo list(PhoneBalanceLog phoneBalanceLog) {
         startPage();
@@ -56,6 +58,7 @@ public class PhoneBalanceLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('phone:balanceLog:export')")
     @Log(title = "余额充值记录", businessType = BusinessType.EXPORT)
+    @DataScope(deptAlias = "d", userAlias = "a")
     @PostMapping("/export")
     public void export(HttpServletResponse response, PhoneBalanceLog phoneBalanceLog) {
         List<PhoneBalanceLog> list = phoneBalanceLogService.selectPhoneBalanceLogList(phoneBalanceLog);

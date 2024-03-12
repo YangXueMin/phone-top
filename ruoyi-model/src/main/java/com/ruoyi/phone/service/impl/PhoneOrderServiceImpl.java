@@ -11,6 +11,7 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
@@ -96,7 +97,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Transactional(rollbackFor = Exception.class)
     public PhoneOrder insertPhoneOrder(PhoneOrder phoneOrder) {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneOrder.getAppId());
-        phoneOrder.setCompanyId(wechatConfig.getCompanyId());
+        phoneOrder.setDeptId(wechatConfig.getDeptId());
         phoneOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         phoneOrder.setCreateTime(DateUtils.getNowDate());
 
@@ -146,7 +147,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             memberMapper.updateMember(member);
             //添加余额变更记录
             PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-            phoneBalanceLog.setCompanyId(phoneOrder.getCompanyId());
+            phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
             phoneBalanceLog.setAppId(phoneOrder.getAppId());
             phoneBalanceLog.setMemberId(member.getMemberId());
             phoneBalanceLog.setType("2");
@@ -210,7 +211,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
-        request.setNotifyUrl(Constants.URL + "/api/phone/memberCard/payNotify?appid=" + phoneOrder.getAppId());
+        request.setNotifyUrl(Constants.URL + "/api/phone/memberCard/payNotify");
         //公众号支付
         request.setTradeType("JSAPI");
         //微信公众号用户openid
@@ -301,7 +302,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         memberMapper.updateMember(agency);
                         //添加佣金记录
                         PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
-                        phoneCommissionConfig.setCompanyId(phoneOrder.getCompanyId());
+                        phoneCommissionConfig.setDeptId(phoneOrder.getDeptId());
                         phoneCommissionConfig.setAppId(phoneOrder.getAppId());
                         phoneCommissionConfig.setCommissionBefore(agencyBalance);
                         phoneCommissionConfig.setMoney(directCommission);
@@ -322,7 +323,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 memberMapper.updateMember(secondary);
                                 //添加佣金记录
                                 PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
-                                secondaryPhoneCommissionConfig.setCompanyId(phoneOrder.getCompanyId());
+                                secondaryPhoneCommissionConfig.setDeptId(phoneOrder.getDeptId());
                                 secondaryPhoneCommissionConfig.setAppId(phoneOrder.getAppId());
                                 secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
                                 secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);
@@ -346,7 +347,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                             //充值送
                             if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
                                 PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
-                                phoneMemberCoupon.setCompanyId(phoneOrder.getCompanyId());
+                                phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
                                 phoneMemberCoupon.setAppId(phoneOrder.getAppId());
                                 phoneMemberCoupon.setMemberId(member.getId());
                                 phoneMemberCoupon.setCouponId(coupon.getId());
@@ -364,7 +365,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                             if (phoneOrderList.size() == 1) {
                                 if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
                                     PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
-                                    phoneMemberCoupon.setCompanyId(phoneOrder.getCompanyId());
+                                    phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
                                     phoneMemberCoupon.setAppId(phoneOrder.getAppId());
                                     phoneMemberCoupon.setMemberId(member.getId());
                                     phoneMemberCoupon.setCouponId(coupon.getId());

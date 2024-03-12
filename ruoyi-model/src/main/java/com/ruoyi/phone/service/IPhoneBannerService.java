@@ -10,8 +10,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2024-03-04
  */
-public interface IPhoneBannerService
-{
+public interface IPhoneBannerService {
     /**
      * 查询banner轮播配置
      *

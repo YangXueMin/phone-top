@@ -2,6 +2,8 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,7 @@ public class PhoneMemberCouponController extends BaseController {
      */
     @ApiOperation("查询会员卡券管理关系列表")
     @PreAuthorize("@ss.hasPermi('phone:memberCoupon:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @GetMapping("/list")
     public TableDataInfo list(PhoneMemberCoupon phoneMemberCoupon)
     {
@@ -56,6 +59,7 @@ public class PhoneMemberCouponController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('phone:memberCoupon:export')")
     @Log(title = "会员卡券管理关系", businessType = BusinessType.EXPORT)
+    @DataScope(deptAlias = "d", userAlias = "a")
     @PostMapping("/export")
     public void export(HttpServletResponse response, PhoneMemberCoupon phoneMemberCoupon)
     {

@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.img.ImgUtil;
 import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -61,6 +63,7 @@ public class MemberServiceImpl implements IMemberService {
      * @return 会员管理
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<Member> selectMemberList(Member member) {
         return memberMapper.selectMemberList(member);
     }
@@ -155,7 +158,7 @@ public class MemberServiceImpl implements IMemberService {
     }
 
     @Override
-    public List<Member> findSubordinateList(String type) {
+    public List<Map<String,Object>> findSubordinateList(String type) {
         Member member = new Member();
         Long id = SecurityUtils.getLoginUser().getUserId();
         if (StringUtils.equals("1", type)) {
@@ -163,22 +166,23 @@ public class MemberServiceImpl implements IMemberService {
         } else {
             member.setAncestors(id.toString());
         }
-        return memberMapper.selectMemberList(member);
+        return memberMapper.selectSubordinateMemberList(member);
     }
 
     @Override
     public String getQrCode() {
-        Member member = SecurityUtils.getLoginUser().getMember();
-        if (redisCache.hasKey(getCacheKey(member.getOpenId()))) {
-            final WxMpQrCodeTicket wxMpQrCodeTicket = JSON.parseObject(redisCache.getCacheObject(getCacheKey(member.getOpenId())).toString(), WxMpQrCodeTicket.class);
-            return ewmUtils.generateBase64(wxMpQrCodeTicket.getUrl(), ImgUtil.IMAGE_TYPE_PNG);
-        }
-        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(member.getAppId());
-        WxMpService wxMpService = wechatConfiguration.wxMpService(wechatConfig);
         try {
-            WxMpQrCodeTicket wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(member.getOpenId(), null);
-            redisCache.setCacheObject(getCacheKey(member.getOpenId()), JSON.toJSONString(wxMpQrCodeTicket), 20, TimeUnit.DAYS);
-            return ewmUtils.generateBase64(wxMpQrCodeTicket.getUrl(), ImgUtil.IMAGE_TYPE_PNG);
+            Member member = SecurityUtils.getLoginUser().getMember();
+            WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(member.getAppId());
+            WxMpService wxMpService = wechatConfiguration.wxMpService(wechatConfig);
+            WxMpQrCodeTicket wxMpQrCodeTicket;
+            if (redisCache.hasKey(getCacheKey(member.getOpenId()))) {
+                wxMpQrCodeTicket = JSON.parseObject(redisCache.getCacheObject(getCacheKey(member.getOpenId())).toString(), WxMpQrCodeTicket.class);
+            } else {
+                wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(member.getOpenId(), 30 * 24 * 60 * 60);
+                redisCache.setCacheObject(getCacheKey(member.getOpenId()), JSON.toJSONString(wxMpQrCodeTicket), 20, TimeUnit.DAYS);
+            }
+            return wxMpService.getQrcodeService().qrCodePictureUrl(wxMpQrCodeTicket.getTicket());
         } catch (WxErrorException e) {
             e.printStackTrace();
         }

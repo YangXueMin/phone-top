@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
 
     /** 公司ID */
     @Excel(name = "公司ID")
-    private Long companyId;
+    private Long deptId;
 
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
@@ -286,12 +286,12 @@ public class Member extends BaseEntity {
         this.ancestors = ancestors;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public Long getDeptId() {
+        return deptId;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
     public String getAppId() {

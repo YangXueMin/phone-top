@@ -31,7 +31,7 @@ public class PhoneCommissionConfig extends BaseEntity {
      */
     @Excel(name = "公司ID")
     @ApiModelProperty("公司ID")
-    private Long companyId;
+    private Long deptId;
 
     /**
      * 公众号配置ID
@@ -82,12 +82,12 @@ public class PhoneCommissionConfig extends BaseEntity {
         return id;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public Long getDeptId() {
+        return deptId;
     }
 
     public String getAppId() {

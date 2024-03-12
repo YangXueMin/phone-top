@@ -6,7 +6,7 @@
 
     <resultMap type="PhoneCompanyConfig" id="PhoneCompanyConfigResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="promotionPoster"    column="promotion_poster"    />
         <result property="slowChargingContent"    column="slow_charging_content"    />
@@ -30,7 +30,7 @@
     <sql id="selectPhoneCompanyConfigVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.promotion_poster,
             a.slow_charging_content,
@@ -47,12 +47,13 @@
             wc.title as wxTitle
         from phone_company_config a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectPhoneCompanyConfigList" parameterType="PhoneCompanyConfig" resultMap="PhoneCompanyConfigResult">
         <include refid="selectPhoneCompanyConfigVo"/>
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
             <if test="promotionPoster != null  and promotionPoster != ''"> and a.promotion_poster = #{promotionPoster}</if>
             <if test="slowChargingContent != null  and slowChargingContent != ''"> and a.slow_charging_content = #{slowChargingContent}</if>
@@ -61,6 +62,8 @@
             <if test="shareTitle != null  and shareTitle != ''"> and a.share_title = #{shareTitle}</if>
             <if test="shareContent != null  and shareContent != ''"> and a.share_content = #{shareContent}</if>
             <if test="sharePhoto != null  and sharePhoto != ''"> and a.share_photo = #{sharePhoto}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         ORDER BY a.create_time DESC
     </select>
@@ -73,7 +76,7 @@
     <insert id="insertPhoneCompanyConfig" parameterType="PhoneCompanyConfig" useGeneratedKeys="true" keyProperty="id">
         insert into phone_company_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="promotionPoster != null">promotion_poster,</if>
             <if test="slowChargingContent != null">slow_charging_content,</if>
@@ -89,7 +92,7 @@
             <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="promotionPoster != null">#{promotionPoster},</if>
             <if test="slowChargingContent != null">#{slowChargingContent},</if>
@@ -109,7 +112,7 @@
     <update id="updatePhoneCompanyConfig" parameterType="PhoneCompanyConfig">
         update phone_company_config
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="promotionPoster != null">promotion_poster = #{promotionPoster},</if>
             <if test="slowChargingContent != null">slow_charging_content = #{slowChargingContent},</if>

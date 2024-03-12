@@ -1,14 +1,13 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.CacheConstants;
-import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.mapper.WechatConfigMapper;
-import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +28,6 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     private WechatConfigMapper wechatConfigMapper;
     @Autowired
     private RedisCache redisCache;
-    @Autowired
-    private ISysDeptService sysDeptService;
 
     /**
      * 项目启动时，初始化参数到缓存
@@ -87,10 +84,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      */
     @Override
     public int insertWechatConfig(WechatConfig wechatConfig) {
-        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
-        if(company != null && !company.getDeptId().equals(100L)){
-            wechatConfig.setCompanyId(company.getDeptId());
-        }
+        wechatConfig.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         wechatConfig.setCreateTime(DateUtils.getNowDate());
         final int i = wechatConfigMapper.insertWechatConfig(wechatConfig);
         if (i > 0) {

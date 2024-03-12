@@ -3,6 +3,7 @@ package com.ruoyi.phone.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,7 @@ public class WechatConfigController extends BaseController {
      */
     @ApiOperation("查询微信配置列表")
     @PreAuthorize("@ss.hasPermi('system:wechatConfig:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @GetMapping("/list")
     public TableDataInfo list(WechatConfig wechatConfig) {
         startPage();
@@ -55,6 +57,7 @@ public class WechatConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:wechatConfig:export')")
     @Log(title = "微信配置", businessType = BusinessType.EXPORT)
+    @DataScope(deptAlias = "d", userAlias = "a")
     @PostMapping("/export")
     public void export(HttpServletResponse response, WechatConfig wechatConfig) {
         List<WechatConfig> list = wechatConfigService.selectWechatConfigList(wechatConfig);

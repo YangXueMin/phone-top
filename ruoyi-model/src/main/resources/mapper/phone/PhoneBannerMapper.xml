@@ -6,7 +6,7 @@
 
     <resultMap type="PhoneBanner" id="PhoneBannerResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="title"    column="title"    />
         <result property="banner"    column="banner"    />
@@ -27,7 +27,7 @@
     <sql id="selectPhoneBannerVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.title,
             a.banner,
@@ -41,17 +41,20 @@
             wc.title as wxTitle
         from phone_banner a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectPhoneBannerList" parameterType="PhoneBanner" resultMap="PhoneBannerResult">
         <include refid="selectPhoneBannerVo"/>
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
             <if test="title != null  and title != ''"> and a.title = #{title}</if>
             <if test="banner != null  and banner != ''"> and a.banner = #{banner}</if>
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         order by a.order_num
     </select>
@@ -64,7 +67,7 @@
     <insert id="insertPhoneBanner" parameterType="PhoneBanner" useGeneratedKeys="true" keyProperty="id">
         insert into phone_banner
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="title != null">title,</if>
             <if test="banner != null">banner,</if>
@@ -77,7 +80,7 @@
             <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="title != null">#{title},</if>
             <if test="banner != null">#{banner},</if>
@@ -94,7 +97,7 @@
     <update id="updatePhoneBanner" parameterType="PhoneBanner">
         update phone_banner
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="title != null">title = #{title},</if>
             <if test="banner != null">banner = #{banner},</if>

@@ -1,8 +1,10 @@
 package com.ruoyi.phone.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -10,6 +12,7 @@ import com.ruoyi.phone.domain.PhoneBanner;
 import com.ruoyi.phone.mapper.PhoneBannerMapper;
 import com.ruoyi.phone.service.IPhoneBannerService;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +33,7 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
     @Autowired
     private RedisCache redisCache;
     @Autowired
-    private ISysDeptService sysDeptService;
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询banner轮播配置
@@ -67,6 +70,7 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
      * @return banner轮播配置
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneBanner> selectPhoneBannerList(PhoneBanner phoneBanner) {
         return phoneBannerMapper.selectPhoneBannerList(phoneBanner);
     }
@@ -79,10 +83,8 @@ public class PhoneBannerServiceImpl implements IPhoneBannerService {
      */
     @Override
     public int insertPhoneBanner(PhoneBanner phoneBanner) {
-        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
-        if(company != null && !company.getDeptId().equals(100L)){
-            phoneBanner.setCompanyId(company.getDeptId());
-        }
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneBanner.getAppId());
+        phoneBanner.setDeptId(wechatConfig.getDeptId());
         phoneBanner.setCreateTime(DateUtils.getNowDate());
         final int i = phoneBannerMapper.insertPhoneBanner(phoneBanner);
         if (i > 0) {

@@ -6,7 +6,7 @@
 
     <resultMap type="Member" id="MemberResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="name"    column="name"    />
         <result property="avatar"    column="avatar"    />
@@ -44,7 +44,7 @@
     <sql id="selectMemberVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.name,
             a.avatar,
@@ -75,13 +75,14 @@
             wc.title as wxTitle
         from phone_member a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">
         <include refid="selectMemberVo"/>
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null and appId != ''"> and a.app_id = #{appId}</if>
             <if test="number != null "> and a.number = #{number}</if>
             <if test="mobile != null  and mobile != ''"> and a.mobile like concat('%', #{mobile}, '%')</if>
@@ -91,10 +92,47 @@
             <if test="isSuperMember != null  and isSuperMember != ''"> and a.is_super_member = #{isSuperMember}</if>
             <if test="isBlacklist != null  and isBlacklist != ''"> and a.is_blacklist = #{isBlacklist}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
-            <if test="ancestors != null "> and a.ancestors like concat('#',#{ancestors},'#') </if>
+            <if test="ancestors != null "> and a.ancestors like concat('%,',#{ancestors},',%') </if>
+            <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
+            <if test="loginDate != null "> and a.login_date = #{loginDate}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        order by a.create_time DESC
+    </select>
+
+    <select id="selectSubordinateMemberList" parameterType="Member" resultType="java.util.Map">
+        select
+            a.id,
+            a.name,
+            a.avatar,
+            a.number,
+            a.password,
+            a.mobile,
+            a.sex,
+            a.birthday,
+            IFNULL(sum(c.money),0) as commission,
+            count(o.id) as orderNum
+        from phone_member a
+                 left join phone_commission_config c on a.id = c.member_id
+                 left join phone_order o on a.id = o.member_id AND o.pay_status = 2
+        <where>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="appId != null and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="number != null "> and a.number = #{number}</if>
+            <if test="mobile != null  and mobile != ''"> and a.mobile like concat('%', #{mobile}, '%')</if>
+            <if test="sex != null  and sex != ''"> and a.sex = #{sex}</if>
+            <if test="openId != null  and openId != ''"> and a.open_id = #{openId}</if>
+            <if test="isMember != null  and isMember != ''"> and a.is_member = #{isMember}</if>
+            <if test="isSuperMember != null  and isSuperMember != ''"> and a.is_super_member = #{isSuperMember}</if>
+            <if test="isBlacklist != null  and isBlacklist != ''"> and a.is_blacklist = #{isBlacklist}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="ancestors != null "> and a.ancestors like concat('%,',#{ancestors},',%') </if>
             <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and a.login_date = #{loginDate}</if>
         </where>
+        GROUP BY a.id
         order by a.create_time DESC
     </select>
 
@@ -118,7 +156,7 @@
         insert into phone_member
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null and appId != ''">app_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="avatar != null">avatar,</if>
@@ -149,7 +187,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null and appId != ''">#{appId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="avatar != null">#{avatar},</if>
@@ -183,7 +221,7 @@
     <update id="updateMember" parameterType="Member">
         update phone_member
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null and appId != ''">app_id = #{appId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="avatar != null">avatar = #{avatar},</if>

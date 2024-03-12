@@ -11,8 +11,7 @@ import com.ruoyi.phone.domain.PhonePrice;
  * @author ruoyi
  * @date 2024-03-05
  */
-public interface IPhonePriceService
-{
+public interface IPhonePriceService {
     /**
      * 查询价格配置
      *
@@ -35,7 +34,7 @@ public interface IPhonePriceService
      * @param phonePrice 价格配置
      * @return 价格配置集合
      */
-    public Map<String,List<PhonePrice>> selectPhonePriceListApi(PhonePrice phonePrice);
+    public Map<String, List<PhonePrice>> selectPhonePriceListApi(PhonePrice phonePrice);
 
     /**
      * 新增价格配置

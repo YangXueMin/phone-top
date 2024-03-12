@@ -1,7 +1,11 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneMemberCouponMapper;
@@ -15,10 +19,11 @@ import com.ruoyi.phone.service.IPhoneMemberCouponService;
  * @date 2024-03-07
  */
 @Service
-public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
-{
+public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService {
     @Autowired
     private PhoneMemberCouponMapper phoneMemberCouponMapper;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询会员卡券管理关系
@@ -27,8 +32,7 @@ public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
      * @return 会员卡券管理关系
      */
     @Override
-    public PhoneMemberCoupon selectPhoneMemberCouponById(Long id)
-    {
+    public PhoneMemberCoupon selectPhoneMemberCouponById(Long id) {
         return phoneMemberCouponMapper.selectPhoneMemberCouponById(id);
     }
 
@@ -39,8 +43,7 @@ public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
      * @return 会员卡券管理关系
      */
     @Override
-    public List<PhoneMemberCoupon> selectPhoneMemberCouponList(PhoneMemberCoupon phoneMemberCoupon)
-    {
+    public List<PhoneMemberCoupon> selectPhoneMemberCouponList(PhoneMemberCoupon phoneMemberCoupon) {
         return phoneMemberCouponMapper.selectPhoneMemberCouponList(phoneMemberCoupon);
     }
 
@@ -51,8 +54,9 @@ public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
      * @return 结果
      */
     @Override
-    public int insertPhoneMemberCoupon(PhoneMemberCoupon phoneMemberCoupon)
-    {
+    public int insertPhoneMemberCoupon(PhoneMemberCoupon phoneMemberCoupon) {
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMemberCoupon.getAppId());
+        phoneMemberCoupon.setDeptId(wechatConfig.getDeptId());
         phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
         return phoneMemberCouponMapper.insertPhoneMemberCoupon(phoneMemberCoupon);
     }
@@ -64,8 +68,7 @@ public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
      * @return 结果
      */
     @Override
-    public int updatePhoneMemberCoupon(PhoneMemberCoupon phoneMemberCoupon)
-    {
+    public int updatePhoneMemberCoupon(PhoneMemberCoupon phoneMemberCoupon) {
         phoneMemberCoupon.setUpdateTime(DateUtils.getNowDate());
         return phoneMemberCouponMapper.updatePhoneMemberCoupon(phoneMemberCoupon);
     }
@@ -77,8 +80,7 @@ public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
      * @return 结果
      */
     @Override
-    public int deletePhoneMemberCouponByIds(Long[] ids)
-    {
+    public int deletePhoneMemberCouponByIds(Long[] ids) {
         return phoneMemberCouponMapper.deletePhoneMemberCouponByIds(ids);
     }
 
@@ -89,8 +91,7 @@ public class PhoneMemberCouponServiceImpl implements IPhoneMemberCouponService
      * @return 结果
      */
     @Override
-    public int deletePhoneMemberCouponById(Long id)
-    {
+    public int deletePhoneMemberCouponById(Long id) {
         return phoneMemberCouponMapper.deletePhoneMemberCouponById(id);
     }
 }

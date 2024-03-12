@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="SysNotice" id="SysNoticeResult">
         <result property="noticeId"       column="notice_id"       />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="noticeTitle"    column="notice_title"    />
         <result property="noticeType"     column="notice_type"     />
@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectNoticeVo">
         select
                a.notice_id,
-               a.company_id,
+               a.dept_id,
                a.app_id,
                a.notice_title,
                a.notice_type,
@@ -51,8 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectNoticeList" parameterType="SysNotice" resultMap="SysNoticeResult">
         <include refid="selectNoticeVo"/>
         <where>
-			<if test="companyId != null and companyId != ''">
-				AND a.company_id = #{companyId}
+			<if test="deptId != null and deptId != ''">
+				AND a.dept_id = #{deptId}
 			</if>
 			<if test="appId != null and appId != ''">
 				AND a.app_id = #{appId}
@@ -73,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <insert id="insertNotice" parameterType="SysNotice">
         insert into sys_notice (
-			<if test="companyId != null and companyId != '' ">company_id, </if>
+			<if test="deptId != null and deptId != '' ">dept_id, </if>
 			<if test="appId != null and appId != '' ">app_id, </if>
 			<if test="noticeTitle != null and noticeTitle != '' ">notice_title, </if>
 			<if test="noticeType != null and noticeType != '' ">notice_type, </if>
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			create_time
  		)values(
-			<if test="companyId != null and companyId != ''">#{companyId}, </if>
+			<if test="deptId != null and deptId != ''">#{deptId}, </if>
 			<if test="appId != null and appId != ''">#{appId}, </if>
 			<if test="noticeTitle != null and noticeTitle != ''">#{noticeTitle}, </if>
 			<if test="noticeType != null and noticeType != ''">#{noticeType}, </if>
@@ -98,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateNotice" parameterType="SysNotice">
         update sys_notice 
         <set>
-            <if test="companyId != null and companyId != ''">company_id = #{companyId}, </if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId}, </if>
             <if test="appId != null and appId != ''">app_id = #{appId}, </if>
             <if test="noticeTitle != null and noticeTitle != ''">notice_title = #{noticeTitle}, </if>
             <if test="noticeType != null and noticeType != ''">notice_type = #{noticeType}, </if>

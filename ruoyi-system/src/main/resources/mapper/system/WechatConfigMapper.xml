@@ -6,7 +6,7 @@
 
     <resultMap type="WechatConfig" id="WechatConfigResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="title"    column="title"    />
         <result property="appId"    column="app_id"    />
         <result property="appSecret"    column="app_secret"    />
@@ -24,48 +24,51 @@
 
     <sql id="selectWechatConfigVo">
         select
-            id,
-            company_id,
-            title,
-            app_id,
-            app_secret,
-            token,
-            aes_key,
-            mch_id,
-            mch_key,
-            key_path,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from phone_wechat_config
+            a.id,
+            a.dept_id,
+            a.title,
+            a.app_id,
+            a.app_secret,
+            a.token,
+            a.aes_key,
+            a.mch_id,
+            a.mch_key,
+            a.key_path,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark
+        from phone_wechat_config a
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectWechatConfigList" parameterType="WechatConfig" resultMap="WechatConfigResult">
         <include refid="selectWechatConfigVo"/>
         <where>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="appSecret != null  and appSecret != ''"> and app_secret = #{appSecret}</if>
-            <if test="token != null  and token != ''"> and token = #{token}</if>
-            <if test="aesKey != null  and aesKey != ''"> and aes_key = #{aesKey}</if>
-            <if test="mchId != null  and mchId != ''"> and mch_id = #{mchId}</if>
-            <if test="mchKey != null  and mchKey != ''"> and mch_key = #{mchKey}</if>
-            <if test="keyPath != null  and keyPath != ''"> and key_path = #{keyPath}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="appSecret != null  and appSecret != ''"> and a.app_secret = #{appSecret}</if>
+            <if test="token != null  and token != ''"> and a.token = #{token}</if>
+            <if test="aesKey != null  and aesKey != ''"> and a.aes_key = #{aesKey}</if>
+            <if test="mchId != null  and mchId != ''"> and a.mch_id = #{mchId}</if>
+            <if test="mchKey != null  and mchKey != ''"> and a.mch_key = #{mchKey}</if>
+            <if test="keyPath != null  and keyPath != ''"> and a.key_path = #{keyPath}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
     <select id="selectWechatConfigById" parameterType="Long" resultMap="WechatConfigResult">
         <include refid="selectWechatConfigVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertWechatConfig" parameterType="WechatConfig" useGeneratedKeys="true" keyProperty="id">
         insert into phone_wechat_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="title != null">title,</if>
             <if test="appId != null">app_id,</if>
             <if test="appSecret != null">app_secret,</if>
@@ -81,7 +84,7 @@
             <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="title != null">#{title},</if>
             <if test="appId != null">#{appId},</if>
             <if test="appSecret != null">#{appSecret},</if>
@@ -101,7 +104,7 @@
     <update id="updateWechatConfig" parameterType="WechatConfig">
         update phone_wechat_config
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="title != null">title = #{title},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="appSecret != null">app_secret = #{appSecret},</if>

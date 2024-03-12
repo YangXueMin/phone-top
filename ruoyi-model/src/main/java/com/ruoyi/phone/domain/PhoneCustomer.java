@@ -24,7 +24,7 @@ public class PhoneCustomer extends BaseEntity{
     /** 公司ID */
     @Excel(name = "公司ID")
     @ApiModelProperty("公司ID")
-    private Long companyId;
+    private Long deptId;
 
     /** APPID */
     @Excel(name = "APPID")
@@ -61,12 +61,12 @@ public class PhoneCustomer extends BaseEntity{
     public Long getId(){
         return id;
     }
-    public void setCompanyId(Long companyId){
-        this.companyId = companyId;
+    public void setDeptId(Long deptId){
+        this.deptId = deptId;
     }
 
-    public Long getCompanyId(){
-        return companyId;
+    public Long getDeptId(){
+        return deptId;
     }
     public void setAppId(String appId){
         this.appId = appId;

@@ -2,6 +2,8 @@ package com.ruoyi.phone.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,9 +45,9 @@ public class PhoneCommissionLogController extends BaseController {
      */
     @ApiOperation("查询佣金提现记录列表")
     @PreAuthorize("@ss.hasPermi('phone:commissionLog:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @GetMapping("/list")
-    public TableDataInfo list(PhoneCommissionLog phoneCommissionLog)
-    {
+    public TableDataInfo list(PhoneCommissionLog phoneCommissionLog) {
         startPage();
         List<PhoneCommissionLog> list = phoneCommissionLogService.selectPhoneCommissionLogList(phoneCommissionLog);
         return getDataTable(list);
@@ -56,9 +58,9 @@ public class PhoneCommissionLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('phone:commissionLog:export')")
     @Log(title = "佣金提现记录", businessType = BusinessType.EXPORT)
+    @DataScope(deptAlias = "d", userAlias = "a")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PhoneCommissionLog phoneCommissionLog)
-    {
+    public void export(HttpServletResponse response, PhoneCommissionLog phoneCommissionLog) {
         List<PhoneCommissionLog> list = phoneCommissionLogService.selectPhoneCommissionLogList(phoneCommissionLog);
         ExcelUtil<PhoneCommissionLog> util = new ExcelUtil<PhoneCommissionLog>(PhoneCommissionLog.class);
         util.exportExcel(response, list, "佣金提现记录数据");
@@ -71,8 +73,7 @@ public class PhoneCommissionLogController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('phone:commissionLog:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(phoneCommissionLogService.selectPhoneCommissionLogById(id));
     }
 
@@ -83,8 +84,7 @@ public class PhoneCommissionLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:commissionLog:add')")
     @Log(title = "佣金提现记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PhoneCommissionLog phoneCommissionLog)
-    {
+    public AjaxResult add(@RequestBody PhoneCommissionLog phoneCommissionLog) {
         return success(phoneCommissionLogService.insertPhoneCommissionLog(phoneCommissionLog));
     }
 
@@ -95,9 +95,19 @@ public class PhoneCommissionLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:commissionLog:edit')")
     @Log(title = "佣金提现记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PhoneCommissionLog phoneCommissionLog)
-    {
+    public AjaxResult edit(@RequestBody PhoneCommissionLog phoneCommissionLog) {
         return toAjax(phoneCommissionLogService.updatePhoneCommissionLog(phoneCommissionLog));
+    }
+
+    /**
+     * 审批佣金提现记录
+     */
+    @ApiOperation("审批佣金提现记录")
+    @PreAuthorize("@ss.hasPermi('phone:commissionLog:edit')")
+    @Log(title = "佣金提现记录", businessType = BusinessType.UPDATE)
+    @PostMapping("audit")
+    public AjaxResult auditPhoneCommissionLog(@RequestBody PhoneCommissionLog phoneCommissionLog) {
+        return toAjax(phoneCommissionLogService.auditPhoneCommissionLog(phoneCommissionLog));
     }
 
     /**
@@ -108,8 +118,7 @@ public class PhoneCommissionLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('phone:commissionLog:remove')")
     @Log(title = "佣金提现记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(phoneCommissionLogService.deletePhoneCommissionLogByIds(ids));
     }
 }

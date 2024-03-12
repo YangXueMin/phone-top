@@ -1,10 +1,12 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.common.core.domain.entity.Member;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yangxuemin
@@ -29,6 +31,15 @@ public interface MemberMapper {
      * @return 会员管理集合
      */
     public List<Member> selectMemberList(Member member);
+
+    /**
+     * 查询下级会员管理列表
+     *
+     * @param member 会员管理
+     * @return 会员管理集合
+     */
+    @MapKey("id")
+    public List<Map<String,Object>>selectSubordinateMemberList(Member member);
 
     /**
      * 查询会员管理列表

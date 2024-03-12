@@ -4,13 +4,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.CardGenerator;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.phone.domain.PhoneBalanceLog;
 import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
 import com.ruoyi.system.mapper.MemberMapper;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneCardMapper;
@@ -32,6 +35,8 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
     private MemberMapper memberMapper;
     @Autowired
     private PhoneBalanceLogMapper phoneBalanceLogMapper;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询卡密管理
@@ -51,6 +56,7 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
      * @return 卡密管理
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneCard> selectPhoneCardList(PhoneCard phoneCard) {
         return phoneCardMapper.selectPhoneCardList(phoneCard);
     }
@@ -63,6 +69,8 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
      */
     @Override
     public int insertPhoneCard(PhoneCard phoneCard) {
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneCard.getAppId());
+        phoneCard.setDeptId(wechatConfig.getDeptId());
         phoneCard.setCreateTime(DateUtils.getNowDate());
         String cardNo = CardGenerator.generateCard(8);
         phoneCard.setCardNo(cardNo);
@@ -96,7 +104,7 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
             memberMapper.updateMember(member);
             //添加余额变更记录
             PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-            phoneBalanceLog.setCompanyId(phoneCard.getCompanyId());
+            phoneBalanceLog.setDeptId(phoneCard.getDeptId());
             phoneBalanceLog.setAppId(phoneCard.getAppId());
             phoneBalanceLog.setMemberId(member.getMemberId());
             phoneBalanceLog.setType("1");

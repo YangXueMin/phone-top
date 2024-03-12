@@ -5,11 +5,14 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DictUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 佣金提现记录对象 phone_commission_log
@@ -28,12 +31,12 @@ public class PhoneCommissionLog extends BaseEntity{
     /** 公司ID */
     @Excel(name = "公司ID")
     @ApiModelProperty("公司ID")
-    private Long companyId;
+    private Long deptId;
 
     /** 公众号配置ID */
     @Excel(name = "公众号配置ID")
     @ApiModelProperty("公众号配置ID")
-    private Long appId;
+    private String appId;
 
     /** 会员ID */
     @Excel(name = "会员ID")
@@ -55,10 +58,25 @@ public class PhoneCommissionLog extends BaseEntity{
     @ApiModelProperty("提现后佣金")
     private BigDecimal commissionAfter;
 
+    /** 支付宝真实姓名 */
+    @Excel(name = "支付宝真实姓名")
+    @ApiModelProperty("支付宝真实姓名")
+    private String alipayName;
+
+    /** 支付宝手机号 */
+    @Excel(name = "支付宝手机号")
+    @ApiModelProperty("支付宝手机号")
+    private String alipayMobile;
+
     /** 审批状态 */
     @Excel(name = "审批状态")
-    @ApiModelProperty("审批状态")
+    @ApiModelProperty("审批状态(字典：phone_audit_status   1：待审批，2：已审批，3：已拒绝)")
     private String auditStatus;
+
+    /** 审批状态 */
+    @Excel(name = "审批状态")
+    @ApiModelProperty("审批状态(字典：phone_audit_status   1：待审批，2：已审批，3：已拒绝)")
+    private String auditStatusLabel;
 
     /** 审批人 */
     @Excel(name = "审批人")
@@ -77,6 +95,9 @@ public class PhoneCommissionLog extends BaseEntity{
     @ApiModelProperty("会员信息")
     private Member member;
 
+    @ApiModelProperty("审批信息")
+    private SysUser user;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -84,18 +105,18 @@ public class PhoneCommissionLog extends BaseEntity{
     public Long getId(){
         return id;
     }
-    public void setCompanyId(Long companyId){
-        this.companyId = companyId;
+    public void setDeptId(Long deptId){
+        this.deptId = deptId;
     }
 
-    public Long getCompanyId(){
-        return companyId;
+    public Long getDeptId(){
+        return deptId;
     }
-    public void setAppId(Long appId){
+    public void setAppId(String appId){
         this.appId = appId;
     }
 
-    public Long getAppId(){
+    public String getAppId(){
         return appId;
     }
     public void setMemberId(Long memberId){
@@ -162,5 +183,40 @@ public class PhoneCommissionLog extends BaseEntity{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getAlipayName() {
+        return alipayName;
+    }
+
+    public void setAlipayName(String alipayName) {
+        this.alipayName = alipayName;
+    }
+
+    public String getAlipayMobile() {
+        return alipayMobile;
+    }
+
+    public void setAlipayMobile(String alipayMobile) {
+        this.alipayMobile = alipayMobile;
+    }
+
+    public String getAuditStatusLabel() {
+        if(StringUtils.isNotBlank(auditStatus)){
+            return DictUtils.getDictLabel("phone_audit_status",auditStatus);
+        }
+        return auditStatusLabel;
+    }
+
+    public void setAuditStatusLabel(String auditStatusLabel) {
+        this.auditStatusLabel = auditStatusLabel;
+    }
+
+    public SysUser getUser() {
+        return user;
+    }
+
+    public void setUser(SysUser user) {
+        this.user = user;
     }
 }

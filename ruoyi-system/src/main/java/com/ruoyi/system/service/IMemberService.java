@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.entity.Member;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员管理Service接口
@@ -102,7 +103,7 @@ public interface IMemberService {
      * @param type
      * @return
      */
-    List<Member> findSubordinateList(String type);
+    List<Map<String,Object>> findSubordinateList(String type);
 
     /**
      * 获取推广二维码

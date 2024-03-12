@@ -6,6 +6,7 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
@@ -72,6 +73,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
      * @return 会员卡充值记录
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneMemberCardLog> selectPhoneMemberCardLogList(PhoneMemberCardLog phoneMemberCardLog) {
         return phoneMemberCardLogMapper.selectPhoneMemberCardLogList(phoneMemberCardLog);
     }
@@ -86,7 +88,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
     @Transactional(rollbackFor = Exception.class)
     public PhoneMemberCardLog insertPhoneMemberCardLog(PhoneMemberCardLog phoneMemberCardLog) {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMemberCardLog.getAppId());
-        phoneMemberCardLog.setCompanyId(wechatConfig.getCompanyId());
+        phoneMemberCardLog.setDeptId(wechatConfig.getDeptId());
         phoneMemberCardLog.setCreateTime(DateUtils.getNowDate());
         phoneMemberCardLog.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         PhoneMemberCard phoneMemberCard = phoneMemberCardMapper.selectPhoneMemberCardById(phoneMemberCardLog.getCardId());
@@ -149,7 +151,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
         // 用户ip
         request.setSpbillCreateIp("127.0.0.1");
         //回调通知地址（必须外网能访问的地址）
-        request.setNotifyUrl(Constants.URL + "/api/phone/memberCard/payNotify?appid=" + phoneMemberCardLog.getAppId());
+        request.setNotifyUrl(Constants.URL + "/api/phone/memberCard/payNotify");
         //公众号支付
         request.setTradeType("JSAPI");
         //小程序用户openid
@@ -220,7 +222,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                     memberMapper.updateMember(agency);
                     //添加佣金记录
                     PhoneCommissionConfig phoneCommissionConfig = new PhoneCommissionConfig();
-                    phoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
+                    phoneCommissionConfig.setDeptId(phoneMemberCardLog.getDeptId());
                     phoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
                     phoneCommissionConfig.setCommissionBefore(agencyBalance);
                     phoneCommissionConfig.setMoney(directCommission);
@@ -241,7 +243,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                             memberMapper.updateMember(secondary);
                             //添加佣金记录
                             PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
-                            secondaryPhoneCommissionConfig.setCompanyId(phoneMemberCardLog.getCompanyId());
+                            secondaryPhoneCommissionConfig.setDeptId(phoneMemberCardLog.getDeptId());
                             secondaryPhoneCommissionConfig.setAppId(phoneMemberCardLog.getAppId());
                             secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
                             secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);

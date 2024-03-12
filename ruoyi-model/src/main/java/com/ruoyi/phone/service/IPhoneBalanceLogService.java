@@ -12,8 +12,7 @@ import com.ruoyi.phone.domain.PhoneOrder;
  * @author ruoyi
  * @date 2024-03-05
  */
-public interface IPhoneBalanceLogService
-{
+public interface IPhoneBalanceLogService {
     /**
      * 查询余额充值记录
      *

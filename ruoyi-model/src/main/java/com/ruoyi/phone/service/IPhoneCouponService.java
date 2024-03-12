@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhoneCoupon;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhoneCoupon;
  * @author ruoyi
  * @date 2024-03-07
  */
-public interface IPhoneCouponService
-{
+public interface IPhoneCouponService {
     /**
      * 查询优惠券管理
      *
@@ -26,6 +26,14 @@ public interface IPhoneCouponService
      * @return 优惠券管理集合
      */
     public List<PhoneCoupon> selectPhoneCouponList(PhoneCoupon phoneCoupon);
+
+    /**
+     * 查询优惠券管理列表
+     *
+     * @param phoneCoupon 优惠券管理
+     * @return 优惠券管理集合
+     */
+    public List<PhoneCoupon> selectPhoneCouponListApi(PhoneCoupon phoneCoupon);
 
     /**
      * 新增优惠券管理

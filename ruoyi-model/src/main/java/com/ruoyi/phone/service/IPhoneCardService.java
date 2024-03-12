@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhoneCard;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhoneCard;
  * @author ruoyi
  * @date 2024-03-04
  */
-public interface IPhoneCardService
-{
+public interface IPhoneCardService {
     /**
      * 查询卡密管理
      *

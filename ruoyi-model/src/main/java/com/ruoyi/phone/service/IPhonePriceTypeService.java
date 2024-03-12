@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhonePriceType;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhonePriceType;
  * @author ruoyi
  * @date 2024-03-08
  */
-public interface IPhonePriceTypeService
-{
+public interface IPhonePriceTypeService {
     /**
      * 查询价格类型
      *

@@ -4,7 +4,14 @@ import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.config.builder.TextBuilder;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.time.DateUtil;
+import com.ruoyi.phone.domain.PhoneCoupon;
+import com.ruoyi.phone.domain.PhoneMemberCoupon;
+import com.ruoyi.phone.service.IPhoneCouponService;
+import com.ruoyi.phone.service.IPhoneMemberCouponService;
 import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.IWechatConfigService;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -18,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +40,10 @@ public class SubscribeHandler extends AbstractHandler {
     private IMemberService memberService;
     @Autowired
     private IWechatConfigService wechatConfigService;
+    @Autowired
+    private IPhoneCouponService phoneCouponService;
+    @Autowired
+    private IPhoneMemberCouponService phoneMemberCouponService;
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map, WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
@@ -56,11 +68,39 @@ public class SubscribeHandler extends AbstractHandler {
                     SnowflakeGenerator.setMachineId(1);
                     member.setNumber(SnowflakeGenerator.nextId().toString());
                     member.setIsMember("0");
+                    member.setAncestors("0,");
                     member.setIsSuperMember("0");
                     member.setIsBlacklist("0");
                     member.setBalance(BigDecimal.ZERO);
+                    if (StringUtils.equals("subscribe", wxMpXmlMessage.getEvent()) && StringUtils.isNotBlank(wxMpXmlMessage.getEventKey())) {
+                        String higherOpenId = wxMpXmlMessage.getEventKey().substring(8);
+                        Member higherMember = memberService.getMemberByOpenId(higherOpenId);
+                        if (higherMember != null) {
+                            member.setMemberId(higherMember.getId());
+                            member.setAncestors(higherMember.getAncestors() + higherMember.getId() + ",");
+                            //查询是否有优惠券邀请配置
+                            PhoneCoupon phoneCoupon = new PhoneCoupon();
+                            phoneCoupon.setAppId(higherMember.getAppId());
+                            phoneCoupon.setDistributionMode("1");
+                            phoneCoupon.setStatus("1");
+                            List<PhoneCoupon> phoneCouponList = phoneCouponService.selectPhoneCouponListApi(phoneCoupon);
+                            if (phoneCouponList != null && phoneCouponList.size() > 0) {
+                                for (PhoneCoupon coupon : phoneCouponList) {
+                                    PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
+                                    phoneMemberCoupon.setDeptId(higherMember.getDeptId());
+                                    phoneMemberCoupon.setAppId(higherMember.getAppId());
+                                    phoneMemberCoupon.setMemberId(higherMember.getId());
+                                    phoneMemberCoupon.setCouponId(coupon.getId());
+                                    phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
+                                    phoneMemberCoupon.setStatus("1");
+                                    phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
+                                    phoneMemberCouponService.insertPhoneMemberCoupon(phoneMemberCoupon);
+                                }
+                            }
+                        }
+                    }
                 }
-                member.setCompanyId(wechatConfig.getCompanyId());
+                member.setDeptId(wechatConfig.getDeptId());
                 member.setAppId(wxMpConfigStorage.getAppId());
                 if (member.getId() != null) {
                     memberService.updateMember(member);
@@ -97,9 +137,6 @@ public class SubscribeHandler extends AbstractHandler {
     private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage)
             throws Exception {
         //TODO
-        System.out.println(wxMessage.getFromUser());
-        Member fromMember = memberService.getMemberByOpenId(wxMessage.getFromUser());
-
         return null;
     }
 

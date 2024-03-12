@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhoneMemberNow;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhoneMemberNow;
  * @author ruoyi
  * @date 2024-03-04
  */
-public interface IPhoneMemberNowService
-{
+public interface IPhoneMemberNowService {
     /**
      * 查询用户须知配置
      *

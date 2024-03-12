@@ -1,8 +1,10 @@
 package com.ruoyi.phone.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -11,6 +13,7 @@ import com.ruoyi.phone.domain.PhoneCustomer;
 import com.ruoyi.phone.mapper.PhoneCompanyConfigMapper;
 import com.ruoyi.phone.service.IPhoneCompanyConfigService;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +34,7 @@ public class PhoneCompanyConfigServiceImpl implements IPhoneCompanyConfigService
     @Autowired
     private RedisCache redisCache;
     @Autowired
-    private ISysDeptService sysDeptService;
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 项目启动时，初始化参数到缓存
@@ -76,6 +79,7 @@ public class PhoneCompanyConfigServiceImpl implements IPhoneCompanyConfigService
      * @return 企业配置
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneCompanyConfig> selectPhoneCompanyConfigList(PhoneCompanyConfig phoneCompanyConfig) {
         return phoneCompanyConfigMapper.selectPhoneCompanyConfigList(phoneCompanyConfig);
     }
@@ -88,10 +92,8 @@ public class PhoneCompanyConfigServiceImpl implements IPhoneCompanyConfigService
      */
     @Override
     public int insertPhoneCompanyConfig(PhoneCompanyConfig phoneCompanyConfig) {
-        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
-        if(company != null && !company.getDeptId().equals(100L)){
-            phoneCompanyConfig.setCompanyId(company.getDeptId());
-        }
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneCompanyConfig.getAppId());
+        phoneCompanyConfig.setDeptId(wechatConfig.getDeptId());
         phoneCompanyConfig.setCreateTime(DateUtils.getNowDate());
         final int i = phoneCompanyConfigMapper.insertPhoneCompanyConfig(phoneCompanyConfig);
         if (i > 0) {

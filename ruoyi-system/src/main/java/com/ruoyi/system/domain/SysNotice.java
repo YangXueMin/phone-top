@@ -22,7 +22,7 @@ public class SysNotice extends BaseEntity
     private Long noticeId;
 
     /** 公司ID */
-    private Long companyId;
+    private Long deptId;
 
     /** 微信ID */
     private String appId;
@@ -94,12 +94,12 @@ public class SysNotice extends BaseEntity
         return status;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public Long getDeptId() {
+        return deptId;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
     public String getAppId() {

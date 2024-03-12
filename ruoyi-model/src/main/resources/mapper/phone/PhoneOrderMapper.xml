@@ -6,7 +6,7 @@
 
     <resultMap type="PhoneOrder" id="PhoneOrderResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
         <result property="priceId"    column="price_id"    />
@@ -74,7 +74,7 @@
     <sql id="selectPhoneOrderVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.member_id,
             a.price_id,
@@ -129,12 +129,13 @@
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                  left join phone_member m ON m.id = a.member_id
                 left join phone_price p ON p.id = a.price_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectPhoneOrderList" parameterType="PhoneOrder" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
             <if test="priceId != null "> and a.price_id = #{priceId}</if>
@@ -155,6 +156,8 @@
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and a.arrival_status = #{arrivalStatus}</if>
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         ORDER BY a.create_time DESC
     </select>
@@ -166,7 +169,7 @@
         left join phone_member m ON m.id = a.member_id
         left join phone_price p ON p.id = a.price_id
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
             <if test="priceId != null "> and a.price_id = #{priceId}</if>
@@ -204,7 +207,7 @@
         insert into phone_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="priceId != null">price_id,</if>
@@ -234,7 +237,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="priceId != null">#{priceId},</if>
@@ -267,7 +270,7 @@
     <update id="updatePhoneOrder" parameterType="PhoneOrder">
         update phone_order
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="priceId != null">price_id = #{priceId},</if>

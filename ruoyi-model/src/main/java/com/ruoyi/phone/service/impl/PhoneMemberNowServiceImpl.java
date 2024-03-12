@@ -3,13 +3,16 @@ package com.ruoyi.phone.service.impl;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.phone.domain.PhoneCustomer;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneMemberNowMapper;
@@ -29,7 +32,7 @@ public class PhoneMemberNowServiceImpl implements IPhoneMemberNowService {
     @Autowired
     private RedisCache redisCache;
     @Autowired
-    private ISysDeptService sysDeptService;
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询用户须知配置
@@ -66,6 +69,7 @@ public class PhoneMemberNowServiceImpl implements IPhoneMemberNowService {
      * @return 用户须知配置
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneMemberNow> selectPhoneMemberNowList(PhoneMemberNow phoneMemberNow) {
         return phoneMemberNowMapper.selectPhoneMemberNowList(phoneMemberNow);
     }
@@ -78,10 +82,8 @@ public class PhoneMemberNowServiceImpl implements IPhoneMemberNowService {
      */
     @Override
     public int insertPhoneMemberNow(PhoneMemberNow phoneMemberNow) {
-        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
-        if(company != null && !company.getDeptId().equals(100L)){
-            phoneMemberNow.setCompanyId(company.getDeptId());
-        }
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMemberNow.getAppId());
+        phoneMemberNow.setDeptId(wechatConfig.getDeptId());
         phoneMemberNow.setCreateTime(DateUtils.getNowDate());
         final int i = phoneMemberNowMapper.insertPhoneMemberNow(phoneMemberNow);
         if (i > 0) {

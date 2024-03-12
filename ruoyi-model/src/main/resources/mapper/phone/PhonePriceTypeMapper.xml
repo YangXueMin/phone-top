@@ -6,7 +6,7 @@
 
     <resultMap type="PhonePriceType" id="PhonePriceTypeResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="title"    column="title"    />
         <result property="status"    column="status"    />
@@ -26,7 +26,7 @@
     <sql id="selectPhonePriceTypeVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.title,
             a.status,
@@ -39,16 +39,19 @@
             wc.title as wxTitle
         from phone_price_type a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectPhonePriceTypeList" parameterType="PhonePriceType" resultMap="PhonePriceTypeResult">
         <include refid="selectPhonePriceTypeVo"/>
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
             <if test="title != null  and title != ''"> and a.title = #{title}</if>
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         ORDER BY a.order_num
     </select>
@@ -62,7 +65,7 @@
         insert into phone_price_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="title != null">title,</if>
             <if test="status != null">status,</if>
@@ -75,7 +78,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="title != null">#{title},</if>
             <if test="status != null">#{status},</if>
@@ -91,7 +94,7 @@
     <update id="updatePhonePriceType" parameterType="PhonePriceType">
         update phone_price_type
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="title != null">title = #{title},</if>
             <if test="status != null">status = #{status},</if>

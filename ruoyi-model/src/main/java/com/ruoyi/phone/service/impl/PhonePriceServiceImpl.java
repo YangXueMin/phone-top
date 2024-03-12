@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhonePriceMapper;
@@ -26,7 +29,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
     @Autowired
     private PhonePriceMapper phonePriceMapper;
     @Autowired
-    private ISysDeptService sysDeptService;
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询价格配置
@@ -46,6 +49,7 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
      * @return 价格配置
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhonePrice> selectPhonePriceList(PhonePrice phonePrice) {
         return phonePriceMapper.selectPhonePriceList(phonePrice);
     }
@@ -69,10 +73,8 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
      */
     @Override
     public int insertPhonePrice(PhonePrice phonePrice) {
-        SysDept company = sysDeptService.selectCompany(SecurityUtils.getLoginUser().getDeptId());
-        if(company != null && !company.getDeptId().equals(100L)){
-            phonePrice.setCompanyId(company.getDeptId());
-        }
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phonePrice.getAppId());
+        phonePrice.setDeptId(wechatConfig.getDeptId());
         phonePrice.setCreateTime(DateUtils.getNowDate());
         phonePrice.setSellPrice(phonePrice.getOriginalPrice().multiply(phonePrice.getDiscount()).setScale(2, RoundingMode.HALF_UP));
         return phonePriceMapper.insertPhonePrice(phonePrice);

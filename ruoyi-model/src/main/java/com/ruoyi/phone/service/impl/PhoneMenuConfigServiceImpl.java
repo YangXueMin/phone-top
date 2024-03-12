@@ -1,7 +1,11 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneMenuConfigMapper;
@@ -15,10 +19,11 @@ import com.ruoyi.phone.service.IPhoneMenuConfigService;
  * @date 2024-03-07
  */
 @Service
-public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
-{
+public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService {
     @Autowired
     private PhoneMenuConfigMapper phoneMenuConfigMapper;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询小程序菜单配置
@@ -27,8 +32,7 @@ public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
      * @return 小程序菜单配置
      */
     @Override
-    public PhoneMenuConfig selectPhoneMenuConfigById(Long id)
-    {
+    public PhoneMenuConfig selectPhoneMenuConfigById(Long id) {
         return phoneMenuConfigMapper.selectPhoneMenuConfigById(id);
     }
 
@@ -39,8 +43,7 @@ public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
      * @return 小程序菜单配置
      */
     @Override
-    public List<PhoneMenuConfig> selectPhoneMenuConfigList(PhoneMenuConfig phoneMenuConfig)
-    {
+    public List<PhoneMenuConfig> selectPhoneMenuConfigList(PhoneMenuConfig phoneMenuConfig) {
         return phoneMenuConfigMapper.selectPhoneMenuConfigList(phoneMenuConfig);
     }
 
@@ -51,8 +54,9 @@ public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
      * @return 结果
      */
     @Override
-    public int insertPhoneMenuConfig(PhoneMenuConfig phoneMenuConfig)
-    {
+    public int insertPhoneMenuConfig(PhoneMenuConfig phoneMenuConfig) {
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMenuConfig.getAppId());
+        phoneMenuConfig.setDeptId(wechatConfig.getDeptId());
         phoneMenuConfig.setCreateTime(DateUtils.getNowDate());
         return phoneMenuConfigMapper.insertPhoneMenuConfig(phoneMenuConfig);
     }
@@ -64,8 +68,7 @@ public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
      * @return 结果
      */
     @Override
-    public int updatePhoneMenuConfig(PhoneMenuConfig phoneMenuConfig)
-    {
+    public int updatePhoneMenuConfig(PhoneMenuConfig phoneMenuConfig) {
         phoneMenuConfig.setUpdateTime(DateUtils.getNowDate());
         return phoneMenuConfigMapper.updatePhoneMenuConfig(phoneMenuConfig);
     }
@@ -77,8 +80,7 @@ public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
      * @return 结果
      */
     @Override
-    public int deletePhoneMenuConfigByIds(Long[] ids)
-    {
+    public int deletePhoneMenuConfigByIds(Long[] ids) {
         return phoneMenuConfigMapper.deletePhoneMenuConfigByIds(ids);
     }
 
@@ -89,8 +91,7 @@ public class PhoneMenuConfigServiceImpl implements IPhoneMenuConfigService
      * @return 结果
      */
     @Override
-    public int deletePhoneMenuConfigById(Long id)
-    {
+    public int deletePhoneMenuConfigById(Long id) {
         return phoneMenuConfigMapper.deletePhoneMenuConfigById(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhoneInterfaceConfig;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhoneInterfaceConfig;
  * @author ruoyi
  * @date 2024-03-07
  */
-public interface IPhoneInterfaceConfigService
-{
+public interface IPhoneInterfaceConfigService {
     /**
      * 查询接口地址配置
      *

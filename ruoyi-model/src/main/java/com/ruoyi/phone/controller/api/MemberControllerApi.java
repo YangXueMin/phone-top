@@ -85,7 +85,7 @@ public class MemberControllerApi extends BaseController {
      * 获取会员下级
      */
     @ApiOperation("获取会员下级")
-    @PostMapping("/findSubordinateList")
+    @GetMapping("/findSubordinateList")
     public AjaxResult findSubordinateList(@RequestParam("type") String type) {
         return success(memberService.findSubordinateList(type));
     }

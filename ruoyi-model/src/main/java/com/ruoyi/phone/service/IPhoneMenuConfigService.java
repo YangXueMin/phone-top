@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+
 import com.ruoyi.phone.domain.PhoneMenuConfig;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.phone.domain.PhoneMenuConfig;
  * @author ruoyi
  * @date 2024-03-07
  */
-public interface IPhoneMenuConfigService
-{
+public interface IPhoneMenuConfigService {
     /**
      * 查询小程序菜单配置
      *

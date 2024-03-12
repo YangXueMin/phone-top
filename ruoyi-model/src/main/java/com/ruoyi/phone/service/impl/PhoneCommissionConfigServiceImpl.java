@@ -1,6 +1,8 @@
 package com.ruoyi.phone.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,7 @@ import com.ruoyi.phone.service.IPhoneCommissionConfigService;
  * @date 2024-03-05
  */
 @Service
-public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigService
-{
+public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigService {
     @Autowired
     private PhoneCommissionConfigMapper phoneCommissionConfigMapper;
 
@@ -27,8 +28,7 @@ public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigS
      * @return 佣金生成记录
      */
     @Override
-    public PhoneCommissionConfig selectPhoneCommissionConfigById(Long id)
-    {
+    public PhoneCommissionConfig selectPhoneCommissionConfigById(Long id) {
         return phoneCommissionConfigMapper.selectPhoneCommissionConfigById(id);
     }
 
@@ -39,8 +39,8 @@ public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigS
      * @return 佣金生成记录
      */
     @Override
-    public List<PhoneCommissionConfig> selectPhoneCommissionConfigList(PhoneCommissionConfig phoneCommissionConfig)
-    {
+    @DataScope(deptAlias = "d", userAlias = "a")
+    public List<PhoneCommissionConfig> selectPhoneCommissionConfigList(PhoneCommissionConfig phoneCommissionConfig) {
         return phoneCommissionConfigMapper.selectPhoneCommissionConfigList(phoneCommissionConfig);
     }
 
@@ -51,8 +51,7 @@ public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigS
      * @return 结果
      */
     @Override
-    public int insertPhoneCommissionConfig(PhoneCommissionConfig phoneCommissionConfig)
-    {
+    public int insertPhoneCommissionConfig(PhoneCommissionConfig phoneCommissionConfig) {
         phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
         return phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
     }
@@ -64,8 +63,7 @@ public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigS
      * @return 结果
      */
     @Override
-    public int updatePhoneCommissionConfig(PhoneCommissionConfig phoneCommissionConfig)
-    {
+    public int updatePhoneCommissionConfig(PhoneCommissionConfig phoneCommissionConfig) {
         phoneCommissionConfig.setUpdateTime(DateUtils.getNowDate());
         return phoneCommissionConfigMapper.updatePhoneCommissionConfig(phoneCommissionConfig);
     }
@@ -77,8 +75,7 @@ public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigS
      * @return 结果
      */
     @Override
-    public int deletePhoneCommissionConfigByIds(Long[] ids)
-    {
+    public int deletePhoneCommissionConfigByIds(Long[] ids) {
         return phoneCommissionConfigMapper.deletePhoneCommissionConfigByIds(ids);
     }
 
@@ -89,8 +86,7 @@ public class PhoneCommissionConfigServiceImpl implements IPhoneCommissionConfigS
      * @return 结果
      */
     @Override
-    public int deletePhoneCommissionConfigById(Long id)
-    {
+    public int deletePhoneCommissionConfigById(Long id) {
         return phoneCommissionConfigMapper.deletePhoneCommissionConfigById(id);
     }
 }

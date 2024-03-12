@@ -6,7 +6,7 @@
 
     <resultMap type="PhonePrice" id="PhonePriceResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
@@ -45,7 +45,7 @@
     <sql id="selectPhonePriceVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.method,
             a.type,
@@ -74,12 +74,13 @@
         from phone_price a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                 left join phone_price_type t ON t.id = a.type_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectPhonePriceList" parameterType="PhonePrice" resultMap="PhonePriceResult">
         <include refid="selectPhonePriceVo"/>
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null "> and a.app_id = #{appId}</if>
             <if test="method != null  and method != ''"> and a.method = #{method}</if>
             <if test="type != null  and type != ''"> and a.type = #{type}</if>
@@ -91,6 +92,8 @@
             <if test="directCommission != null "> and a.direct_commission = #{directCommission}</if>
             <if test="indirectCommission != null "> and a.indirect_commission = #{indirectCommission}</if>
             <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         order by a.order_num
     </select>
@@ -103,7 +106,7 @@
     <insert id="insertPhonePrice" parameterType="PhonePrice" useGeneratedKeys="true" keyProperty="id">
         insert into phone_price
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
@@ -127,7 +130,7 @@
             <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
@@ -155,7 +158,7 @@
     <update id="updatePhonePrice" parameterType="PhonePrice">
         update phone_price
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>

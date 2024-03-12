@@ -2,8 +2,11 @@ package com.ruoyi.phone.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.phone.mapper.PhoneInterfaceConfigMapper;
@@ -20,6 +23,8 @@ import com.ruoyi.phone.service.IPhoneInterfaceConfigService;
 public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigService {
     @Autowired
     private PhoneInterfaceConfigMapper phoneInterfaceConfigMapper;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询接口地址配置
@@ -39,6 +44,7 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      * @return 接口地址配置
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneInterfaceConfig> selectPhoneInterfaceConfigList(PhoneInterfaceConfig phoneInterfaceConfig) {
         return phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
     }
@@ -51,6 +57,8 @@ public class PhoneInterfaceConfigServiceImpl implements IPhoneInterfaceConfigSer
      */
     @Override
     public int insertPhoneInterfaceConfig(PhoneInterfaceConfig phoneInterfaceConfig) {
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneInterfaceConfig.getAppId());
+        phoneInterfaceConfig.setDeptId(wechatConfig.getDeptId());
         phoneInterfaceConfig.setCreateTime(DateUtils.getNowDate());
         return phoneInterfaceConfigMapper.insertPhoneInterfaceConfig(phoneInterfaceConfig);
     }

@@ -11,8 +11,7 @@ import com.ruoyi.phone.domain.PhoneMemberCardLog;
  * @author ruoyi
  * @date 2024-03-05
  */
-public interface IPhoneMemberCardLogService
-{
+public interface IPhoneMemberCardLogService {
     /**
      * 查询会员卡充值记录
      *

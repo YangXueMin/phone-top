@@ -6,7 +6,7 @@
 
     <resultMap type="PhoneMemberCardLog" id="PhoneMemberCardLogResult">
         <result property="id"    column="id"    />
-        <result property="companyId"    column="company_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
         <result property="payStatus"    column="pay_status"    />
@@ -49,7 +49,7 @@
     <sql id="selectPhoneMemberCardLogVo">
         select
             a.id,
-            a.company_id,
+            a.dept_id,
             a.app_id,
             a.member_id,
             a.pay_status,
@@ -81,12 +81,13 @@
         from phone_member_card_log a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                  left join phone_member m ON m.id = a.member_id
+                 left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
     <select id="selectPhoneMemberCardLogList" parameterType="PhoneMemberCardLog" resultMap="PhoneMemberCardLogResult">
         <include refid="selectPhoneMemberCardLogVo"/>
         <where>
-            <if test="companyId != null "> and a.company_id = #{companyId}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
             <if test="payStatus != null  and payStatus != ''"> and a.pay_status = #{payStatus}</if>
@@ -100,6 +101,8 @@
             <if test="cardName != null  and cardName != ''"> and a.card_name like concat('%', #{cardName}, '%')</if>
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         ORDER BY a.create_time DESC
     </select>
@@ -117,7 +120,7 @@
     <insert id="insertPhoneMemberCardLog" parameterType="PhoneMemberCardLog" useGeneratedKeys="true" keyProperty="id">
         insert into phone_member_card_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">company_id,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="payStatus != null">pay_status,</if>
@@ -138,7 +141,7 @@
             <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="companyId != null">#{companyId},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="payStatus != null">#{payStatus},</if>
@@ -163,7 +166,7 @@
     <update id="updatePhoneMemberCardLog" parameterType="PhoneMemberCardLog">
         update phone_member_card_log
         <trim prefix="SET" suffixOverrides=",">
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="payStatus != null">pay_status = #{payStatus},</if>
