@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.phone.domain.PhoneMemberCardLog;
 import com.ruoyi.phone.domain.PhoneOrder;
+import com.ruoyi.phone.domain.TopNotifyRequest;
 
 /**
  * 订单记录Service接口
@@ -54,6 +55,14 @@ public interface IPhoneOrderService {
     public int updatePhoneOrder(PhoneOrder phoneOrder);
 
     /**
+     * 取消订单记录
+     *
+     * @param phoneOrder 订单记录
+     * @return 结果
+     */
+    public int cancel(PhoneOrder phoneOrder);
+
+    /**
      * 批量删除订单记录
      *
      * @param ids 需要删除的订单记录主键集合
@@ -84,4 +93,12 @@ public interface IPhoneOrderService {
      * @return 结果
      */
     public String payNotify(String xmlData);
+
+    /**
+     * 充值回调
+     *
+     * @param requestBody
+     * @return 结果
+     */
+    public String topNotify(TopNotifyRequest requestBody);
 }

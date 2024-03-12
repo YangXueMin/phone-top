@@ -4,8 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
@@ -16,10 +19,9 @@ import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.SnowflakeGenerator;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.great.GreatUrlConstants;
+import com.ruoyi.common.utils.great.SignUtils;
 import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.phone.domain.*;
@@ -124,7 +126,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         }
 
         BigDecimal balance = member.getBalance();
-        phoneOrder.setArrivalStatus("1");
+        phoneOrder.setArrivalStatus("0");
         if (StringUtils.equals("1", phoneOrder.getPayType())) {
             phoneOrder.setPayMoney(phoneOrder.getMoney());
             phoneOrder.setPayBalance(BigDecimal.ZERO);
@@ -172,6 +174,38 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     public int updatePhoneOrder(PhoneOrder phoneOrder) {
         phoneOrder.setUpdateTime(DateUtils.getNowDate());
         return phoneOrderMapper.updatePhoneOrder(phoneOrder);
+    }
+
+    @Override
+    public int cancel(PhoneOrder phoneOrder) {
+        phoneOrder = phoneOrderMapper.selectPhoneOrderById(phoneOrder.getId());
+        PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
+        phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
+        phoneInterfaceConfig.setSwitchType("1");
+        List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
+        if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
+            phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
+            if (StringUtils.equals("2", phoneInterfaceConfig.getInterfaceType())) {
+                TreeMap<String, String> params = new TreeMap<>();
+                params.put("userid", phoneInterfaceConfig.getMchId());
+                params.put("out_trade_nums", phoneOrder.getOrderNo());
+                try {
+                    params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
+                    String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.QUERY_PRODUCT, JSON.toJSONString(params));
+                    if (StringUtils.isNotBlank(post) && JsonUtils.isJson2(post)) {
+                        JSONObject jsonObject = JSON.parseObject(post);
+                        if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
+                            phoneOrder.setArrivalStatus("4");
+                            phoneOrderMapper.updatePhoneOrder(phoneOrder);
+                            return 1;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
     }
 
     /**
@@ -264,6 +298,27 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         return WxPayNotifyResponse.fail("失败");
     }
 
+    @Override
+    public String topNotify(TopNotifyRequest requestBody) {
+        System.out.println(JSON.toJSONString(requestBody));
+        List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOrder_number());
+        if (phoneOrderList != null && phoneOrderList.size() > 0) {
+            PhoneOrder phoneOrder = phoneOrderList.get(0);
+            if (requestBody.getState() == -1) {
+                phoneOrder.setArrivalStatus("5");
+            }else if (requestBody.getState() == 1) {
+                phoneOrder.setArrivalStatus("2");
+            }else if(requestBody.getState() == 2){
+                phoneOrder.setArrivalStatus("3");
+            }
+            phoneOrder.setTopTime(requestBody.getOtime() + "");
+            phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
+            phoneOrder.setUpdateTime(DateUtils.getNowDate());
+            phoneOrderMapper.updatePhoneOrder(phoneOrder);
+        }
+        return "success";
+    }
+
     /**
      * 更新会员相关数据
      *
@@ -276,12 +331,59 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             //如果是直充
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
             phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
-            phoneInterfaceConfig.setType(phoneOrder.getMethod());
+            phoneInterfaceConfig.setSwitchType("1");
             List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
             if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
                 phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
                 if (StringUtils.equals("2", phoneInterfaceConfig.getInterfaceType())) {
                     //TODO 调用第三方接口
+                    //组装数据
+                    //判断是话费还是电费
+                    TreeMap<String, String> params = new TreeMap<>();
+                    params.put("out_trade_num", phoneOrder.getOrderNo());
+                    params.put("mobile", phoneOrder.getAccountNumber());
+                    params.put("notify_url", Constants.URL + "/api/phone/memberCard/topNotify");
+                    params.put("userid", phoneInterfaceConfig.getMchId());
+                    int product_id = 0;
+                    if (StringUtils.equals("4", phoneOrder.getType())) {
+                        //国家电网
+                        product_id = 247;
+                        params.put("area", phoneOrder.getArea());
+                    } else if (StringUtils.equals("5", phoneOrder.getType())) {
+                        //南方电网
+                        product_id = 0;
+                        params.put("area", phoneOrder.getArea());
+                        params.put("ytype", "1");
+                        params.put("id_card_no", phoneOrder.getCardNo());
+                    } else {
+                        //话费
+                        //判断金额
+                        if (phoneOrder.getMoney().compareTo(new BigDecimal(50)) < 1) {
+                            product_id = 238;
+                        } else if (phoneOrder.getMoney().compareTo(new BigDecimal(100)) < 1) {
+                            product_id = 239;
+                        } else if (phoneOrder.getMoney().compareTo(new BigDecimal(200)) < 1) {
+                            product_id = 240;
+                        }
+                    }
+                    if (product_id != 0) {
+                        params.put("product_id", product_id + "");
+                        try {
+                            params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
+                            String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.QUERY_PRODUCT, JSON.toJSONString(params));
+                            if (StringUtils.isNotBlank(post) && JsonUtils.isJson2(post)) {
+                                JSONObject jsonObject = JSON.parseObject(post);
+                                if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
+                                    //表示下单成功
+                                    phoneOrder.setArrivalStatus("1");
+                                    phoneOrder.setTopResult(post);
+                                    phoneOrderMapper.updatePhoneOrder(phoneOrder);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
             //如果是被推荐用户获取上级

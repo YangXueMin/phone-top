@@ -1,15 +1,10 @@
 package com.ruoyi.common.utils.great;
 
-import cn.hutool.crypto.SmUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 
-import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,7 +17,7 @@ import java.util.TreeMap;
  */
 public class SignUtils {
 
-    public static String unionSign(TreeMap<String, String> params,String apikey) throws Exception {
+    public static String unionSign(TreeMap<String, String> params, String apikey) throws Exception {
         params.remove("sign");
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -46,10 +41,10 @@ public class SignUtils {
         String userId = "74";
         String apikey = "A8E20FB194D86087AD24B3172461C5AE";
         TreeMap<String, String> params = new TreeMap<>();
-        params.put("userid",userId);
-        params.put("type","1");
+        params.put("userid", userId);
+        params.put("type", "1");
 
-        params.put("sign",unionSign(params,apikey));
+        params.put("sign", unionSign(params, apikey));
 
         final String post = HttpUtil.post(url + GreatUrlConstants.QUERY_PRODUCT, JSON.toJSONString(params));
 

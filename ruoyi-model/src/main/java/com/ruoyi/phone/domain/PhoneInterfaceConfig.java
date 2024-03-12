@@ -33,16 +33,6 @@ public class PhoneInterfaceConfig extends BaseEntity{
     @ApiModelProperty("公众号ID")
     private String appId;
 
-    /** 类型（电费：1，快充：2，慢充：3） */
-    @Excel(name = "类型", readConverterExp = "电费：1，快充：2，慢充：3")
-    @ApiModelProperty("类型（字典：phone_pay_method）")
-    private String type;
-
-    /** 类型（电费：1，快充：2，慢充：3） */
-    @Excel(name = "类型", readConverterExp = "电费：1，快充：2，慢充：3")
-    @ApiModelProperty("类型")
-    private String typeLabel;
-
     /** 开关类型（开：1，关:2） */
     @Excel(name = "开关类型", readConverterExp = "开1，关:2")
     @ApiModelProperty("开关类型")
@@ -94,16 +84,6 @@ public class PhoneInterfaceConfig extends BaseEntity{
         this.appId = appId;
     }
 
-    public String getAppId(){
-        return appId;
-    }
-    public void setType(String type){
-        this.type = type;
-    }
-
-    public String getType(){
-        return type;
-    }
     public void setSwitchType(String switchType){
         this.switchType = switchType;
     }
@@ -148,22 +128,15 @@ public class PhoneInterfaceConfig extends BaseEntity{
         this.wechatConfig = wechatConfig;
     }
 
-    public String getTypeLabel() {
-        if(StringUtils.isNotBlank(type)){
-            return DictUtils.getDictLabel("phone_pay_method",type);
-        }
-        return typeLabel;
-    }
-
-    public void setTypeLabel(String typeLabel) {
-        this.typeLabel = typeLabel;
-    }
-
     public String getInterfaceTypeLabel() {
         if(StringUtils.isNotBlank(interfaceType)){
             return DictUtils.getDictLabel("phone_interface_type",interfaceType);
         }
         return interfaceTypeLabel;
+    }
+
+    public String getAppId() {
+        return appId;
     }
 
     public void setInterfaceTypeLabel(String interfaceTypeLabel) {

@@ -140,14 +140,14 @@ public class PhoneOrder extends BaseEntity{
     @ApiModelProperty("支付状态(字典值：phone_pay_status 1:待支付，2：支付完成，3：已退款，4：已取消)")
     private String payStatusLabel;
 
-    /** 到账状态(1:充值中，2：充值成功，3：充 */
-    @Excel(name = "到账状态(1:充值中，2：充值成功，3：充")
-    @ApiModelProperty("到账状态(字典值：phone_arrival_status 1:充值中，2：充值成功，3：充")
+    /** 到账状态(0：代充值，1:充值中，2：充值成功，3：充 */
+    @Excel(name = "到账状态(0：代充值，1:充值中，2：充值成功，3：充值失败")
+    @ApiModelProperty("到账状态(字典值：phone_arrival_status 0：代充值，1:充值中，2：充值成功，3：充值失败")
     private String arrivalStatus;
 
-    /** 到账状态(1:充值中，2：充值成功，3：充 */
-    @Excel(name = "到账状态(1:充值中，2：充值成功，3：充")
-    @ApiModelProperty("到账状态(字典值：phone_arrival_status 1:充值中，2：充值成功，3：充")
+    /** 到账状态(1:充值中，2：充值成功，3：已取消 */
+    @Excel(name = "到账状态(1:充值中，2：充值成功，3：充值失败")
+    @ApiModelProperty("到账状态(字典值：phone_arrival_status 1:充值中，2：充值成功，3：充值失败")
     private String arrivalStatusLabel;
 
     /** 支付时间 */
@@ -159,6 +159,21 @@ public class PhoneOrder extends BaseEntity{
     @Excel(name = "支付回调记录")
     @ApiModelProperty("支付回调记录")
     private String payResult;
+
+    /** 充值回调记录 */
+    @Excel(name = "充值记录")
+    @ApiModelProperty("充值记录")
+    private String topResult;
+
+    /** 充值时间 */
+    @Excel(name = "充值时间")
+    @ApiModelProperty("充值时间")
+    private String topTime;
+
+    /** 充值回调记录 */
+    @Excel(name = "充值回调记录")
+    @ApiModelProperty("充值回调记录")
+    private String topNotifyResult;
 
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
@@ -409,5 +424,29 @@ public class PhoneOrder extends BaseEntity{
 
     public void setCouponId(Long couponId) {
         this.couponId = couponId;
+    }
+
+    public String getTopResult() {
+        return topResult;
+    }
+
+    public void setTopResult(String topResult) {
+        this.topResult = topResult;
+    }
+
+    public String getTopNotifyResult() {
+        return topNotifyResult;
+    }
+
+    public void setTopNotifyResult(String topNotifyResult) {
+        this.topNotifyResult = topNotifyResult;
+    }
+
+    public String getTopTime() {
+        return topTime;
+    }
+
+    public void setTopTime(String topTime) {
+        this.topTime = topTime;
     }
 }

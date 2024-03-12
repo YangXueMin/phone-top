@@ -8,7 +8,6 @@
         <result property="id"    column="id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
-        <result property="type"    column="type"    />
         <result property="switchType"    column="switch_type"    />
         <result property="interfaceType"    column="interface_type"    />
         <result property="interfaceUrl"    column="interface_url"    />
@@ -31,7 +30,6 @@
             a.id,
             a.dept_id,
             a.app_id,
-            a.type,
             a.switch_type,
             a.interface_type,
             a.interface_url,
@@ -53,7 +51,6 @@
         <where>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
-            <if test="type != null  and type != ''"> and a.type = #{type}</if>
             <if test="switchType != null  and switchType != ''"> and a.switch_type = #{switchType}</if>
             <if test="interfaceType != null  and interfaceType != ''"> and a.interface_type = #{interfaceType}</if>
             <if test="interfaceUrl != null  and interfaceUrl != ''"> and a.interface_url = #{interfaceUrl}</if>
@@ -75,7 +72,6 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
-            <if test="type != null">type,</if>
             <if test="switchType != null">switch_type,</if>
             <if test="interfaceType != null">interface_type,</if>
             <if test="interfaceUrl != null">interface_url,</if>
@@ -90,7 +86,6 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
-            <if test="type != null">#{type},</if>
             <if test="switchType != null">#{switchType},</if>
             <if test="interfaceType != null">#{interfaceType},</if>
             <if test="interfaceUrl != null">#{interfaceUrl},</if>
@@ -109,7 +104,6 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
-            <if test="type != null">type = #{type},</if>
             <if test="switchType != null">switch_type = #{switchType},</if>
             <if test="interfaceType != null">interface_type = #{interfaceType},</if>
             <if test="interfaceUrl != null">interface_url = #{interfaceUrl},</if>

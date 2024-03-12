@@ -28,6 +28,9 @@
         <result property="arrivalStatus"    column="arrival_status"    />
         <result property="payTime"    column="pay_time"    />
         <result property="payResult"    column="pay_result"    />
+        <result property="topResult"    column="top_result"    />
+        <result property="topTime"    column="top_time"    />
+        <result property="topNotifyResult"    column="top_notify_result"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -96,6 +99,9 @@
             a.arrival_status,
             a.pay_time,
             a.pay_result,
+               a.top_result,
+               a.top_time,
+               a.top_notify_result,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -229,6 +235,9 @@
             <if test="arrivalStatus != null">arrival_status,</if>
             <if test="payTime != null">pay_time,</if>
             <if test="payResult != null">pay_result,</if>
+            <if test="topResult != null">top_result,</if>
+            <if test="topTime != null">top_time,</if>
+            <if test="topNotifyResult != null">top_notify_result,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -259,6 +268,9 @@
             <if test="arrivalStatus != null">#{arrivalStatus},</if>
             <if test="payTime != null">#{payTime},</if>
             <if test="payResult != null">#{payResult},</if>
+            <if test="topResult != null">#{topResult},</if>
+            <if test="topTime != null">#{topTime},</if>
+            <if test="topNotifyResult != null">#{topNotifyResult},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -292,6 +304,9 @@
             <if test="arrivalStatus != null">arrival_status = #{arrivalStatus},</if>
             <if test="payTime != null">pay_time = #{payTime},</if>
             <if test="payResult != null">pay_result = #{payResult},</if>
+            <if test="topResult != null">top_result = #{topResult},</if>
+            <if test="topTime != null">top_time = #{topTime},</if>
+            <if test="topNotifyResult != null">top_notify_result = #{topNotifyResult},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

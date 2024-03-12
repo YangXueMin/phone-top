@@ -6,6 +6,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.phone.domain.PhoneOrder;
+import com.ruoyi.phone.domain.TopNotifyRequest;
 import com.ruoyi.phone.service.IPhoneOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -89,6 +90,15 @@ public class OrderControllerApi extends BaseController {
     @PostMapping("/payNotify")
     public String payNotify(@RequestBody String xmlData) {
         return phoneOrderService.payNotify(xmlData);
+    }
+
+    /**
+     * 充值结果通知
+     */
+    @ApiOperation("充值结果通知")
+    @PostMapping("/topNotify")
+    public String topNotify(@RequestBody TopNotifyRequest requestBody) {
+        return phoneOrderService.topNotify(requestBody);
     }
 
 

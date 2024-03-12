@@ -100,6 +100,17 @@ public class PhoneOrderController extends BaseController {
     }
 
     /**
+     * 取消订单记录
+     */
+    @ApiOperation("取消订单记录")
+    @PreAuthorize("@ss.hasPermi('phone:order:edit')")
+    @Log(title = "订单记录", businessType = BusinessType.UPDATE)
+    @PostMapping("cancel")
+    public AjaxResult cancel(@RequestBody PhoneOrder phoneOrder) {
+        return toAjax(phoneOrderService.cancel(phoneOrder));
+    }
+
+    /**
      * 删除订单记录
      */
     @ApiOperation("删除订单记录")
