@@ -43,7 +43,6 @@ public class PhoneCouponServiceImpl implements IPhoneCouponService {
      * @return 优惠券管理
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneCoupon> selectPhoneCouponList(PhoneCoupon phoneCoupon) {
         return phoneCouponMapper.selectPhoneCouponList(phoneCoupon);
     }
