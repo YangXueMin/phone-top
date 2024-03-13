@@ -204,6 +204,19 @@
         where a.order_no = #{orderNo}
     </select>
 
+    <select id="selectNewsflash" parameterType="string" resultType="string">
+        SELECT CONCAT('用户',REPLACE(account_number,
+            SUBSTRING(account_number, 4, LENGTH(account_number)-7), '****')
+            ,'充值',top_up_money,'元') AS title
+        FROM phone_order
+        <where>
+            pay_status = '2'
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+        </where>
+        order by pay_time desc
+        limit 10
+    </select>
+
     <select id="selectPhoneOrderById" parameterType="Long" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         where a.id = #{id}

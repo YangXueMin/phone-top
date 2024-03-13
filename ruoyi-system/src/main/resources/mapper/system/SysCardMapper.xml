@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysCardMapper">
+
+    <resultMap type="SysCard" id="SysCardResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="cardNo"    column="card_no"    />
+        <result property="timeSpan"    column="time_span"    />
+        <result property="status"    column="status"    />
+        <result property="cancelStatus"    column="cancel_status"    />
+        <result property="cancelTime"    column="cancel_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysCardVo">
+        select
+            id,
+            dept_id,
+            app_id,
+            card_no,
+            time_span,
+            status,
+            cancel_status,
+            cancel_time,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            remark
+        from sys_card
+    </sql>
+
+    <select id="selectSysCardList" parameterType="SysCard" resultMap="SysCardResult">
+        <include refid="selectSysCardVo"/>
+        <where>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
+            <if test="timeSpan != null "> and time_span = #{timeSpan}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and cancel_status = #{cancelStatus}</if>
+            <if test="cancelTime != null "> and cancel_time = #{cancelTime}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCardById" parameterType="Long" resultMap="SysCardResult">
+        <include refid="selectSysCardVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCard" parameterType="SysCard" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="cardNo != null">card_no,</if>
+            <if test="timeSpan != null">time_span,</if>
+            <if test="status != null">status,</if>
+            <if test="cancelStatus != null">cancel_status,</if>
+            <if test="cancelTime != null">cancel_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="cardNo != null">#{cardNo},</if>
+            <if test="timeSpan != null">#{timeSpan},</if>
+            <if test="status != null">#{status},</if>
+            <if test="cancelStatus != null">#{cancelStatus},</if>
+            <if test="cancelTime != null">#{cancelTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCard" parameterType="SysCard">
+        update sys_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="cardNo != null">card_no = #{cardNo},</if>
+            <if test="timeSpan != null">time_span = #{timeSpan},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="cancelStatus != null">cancel_status = #{cancelStatus},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCardById" parameterType="Long">
+        delete from sys_card where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCardByIds" parameterType="String">
+        delete from sys_card where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

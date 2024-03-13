@@ -3,6 +3,7 @@ package com.ruoyi.phone.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.phone.domain.PhoneOrder;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 订单记录Mapper接口
@@ -44,6 +45,14 @@ public interface PhoneOrderMapper
      * @return 订单记录集合
      */
     public List<PhoneOrder> selectPhoneOrderListByOrderNo(String orderNo);
+
+    /**
+     * 查询订单记录列表
+     *
+     * @param appId 微信小程序ID
+     * @return 订单记录集合
+     */
+    public List<String> selectNewsflash(@Param("appId")String appId);
 
     /**
      * 新增订单记录

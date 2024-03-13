@@ -22,6 +22,7 @@ import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.great.GreatUrlConstants;
 import com.ruoyi.common.utils.great.SignUtils;
+import com.ruoyi.common.utils.time.DateFormatUtil;
 import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.phone.domain.*;
@@ -104,7 +105,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         phoneOrder.setCreateTime(DateUtils.getNowDate());
 
         PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-
+        phoneOrder.setTopUpMoney(phonePrice.getOriginalPrice());
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
         if (StringUtils.equals("1", member.getIsSuperMember())) {
             phoneOrder.setMoney(phonePrice.getOriginalPrice().multiply(phonePrice.getSuperMemberPrice()).setScale(2, RoundingMode.HALF_UP));
@@ -144,6 +145,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 phoneOrder.setPayBalance(phoneOrder.getMoney());
                 money = phoneOrder.getMoney();
                 phoneOrder.setPayStatus("2");
+                phoneOrder.setPayTime(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_WECHAT_DATE,DateUtils.getNowDate()));
                 phoneOrder.setPayMoney(BigDecimal.ZERO);
             }
             memberMapper.updateMember(member);
@@ -317,6 +319,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             phoneOrderMapper.updatePhoneOrder(phoneOrder);
         }
         return "success";
+    }
+
+    @Override
+    public List<String> findNewsflash(String appId) {
+        return phoneOrderMapper.selectNewsflash(appId);
     }
 
     /**

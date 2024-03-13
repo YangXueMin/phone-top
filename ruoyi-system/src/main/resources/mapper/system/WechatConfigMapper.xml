@@ -15,6 +15,8 @@
         <result property="mchId"    column="mch_id"    />
         <result property="mchKey"    column="mch_key"    />
         <result property="keyPath"    column="key_path"    />
+        <result property="validityPeriod"    column="validity_period"    />
+        <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -34,6 +36,8 @@
             a.mch_id,
             a.mch_key,
             a.key_path,
+               a.validity_period,
+               a.status,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -55,6 +59,8 @@
             <if test="mchId != null  and mchId != ''"> and a.mch_id = #{mchId}</if>
             <if test="mchKey != null  and mchKey != ''"> and a.mch_key = #{mchKey}</if>
             <if test="keyPath != null  and keyPath != ''"> and a.key_path = #{keyPath}</if>
+            <if test="validityPeriod != null "> and a.validity_period = #{validityPeriod}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
@@ -77,6 +83,8 @@
             <if test="mchId != null">mch_id,</if>
             <if test="mchKey != null">mch_key,</if>
             <if test="keyPath != null">key_path,</if>
+            <if test="validityPeriod != null">validity_period,</if>
+            <if test="status != null">status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -93,6 +101,8 @@
             <if test="mchId != null">#{mchId},</if>
             <if test="mchKey != null">#{mchKey},</if>
             <if test="keyPath != null">#{keyPath},</if>
+            <if test="validityPeriod != null">#{validityPeriod},</if>
+            <if test="status != null">#{status},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -113,6 +123,8 @@
             <if test="mchId != null">mch_id = #{mchId},</if>
             <if test="mchKey != null">mch_key = #{mchKey},</if>
             <if test="keyPath != null">key_path = #{keyPath},</if>
+            <if test="validityPeriod != null">validity_period = #{validityPeriod},</if>
+            <if test="status != null">status = #{status},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

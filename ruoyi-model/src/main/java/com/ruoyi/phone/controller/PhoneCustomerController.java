@@ -42,7 +42,6 @@ public class PhoneCustomerController extends BaseController {
      * 查询客服配置列表
      */
     @ApiOperation("查询客服配置列表")
-    @PreAuthorize("@ss.hasPermi('phone:customer:list')")
     @GetMapping("/list")
     public TableDataInfo list(PhoneCustomer phoneCustomer)
     {

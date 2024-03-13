@@ -101,4 +101,12 @@ public interface IPhoneOrderService {
      * @return 结果
      */
     public String topNotify(TopNotifyRequest requestBody);
+
+    /**
+     * 充值快讯
+     *
+     * @param appId
+     * @return 结果
+     */
+    public List<String> findNewsflash(String appId);
 }

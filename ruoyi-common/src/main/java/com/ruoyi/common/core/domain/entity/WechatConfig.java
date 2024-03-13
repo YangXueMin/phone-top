@@ -4,6 +4,8 @@ import com.ruoyi.common.annotation.Excel;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.Date;
+
 /**
  * 微信配置对象 phone_wechat_config
  *
@@ -52,6 +54,18 @@ public class WechatConfig extends BaseEntity{
     /** p12证书的位置 */
     @Excel(name = "p12证书的位置")
     private String keyPath;
+
+    /**
+     * 有效期
+     */
+    @Excel(name = "有效期")
+    private Date validityPeriod;
+
+    /**
+     * 状态（正常：1，停用：2）
+     */
+    @Excel(name = "状态（正常：1，停用：2）")
+    private String status;
 
     public void setId(Long id){
         this.id = id;
@@ -124,5 +138,21 @@ public class WechatConfig extends BaseEntity{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Date getValidityPeriod() {
+        return validityPeriod;
+    }
+
+    public void setValidityPeriod(Date validityPeriod) {
+        this.validityPeriod = validityPeriod;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -101,5 +101,14 @@ public class OrderControllerApi extends BaseController {
         return phoneOrderService.topNotify(requestBody);
     }
 
+    /**
+     * 充值快讯
+     */
+    @ApiOperation("充值快讯")
+    @GetMapping("/findNewsflash")
+    public AjaxResult findNewsflash(@RequestParam(value = "appId",required = false)String appId) {
+        return success(phoneOrderService.findNewsflash(appId));
+    }
+
 
 }
