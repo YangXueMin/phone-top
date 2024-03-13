@@ -28,6 +28,14 @@ public interface ISysCardService
     public List<SysCard> selectSysCardList(SysCard sysCard);
 
     /**
+     * 查询后台卡密管理列表
+     *
+     * @param cardNo 后台卡密管理
+     * @return 后台卡密管理集合
+     */
+    public SysCard selectSysCardByCardNo(String cardNo);
+
+    /**
      * 新增后台卡密管理
      *
      * @param sysCard 后台卡密管理

@@ -114,8 +114,8 @@ public class WechatConfigController extends BaseController {
     @ApiOperation("激活微信配置")
     @Log(title = "微信配置", businessType = BusinessType.DELETE)
     @GetMapping("cancel")
-    public AjaxResult cancel(@RequestParam("id") Long id, @RequestParam("cardId") Long cardId) {
-        SysCard sysCard = sysCardService.selectSysCardById(cardId);
+    public AjaxResult cancel(@RequestParam("id") Long id, @RequestParam("cardNo") String cardNo) {
+        SysCard sysCard = sysCardService.selectSysCardByCardNo(cardNo);
         if(sysCard == null){
             return AjaxResult.error("查无此卡数据");
         }

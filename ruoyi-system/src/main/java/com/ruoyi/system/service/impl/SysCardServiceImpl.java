@@ -43,6 +43,17 @@ public class SysCardServiceImpl implements ISysCardService {
         return sysCardMapper.selectSysCardList(sysCard);
     }
 
+    @Override
+    public SysCard selectSysCardByCardNo(String cardNo) {
+        SysCard sysCard = new SysCard();
+        sysCard.setCardNo(cardNo);
+        List<SysCard> list = sysCardMapper.selectSysCardList(sysCard);
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
+
     /**
      * 新增后台卡密管理
      *
