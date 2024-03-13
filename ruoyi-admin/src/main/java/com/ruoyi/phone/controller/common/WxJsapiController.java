@@ -9,7 +9,6 @@ import com.ruoyi.system.service.IWechatConfigService;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.TimeUnit;
@@ -36,7 +35,7 @@ public class WxJsapiController {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxJsapiSignature jsapiSignature = this.wechatConfiguration.wxMpService(wechatConfig).createJsapiSignature(url);
         //final String jsapiTicket = this.wechatConfiguration.wxMpService(wechatConfig).getJsapiTicket(true);
-        redisCache.setCacheObject(getCacheKey(appid + url), JSON.toJSONString(jsapiSignature),1, TimeUnit.HOURS);
+        redisCache.setCacheObject(getCacheKey(appid + url), JSON.toJSONString(jsapiSignature), 1, TimeUnit.HOURS);
         return jsapiSignature;
     }
 

@@ -75,6 +75,12 @@ public class WechatConfig extends BaseEntity{
     @Excel(name = "有效状态（字典：phone_wechat_time_status  未激活：0，已激活：1，已过期：2）")
     private String statusLabel;
 
+    /**
+     * 菜单json
+     */
+    @Excel(name = "菜单json")
+    private String menuJson;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -173,5 +179,13 @@ public class WechatConfig extends BaseEntity{
 
     public void setStatusLabel(String statusLabel) {
         this.statusLabel = statusLabel;
+    }
+
+    public String getMenuJson() {
+        return menuJson;
+    }
+
+    public void setMenuJson(String menuJson) {
+        this.menuJson = menuJson;
     }
 }

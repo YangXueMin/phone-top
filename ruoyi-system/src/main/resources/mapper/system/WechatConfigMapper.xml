@@ -17,6 +17,7 @@
         <result property="keyPath"    column="key_path"    />
         <result property="validityPeriod"    column="validity_period"    />
         <result property="status"    column="status"    />
+        <result property="menuJson"    column="menu_json"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -38,6 +39,7 @@
             a.key_path,
                a.validity_period,
                a.status,
+               a.menu_json,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -85,6 +87,7 @@
             <if test="keyPath != null">key_path,</if>
             <if test="validityPeriod != null">validity_period,</if>
             <if test="status != null">status,</if>
+            <if test="menuJson != null">menu_json,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -103,6 +106,7 @@
             <if test="keyPath != null">#{keyPath},</if>
             <if test="validityPeriod != null">#{validityPeriod},</if>
             <if test="status != null">#{status},</if>
+            <if test="menuJson != null">#{menuJson},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -125,6 +129,7 @@
             <if test="keyPath != null">key_path = #{keyPath},</if>
             <if test="validityPeriod != null">validity_period = #{validityPeriod},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="menuJson != null">menu_json = #{menuJson},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

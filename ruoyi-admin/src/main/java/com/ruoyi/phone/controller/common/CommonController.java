@@ -44,10 +44,11 @@ public class CommonController {
      * 网页授权域名，需要把用到的文件下载下来，文件名是需要请求的接口
      * 返回的是文件对应的内容
      */
-    @GetMapping("MP_verify_cXlH68VBATL5Mc34.txt")
-    private String returnConfigFile() {
-        //把 MP_verify_xxxxxx.txt 中的内容返回
-        return "cXlH68VBATL5Mc34";
+    @GetMapping("MP_*")
+    private String returnConfigFile(HttpServletRequest request) {
+        //示例：请求 MP_verify_cXlH68VBATL5Mc34.txt 响应 cXlH68VBATL5Mc34
+        String url = request.getRequestURI();
+        return url.substring(9, 27);
     }
 
     /**
