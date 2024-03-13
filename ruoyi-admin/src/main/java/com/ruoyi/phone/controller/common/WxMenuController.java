@@ -1,6 +1,7 @@
 package com.ruoyi.phone.controller.common;
 
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.system.service.IWechatConfigService;
 import lombok.AllArgsConstructor;
@@ -42,10 +43,10 @@ public class WxMenuController {
      * @return 如果是个性化菜单，则返回menuid，否则返回null
      */
     @PostMapping("/create")
-    public String menuCreate(@PathVariable String appid, @RequestBody WxMenu menu) throws WxErrorException {
+    public AjaxResult menuCreate(@PathVariable String appid, @RequestBody WxMenu menu) throws WxErrorException {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
-        return wxMpService.switchoverTo(appid).getMenuService().menuCreate(menu);
+        return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuCreate(menu));
     }
 
     @GetMapping("/create")
@@ -122,10 +123,10 @@ public class WxMenuController {
      * @return 如果是个性化菜单，则返回menuid，否则返回null
      */
     @PostMapping("/createByJson")
-    public String menuCreate(@PathVariable String appid, @RequestBody String json) throws WxErrorException {
+    public AjaxResult menuCreate(@PathVariable String appid, @RequestBody String json) throws WxErrorException {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
-        return wxMpService.switchoverTo(appid).getMenuService().menuCreate(json);
+        return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuCreate(json));
     }
 
     /**
@@ -135,10 +136,11 @@ public class WxMenuController {
      * </pre>
      */
     @GetMapping("/delete")
-    public void menuDelete(@PathVariable String appid) throws WxErrorException {
+    public AjaxResult menuDelete(@PathVariable String appid) throws WxErrorException {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
         wxMpService.switchoverTo(appid).getMenuService().menuDelete();
+        return AjaxResult.success();
     }
 
     /**
@@ -163,10 +165,10 @@ public class WxMenuController {
      * </pre>
      */
     @GetMapping("/get")
-    public WxMpMenu menuGet(@PathVariable String appid) throws WxErrorException {
+    public AjaxResult menuGet(@PathVariable String appid) throws WxErrorException {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
-        return wxMpService.switchoverTo(appid).getMenuService().menuGet();
+        return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuGet());
     }
 
     /**
@@ -178,10 +180,10 @@ public class WxMenuController {
      * @param userid 可以是粉丝的OpenID，也可以是粉丝的微信号。
      */
     @GetMapping("/menuTryMatch/{userid}")
-    public WxMenu menuTryMatch(@PathVariable String appid, @PathVariable String userid) throws WxErrorException {
+    public AjaxResult menuTryMatch(@PathVariable String appid, @PathVariable String userid) throws WxErrorException {
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
-        return wxMpService.switchoverTo(appid).getMenuService().menuTryMatch(userid);
+        return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuTryMatch(userid));
     }
 
     /**
