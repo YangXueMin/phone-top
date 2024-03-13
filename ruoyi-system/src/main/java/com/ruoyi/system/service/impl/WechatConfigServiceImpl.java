@@ -7,13 +7,18 @@ import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.time.DateUtil;
+import com.ruoyi.system.domain.SysCard;
+import com.ruoyi.system.mapper.SysCardMapper;
 import com.ruoyi.system.mapper.WechatConfigMapper;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +33,8 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     private WechatConfigMapper wechatConfigMapper;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private SysCardMapper sysCardMapper;
 
     /**
      * 项目启动时，初始化参数到缓存
@@ -101,6 +108,8 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      */
     @Override
     public int updateWechatConfig(WechatConfig wechatConfig) {
+        wechatConfig.setStatus(null);
+        wechatConfig.setValidityPeriod(null);
         wechatConfig.setUpdateTime(DateUtils.getNowDate());
         int i = wechatConfigMapper.updateWechatConfig(wechatConfig);
         if (i > 0) {
@@ -164,6 +173,29 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     public void resetConfigCache() {
         clearConfigCache();
         loadingConfigCache();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public synchronized int cancel(Long id, SysCard sysCard) {
+        WechatConfig wechatConfig = wechatConfigMapper.selectWechatConfigById(id);
+        wechatConfig.setStatus("1");
+        Date date = new Date();
+        if(wechatConfig.getValidityPeriod() != null){
+            date = wechatConfig.getValidityPeriod();
+        }
+        wechatConfig.setValidityPeriod(DateUtil.endOfDate(DateUtil.addDays(date,sysCard.getTimeSpan())));
+        final int i = wechatConfigMapper.updateWechatConfig(wechatConfig);
+        if (i > 0) {
+            redisCache.deleteObject(getCacheKey(wechatConfig.getAppId()));
+            //修改卡状态
+            sysCard.setAppId(wechatConfig.getAppId());
+            sysCard.setDeptId(wechatConfig.getDeptId());
+            sysCard.setCancelStatus("2");
+            sysCard.setCancelTime(new Date());
+            sysCardMapper.updateSysCard(sysCard);
+        }
+        return i;
     }
 
     /**

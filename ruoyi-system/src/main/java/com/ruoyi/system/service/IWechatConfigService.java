@@ -1,7 +1,9 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.system.domain.SysCard;
 
 /**
  * 微信配置Service接口
@@ -9,8 +11,7 @@ import com.ruoyi.common.core.domain.entity.WechatConfig;
  * @author ruoyi
  * @date 2024-03-01
  */
-public interface IWechatConfigService
-{
+public interface IWechatConfigService {
     /**
      * 查询微信配置
      *
@@ -18,6 +19,7 @@ public interface IWechatConfigService
      * @return 微信配置
      */
     public WechatConfig selectWechatConfigById(Long id);
+
     /**
      * 查询微信配置
      *
@@ -80,5 +82,13 @@ public interface IWechatConfigService
      * 重置参数缓存数据
      */
     public void resetConfigCache();
+
+    /**
+     * 核销数据
+     * @param id
+     * @param sysCard
+     * @return
+     */
+    public int cancel(Long id, SysCard sysCard);
 
 }

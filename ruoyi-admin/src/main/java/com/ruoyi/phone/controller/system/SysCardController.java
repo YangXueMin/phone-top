@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +45,7 @@ public class SysCardController extends BaseController {
     @ApiOperation("查询后台卡密管理列表")
     @PreAuthorize("@ss.hasPermi('system:sysCard:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysCard sysCard)
-    {
+    public TableDataInfo list(SysCard sysCard) {
         startPage();
         List<SysCard> list = sysCardService.selectSysCardList(sysCard);
         return getDataTable(list);
@@ -57,8 +57,7 @@ public class SysCardController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:sysCard:export')")
     @Log(title = "后台卡密管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysCard sysCard)
-    {
+    public void export(HttpServletResponse response, SysCard sysCard) {
         List<SysCard> list = sysCardService.selectSysCardList(sysCard);
         ExcelUtil<SysCard> util = new ExcelUtil<SysCard>(SysCard.class);
         util.exportExcel(response, list, "后台卡密管理数据");
@@ -71,8 +70,7 @@ public class SysCardController extends BaseController {
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @PreAuthorize("@ss.hasPermi('system:sysCard:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(sysCardService.selectSysCardById(id));
     }
 
@@ -83,8 +81,7 @@ public class SysCardController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:sysCard:add')")
     @Log(title = "后台卡密管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysCard sysCard)
-    {
+    public AjaxResult add(@RequestBody SysCard sysCard) {
         return toAjax(sysCardService.insertSysCard(sysCard));
     }
 
@@ -95,8 +92,7 @@ public class SysCardController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:sysCard:edit')")
     @Log(title = "后台卡密管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysCard sysCard)
-    {
+    public AjaxResult edit(@RequestBody SysCard sysCard) {
         return toAjax(sysCardService.updateSysCard(sysCard));
     }
 
@@ -108,8 +104,7 @@ public class SysCardController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:sysCard:remove')")
     @Log(title = "后台卡密管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(sysCardService.deleteSysCardByIds(ids));
     }
 }

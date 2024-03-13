@@ -1,8 +1,10 @@
 package com.ruoyi.common.core.domain.entity;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.utils.DictUtils;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -62,10 +64,16 @@ public class WechatConfig extends BaseEntity{
     private Date validityPeriod;
 
     /**
-     * 状态（正常：1，停用：2）
+     * 有效状态（字典：phone_wechat_time_status  未激活：0，已激活：1，已过期：2）
      */
-    @Excel(name = "状态（正常：1，停用：2）")
+    @Excel(name = "有效状态（字典：phone_wechat_time_status  未激活：0，已激活：1，已过期：2）")
     private String status;
+
+    /**
+     * 有效状态（字典：phone_wechat_time_status  未激活：0，已激活：1，已过期：2）
+     */
+    @Excel(name = "有效状态（字典：phone_wechat_time_status  未激活：0，已激活：1，已过期：2）")
+    private String statusLabel;
 
     public void setId(Long id){
         this.id = id;
@@ -154,5 +162,16 @@ public class WechatConfig extends BaseEntity{
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatusLabel() {
+        if(StringUtils.isNotBlank(status)){
+            return DictUtils.getDictLabel("phone_wechat_time_status",status);
+        }
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel = statusLabel;
     }
 }

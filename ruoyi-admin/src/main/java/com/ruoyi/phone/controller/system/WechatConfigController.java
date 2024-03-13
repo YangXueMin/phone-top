@@ -4,16 +4,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.SysCard;
+import com.ruoyi.system.service.ISysCardService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -38,6 +34,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class WechatConfigController extends BaseController {
     @Autowired
     private IWechatConfigService wechatConfigService;
+    @Autowired
+    private ISysCardService sysCardService;
 
     /**
      * 查询微信配置列表
@@ -109,4 +107,26 @@ public class WechatConfigController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(wechatConfigService.deleteWechatConfigByIds(ids));
     }
+
+    /**
+     * 激活微信配置
+     */
+    @ApiOperation("激活微信配置")
+    @Log(title = "微信配置", businessType = BusinessType.DELETE)
+    @GetMapping("cancel")
+    public AjaxResult cancel(@RequestParam("id") Long id, @RequestParam("cardId") Long cardId) {
+        SysCard sysCard = sysCardService.selectSysCardById(cardId);
+        if(sysCard == null){
+            return AjaxResult.error("查无此卡数据");
+        }
+        if(StringUtils.equals("2",sysCard.getStatus())){
+            return AjaxResult.error("此卡未激活");
+        }
+        if(StringUtils.equals("2",sysCard.getCancelStatus())){
+            return AjaxResult.error("此卡已核销");
+        }
+        return toAjax(wechatConfigService.cancel(id,sysCard));
+    }
+
+
 }
