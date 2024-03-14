@@ -2,6 +2,7 @@ package com.ruoyi.phone.controller.api;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.phone.service.IPhoneBannerService;
 import com.ruoyi.phone.service.IPhoneCompanyConfigService;
 import com.ruoyi.phone.service.IPhoneCustomerService;
@@ -71,7 +72,15 @@ public class AppIdConfigControllerApi extends BaseController {
     @ApiOperation("获取微信配置")
     @GetMapping("/wechatConfig")
     public AjaxResult wechatConfig(@RequestParam("appId") String appId) {
-        return success(wechatConfigService.selectWechatConfigByAppId(appId));
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appId);
+        if (wechatConfig != null) {
+            wechatConfig.setAppSecret(null);
+            wechatConfig.setMchId(null);
+            wechatConfig.setMchKey(null);
+            wechatConfig.setAesKey(null);
+            wechatConfig.setKeyPath(null);
+        }
+        return success(wechatConfig);
     }
 
     /**
