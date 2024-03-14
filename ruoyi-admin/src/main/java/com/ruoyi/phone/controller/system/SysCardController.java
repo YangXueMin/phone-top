@@ -1,4 +1,4 @@
-package com.ruoyi.system.controller;
+package com.ruoyi.phone.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
