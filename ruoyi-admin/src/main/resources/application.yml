@@ -70,11 +70,11 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 139.198.35.244
+    host: 127.0.0.1
     # 端口，默认为6379
     port: 6666
     # 数据库索引
-    database: 4
+    database: 1
     # 密码
     password: 1q2w3e4r5t
     # 连接超时时间
@@ -160,7 +160,7 @@ wechat:
 
 # Minio配置
 minio:
-  url: https://minio.yangxuemin.mobi        #使用域名只能使用https
+  url: https://minio.yueliangjiejie.cn      #使用域名只能使用https
   accessKey: admin
-  secretKey: admin123
+  secretKey: Jinyun@123.com
   bucketName: phone-up
