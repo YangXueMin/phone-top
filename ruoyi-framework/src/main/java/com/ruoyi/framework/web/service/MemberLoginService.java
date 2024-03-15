@@ -58,8 +58,6 @@ public class MemberLoginService {
     private IMemberService memberService;
     @Autowired
     private IWechatConfigService wechatConfigService;
-    @Autowired
-    private RedisCache redisCache;
 
     /**
      * 设置cache key
@@ -84,13 +82,7 @@ public class MemberLoginService {
         Integer wxSex;
         try {
             WxOAuth2Service oAuth2Service = wechatConfiguration.wxMpService(wechatConfig).getOAuth2Service();
-            WxOAuth2AccessToken accessToken;
-            if (redisCache.hasKey(getCacheKey(appId))) {
-                accessToken = JSON.parseObject(redisCache.getCacheObject(getCacheKey(appId)).toString(), WxOAuth2AccessToken.class);
-            } else {
-                accessToken = oAuth2Service.getAccessToken(code);
-                redisCache.setCacheObject(getCacheKey(appId), JSON.toJSONString(accessToken),1, TimeUnit.HOURS);
-            }
+            WxOAuth2AccessToken accessToken = oAuth2Service.getAccessToken(code);
             WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(accessToken, null);
             openId = wxMpUser.getOpenid();
             wxHeadImg = wxMpUser.getHeadImgUrl();

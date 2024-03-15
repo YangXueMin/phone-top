@@ -15,6 +15,8 @@
         <result property="shareTitle"    column="share_title"    />
         <result property="shareContent"    column="share_content"    />
         <result property="sharePhoto"    column="share_photo"    />
+        <result property="personalCenterTitle"    column="personal_center_title"    />
+        <result property="personalCenterContent"    column="personal_center_content"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -39,6 +41,8 @@
             a.share_title,
             a.share_content,
             a.share_photo,
+            a.personal_center_title,
+            a.personal_center_content,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -85,6 +89,8 @@
             <if test="shareTitle != null">share_title,</if>
             <if test="shareContent != null">share_content,</if>
             <if test="sharePhoto != null">share_photo,</if>
+            <if test="personalCenterTitle != null">personal_center_title,</if>
+            <if test="personalCenterContent != null">personal_center_content,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -101,6 +107,8 @@
             <if test="shareTitle != null">#{shareTitle},</if>
             <if test="shareContent != null">#{shareContent},</if>
             <if test="sharePhoto != null">#{sharePhoto},</if>
+            <if test="personalCenterTitle != null">#{personalCenterTitle},</if>
+            <if test="personalCenterContent != null">#{personalCenterContent},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -121,6 +129,8 @@
             <if test="shareTitle != null">share_title = #{shareTitle},</if>
             <if test="shareContent != null">share_content = #{shareContent},</if>
             <if test="sharePhoto != null">share_photo = #{sharePhoto},</if>
+            <if test="personalCenterTitle != null">personal_center_title = #{personalCenterTitle},</if>
+            <if test="personalCenterContent != null">personal_center_content = #{personalCenterContent},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

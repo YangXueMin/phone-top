@@ -66,6 +66,16 @@ public class PhoneCompanyConfig extends BaseEntity{
     @ApiModelProperty("分享图片")
     private String sharePhoto;
 
+    /** 个人中心配置 */
+    @Excel(name = "个人中心配置")
+    @ApiModelProperty("个人中心配置")
+    private String personalCenterTitle;
+
+    /** 个人中心内容配置 */
+    @Excel(name = "个人中心内容配置")
+    @ApiModelProperty("个人中心内容配置")
+    private String personalCenterContent;
+
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
 
@@ -146,5 +156,21 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setWechatConfig(WechatConfig wechatConfig) {
         this.wechatConfig = wechatConfig;
+    }
+
+    public String getPersonalCenterTitle() {
+        return personalCenterTitle;
+    }
+
+    public void setPersonalCenterTitle(String personalCenterTitle) {
+        this.personalCenterTitle = personalCenterTitle;
+    }
+
+    public String getPersonalCenterContent() {
+        return personalCenterContent;
+    }
+
+    public void setPersonalCenterContent(String personalCenterContent) {
+        this.personalCenterContent = personalCenterContent;
     }
 }

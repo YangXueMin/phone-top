@@ -39,6 +39,16 @@ public class PhonePrice extends BaseEntity{
     @ApiModelProperty("类型ID")
     private Long typeId;
 
+    /** 充值到第三方类型 */
+    @Excel(name = "充值到第三方类型(字典值：phone_interface_type 系统：1，大猿人：2)")
+    @ApiModelProperty("充值到第三方类型(字典值：phone_interface_type 系统：1，大猿人：2)")
+    private String rechargeType;
+
+    /** 充值到第三方类型 */
+    @Excel(name = "充值到第三方类型(字典值：phone_interface_type 系统：1，大猿人：2)")
+    @ApiModelProperty("充值到第三方类型(字典值：phone_interface_type 系统：1，大猿人：2)")
+    private String rechargeTypeLabel;
+
     /** 充值方式（电网：0，快充：1，慢充：2） */
     @Excel(name = "充值方式", readConverterExp = "电费：0，快充：1，慢充：2")
     @ApiModelProperty("充值方式（字典值：phone_pay_method）")
@@ -58,6 +68,11 @@ public class PhonePrice extends BaseEntity{
     @Excel(name = "类型(移动、联通、电信、国家电网、南方电网)")
     @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
     private String typeLabel;
+
+    /** 第三方产品ID */
+    @Excel(name = "第三方产品ID")
+    @ApiModelProperty("第三方产品ID")
+    private Integer productId;
 
     /** 原价 */
     @Excel(name = "原价")
@@ -124,6 +139,11 @@ public class PhonePrice extends BaseEntity{
 
     @ApiModelProperty("价格类型")
     private PhonePriceType phonePriceType;
+
+    /** 标签 */
+    @Excel(name = "标签")
+    @ApiModelProperty("标签")
+    private String label;
 
     public void setId(Long id){
         this.id = id;
@@ -296,5 +316,37 @@ public class PhonePrice extends BaseEntity{
 
     public void setSuperMemberPrice(BigDecimal superMemberPrice) {
         this.superMemberPrice = superMemberPrice;
+    }
+
+    public String getRechargeType() {
+        return rechargeType;
+    }
+
+    public void setRechargeType(String rechargeType) {
+        this.rechargeType = rechargeType;
+    }
+
+    public String getRechargeTypeLabel() {
+        return rechargeTypeLabel;
+    }
+
+    public void setRechargeTypeLabel(String rechargeTypeLabel) {
+        this.rechargeTypeLabel = rechargeTypeLabel;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

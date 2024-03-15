@@ -48,7 +48,7 @@ public class CommonController {
     private String returnConfigFile(HttpServletRequest request) {
         //示例：请求 MP_verify_cXlH68VBATL5Mc34.txt 响应 cXlH68VBATL5Mc34
         String url = request.getRequestURI();
-        return url.substring(9, 27);
+        return url.substring(11, 27);
     }
 
     /**

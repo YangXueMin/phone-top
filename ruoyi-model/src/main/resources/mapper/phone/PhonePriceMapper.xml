@@ -11,6 +11,7 @@
         <result property="method"    column="method"    />
         <result property="type"    column="type"    />
         <result property="typeId"    column="type_id"    />
+        <result property="rechargeType"    column="recharge_type"    />
         <result property="originalPrice"    column="original_price"    />
         <result property="discount"    column="discount"    />
         <result property="sellPrice"    column="sell_price"    />
@@ -23,6 +24,8 @@
         <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
         <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
         <result property="orderNum"    column="order_num"    />
+        <result property="productId"    column="product_id"    />
+        <result property="label"    column="label"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -50,6 +53,7 @@
             a.method,
             a.type,
             a.type_id,
+               a.recharge_type,
             a.original_price,
             a.discount,
             a.sell_price,
@@ -62,6 +66,8 @@
             a.super_member_direct_commission,
             a.super_member_indirect_commission,
             a.order_num,
+               a.product_id,
+               a.label,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -92,6 +98,8 @@
             <if test="directCommission != null "> and a.direct_commission = #{directCommission}</if>
             <if test="indirectCommission != null "> and a.indirect_commission = #{indirectCommission}</if>
             <if test="orderNum != null "> and a.order_num = #{orderNum}</if>
+            <if test="rechargeType != null "> and a.recharge_type = #{rechargeType}</if>
+            <if test="productId != null "> and a.product_id = #{productId}</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
@@ -111,6 +119,7 @@
             <if test="method != null">method,</if>
             <if test="type != null">type,</if>
             <if test="typeId != null">type_id,</if>
+            <if test="rechargeType != null">recharge_type,</if>
             <if test="originalPrice != null">original_price,</if>
             <if test="discount != null">discount,</if>
             <if test="sellPrice != null">sell_price,</if>
@@ -123,6 +132,8 @@
             <if test="superMemberDirectCommission != null">super_member_direct_commission,</if>
             <if test="superMemberIndirectCommission != null">super_member_indirect_commission,</if>
             <if test="orderNum != null">order_num,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="label != null">label,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -135,6 +146,7 @@
             <if test="method != null">#{method},</if>
             <if test="type != null">#{type},</if>
             <if test="typeId != null">#{typeId},</if>
+            <if test="rechargeType != null">#{rechargeType},</if>
             <if test="originalPrice != null">#{originalPrice},</if>
             <if test="discount != null">#{discount},</if>
             <if test="sellPrice != null">#{sellPrice},</if>
@@ -147,6 +159,8 @@
             <if test="superMemberDirectCommission != null">#{memberDirectCommission},</if>
             <if test="superMemberIndirectCommission != null">#{superMemberIndirectCommission},</if>
             <if test="orderNum != null">#{orderNum},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="label != null">#{label},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -163,6 +177,7 @@
             <if test="method != null">method = #{method},</if>
             <if test="type != null">type = #{type},</if>
             <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="rechargeType != null">recharge_type = #{rechargeType},</if>
             <if test="originalPrice != null">original_price = #{originalPrice},</if>
             <if test="discount != null">discount = #{discount},</if>
             <if test="sellPrice != null">sell_price = #{sellPrice},</if>
@@ -175,6 +190,8 @@
             <if test="superMemberDirectCommission != null">super_member_direct_commission = #{superMemberDirectCommission},</if>
             <if test="superMemberIndirectCommission != null">super_member_indirect_commission = #{superMemberIndirectCommission},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="label != null">label = #{label},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
