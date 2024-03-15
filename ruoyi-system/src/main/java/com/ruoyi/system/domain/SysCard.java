@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DictUtils;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -78,6 +79,8 @@ public class SysCard extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "核销时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cancelTime;
+
+    private WechatConfig wechatConfig;
 
     public void setId(Long id) {
         this.id = id;
@@ -163,5 +166,13 @@ public class SysCard extends BaseEntity {
 
     public void setCancelStatusLabel(String cancelStatusLabel) {
         this.cancelStatusLabel = cancelStatusLabel;
+    }
+
+    public WechatConfig getWechatConfig() {
+        return wechatConfig;
+    }
+
+    public void setWechatConfig(WechatConfig wechatConfig) {
+        this.wechatConfig = wechatConfig;
     }
 }

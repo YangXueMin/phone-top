@@ -18,42 +18,49 @@
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
     </resultMap>
 
     <sql id="selectSysCardVo">
         select
-            id,
-            dept_id,
-            app_id,
-            card_no,
-            time_span,
-            status,
-            cancel_status,
-            cancel_time,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            remark
-        from sys_card
+            a.id,
+            a.dept_id,
+            a.app_id,
+            a.card_no,
+            a.time_span,
+            a.status,
+            a.cancel_status,
+            a.cancel_time,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from sys_card a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
     </sql>
 
     <select id="selectSysCardList" parameterType="SysCard" resultMap="SysCardResult">
         <include refid="selectSysCardVo"/>
         <where>
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
-            <if test="cardNo != null  and cardNo != ''"> and card_no = #{cardNo}</if>
-            <if test="timeSpan != null "> and time_span = #{timeSpan}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="cancelStatus != null  and cancelStatus != ''"> and cancel_status = #{cancelStatus}</if>
-            <if test="cancelTime != null "> and cancel_time = #{cancelTime}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="cardNo != null  and cardNo != ''"> and a.card_no = #{cardNo}</if>
+            <if test="timeSpan != null "> and a.time_span = #{timeSpan}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
+            <if test="cancelTime != null "> and a.cancel_time = #{cancelTime}</if>
         </where>
     </select>
 
     <select id="selectSysCardById" parameterType="Long" resultMap="SysCardResult">
         <include refid="selectSysCardVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertSysCard" parameterType="SysCard" useGeneratedKeys="true" keyProperty="id">
