@@ -115,6 +115,20 @@
                      AND u.nick_name like concat('%',#{user.nickName},'%')
                  </if>
              </if>
+            <if test="member != null">
+                <if test="member.name != null and member.name != ''">
+                    AND m.name like concat('%',#{member.name},'%')
+                </if>
+                <if test="member.number != null and member.number != ''">
+                    AND m.number like concat('%',#{member.number},'%')
+                </if>
+                <if test="member.isMember != null and member.isMember != ''">
+                    AND m.is_member = #{member.isMember}
+                </if>
+                <if test="member.isSuperMember != null and member.isSuperMember != ''">
+                    AND m.is_super_member = #{member.isSuperMember}
+                </if>
+            </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>

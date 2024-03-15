@@ -133,6 +133,18 @@ public class Member extends BaseEntity {
     private Long memberId;
 
     /**
+     * 邀请人ID
+     */
+    @Excel(name = "邀请人ID")
+    private Member inviterMember;
+
+    /**
+     * 邀请人ID
+     */
+    @Excel(name = "邀请人ID")
+    private Member secondaryMember;
+
+    /**
      * 所有邀请人ID
      */
     @Excel(name = "所有邀请人ID")
@@ -356,5 +368,21 @@ public class Member extends BaseEntity {
 
     public void setWithdrawalAmount(BigDecimal withdrawalAmount) {
         this.withdrawalAmount = withdrawalAmount;
+    }
+
+    public Member getInviterMember() {
+        return inviterMember;
+    }
+
+    public void setInviterMember(Member inviterMember) {
+        this.inviterMember = inviterMember;
+    }
+
+    public Member getSecondaryMember() {
+        return secondaryMember;
+    }
+
+    public void setSecondaryMember(Member secondaryMember) {
+        this.secondaryMember = secondaryMember;
     }
 }

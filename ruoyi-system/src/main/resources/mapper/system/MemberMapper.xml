@@ -35,11 +35,26 @@
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="inviterMember"    column="member_id" javaType="Member" resultMap="InviterMemberResult" />
+        <association property="secondaryMember"    column="member_id" javaType="Member" resultMap="SecondaryMemberResult" />
     </resultMap>
 
     <resultMap type="WechatConfig" id="WechatConfigResult">
         <result property="title"    column="wxTitle"    />
     </resultMap>
+
+    <resultMap type="Member" id="InviterMemberResult">
+        <result property="name"    column="inviterName"    />
+        <result property="avatar"    column="inviterAvatar"    />
+        <result property="number"    column="inviterNumber"    />
+    </resultMap>
+
+    <resultMap type="Member" id="SecondaryMemberResult">
+        <result property="name"    column="secondaryName"    />
+        <result property="avatar"    column="secondaryAvatar"    />
+        <result property="number"    column="secondaryNumber"    />
+    </resultMap>
+
 
     <sql id="selectMemberVo">
         select
@@ -72,10 +87,18 @@
             a.update_by,
             a.update_time,
             a.remark,
-            wc.title as wxTitle
+            wc.title as wxTitle,
+            i.name as inviterName,
+            i.avatar  as inviterAvatar,
+            i.number as inviterNumber,
+            s.name as secondaryName,
+            s.avatar as secondaryAvatar,
+            s.number as secondaryNumber
         from phone_member a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                  left join sys_dept d on a.dept_id = d.dept_id
+                left  join phone_member i ON i.id = a.member_id
+                left  join phone_member s ON s.id = i.member_id
     </sql>
 
     <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">

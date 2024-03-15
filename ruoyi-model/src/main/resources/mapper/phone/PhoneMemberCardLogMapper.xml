@@ -101,6 +101,20 @@
             <if test="cardName != null  and cardName != ''"> and a.card_name like concat('%', #{cardName}, '%')</if>
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
+            <if test="member != null">
+                <if test="member.name != null and member.name != ''">
+                    AND m.name like concat('%',#{member.name},'%')
+                </if>
+                <if test="member.number != null and member.number != ''">
+                    AND m.number like concat('%',#{member.number},'%')
+                </if>
+                <if test="member.isMember != null and member.isMember != ''">
+                    AND m.is_member = #{member.isMember}
+                </if>
+                <if test="member.isSuperMember != null and member.isSuperMember != ''">
+                    AND m.is_super_member = #{member.isSuperMember}
+                </if>
+            </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
