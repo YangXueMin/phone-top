@@ -160,9 +160,13 @@ public class MemberServiceImpl implements IMemberService {
     public List<Map<String,Object>> findSubordinateList(String type) {
         Member member = new Member();
         Long id = SecurityUtils.getLoginUser().getUserId();
+
         if (StringUtils.equals("1", type)) {
             member.setMemberId(id);
-        } else {
+        } else if(StringUtils.equals("2", type)){
+            member.setMemberId(id);
+            member.setAncestors(id.toString());
+        }else {
             member.setAncestors(id.toString());
         }
         return memberMapper.selectSubordinateMemberList(member);
