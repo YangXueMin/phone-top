@@ -1,5 +1,7 @@
 package com.ruoyi.phone.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import com.ruoyi.common.annotation.DataScope;
@@ -7,6 +9,9 @@ import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.phone.domain.PhoneCompanyConfig;
+import com.ruoyi.phone.mapper.PhoneCompanyConfigMapper;
+import com.ruoyi.phone.service.IPhoneCompanyConfigService;
 import com.ruoyi.system.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +32,8 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
     private PhoneCommissionLogMapper phoneCommissionLogMapper;
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private IPhoneCompanyConfigService phoneCompanyConfigService;
 
     /**
      * 查询佣金提现记录
@@ -65,12 +72,22 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
         if (member != null) {
             phoneCommissionLog.setCommissionBefore(member.getCommissionBalance());
             phoneCommissionLog.setCommissionAfter(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
+            phoneCommissionLog.setDeptId(member.getDeptId());
+            phoneCommissionLog.setAppId(member.getAppId());
             if(StringUtils.equals("1",phoneCommissionLog.getType())){
                 phoneCommissionLog.setAuditStatus("2");
+                phoneCommissionLog.setChargeMoney(BigDecimal.ZERO);
                 member.setBalance(member.getBalance().add(phoneCommissionLog.getMoney()));
                 member.setCommissionBalance(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
                 member.setWithdrawalAmount(member.getWithdrawalAmount().add(phoneCommissionLog.getMoney()));
                 memberMapper.updateMember(member);
+            }else {
+                final PhoneCompanyConfig phoneCompanyConfig = phoneCompanyConfigService.selectPhoneCompanyConfigByAppId(member.getAppId());
+                if(phoneCompanyConfig.getCommissionRate() != null){
+                    BigDecimal decimal = phoneCommissionLog.getMoney().multiply(phoneCompanyConfig.getCommissionRate()).setScale(2, RoundingMode.HALF_UP);
+                    phoneCommissionLog.setMoney(phoneCommissionLog.getMoney().subtract(decimal));
+                    phoneCommissionLog.setChargeMoney(decimal);
+                }
             }
         }
         final int i = phoneCommissionLogMapper.insertPhoneCommissionLog(phoneCommissionLog);
@@ -98,8 +115,9 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
         if (StringUtils.equals("2", phoneCommissionLog.getAuditStatus())) {
             //修改会员的佣金，并修改会员的体现佣金
             Member member = memberMapper.selectMemberById(phoneCommissionLog.getMemberId());
-            member.setCommissionBalance(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
-            member.setWithdrawalAmount(member.getWithdrawalAmount().add(phoneCommissionLog.getMoney()));
+            BigDecimal money = phoneCommissionLog.getMoney().add(phoneCommissionLog.getChargeMoney());
+            member.setCommissionBalance(member.getCommissionBalance().subtract(money));
+            member.setWithdrawalAmount(member.getWithdrawalAmount().add(money));
             memberMapper.updateMember(member);
         }
         return phoneCommissionLogMapper.updatePhoneCommissionLog(phoneCommissionLog);

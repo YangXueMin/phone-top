@@ -40,6 +40,7 @@
     </resultMap>
 
     <resultMap type="PhoneCoupon" id="PhoneCouponResult">
+        <result property="type"    column="coupon_type"    />
         <result property="title"    column="coupon_title"    />
         <result property="termValidity"    column="term_validity"    />
         <result property="rechargeAmount"    column="recharge_amount"    />
@@ -74,6 +75,7 @@
             m.balance,
             m.open_id,
             m.is_member,
+            c.type as coupon_type,
             c.title as coupon_title,
             c.term_validity,
             c.recharge_amount,
@@ -110,6 +112,11 @@
                 </if>
                 <if test="member.isSuperMember != null and member.isSuperMember != ''">
                     AND m.is_super_member = #{member.isSuperMember}
+                </if>
+            </if>
+            <if test="phoneCoupon != null">
+                <if test="phoneCoupon.type != null and phoneCoupon.type != ''">
+                    AND c.type = ${phoneCoupon.type}
                 </if>
             </if>
             <!-- 数据范围过滤 -->

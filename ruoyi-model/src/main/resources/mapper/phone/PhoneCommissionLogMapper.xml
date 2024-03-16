@@ -12,6 +12,7 @@
         <result property="type"    column="type"    />
         <result property="commissionBefore"    column="commission_before"    />
         <result property="money"    column="money"    />
+        <result property="chargeMoney"    column="charge_money"    />
         <result property="commissionAfter"    column="commission_after"    />
         <result property="alipayName"    column="alipay_name"    />
         <result property="alipayMobile"    column="alipay_mobile"    />
@@ -63,6 +64,7 @@
                a.type,
             a.commission_before,
             a.money,
+               a.charge_money,
             a.commission_after,
             a.alipay_name,
             a.alipay_mobile,
@@ -152,6 +154,7 @@
             <if test="type != null">type,</if>
             <if test="commissionBefore != null">commission_before,</if>
             <if test="money != null">money,</if>
+            <if test="chargeMoney != null">charge_money,</if>
             <if test="commissionAfter != null">commission_after,</if>
             <if test="alipayName != null">alipay_name,</if>
             <if test="alipayMobile != null">alipay_mobile,</if>
@@ -171,6 +174,7 @@
             <if test="type != null">#{type},</if>
             <if test="commissionBefore != null">#{commissionBefore},</if>
             <if test="money != null">#{money},</if>
+            <if test="chargeMoney != null">#{chargeMoney},</if>
             <if test="commissionAfter != null">#{commissionAfter},</if>
             <if test="alipayName != null">#{alipayName},</if>
             <if test="alipayMobile != null">#{alipayMobile},</if>
@@ -194,6 +198,7 @@
             <if test="type != null">type = #{type},</if>
             <if test="commissionBefore != null">commission_before = #{commissionBefore},</if>
             <if test="money != null">money = #{money},</if>
+            <if test="chargeMoney != null">charge_money = #{chargeMoney},</if>
             <if test="commissionAfter != null">commission_after = #{commissionAfter},</if>
             <if test="alipayName != null">alipay_name = #{alipayName},</if>
             <if test="alipayMobile != null">alipay_mobile = #{alipayMobile},</if>

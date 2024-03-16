@@ -34,6 +34,16 @@ public class PhoneCoupon extends BaseEntity{
     @ApiModelProperty("公众号appID")
     private String appId;
 
+    /** 优惠券类型(1:话费，2：电费) */
+    @Excel(name = "优惠券类型(字典（phone_coupon_type）1:话费，2：电费)")
+    @ApiModelProperty("优惠券类型(字典（phone_coupon_type）1:话费，2：电费)")
+    private String type;
+
+    /** 优惠券类型(1:话费，2：电费) */
+    @Excel(name = "优惠券类型(字典（phone_coupon_type）1:话费，2：电费)")
+    @ApiModelProperty("优惠券类型(字典（phone_coupon_type）1:话费，2：电费)")
+    private String typeLabel;
+
     /** 标题 */
     @Excel(name = "标题")
     @ApiModelProperty("标题")
@@ -193,5 +203,21 @@ public class PhoneCoupon extends BaseEntity{
 
     public void setStatusLabel(String statusLabel) {
         this.statusLabel = statusLabel;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeLabel() {
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
     }
 }

@@ -82,6 +82,13 @@ public class PhoneCommissionLog extends BaseEntity {
     private BigDecimal money;
 
     /**
+     * 手续费
+     */
+    @Excel(name = "手续费")
+    @ApiModelProperty("手续费")
+    private BigDecimal chargeMoney;
+
+    /**
      * 提现后佣金
      */
     @Excel(name = "提现后佣金")
@@ -288,5 +295,13 @@ public class PhoneCommissionLog extends BaseEntity {
 
     public void setUser(SysUser user) {
         this.user = user;
+    }
+
+    public BigDecimal getChargeMoney() {
+        return chargeMoney;
+    }
+
+    public void setChargeMoney(BigDecimal chargeMoney) {
+        this.chargeMoney = chargeMoney;
     }
 }
