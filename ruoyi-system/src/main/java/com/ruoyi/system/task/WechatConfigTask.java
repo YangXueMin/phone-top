@@ -28,7 +28,7 @@ public class WechatConfigTask {
         wechatConfig.setStatus("1");
         List<WechatConfig> list = wechatConfigMapper.selectWechatConfigList(wechatConfig);
         for (WechatConfig config : list) {
-            if (config.getValidityPeriod().getTime() < now) {
+            if (config.getValidityPeriod() !=null && config.getValidityPeriod().getTime() < now) {
                 config.setStatus("2");
                 wechatConfigMapper.updateWechatConfig(config);
                 redisCache.deleteObject(getCacheKey(wechatConfig.getAppId()));

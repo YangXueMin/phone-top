@@ -17,6 +17,9 @@
         <result property="sharePhoto"    column="share_photo"    />
         <result property="personalCenterTitle"    column="personal_center_title"    />
         <result property="personalCenterContent"    column="personal_center_content"    />
+        <result property="commissionContent"    column="commission_content"    />
+        <result property="commissionMinimum"    column="commission_minimum"    />
+        <result property="commissionRate"    column="commission_rate"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -43,6 +46,9 @@
             a.share_photo,
             a.personal_center_title,
             a.personal_center_content,
+               a.commission_content,
+               a.commission_minimum,
+               a.commission_rate,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -91,6 +97,9 @@
             <if test="sharePhoto != null">share_photo,</if>
             <if test="personalCenterTitle != null">personal_center_title,</if>
             <if test="personalCenterContent != null">personal_center_content,</if>
+            <if test="commissionContent != null">commission_content,</if>
+            <if test="commissionMinimum != null">commission_minimum,</if>
+            <if test="commissionRate != null">commission_rate,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -109,6 +118,9 @@
             <if test="sharePhoto != null">#{sharePhoto},</if>
             <if test="personalCenterTitle != null">#{personalCenterTitle},</if>
             <if test="personalCenterContent != null">#{personalCenterContent},</if>
+            <if test="commissionContent != null">#{commissionContent},</if>
+            <if test="commissionMinimum != null">#{commissionMinimum},</if>
+            <if test="commissionRate != null">#{commissionRate},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -131,6 +143,9 @@
             <if test="sharePhoto != null">share_photo = #{sharePhoto},</if>
             <if test="personalCenterTitle != null">personal_center_title = #{personalCenterTitle},</if>
             <if test="personalCenterContent != null">personal_center_content = #{personalCenterContent},</if>
+            <if test="commissionContent != null">commission_content = #{commissionContent},</if>
+            <if test="commissionMinimum != null">commission_minimum = #{commissionMinimum},</if>
+            <if test="commissionRate != null">commission_rate = #{commissionRate},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

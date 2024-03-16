@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.math.BigDecimal;
+
 /**
  * 企业配置对象 phone_company_config
  *
@@ -75,6 +77,21 @@ public class PhoneCompanyConfig extends BaseEntity{
     @Excel(name = "个人中心内容配置")
     @ApiModelProperty("个人中心内容配置")
     private String personalCenterContent;
+
+    /** 佣金提现文案 */
+    @Excel(name = "佣金提现文案")
+    @ApiModelProperty("佣金提现文案")
+    private String commissionContent;
+
+    /** 佣金最低提现金额 */
+    @Excel(name = "佣金最低提现金额")
+    @ApiModelProperty("佣金最低提现金额")
+    private BigDecimal commissionMinimum;
+
+    /** 佣金手续费 */
+    @Excel(name = "佣金手续费")
+    @ApiModelProperty("佣金手续费")
+    private BigDecimal commissionRate;
 
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
@@ -172,5 +189,29 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setPersonalCenterContent(String personalCenterContent) {
         this.personalCenterContent = personalCenterContent;
+    }
+
+    public String getCommissionContent() {
+        return commissionContent;
+    }
+
+    public void setCommissionContent(String commissionContent) {
+        this.commissionContent = commissionContent;
+    }
+
+    public BigDecimal getCommissionMinimum() {
+        return commissionMinimum;
+    }
+
+    public void setCommissionMinimum(BigDecimal commissionMinimum) {
+        this.commissionMinimum = commissionMinimum;
+    }
+
+    public BigDecimal getCommissionRate() {
+        return commissionRate;
+    }
+
+    public void setCommissionRate(BigDecimal commissionRate) {
+        this.commissionRate = commissionRate;
     }
 }

@@ -5,6 +5,7 @@ import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.phone.domain.PhoneOrder;
 import com.ruoyi.phone.domain.TopNotifyRequest;
 import com.ruoyi.phone.service.IPhoneOrderService;
@@ -78,6 +79,10 @@ public class OrderControllerApi extends BaseController {
         phoneOrder = phoneOrderService.selectPhoneOrderById(phoneOrder.getId());
         if (phoneOrder == null) {
             return warn("订单不存在");
+        }
+        long now = System.currentTimeMillis();
+        if(DateUtil.addHours(phoneOrder.getCreateTime(),24).getTime() <= now){
+            return warn("订单已超24小时，请重新下单");
         }
         WxPayMpOrderResult pay = phoneOrderService.pay(phoneOrder);
         return success(pay);

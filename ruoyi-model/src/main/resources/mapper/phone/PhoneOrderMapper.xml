@@ -162,6 +162,7 @@
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and a.arrival_status = #{arrivalStatus}</if>
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
+             <if test="createTime != null"> AND a.create_time &lt; #{createTime}</if>
              <if test="member != null">
                  <if test="member.name != null and member.name != ''">
                      AND m.name like concat('%',#{member.name},'%')

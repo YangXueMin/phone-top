@@ -57,13 +57,21 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
      * @return 结果
      */
     @Override
-    public PhoneCommissionLog insertPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog) {
+    @Transactional(rollbackFor = Exception.class)
+    public synchronized PhoneCommissionLog insertPhoneCommissionLog(PhoneCommissionLog phoneCommissionLog) {
         phoneCommissionLog.setCreateTime(DateUtils.getNowDate());
         phoneCommissionLog.setAuditStatus("1");
         Member member = memberMapper.selectMemberById(phoneCommissionLog.getMemberId());
         if (member != null) {
             phoneCommissionLog.setCommissionBefore(member.getCommissionBalance());
             phoneCommissionLog.setCommissionAfter(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
+            if(StringUtils.equals("1",phoneCommissionLog.getType())){
+                phoneCommissionLog.setAuditStatus("2");
+                member.setBalance(member.getBalance().add(phoneCommissionLog.getMoney()));
+                member.setCommissionBalance(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
+                member.setWithdrawalAmount(member.getWithdrawalAmount().add(phoneCommissionLog.getMoney()));
+                memberMapper.updateMember(member);
+            }
         }
         final int i = phoneCommissionLogMapper.insertPhoneCommissionLog(phoneCommissionLog);
         return phoneCommissionLog;
