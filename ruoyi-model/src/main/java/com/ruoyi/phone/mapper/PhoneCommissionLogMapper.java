@@ -1,6 +1,10 @@
 package com.ruoyi.phone.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.phone.domain.PhoneOrder;
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.phone.domain.PhoneCommissionLog;
 
@@ -60,4 +64,18 @@ public interface PhoneCommissionLogMapper
      * @return 结果
      */
     public int deletePhoneCommissionLogByIds(Long[] ids);
+
+    /**
+     * 统计基础数据
+     * @param phoneCommissionLog
+     * @return
+     */
+    public BigDecimal getCommissionCountMoney(PhoneCommissionLog phoneCommissionLog);
+
+    /**
+     * 统计支出金额
+     * @param phoneCommissionLog
+     * @return
+     */
+    public List<Map<String,Object>> getMonthCountMoney(PhoneCommissionLog phoneCommissionLog);
 }

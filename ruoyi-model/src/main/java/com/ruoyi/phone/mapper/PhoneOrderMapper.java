@@ -1,6 +1,9 @@
 package com.ruoyi.phone.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.phone.domain.PhoneOrder;
 import org.apache.ibatis.annotations.Param;
@@ -85,4 +88,32 @@ public interface PhoneOrderMapper
      * @return 结果
      */
     public int deletePhoneOrderByIds(Long[] ids);
+
+    /**
+     * 统计订单笔数
+     * @param phoneOrder
+     * @return
+     */
+    public int getOrderCount(PhoneOrder phoneOrder);
+
+    /**
+     * 统计订单金额
+     * @param phoneOrder
+     * @return
+     */
+    public BigDecimal getOrderCountMoney(PhoneOrder phoneOrder);
+
+    /**
+     * 统计订单金额
+     * @param phoneOrder
+     * @return
+     */
+    public List<Map<String,Object>> getMonthOrderCountMoney(PhoneOrder phoneOrder);
+
+    /**
+     * 统计订单总数
+     * @param phoneOrder
+     * @return
+     */
+    public List<Map<String,Object>> getMonthOrderCount(PhoneOrder phoneOrder);
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.phone.domain.PhoneCommissionLog;
 
@@ -66,4 +67,11 @@ public interface IPhoneCommissionLogService {
      * @return 结果
      */
     public int deletePhoneCommissionLogById(Long id);
+
+    /**
+     * 统计数据
+     * @param phoneCommissionLog
+     * @return
+     */
+    public Map<String,Object> getCommissionDayCountMoney(PhoneCommissionLog phoneCommissionLog);
 }

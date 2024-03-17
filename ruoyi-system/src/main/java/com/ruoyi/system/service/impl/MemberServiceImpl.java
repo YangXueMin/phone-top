@@ -1,8 +1,6 @@
 package com.ruoyi.system.service.impl;
 
-import cn.hutool.core.img.ImgUtil;
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
@@ -12,7 +10,6 @@ import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.qrCode.EwmUtils;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.IWechatConfigService;
@@ -22,6 +19,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -42,8 +40,6 @@ public class MemberServiceImpl implements IMemberService {
     private IWechatConfigService wechatConfigService;
     @Autowired
     private RedisCache redisCache;
-    @Autowired
-    private EwmUtils ewmUtils;
 
     /**
      * 查询会员管理
@@ -157,16 +153,16 @@ public class MemberServiceImpl implements IMemberService {
     }
 
     @Override
-    public List<Map<String,Object>> findSubordinateList(String type) {
+    public List<Map<String, Object>> findSubordinateList(String type) {
         Member member = new Member();
         Long id = SecurityUtils.getLoginUser().getUserId();
 
         if (StringUtils.equals("1", type)) {
             member.setMemberId(id);
-        } else if(StringUtils.equals("2", type)){
+        } else if (StringUtils.equals("2", type)) {
             member.setMemberId(id);
             member.setAncestors(id.toString());
-        }else {
+        } else {
             member.setAncestors(id.toString());
         }
         return memberMapper.selectSubordinateMemberList(member);
@@ -190,6 +186,24 @@ public class MemberServiceImpl implements IMemberService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Integer> getMemberDayCount(Member member) {
+        Map<String, Integer> map = new HashMap<>();
+        //今日数据
+        member.getParams().put("type", 1);
+        int todayCount = memberMapper.getDayCount(member);
+        map.put("todayCount", todayCount);
+        //昨日数据
+        member.getParams().put("type", 2);
+        int yesterdayCount = memberMapper.getDayCount(member);
+        map.put("yesterdayCount", yesterdayCount);
+        //本月数据
+        member.getParams().put("type", 3);
+        int monthCount = memberMapper.getDayCount(member);
+        map.put("monthCount", monthCount);
+        return map;
     }
 
     /**

@@ -1,8 +1,10 @@
 package com.ruoyi.phone.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.phone.domain.PhoneMemberCardLog;
 import com.ruoyi.phone.domain.PhoneOrder;
 import com.ruoyi.phone.domain.TopNotifyRequest;
@@ -109,4 +111,20 @@ public interface IPhoneOrderService {
      * @return 结果
      */
     public List<String> findNewsflash(String appId);
+
+    /**
+     * 统计订单数据
+     * @param phoneOrder
+     * @return
+     */
+    Map<String,Object> getOrderDayCount(PhoneOrder phoneOrder);
+
+    /**
+     * 统计订单金额数据
+     * @param phoneOrder
+     * @return
+     */
+    Map<String,Object> getOrderDayCountMoney(PhoneOrder phoneOrder);
+
+
 }

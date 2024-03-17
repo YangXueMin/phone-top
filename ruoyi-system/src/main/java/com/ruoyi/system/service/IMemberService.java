@@ -107,6 +107,14 @@ public interface IMemberService {
 
     /**
      * 获取推广二维码
+     * @return
      */
     String getQrCode();
+
+    /**
+     * 统计会员数据
+     * @param member
+     * @return
+     */
+    Map<String,Integer> getMemberDayCount(Member member);
 }

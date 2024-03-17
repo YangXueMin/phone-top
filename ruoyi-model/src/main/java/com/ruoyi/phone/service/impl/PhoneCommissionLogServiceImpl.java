@@ -2,7 +2,9 @@ package com.ruoyi.phone.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.Member;
@@ -143,5 +145,23 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
     @Override
     public int deletePhoneCommissionLogById(Long id) {
         return phoneCommissionLogMapper.deletePhoneCommissionLogById(id);
+    }
+
+    @Override
+    public Map<String, Object> getCommissionDayCountMoney(PhoneCommissionLog phoneCommissionLog) {
+        Map<String, Object> map = new HashMap<>();
+        //今日数据
+        phoneCommissionLog.getParams().put("type", 1);
+        BigDecimal todayCommissionMoney = phoneCommissionLogMapper.getCommissionCountMoney(phoneCommissionLog);
+        map.put("todayCommissionMoney", todayCommissionMoney);
+        //昨日数据
+        phoneCommissionLog.getParams().put("type", 2);
+        BigDecimal yesterdayCommissionMoney = phoneCommissionLogMapper.getCommissionCountMoney(phoneCommissionLog);
+        map.put("yesterdayCommissionMoney", yesterdayCommissionMoney);
+        //本月数据
+        phoneCommissionLog.getParams().put("type", 3);
+        BigDecimal monthCommissionMoney = phoneCommissionLogMapper.getCommissionCountMoney(phoneCommissionLog);
+        map.put("monthCommissionMoney", monthCommissionMoney);
+        return map;
     }
 }

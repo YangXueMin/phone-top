@@ -300,4 +300,43 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getDayCount" parameterType="member" resultType="int">
+        SELECT COUNT(a.id) FROM phone_member a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            <if test="appId != null and appId != ''">
+                AND a.app_id = #{appId}
+            </if>
+            <if test="params.type != null and params.type != ''">
+                <choose>
+                    <when test="params.type == '1'.toString">
+                        AND TO_DAYS(NOW()) - TO_DAYS(a.create_time) = 0
+                    </when>
+                    <when test="params.type == '2'.toString">
+                        AND TO_DAYS(NOW()) - TO_DAYS(a.create_time) = 1
+                    </when>
+                    <when test="params.type == '3'.toString">
+                        AND DATE_FORMAT(a.create_time, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="getMonthCount" parameterType="member" resultType="java.util.Map">
+        SELECT DATE_FORMAT(a.create_time,'%Y-%m') months,count(a.id) number
+        FROM phone_member a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            <if test="appId != null and appId != ''">
+                AND a.app_id = #{appId}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        group by months
+    </select>
 </mapper>

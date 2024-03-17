@@ -97,4 +97,19 @@ public interface MemberMapper {
      * @return 结果
      */
     public int deleteMemberByIds(Long[] ids);
+
+    /**
+     * 统计用户数据
+     * @param member
+     * @return
+     */
+    public int getDayCount(Member member);
+
+
+    /**
+     * 统计订单总数
+     * @param member
+     * @return
+     */
+    public List<Map<String,Object>> getMonthCount(Member member);
 }

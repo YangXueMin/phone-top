@@ -2,9 +2,7 @@ package com.ruoyi.phone.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
@@ -323,6 +321,42 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public List<String> findNewsflash(String appId) {
         return phoneOrderMapper.selectNewsflash(appId);
+    }
+
+    @Override
+    public Map<String, Object> getOrderDayCount(PhoneOrder phoneOrder) {
+        Map<String, Object> map = new HashMap<>();
+        //今日数据
+        phoneOrder.getParams().put("type", 1);
+        int todayOrderCount = phoneOrderMapper.getOrderCount(phoneOrder);
+        map.put("todayOrderCount", todayOrderCount);
+        //昨日数据
+        phoneOrder.getParams().put("type", 2);
+        int yesterdayOrderCount = phoneOrderMapper.getOrderCount(phoneOrder);
+        map.put("yesterdayOrderCount", yesterdayOrderCount);
+        //本月数据
+        phoneOrder.getParams().put("type", 3);
+        int monthOrderCount = phoneOrderMapper.getOrderCount(phoneOrder);
+        map.put("monthOrderCount", monthOrderCount);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getOrderDayCountMoney(PhoneOrder phoneOrder) {
+        Map<String, Object> map = new HashMap<>();
+        //今日数据
+        phoneOrder.getParams().put("type", 1);
+        BigDecimal todayOrderMoney = phoneOrderMapper.getOrderCountMoney(phoneOrder);
+        map.put("todayOrderMoney", todayOrderMoney);
+        //昨日数据
+        phoneOrder.getParams().put("type", 2);
+        BigDecimal yesterdayOrderMoney = phoneOrderMapper.getOrderCountMoney(phoneOrder);
+        map.put("yesterdayOrderMoney", yesterdayOrderMoney);
+        //本月数据
+        phoneOrder.getParams().put("type", 3);
+        BigDecimal monthOrderMoney = phoneOrderMapper.getOrderCountMoney(phoneOrder);
+        map.put("monthOrderMoney", monthOrderMoney);
+        return map;
     }
 
     /**
