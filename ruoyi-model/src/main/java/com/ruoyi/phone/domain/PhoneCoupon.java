@@ -214,6 +214,9 @@ public class PhoneCoupon extends BaseEntity{
     }
 
     public String getTypeLabel() {
+        if(StringUtils.isNotBlank(type)){
+            return DictUtils.getDictLabel("phone_coupon_type",type);
+        }
         return typeLabel;
     }
 

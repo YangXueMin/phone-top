@@ -8,6 +8,7 @@
         <result property="id"    column="id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
+        <result property="type"    column="type"    />
         <result property="title"    column="title"    />
         <result property="termValidity"    column="term_validity"    />
         <result property="rechargeAmount"    column="recharge_amount"    />
@@ -34,6 +35,7 @@
             a.dept_id,
             a.app_id,
             a.title,
+               a.type,
             a.term_validity,
             a.recharge_amount,
             a.full_money,
@@ -57,6 +59,7 @@
         <where>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
             <if test="title != null  and title != ''"> and a.title = #{title}</if>
             <if test="termValidity != null "> and a.term_validity = #{termValidity}</if>
             <if test="rechargeAmount != null "> and a.recharge_amount = #{rechargeAmount}</if>
@@ -81,6 +84,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
+            <if test="type != null">type,</if>
             <if test="title != null">title,</if>
             <if test="termValidity != null">term_validity,</if>
             <if test="rechargeAmount != null">recharge_amount,</if>
@@ -98,6 +102,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
+            <if test="type != null">#{type},</if>
             <if test="title != null">#{title},</if>
             <if test="termValidity != null">#{termValidity},</if>
             <if test="rechargeAmount != null">#{rechargeAmount},</if>
@@ -119,6 +124,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
+            <if test="type != null">type = #{type},</if>
             <if test="title != null">title = #{title},</if>
             <if test="termValidity != null">term_validity = #{termValidity},</if>
             <if test="rechargeAmount != null">recharge_amount = #{rechargeAmount},</if>
