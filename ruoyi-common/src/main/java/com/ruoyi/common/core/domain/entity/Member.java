@@ -151,6 +151,12 @@ public class Member extends BaseEntity {
     private String ancestors;
 
     /**
+     * 订单数量
+     */
+    @Excel(name = "订单数量")
+    private Integer orderNum;
+
+    /**
      * 删除标志（0代表存在 2代表删除）
      */
     private String delFlag;
@@ -384,5 +390,13 @@ public class Member extends BaseEntity {
 
     public void setSecondaryMember(Member secondaryMember) {
         this.secondaryMember = secondaryMember;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
     }
 }
