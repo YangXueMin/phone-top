@@ -1,6 +1,9 @@
 package com.ruoyi.phone.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -153,7 +156,8 @@ public class PhoneOrder extends BaseEntity{
     /** 支付时间 */
     @Excel(name = "支付时间")
     @ApiModelProperty("支付时间")
-    private String payTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date payTime;
 
     /** 支付回调记录 */
     @Excel(name = "支付回调记录")
@@ -168,7 +172,8 @@ public class PhoneOrder extends BaseEntity{
     /** 充值时间 */
     @Excel(name = "充值时间")
     @ApiModelProperty("充值时间")
-    private String topTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date topTime;
 
     /** 充值回调记录 */
     @Excel(name = "充值回调记录")
@@ -317,11 +322,11 @@ public class PhoneOrder extends BaseEntity{
     public String getArrivalStatus(){
         return arrivalStatus;
     }
-    public void setPayTime(String payTime){
+    public void setPayTime(Date payTime){
         this.payTime = payTime;
     }
 
-    public String getPayTime(){
+    public Date getPayTime(){
         return payTime;
     }
     public void setPayResult(String payResult){
@@ -442,11 +447,11 @@ public class PhoneOrder extends BaseEntity{
         this.topNotifyResult = topNotifyResult;
     }
 
-    public String getTopTime() {
+    public Date getTopTime() {
         return topTime;
     }
 
-    public void setTopTime(String topTime) {
+    public void setTopTime(Date topTime) {
         this.topTime = topTime;
     }
 }

@@ -20,6 +20,8 @@
         <result property="commissionContent"    column="commission_content"    />
         <result property="commissionMinimum"    column="commission_minimum"    />
         <result property="commissionRate"    column="commission_rate"    />
+        <result property="couponContent"    column="coupon_content"    />
+        <result property="couponPrice"    column="coupon_price"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -49,6 +51,8 @@
                a.commission_content,
                a.commission_minimum,
                a.commission_rate,
+               a.coupon_content,
+               a.coupon_price,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -100,6 +104,8 @@
             <if test="commissionContent != null">commission_content,</if>
             <if test="commissionMinimum != null">commission_minimum,</if>
             <if test="commissionRate != null">commission_rate,</if>
+            <if test="couponContent != null">coupon_content,</if>
+            <if test="couponPrice != null">coupon_price,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -121,6 +127,8 @@
             <if test="commissionContent != null">#{commissionContent},</if>
             <if test="commissionMinimum != null">#{commissionMinimum},</if>
             <if test="commissionRate != null">#{commissionRate},</if>
+            <if test="couponContent != null">#{couponContent},</if>
+            <if test="couponPrice != null">#{couponPrice},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -146,6 +154,8 @@
             <if test="commissionContent != null">commission_content = #{commissionContent},</if>
             <if test="commissionMinimum != null">commission_minimum = #{commissionMinimum},</if>
             <if test="commissionRate != null">commission_rate = #{commissionRate},</if>
+            <if test="couponContent != null">coupon_content = #{couponContent},</if>
+            <if test="couponPrice != null">coupon_price = #{couponPrice},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

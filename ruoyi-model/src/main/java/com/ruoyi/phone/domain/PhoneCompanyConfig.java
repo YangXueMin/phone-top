@@ -93,6 +93,16 @@ public class PhoneCompanyConfig extends BaseEntity{
     @ApiModelProperty("佣金手续费")
     private BigDecimal commissionRate;
 
+    /** 优惠券配置金额 */
+    @Excel(name = "优惠券配置金额")
+    @ApiModelProperty("优惠券配置金额")
+    private String couponContent;
+
+    /** 优惠金额 */
+    @Excel(name = "优惠金额")
+    @ApiModelProperty("优惠金额")
+    private BigDecimal couponPrice;
+
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
 
@@ -213,5 +223,21 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setCommissionRate(BigDecimal commissionRate) {
         this.commissionRate = commissionRate;
+    }
+
+    public String getCouponContent() {
+        return couponContent;
+    }
+
+    public void setCouponContent(String couponContent) {
+        this.couponContent = couponContent;
+    }
+
+    public BigDecimal getCouponPrice() {
+        return couponPrice;
+    }
+
+    public void setCouponPrice(BigDecimal couponPrice) {
+        this.couponPrice = couponPrice;
     }
 }

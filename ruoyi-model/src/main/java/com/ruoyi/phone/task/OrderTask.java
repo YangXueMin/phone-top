@@ -1,5 +1,6 @@
 package com.ruoyi.phone.task;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
@@ -12,6 +13,7 @@ import com.ruoyi.phone.mapper.PhoneMemberCardMapper;
 import com.ruoyi.phone.mapper.PhoneMemberCouponMapper;
 import com.ruoyi.phone.mapper.PhoneOrderMapper;
 import com.ruoyi.system.mapper.MemberMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,7 @@ import java.util.List;
  * @date 2024/3/16 10:25 AM
  */
 @Component("overtimeTask")
+@Slf4j
 public class OrderTask {
     @Autowired
     private PhoneOrderMapper phoneOrderMapper;
@@ -45,6 +48,7 @@ public class OrderTask {
         if (orderList.size() > 0) {
             for (PhoneOrder order : orderList) {
                 order.setPayStatus("4");
+                phoneOrderMapper.updatePhoneOrder(order);
                 //取消后给用户退款
                 if(order.getPayBalance().compareTo(BigDecimal.ZERO) > 0){
                     Member member = memberMapper.selectMemberById(order.getMemberId());
