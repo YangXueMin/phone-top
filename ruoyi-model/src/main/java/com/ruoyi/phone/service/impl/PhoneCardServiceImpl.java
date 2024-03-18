@@ -10,6 +10,8 @@ import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.CardGenerator;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.phone.domain.PhoneBalanceLog;
 import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
 import com.ruoyi.system.mapper.MemberMapper;
@@ -33,8 +35,6 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
     private PhoneCardMapper phoneCardMapper;
     @Autowired
     private MemberMapper memberMapper;
-    @Autowired
-    private PhoneBalanceLogMapper phoneBalanceLogMapper;
     @Autowired
     private IWechatConfigService wechatConfigService;
 
@@ -68,14 +68,22 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertPhoneCard(PhoneCard phoneCard) {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneCard.getAppId());
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneCard.getAppId());
         phoneCard.setDeptId(wechatConfig.getDeptId());
         phoneCard.setCreateTime(DateUtils.getNowDate());
-        String cardNo = CardGenerator.generateCard(8);
-        phoneCard.setCardNo(cardNo);
         phoneCard.setCancelStatus("1");
-        return phoneCardMapper.insertPhoneCard(phoneCard);
+        int num = 0;
+        if(phoneCard.getParams().get("number") != null){
+            num = Integer.parseInt(phoneCard.getParams().get("number").toString());
+        }
+        for (int i = 0; i < num; i++) {
+            String cardNo = CardGenerator.generateCard(8);
+            phoneCard.setCardNo(cardNo);
+            phoneCardMapper.insertPhoneCard(phoneCard);
+        }
+        return num;
     }
 
     /**
@@ -97,22 +105,25 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
         phoneCard.setCancelTime(DateUtils.getNowDate());
         final int i = phoneCardMapper.updatePhoneCard(phoneCard);
         if (i > 0) {
-            final Member member = memberMapper.selectMemberById(phoneCard.getMemberId());
-            BigDecimal balance = member.getBalance();
-            member.setBalance(member.getBalance().add(phoneCard.getPrice()));
+            Date date = new Date();
+            Member member = memberMapper.selectMemberById(phoneCard.getMemberId());
+            if(StringUtils.equals("1",phoneCard.getType())){
+                //普通会员
+                if(member.getExpirationTime() != null){
+                    date = member.getExpirationTime();
+                }
+                member.setExpirationTime(DateUtil.endOfDate(DateUtils.addDays(date,phoneCard.getDuration())));
+                member.setIsMember("1");
+            }else if(StringUtils.equals("2",phoneCard.getType())){
+                //超级会员
+                if(member.getSuperExpirationTime() != null){
+                    date = member.getSuperExpirationTime();
+                }
+                member.setSuperExpirationTime(DateUtil.endOfDate(DateUtils.addDays(date,phoneCard.getDuration())));
+                member.setIsSuperMember("1");
+            }
             member.setUpdateTime(DateUtils.getNowDate());
             memberMapper.updateMember(member);
-            //添加余额变更记录
-            PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-            phoneBalanceLog.setDeptId(phoneCard.getDeptId());
-            phoneBalanceLog.setAppId(phoneCard.getAppId());
-            phoneBalanceLog.setMemberId(member.getMemberId());
-            phoneBalanceLog.setType("1");
-            phoneBalanceLog.setBalanceAfter(balance);
-            phoneBalanceLog.setMoney(phoneCard.getPrice());
-            phoneBalanceLog.setBalanceBefore(member.getBalance());
-            phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
-            phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
         }
         return i;
     }

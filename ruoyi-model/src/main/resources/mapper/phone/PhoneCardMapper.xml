@@ -8,14 +8,17 @@
         <result property="id"    column="id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
+        <result property="type"    column="type"    />
         <result property="cardNo"    column="card_no"    />
-        <result property="price"    column="price"    />
+        <result property="duration"    column="duration"    />
         <result property="status"    column="status"    />
         <result property="cancelStatus"    column="cancel_status"    />
         <result property="cancelTime"    column="cancel_time"    />
         <result property="memberId"    column="member_id"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="endTime"    column="end_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
@@ -45,11 +48,14 @@
             a.id,
             a.dept_id,
             a.app_id,
+               a.type,
             a.card_no,
-            a.price,
+            a.duration,
             a.status,
             a.cancel_status,
             a.cancel_time,
+               a.begin_time,
+               a.end_time,
             a.member_id,
             a.create_by,
             a.create_time,
@@ -77,8 +83,8 @@
         <where>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
             <if test="cardNo != null  and cardNo != ''"> and a.card_no = #{cardNo}</if>
-            <if test="price != null "> and a.price = #{price}</if>
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="cancelStatus != null  and cancelStatus != ''"> and a.cancel_status = #{cancelStatus}</if>
             <if test="cancelTime != null "> and a.cancel_time = #{cancelTime}</if>
@@ -99,11 +105,14 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
+            <if test="type != null">type,</if>
             <if test="cardNo != null">card_no,</if>
-            <if test="price != null">price,</if>
+            <if test="duration != null">duration,</if>
             <if test="status != null">status,</if>
             <if test="cancelStatus != null">cancel_status,</if>
             <if test="cancelTime != null">cancel_time,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="endTime != null">end_time,</if>
             <if test="memberId != null">member_id,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -114,11 +123,14 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
+            <if test="type != null">#{type},</if>
             <if test="cardNo != null">#{cardNo},</if>
-            <if test="price != null">#{price},</if>
+            <if test="duration != null">#{duration},</if>
             <if test="status != null">#{status},</if>
             <if test="cancelStatus != null">#{cancelStatus},</if>
             <if test="cancelTime != null">#{cancelTime},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="endTime != null">#{endTime},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -133,11 +145,14 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
+            <if test="type != null">type = #{type},</if>
             <if test="cardNo != null">card_no = #{cardNo},</if>
-            <if test="price != null">price = #{price},</if>
+            <if test="duration != null">duration = #{duration},</if>
             <if test="status != null">status = #{status},</if>
             <if test="cancelStatus != null">cancel_status = #{cancelStatus},</if>
             <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

@@ -45,6 +45,20 @@ public class PhoneCard extends BaseEntity {
     private String appId;
 
     /**
+     * 会员卡类型
+     */
+    @Excel(name = "会员卡类型")
+    @ApiModelProperty("会员卡类型（字典：phone_card_type，1：普通会员，2：超级会员）")
+    private String type;
+
+    /**
+     * 会员卡类型
+     */
+    @Excel(name = "会员卡类型")
+    @ApiModelProperty("会员卡类型(字典：phone_card_type，1：普通会员，2：超级会员)")
+    private String typeLabel;
+
+    /**
      * 卡密
      */
     @Excel(name = "卡密")
@@ -52,11 +66,11 @@ public class PhoneCard extends BaseEntity {
     private String cardNo;
 
     /**
-     * 金额
+     * 时长
      */
-    @Excel(name = "金额")
-    @ApiModelProperty("金额")
-    private BigDecimal price;
+    @Excel(name = "时长")
+    @ApiModelProperty("时长")
+    private Integer duration;
 
     /**
      * 状态
@@ -93,6 +107,22 @@ public class PhoneCard extends BaseEntity {
     @Excel(name = "核销时间", width = 30, dateFormat = "yyyy-MM-dd")
     @ApiModelProperty("核销时间")
     private Date cancelTime;
+
+    /**
+     * 开始时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty("开始时间")
+    private Date beginTime;
+
+    /**
+     * 结束时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty("结束时间")
+    private Date endTime;
 
     /**
      * 核销会员ID
@@ -137,14 +167,6 @@ public class PhoneCard extends BaseEntity {
 
     public String getCardNo() {
         return cardNo;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
     }
 
     public void setStatus(String status) {
@@ -215,5 +237,48 @@ public class PhoneCard extends BaseEntity {
 
     public void setCancelStatusLabel(String cancelStatusLabel) {
         this.cancelStatusLabel = cancelStatusLabel;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeLabel() {
+        if (StringUtils.isNotBlank(type)) {
+            return DictUtils.getDictLabel("phone_card_type", type);
+        }
+        return typeLabel;
+    }
+
+    public void setTypeLabel(String typeLabel) {
+        this.typeLabel = typeLabel;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }
