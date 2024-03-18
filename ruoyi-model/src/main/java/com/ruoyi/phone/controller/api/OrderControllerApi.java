@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -79,6 +80,9 @@ public class OrderControllerApi extends BaseController {
         phoneOrder = phoneOrderService.selectPhoneOrderById(phoneOrder.getId());
         if (phoneOrder == null) {
             return warn("订单不存在");
+        }
+        if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) == 0) {
+            return warn("订单支付金额为0，无需支付");
         }
         long now = System.currentTimeMillis();
         if(DateUtil.addHours(phoneOrder.getCreateTime(),24).getTime() <= now){

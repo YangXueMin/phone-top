@@ -143,7 +143,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 phoneOrder.setPayBalance(phoneOrder.getMoney());
                 money = phoneOrder.getMoney();
                 phoneOrder.setPayStatus("2");
-                phoneOrder.setPayTime(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_WECHAT_DATE,DateUtils.getNowDate()));
+                phoneOrder.setPayTime(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_WECHAT_DATE, DateUtils.getNowDate()));
                 phoneOrder.setPayMoney(BigDecimal.ZERO);
             }
             memberMapper.updateMember(member);
@@ -160,7 +160,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
         }
         phoneOrderMapper.insertPhoneOrder(phoneOrder);
-        updateMemberInfo(phoneOrder,phonePrice, member);
+        updateMemberInfo(phoneOrder, phonePrice, member);
         return phoneOrder;
     }
 
@@ -289,7 +289,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     phoneOrder.setUpdateTime(DateUtils.getNowDate());
                     phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-                    updateMemberInfo(phoneOrder,phonePrice, member);
+                    updateMemberInfo(phoneOrder, phonePrice, member);
                 }
             }
             return WxPayNotifyResponse.success("成功");
@@ -305,9 +305,9 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
             if (requestBody.getState() == -1) {
                 phoneOrder.setArrivalStatus("5");
-            }else if (requestBody.getState() == 1) {
+            } else if (requestBody.getState() == 1) {
                 phoneOrder.setArrivalStatus("2");
-            }else if(requestBody.getState() == 2){
+            } else if (requestBody.getState() == 2) {
                 phoneOrder.setArrivalStatus("3");
             }
             phoneOrder.setTopTime(requestBody.getOtime() + "");
@@ -366,7 +366,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
      * @param member
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateMemberInfo(PhoneOrder phoneOrder, PhonePrice phonePrice,Member member) {
+    public void updateMemberInfo(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member) {
         if (StringUtils.equals("2", phoneOrder.getPayStatus())) {
             //如果是直充
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
@@ -375,7 +375,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
             if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
                 phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
-                if(phonePrice != null && !StringUtils.equals("1",phonePrice.getRechargeType())){
+                if (phonePrice != null && !StringUtils.equals("1", phonePrice.getRechargeType())) {
                     TreeMap<String, String> params = new TreeMap<>();
                     params.put("out_trade_num", phoneOrder.getOrderNo());
                     params.put("mobile", phoneOrder.getAccountNumber());
@@ -384,7 +384,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     params.put("product_id", phonePrice.getProductId() + "");
                     try {
                         params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
-                        String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.QUERY_PRODUCT, JSON.toJSONString(params));
+                        String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.CREATE_ORDER, JSON.toJSONString(params));
+                        System.out.println("发送请求到第三方返回：" + post);
                         if (StringUtils.isNotBlank(post) && JsonUtils.isJson2(post)) {
                             JSONObject jsonObject = JSON.parseObject(post);
                             if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
