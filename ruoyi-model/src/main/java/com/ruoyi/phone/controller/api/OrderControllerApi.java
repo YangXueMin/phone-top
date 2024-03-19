@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Name;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class OrderControllerApi extends BaseController {
             return warn("订单支付金额为0，无需支付");
         }
         long now = System.currentTimeMillis();
-        if(DateUtil.addHours(phoneOrder.getCreateTime(),24).getTime() <= now){
+        if (DateUtil.addHours(phoneOrder.getCreateTime(), 24).getTime() <= now) {
             return warn("订单已超24小时，请重新下单");
         }
         WxPayMpOrderResult pay = phoneOrderService.pay(phoneOrder);
@@ -105,8 +106,8 @@ public class OrderControllerApi extends BaseController {
      * 充值结果通知
      */
     @ApiOperation("充值结果通知")
-    @PostMapping("/topNotify")
-    public String topNotify(@RequestBody TopNotifyRequest requestBody) {
+    @PostMapping(value = "/topNotify")
+    public String topNotify(TopNotifyRequest requestBody) {
         return phoneOrderService.topNotify(requestBody);
     }
 
@@ -115,7 +116,7 @@ public class OrderControllerApi extends BaseController {
      */
     @ApiOperation("充值快讯")
     @GetMapping("/findNewsflash")
-    public AjaxResult findNewsflash(@RequestParam(value = "appId",required = false)String appId) {
+    public AjaxResult findNewsflash(@RequestParam(value = "appId", required = false) String appId) {
         return success(phoneOrderService.findNewsflash(appId));
     }
 

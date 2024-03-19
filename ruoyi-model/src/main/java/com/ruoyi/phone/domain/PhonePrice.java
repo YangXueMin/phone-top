@@ -145,6 +145,16 @@ public class PhonePrice extends BaseEntity{
     @ApiModelProperty("标签")
     private String label;
 
+    /** 上架状态 */
+    @Excel(name = "上架状态(字典值：phone_status)")
+    @ApiModelProperty("上架状态(字典值：phone_status)")
+    private String status;
+
+    /** 上架状态 */
+    @Excel(name = "上架状态(字典值：phone_status)")
+    @ApiModelProperty("上架状态(字典值：phone_status)")
+    private String statusLabel;
+
     public void setId(Long id){
         this.id = id;
     }
@@ -348,5 +358,24 @@ public class PhonePrice extends BaseEntity{
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusLabel() {
+        if(StringUtils.isNotBlank(status)){
+            return DictUtils.getDictLabel("phone_status",status);
+        }
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel = statusLabel;
     }
 }

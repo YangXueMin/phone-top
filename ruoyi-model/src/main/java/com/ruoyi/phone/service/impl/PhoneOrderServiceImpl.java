@@ -339,7 +339,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public String topNotify(TopNotifyRequest requestBody) {
         System.out.println(JSON.toJSONString(requestBody));
-        List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOrder_number());
+        List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOut_trade_num());
         if (phoneOrderList != null && phoneOrderList.size() > 0) {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
             if (requestBody.getState() == -1) {
