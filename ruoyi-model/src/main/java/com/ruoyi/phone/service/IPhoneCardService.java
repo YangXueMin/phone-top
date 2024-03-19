@@ -28,6 +28,14 @@ public interface IPhoneCardService {
     public List<PhoneCard> selectPhoneCardList(PhoneCard phoneCard);
 
     /**
+     * 查询卡密管理列表
+     *
+     * @param phoneCard 卡密管理
+     * @return 卡密管理集合
+     */
+    public PhoneCard selectPhoneCardByCardNo(PhoneCard phoneCard);
+
+    /**
      * 新增卡密管理
      *
      * @param phoneCard 卡密管理

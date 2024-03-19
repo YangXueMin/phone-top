@@ -37,12 +37,12 @@ public class CardControllerApi extends BaseController {
     @ApiOperation("核销卡")
     @GetMapping("/cancel")
     public synchronized AjaxResult cancel(PhoneCard phoneCard) {
-        phoneCard = phoneCardService.selectPhoneCardById(phoneCard.getId());
+        phoneCard = phoneCardService.selectPhoneCardByCardNo(phoneCard);
         if (phoneCard != null) {
             if (!StringUtils.equals("1", phoneCard.getStatus())) {
                 return error("无效卡，请核对");
             }
-            if (StringUtils.equals("1", phoneCard.getCancelStatus())) {
+            if (StringUtils.equals("2", phoneCard.getCancelStatus())) {
                 return error("卡已核销，请核对");
             }
             Date date = new Date();
@@ -50,7 +50,7 @@ public class CardControllerApi extends BaseController {
                 if(date.before(phoneCard.getBeginTime())){
                     return error("此卡还未到有效期内");
                 }
-                if(date.after(phoneCard.getBeginTime())){
+                if(date.after(phoneCard.getEndTime())){
                     return error("此卡已过有效期");
                 }
                 if(!DateUtil.isBetween(date,phoneCard.getBeginTime(),phoneCard.getEndTime())){

@@ -7,10 +7,7 @@ import java.util.List;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
-import com.ruoyi.common.utils.CardGenerator;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.SnowflakeGenerator;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.phone.domain.PhoneBalanceLog;
 import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
@@ -61,6 +58,16 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
         return phoneCardMapper.selectPhoneCardList(phoneCard);
     }
 
+    @Override
+    public PhoneCard selectPhoneCardByCardNo(PhoneCard phoneCard) {
+        phoneCard.setCancelStatus(null);
+        List<PhoneCard> phoneCardList = phoneCardMapper.selectPhoneCardList(phoneCard);
+        if (phoneCardList != null && phoneCardList.size() > 0) {
+            return phoneCardList.get(0);
+        }
+        return null;
+    }
+
     /**
      * 新增卡密管理
      *
@@ -75,7 +82,7 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
         phoneCard.setCreateTime(DateUtils.getNowDate());
         phoneCard.setCancelStatus("1");
         int num = 0;
-        if(phoneCard.getParams().get("number") != null){
+        if (phoneCard.getParams().get("number") != null) {
             num = Integer.parseInt(phoneCard.getParams().get("number").toString());
         }
         for (int i = 0; i < num; i++) {
@@ -101,25 +108,25 @@ public class PhoneCardServiceImpl implements IPhoneCardService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public synchronized int cancel(PhoneCard phoneCard) {
-        phoneCard.setCancelStatus("1");
+        phoneCard.setCancelStatus("2");
         phoneCard.setCancelTime(DateUtils.getNowDate());
         final int i = phoneCardMapper.updatePhoneCard(phoneCard);
         if (i > 0) {
             Date date = new Date();
-            Member member = memberMapper.selectMemberById(phoneCard.getMemberId());
-            if(StringUtils.equals("1",phoneCard.getType())){
+            Member member = memberMapper.selectMemberById(SecurityUtils.getUserId());
+            if (StringUtils.equals("1", phoneCard.getType())) {
                 //普通会员
-                if(member.getExpirationTime() != null){
+                if (member.getExpirationTime() != null) {
                     date = member.getExpirationTime();
                 }
-                member.setExpirationTime(DateUtil.endOfDate(DateUtils.addDays(date,phoneCard.getDuration())));
+                member.setExpirationTime(DateUtil.endOfDate(DateUtils.addDays(date, phoneCard.getDuration())));
                 member.setIsMember("1");
-            }else if(StringUtils.equals("2",phoneCard.getType())){
+            } else if (StringUtils.equals("2", phoneCard.getType())) {
                 //超级会员
-                if(member.getSuperExpirationTime() != null){
+                if (member.getSuperExpirationTime() != null) {
                     date = member.getSuperExpirationTime();
                 }
-                member.setSuperExpirationTime(DateUtil.endOfDate(DateUtils.addDays(date,phoneCard.getDuration())));
+                member.setSuperExpirationTime(DateUtil.endOfDate(DateUtils.addDays(date, phoneCard.getDuration())));
                 member.setIsSuperMember("1");
             }
             member.setUpdateTime(DateUtils.getNowDate());
