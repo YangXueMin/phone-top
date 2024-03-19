@@ -57,7 +57,6 @@ public class SubscribeHandler extends AbstractHandler {
                     .userInfo(wxMpXmlMessage.getFromUser(), null);
             this.logger.info("新关注用户 OPENID: " + JSON.toJSONString(userWxInfo));
             if (userWxInfo != null) {
-                // TODO 可以添加关注用户到本地数据库
                 String openId = wxMpXmlMessage.getFromUser();
                 Member member = memberService.getMemberByOpenId(openId);
                 if (member == null) {
@@ -86,15 +85,18 @@ public class SubscribeHandler extends AbstractHandler {
                             List<PhoneCoupon> phoneCouponList = phoneCouponService.selectPhoneCouponListApi(phoneCoupon);
                             if (phoneCouponList != null && phoneCouponList.size() > 0) {
                                 for (PhoneCoupon coupon : phoneCouponList) {
-                                    PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
-                                    phoneMemberCoupon.setDeptId(higherMember.getDeptId());
-                                    phoneMemberCoupon.setAppId(higherMember.getAppId());
-                                    phoneMemberCoupon.setMemberId(higherMember.getId());
-                                    phoneMemberCoupon.setCouponId(coupon.getId());
-                                    phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
-                                    phoneMemberCoupon.setStatus("1");
-                                    phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
-                                    phoneMemberCouponService.insertPhoneMemberCoupon(phoneMemberCoupon);
+                                    int number = coupon.getNumber() != null ? coupon.getNumber().intValue() : 0;
+                                    for (int i = 0; i < number; i++) {
+                                        PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
+                                        phoneMemberCoupon.setDeptId(higherMember.getDeptId());
+                                        phoneMemberCoupon.setAppId(higherMember.getAppId());
+                                        phoneMemberCoupon.setMemberId(higherMember.getId());
+                                        phoneMemberCoupon.setCouponId(coupon.getId());
+                                        phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
+                                        phoneMemberCoupon.setStatus("1");
+                                        phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
+                                        phoneMemberCouponService.insertPhoneMemberCoupon(phoneMemberCoupon);
+                                    }
                                 }
                             }
                         }

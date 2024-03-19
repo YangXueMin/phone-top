@@ -9,6 +9,7 @@
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
+        <result property="commissionMemberId"    column="commission_member_id"    />
         <result property="commissionBefore"    column="commission_before"    />
         <result property="money"    column="money"    />
         <result property="commissionAfter"    column="commission_after"    />
@@ -44,6 +45,7 @@
             a.dept_id,
             a.app_id,
             a.member_id,
+               a.commission_member_id,
             a.commission_before,
             a.money,
             a.commission_after,
@@ -74,6 +76,7 @@
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null "> and a.app_id = #{appId}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="commissionMemberId != null "> and a.commission_member_id = #{commissionMemberId}</if>
             <if test="commissionBefore != null "> and a.commission_before = #{commissionBefore}</if>
             <if test="money != null "> and a.money = #{money}</if>
             <if test="commissionAfter != null "> and a.commission_after = #{commissionAfter}</if>
@@ -94,6 +97,7 @@
             <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
+            <if test="commissionMemberId != null">commission_member_id,</if>
             <if test="commissionBefore != null">commission_before,</if>
             <if test="money != null">money,</if>
             <if test="commissionAfter != null">commission_after,</if>
@@ -107,6 +111,7 @@
             <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
+            <if test="commissionMemberId != null">#{commissionMemberId},</if>
             <if test="commissionBefore != null">#{commissionBefore},</if>
             <if test="money != null">#{money},</if>
             <if test="commissionAfter != null">#{commissionAfter},</if>
@@ -124,6 +129,7 @@
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="commissionMemberId != null">commission_member_id = #{commissionMemberId},</if>
             <if test="commissionBefore != null">commission_before = #{commissionBefore},</if>
             <if test="money != null">money = #{money},</if>
             <if test="commissionAfter != null">commission_after = #{commissionAfter},</if>

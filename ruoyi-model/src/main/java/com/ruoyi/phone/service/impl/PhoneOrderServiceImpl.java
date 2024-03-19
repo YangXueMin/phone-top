@@ -471,6 +471,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         phoneCommissionConfig.setAppId(phoneOrder.getAppId());
                         phoneCommissionConfig.setCommissionBefore(agencyBalance);
                         phoneCommissionConfig.setMoney(directCommission);
+                        phoneCommissionConfig.setMemberId(agency.getId());
+                        phoneCommissionConfig.setCommissionMemberId(member.getId());
                         phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
                         phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
                         phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
@@ -493,6 +495,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
                                 secondaryPhoneCommissionConfig.setDeptId(phoneOrder.getDeptId());
                                 secondaryPhoneCommissionConfig.setAppId(phoneOrder.getAppId());
+                                phoneCommissionConfig.setMemberId(secondary.getId());
+                                phoneCommissionConfig.setCommissionMemberId(member.getId());
                                 secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
                                 secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);
                                 secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());

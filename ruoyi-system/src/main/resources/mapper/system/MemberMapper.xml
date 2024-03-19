@@ -139,7 +139,7 @@
             IFNULL(sum(c.money),0) as commission,
             count(o.id) as orderNum
         from phone_member a
-                 left join phone_commission_config c on a.id = c.member_id
+                 left join phone_commission_config c on a.id = c.commission_member_id
                  left join phone_order o on a.id = o.member_id AND o.pay_status = 2
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
