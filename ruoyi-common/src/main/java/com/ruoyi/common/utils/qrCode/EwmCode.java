@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import java.awt.*;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName EwmCode
  * @Description 二维码配置类
  * @date 2024/1/15 10:49 PM

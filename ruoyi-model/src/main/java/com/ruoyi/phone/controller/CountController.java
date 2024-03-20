@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName CountController
  * @Description
  * @date 2024/3/17 9:52 AM

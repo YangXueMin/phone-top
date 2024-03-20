@@ -9,7 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberLoginController
  * @Description
  * @date 2024/1/4 4:50 PM

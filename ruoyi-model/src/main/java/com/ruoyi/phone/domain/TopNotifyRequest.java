@@ -1,7 +1,7 @@
 package com.ruoyi.phone.domain;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName TopNotifyRequest
  * @Description
  * @date 2024/3/12 9:57 PM

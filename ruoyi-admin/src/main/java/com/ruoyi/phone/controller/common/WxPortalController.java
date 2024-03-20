@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WxPortalController
  * @Description
  * @date 2024/3/1 10:36 AM

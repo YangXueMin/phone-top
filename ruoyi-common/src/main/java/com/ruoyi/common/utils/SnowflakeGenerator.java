@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberCardGenerator
  * @Description
  * @date 2024/1/4 6:30 PM

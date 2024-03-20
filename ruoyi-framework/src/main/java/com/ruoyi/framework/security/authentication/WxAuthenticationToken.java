@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.util.Collection;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WxAuthenticationToken
  * @Description
  * @date 2023/2/20 1:50 PM

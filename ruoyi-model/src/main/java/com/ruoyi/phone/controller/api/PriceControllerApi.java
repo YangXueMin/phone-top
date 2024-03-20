@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName PriceControllerApi
  * @Description
  * @date 2024/3/5 6:58 PM

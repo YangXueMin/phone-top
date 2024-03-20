@@ -3,7 +3,7 @@ package com.ruoyi.common.core.domain.model;
 import lombok.ToString;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName LoginMemberBody
  * @Description
  * @date 2024/1/4 6:15 PM

@@ -15,7 +15,7 @@ import static me.chanjar.weixin.mp.constant.WxMpEventConstants.CustomerService.*
 import static me.chanjar.weixin.mp.constant.WxMpEventConstants.POI_CHECK_NOTIFY;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WxMpConfiguration
  * @Description
  * @date 2024/3/1 10:43 AM

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WechatPayProperties
  * @Description
  * @date 2023/12/21 2:48 PM

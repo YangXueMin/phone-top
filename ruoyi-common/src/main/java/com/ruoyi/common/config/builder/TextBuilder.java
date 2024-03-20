@@ -6,7 +6,7 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutTextMessage;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName TextBuilder
  * @Description
  * @date 2024/3/1 10:15 AM

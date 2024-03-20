@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WechatConfigurati¬on
  * @Description
  * @date 2023/12/21 2:47 PM

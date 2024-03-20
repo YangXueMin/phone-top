@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName LogHandler
  * @Description 日志事件
  * @date 2024/3/1 10:47 AM

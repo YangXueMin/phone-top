@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName KfSessionHandler
  * @Description 会话事件
  * @date 2024/3/1 10:46 AM

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberAuthenticationProvider
  * @Description
  * @date 2024/1/4 1:49 PM

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName StoreCheckNotifyHandler
  * @Description 门店审核事件处理
  * @date 2024/3/1 10:49 AM

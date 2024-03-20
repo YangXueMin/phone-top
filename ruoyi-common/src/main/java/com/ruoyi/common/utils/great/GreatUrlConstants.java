@@ -1,7 +1,7 @@
 package com.ruoyi.common.utils.great;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName UrlEnum
  * @Description
  * @date 2024/3/12 6:53 PM

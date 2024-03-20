@@ -41,7 +41,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberLoginService
  * @Description
  * @date 2024/1/4 1:55 PM

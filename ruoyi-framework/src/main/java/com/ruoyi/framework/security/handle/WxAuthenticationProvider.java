@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WxAuthenticationProvider
  * @Description
  * @date 2022/10/7 10:15 PM

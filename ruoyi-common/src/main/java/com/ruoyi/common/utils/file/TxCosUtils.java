@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName TxCosUtil
  * @Description
  * @date 2024/1/1 9:54 PM
@@ -312,7 +312,7 @@ public class TxCosUtils {
 
         // 高级API
         // 上传文件
-        File file = new File("/Users/yangxuemin/IdeaProjects/Food-Vue/ruoyi-ui/src/assets/images/profile.jpg");
+        File file = new File("/Users/ruoyi/IdeaProjects/Food-Vue/ruoyi-ui/src/assets/images/profile.jpg");
         BufferedInputStream stream = FileUtil.getInputStream(file);
         Upload test = TxCosUtils.upload("ygmfood", "profile.jpg", stream);
         System.err.println(JSON.toJSONString(test));

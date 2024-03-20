@@ -1,7 +1,7 @@
 package com.ruoyi.phone.controller.common;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WxRedirectController
  * @Description
  * @date 2024/3/5 2:07 PM

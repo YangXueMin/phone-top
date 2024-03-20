@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName EwmUtils
  * @Description 二维码工具类
  * @date 2024/1/15 10:50 PM

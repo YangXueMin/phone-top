@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName DictControllerApi
  * @Description
  * @date 2024/3/10 12:45 AM

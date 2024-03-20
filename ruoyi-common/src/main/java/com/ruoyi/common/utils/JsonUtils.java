@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName JsonUtils
  * @Description
  * @date 2024/3/1 10:47 AM

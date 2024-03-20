@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WechatConfigTask
  * @Description 微信配置过期时间监听
  * @date 2024/3/13 9:45 PM

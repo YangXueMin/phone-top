@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberMapper
  * @Description
  * @date 2024/3/1 10:01 AM

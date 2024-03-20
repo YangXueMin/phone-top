@@ -15,7 +15,7 @@ import java.util.Map;
 import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MsgHandler
  * @Description 默认事件
  * @date 2024/3/1 10:48 AM
@@ -46,10 +46,9 @@ public class MsgHandler extends AbstractHandler {
         }
 
         //TODO 组装回复消息
-        String content = "收到信息内容：" + JsonUtils.toJson(wxMessage);
+        String content = "新人会员添加信息";
 
-        //return new TextBuilder().build(content, wxMessage, weixinService);
-        return null;
+        return new TextBuilder().build(content, wxMessage, weixinService);
     }
 
 }

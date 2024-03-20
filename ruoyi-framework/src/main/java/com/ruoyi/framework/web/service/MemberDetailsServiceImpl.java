@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberDetailsServiceImpl
  * @Description
  * @date 2024/1/4 1:39 PM

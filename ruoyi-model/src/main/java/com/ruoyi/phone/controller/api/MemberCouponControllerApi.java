@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberCouponControllerApi
  * @Description
  * @date 2024/3/11 10:31 PM

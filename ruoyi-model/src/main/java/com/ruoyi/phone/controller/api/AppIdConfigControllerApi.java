@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName AppIdConfigControllerApi
  * @Description
  * @date 2024/3/5 1:47 PM

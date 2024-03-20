@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  */
 @Slf4j
 //通讯地址:ws://localhost:8080//websocket/token

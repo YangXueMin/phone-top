@@ -3,7 +3,7 @@ package com.ruoyi.common.utils.qrCode;
 import lombok.ToString;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName EwmEntity
  * @Description
  * @date 2024/1/15 10:56 PM

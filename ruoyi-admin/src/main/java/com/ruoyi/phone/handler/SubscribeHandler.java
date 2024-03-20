@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName SubscribeHandler
  * @Description 关注事件
  * @date 2024/3/1 10:12 AM

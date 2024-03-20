@@ -80,6 +80,20 @@
             <if test="commissionBefore != null "> and a.commission_before = #{commissionBefore}</if>
             <if test="money != null "> and a.money = #{money}</if>
             <if test="commissionAfter != null "> and a.commission_after = #{commissionAfter}</if>
+            <if test="member != null">
+                <if test="member.name != null and member.name != ''">
+                    AND m.name like concat('%',#{member.name},'%')
+                </if>
+                <if test="member.number != null and member.number != ''">
+                    AND m.number like concat('%',#{member.number},'%')
+                </if>
+                <if test="member.isMember != null and member.isMember != ''">
+                    AND m.is_member = #{member.isMember}
+                </if>
+                <if test="member.isSuperMember != null and member.isSuperMember != ''">
+                    AND m.is_super_member = #{member.isSuperMember}
+                </if>
+            </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>

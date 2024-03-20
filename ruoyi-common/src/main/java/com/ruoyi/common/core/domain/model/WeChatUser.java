@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WeChatUser
  * @Description
  * @date 2023/2/20 2:05 PM

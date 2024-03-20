@@ -13,7 +13,6 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
-import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
@@ -161,7 +160,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
         }
         phoneOrderMapper.insertPhoneOrder(phoneOrder);
-        updateMemberInfo(phoneOrder, phonePrice, member);
+        topOrder(phoneOrder, phonePrice, member);
         return phoneOrder;
     }
 
@@ -328,7 +327,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     phoneOrder.setUpdateTime(DateUtils.getNowDate());
                     phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-                    updateMemberInfo(phoneOrder, phonePrice, member);
+                    topOrder(phoneOrder, phonePrice, member);
                 }
             }
             return WxPayNotifyResponse.success("成功");
@@ -349,7 +348,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             } else if (requestBody.getState() == 2) {
                 phoneOrder.setArrivalStatus("3");
             }
-            phoneOrder.setTopTime(new Date(requestBody.getOtime()));
+            phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000));
             phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
             phoneOrder.setUpdateTime(DateUtils.getNowDate());
             phoneOrderMapper.updatePhoneOrder(phoneOrder);
@@ -402,14 +401,15 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     }
 
     /**
-     * 更新会员相关数据
+     * 充值
      *
      * @param phoneOrder
      * @param member
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateMemberInfo(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member) {
+    public void topOrder(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member) {
         if (StringUtils.equals("2", phoneOrder.getPayStatus())) {
+            System.out.println("开始调用充值第三方接口");
             //如果是直充
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
             phoneInterfaceConfig.setAppId(phoneOrder.getAppId());

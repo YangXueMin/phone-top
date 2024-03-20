@@ -3,7 +3,7 @@ package com.ruoyi.common.utils;
 import java.util.Random;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName CardGenerator
  * @Description
  * @date 2024/3/5 7:03 PM

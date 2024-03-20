@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WxLoginAuthenticationFilter
  * @Description
  * @date 2022/10/7 10:11 PM

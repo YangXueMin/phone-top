@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName ScanHandler
  * @Description 扫码事件
  * @date 2024/3/1 10:49 AM

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MemberCardControllerApi
  * @Description
  * @date 2024/3/5 6:56 PM

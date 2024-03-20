@@ -11,7 +11,7 @@ import java.util.Map;
 import static me.chanjar.weixin.common.api.WxConsts.EventType;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName MenuHandler
  * @Description 自定义菜单事件
  * @date 2024/3/1 10:48 AM

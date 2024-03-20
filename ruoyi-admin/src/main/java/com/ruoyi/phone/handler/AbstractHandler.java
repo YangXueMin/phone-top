@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName AbstractHandler
  * @Description
  * @date 2024/3/1 10:12 AM

@@ -12,7 +12,7 @@ import java.util.Map;
 import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName LocationHandler
  * @Description 位置事件
  * @date 2024/3/1 10:46 AM

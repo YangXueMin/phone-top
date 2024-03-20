@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author yangxuemin
+ * @author ruoyi
  * @ClassName WeatherUtils
  * @Description
  * @date 2023/6/1 2:19 PM
