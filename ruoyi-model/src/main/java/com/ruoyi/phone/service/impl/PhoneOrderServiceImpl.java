@@ -151,11 +151,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
             phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
             phoneBalanceLog.setAppId(phoneOrder.getAppId());
-            phoneBalanceLog.setMemberId(member.getMemberId());
+            phoneBalanceLog.setMemberId(member.getId());
             phoneBalanceLog.setType("2");
-            phoneBalanceLog.setBalanceAfter(balance);
+            phoneBalanceLog.setBalanceBefore(balance);
             phoneBalanceLog.setMoney(money);
-            phoneBalanceLog.setBalanceBefore(member.getBalance());
+            phoneBalanceLog.setBalanceAfter(member.getBalance());
             phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
             phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
         }
@@ -173,7 +173,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public int updatePhoneOrder(PhoneOrder phoneOrder) {
         phoneOrder.setUpdateTime(DateUtils.getNowDate());
-        if(StringUtils.equals("4",phoneOrder.getArrivalStatus())) {
+        if (StringUtils.equals("4", phoneOrder.getArrivalStatus())) {
             //调用取消接口
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
             phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
@@ -201,11 +201,29 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             }
         }
         int i = phoneOrderMapper.updatePhoneOrder(phoneOrder);
-        if(i > 0){
+        if (i > 0) {
             phoneOrder = phoneOrderMapper.selectPhoneOrderById(phoneOrder.getId());
             PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
             Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
-            updateMemberInfoMoney(phoneOrder,phonePrice,member);
+            updateMemberInfoMoney(phoneOrder, phonePrice, member);
+            if((StringUtils.equals("3",phoneOrder.getPayStatus()) || StringUtils.equals("4",phoneOrder.getPayStatus()))
+                    && phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0){
+                //回退余额给用户
+                BigDecimal balance = member.getBalance();
+                member.setBalance(balance.add(phoneOrder.getPayBalance()));
+                memberMapper.updateMember(member);
+                //添加余额变更记录
+                PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
+                phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
+                phoneBalanceLog.setAppId(phoneOrder.getAppId());
+                phoneBalanceLog.setMemberId(member.getId());
+                phoneBalanceLog.setType("3");
+                phoneBalanceLog.setBalanceBefore(balance);
+                phoneBalanceLog.setMoney(phoneOrder.getPayBalance());
+                phoneBalanceLog.setBalanceAfter(member.getBalance());
+                phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
+                phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+            }
         }
         return i;
     }
@@ -348,13 +366,13 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             } else if (requestBody.getState() == 2) {
                 phoneOrder.setArrivalStatus("3");
             }
-            phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000));
+            phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000L));
             phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
             phoneOrder.setUpdateTime(DateUtils.getNowDate());
             phoneOrderMapper.updatePhoneOrder(phoneOrder);
             PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
             Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
-            updateMemberInfoMoney(phoneOrder,phonePrice,member);
+            updateMemberInfoMoney(phoneOrder, phonePrice, member);
         }
         return "success";
     }
@@ -445,8 +463,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         }
     }
 
-    public void updateMemberInfoMoney(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member){
-        if(StringUtils.equals("2",phoneOrder.getArrivalStatus())){
+    public void updateMemberInfoMoney(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member) {
+        if (StringUtils.equals("2", phoneOrder.getArrivalStatus())) {
             //如果是被推荐用户获取上级
             if (member.getMemberId() != null) {
                 //获取佣金
@@ -454,7 +472,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     Member agency = memberMapper.selectMemberById(member.getMemberId());
                     if (agency != null) {
                         BigDecimal agencyBalance = BigDecimal.ZERO;
-                        if(agency.getCommissionBalance() != null){
+                        if (agency.getCommissionBalance() != null) {
                             agencyBalance = agency.getCommissionBalance();
                         }
                         BigDecimal directCommission = phonePrice.getDirectCommission();
@@ -477,10 +495,10 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
                         phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
                         if (agency.getMemberId() != null) {
-                            Member secondary = memberMapper.selectMemberById(member.getMemberId());
+                            Member secondary = memberMapper.selectMemberById(agency.getMemberId());
                             if (secondary != null) {
                                 BigDecimal secondaryBalance = BigDecimal.ZERO;
-                                if(secondary.getCommissionBalance() != null){
+                                if (secondary.getCommissionBalance() != null) {
                                     secondaryBalance = secondary.getCommissionBalance();
                                 }
                                 BigDecimal secondaryDirectCommission = phonePrice.getIndirectCommission();
@@ -495,8 +513,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 PhoneCommissionConfig secondaryPhoneCommissionConfig = new PhoneCommissionConfig();
                                 secondaryPhoneCommissionConfig.setDeptId(phoneOrder.getDeptId());
                                 secondaryPhoneCommissionConfig.setAppId(phoneOrder.getAppId());
-                                phoneCommissionConfig.setMemberId(secondary.getId());
-                                phoneCommissionConfig.setCommissionMemberId(member.getId());
+                                secondaryPhoneCommissionConfig.setMemberId(secondary.getId());
+                                secondaryPhoneCommissionConfig.setCommissionMemberId(member.getId());
                                 secondaryPhoneCommissionConfig.setCommissionBefore(secondaryBalance);
                                 secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);
                                 secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
@@ -518,24 +536,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         case "1":
                             //充值送
                             if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
-                                PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
-                                phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
-                                phoneMemberCoupon.setAppId(phoneOrder.getAppId());
-                                phoneMemberCoupon.setMemberId(member.getId());
-                                phoneMemberCoupon.setCouponId(coupon.getId());
-                                phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
-                                phoneMemberCoupon.setStatus("1");
-                                phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
-                                memberCouponList.add(phoneMemberCoupon);
-                            }
-                            break;
-                        case "3":
-                            //首单送
-                            PhoneOrder queryOrder = new PhoneOrder();
-                            queryOrder.setMemberId(member.getId());
-                            List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
-                            if (phoneOrderList.size() == 1) {
-                                if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                int num = 1;
+                                if (coupon.getNumber() != null) {
+                                    num = coupon.getNumber().intValue();
+                                }
+                                for (int i = 0; i < num; i++) {
                                     PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
                                     phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
                                     phoneMemberCoupon.setAppId(phoneOrder.getAppId());
@@ -545,6 +550,31 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                     phoneMemberCoupon.setStatus("1");
                                     phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
                                     memberCouponList.add(phoneMemberCoupon);
+                                }
+                            }
+                            break;
+                        case "3":
+                            //首单送
+                            PhoneOrder queryOrder = new PhoneOrder();
+                            queryOrder.setMemberId(member.getId());
+                            List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
+                            if (phoneOrderList.size() == 1) {
+                                if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                    int num = 1;
+                                    if (coupon.getNumber() != null) {
+                                        num = coupon.getNumber().intValue();
+                                    }
+                                    for (int i = 0; i < num; i++) {
+                                        PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
+                                        phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
+                                        phoneMemberCoupon.setAppId(phoneOrder.getAppId());
+                                        phoneMemberCoupon.setMemberId(member.getId());
+                                        phoneMemberCoupon.setCouponId(coupon.getId());
+                                        phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
+                                        phoneMemberCoupon.setStatus("1");
+                                        phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
+                                        memberCouponList.add(phoneMemberCoupon);
+                                    }
                                 }
                             }
                             break;

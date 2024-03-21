@@ -46,12 +46,12 @@ public class PhoneBalanceLog extends BaseEntity{
     private String orderNo;
 
     /** 变更类型（充值，消费） */
-    @Excel(name = "变更类型", readConverterExp = "充值，消费")
+    @Excel(name = "变更类型", readConverterExp = "充值，消费,退款")
     @ApiModelProperty("变更类型（字典：phone_balance_type）")
     private String type;
 
     /** 变更类型（充值，消费） */
-    @Excel(name = "变更类型", readConverterExp = "充值，消费")
+    @Excel(name = "变更类型", readConverterExp = "充值，消费，退款")
     @ApiModelProperty("变更类型")
     private String typeLabel;
 
