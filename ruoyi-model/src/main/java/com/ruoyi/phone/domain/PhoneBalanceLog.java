@@ -199,7 +199,7 @@ public class PhoneBalanceLog extends BaseEntity{
 
     public String getTypeLabel() {
         if(StringUtils.isNotBlank(type)){
-            return DictUtils.getDictLabel("phone_pay_status",type);
+            return DictUtils.getDictLabel("phone_balance_type",type);
         }
         return typeLabel;
     }
