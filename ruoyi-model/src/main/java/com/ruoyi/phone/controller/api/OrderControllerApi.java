@@ -103,6 +103,15 @@ public class OrderControllerApi extends BaseController {
     }
 
     /**
+     * 退款回调通知处理
+     */
+    @ApiOperation("支付回调通知处理")
+    @PostMapping("/refundNotify")
+    public String refundNotify(@RequestBody String xmlData) {
+        return phoneOrderService.refundNotify(xmlData);
+    }
+
+    /**
      * 充值结果通知
      */
     @ApiOperation("充值结果通知")

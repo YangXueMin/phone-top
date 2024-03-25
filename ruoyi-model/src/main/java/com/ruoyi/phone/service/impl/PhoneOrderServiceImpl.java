@@ -10,8 +10,11 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.constant.Constants;
@@ -101,7 +104,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         phoneOrder.setDeptId(wechatConfig.getDeptId());
         phoneOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         phoneOrder.setCreateTime(DateUtils.getNowDate());
-
+        phoneOrder.setRefundMoney(BigDecimal.ZERO);
         PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
         phoneOrder.setTopUpMoney(phonePrice.getOriginalPrice());
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
@@ -174,23 +177,33 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     public int updatePhoneOrder(PhoneOrder phoneOrder) {
         phoneOrder.setUpdateTime(DateUtils.getNowDate());
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
+        PhoneOrder old = phoneOrderMapper.selectPhoneOrderById(phoneOrder.getId());
         if (StringUtils.equals("4", phoneOrder.getArrivalStatus())) {
-            if(phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0){
-                //回退余额给用户
-                BigDecimal balance = member.getBalance();
-                member.setBalance(balance.add(phoneOrder.getPayBalance()));
-                memberMapper.updateMember(member);
-                //添加余额变更记录
-                PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-                phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
-                phoneBalanceLog.setAppId(phoneOrder.getAppId());
-                phoneBalanceLog.setMemberId(member.getId());
-                phoneBalanceLog.setType("3");
-                phoneBalanceLog.setBalanceBefore(balance);
-                phoneBalanceLog.setMoney(phoneOrder.getPayBalance());
-                phoneBalanceLog.setBalanceAfter(member.getBalance());
-                phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
-                phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+            if (!StringUtils.equals("4", old.getArrivalStatus()) && !StringUtils.equals("5", old.getArrivalStatus())) {
+                if (phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
+                    //回退余额给用户
+                    BigDecimal balance = member.getBalance();
+                    member.setBalance(balance.add(phoneOrder.getPayBalance()));
+                    memberMapper.updateMember(member);
+                    //添加余额变更记录
+                    PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
+                    phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
+                    phoneBalanceLog.setAppId(phoneOrder.getAppId());
+                    phoneBalanceLog.setMemberId(member.getId());
+                    phoneBalanceLog.setType("3");
+                    phoneBalanceLog.setBalanceBefore(balance);
+                    phoneBalanceLog.setMoney(phoneOrder.getPayBalance());
+                    phoneBalanceLog.setBalanceAfter(member.getBalance());
+                    phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
+                    phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+                }
+                if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) > 0) {
+                    //调用退款接口
+                    PhoneOrder refundOrder = new PhoneOrder();
+                    ToolUtils.copyPropertiesIgnoreNull(phoneOrder, refundOrder);
+                    refundOrder.setRefundMoney(phoneOrder.getPayMoney().subtract(phoneOrder.getRefundMoney()));
+                    this.refund(refundOrder);
+                }
             }
             //调用取消接口
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
@@ -217,7 +230,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     e.printStackTrace();
                 }
             }
-        }else if(StringUtils.equals("2", phoneOrder.getArrivalStatus())){
+        } else if (StringUtils.equals("2", phoneOrder.getArrivalStatus())) {
             phoneOrder.setTopTime(DateUtils.getNowDate());
         }
         int i = phoneOrderMapper.updatePhoneOrder(phoneOrder);
@@ -347,6 +360,56 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
                     topOrder(phoneOrder, phonePrice, member);
+                }
+            }
+            return WxPayNotifyResponse.success("成功");
+        }
+        return WxPayNotifyResponse.fail("失败");
+    }
+
+    @Override
+    public WxPayRefundResult refund(PhoneOrder phoneOrder) {
+        WxPayRefundRequest request = new WxPayRefundRequest();
+        try {
+            //订单号
+            request.setOutTradeNo(phoneOrder.getOrderNo());
+            //退款单号
+            request.setOutRefundNo(SnowflakeGenerator.generateOrderNumber());
+            //订单金额
+            request.setTotalFee(phoneOrder.getPayMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+            //退款金额
+            request.setRefundFee(phoneOrder.getRefundMoney().multiply(BigDecimal.valueOf(100L)).intValue());
+            //加密方式
+            request.setSignType("MD5");
+            //回调通知地址（必须外网能访问的地址）
+            request.setNotifyUrl(Constants.URL + "/api/phone/order/refundNotify");
+            WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneOrder.getAppId());
+            return wechatConfiguration.wxPayService(wechatConfig).refund(request);
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String refundNotify(String xmlData) {
+        final WxPayRefundNotifyResult result = WxPayRefundNotifyResult.fromXML(xmlData, WxPayRefundNotifyResult.class);
+        if (StringUtils.equals("SUCCESS", result.getReturnCode())) {
+            List<PhoneOrder> orderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(result.getReqInfo().getOutTradeNo());
+            if (orderList != null && orderList.size() > 0) {
+                PhoneOrder order = orderList.get(0);
+                order.setPayStatus("3");
+                order.setPayResult(JSON.toJSONString(result));
+                order.setUpdateTime(DateUtils.getNowDate());
+                BigDecimal refundFee = new BigDecimal(result.getReqInfo().getRefundFee()).divide(BigDecimal.valueOf(100L)).setScale(2, RoundingMode.HALF_UP);
+                if (result.getReqInfo().getRefundFee().equals(result.getReqInfo().getTotalFee())) {
+                    order.setRefundMoney(refundFee);
+                } else {
+                    order.setRefundMoney(order.getRefundMoney().add(refundFee));
+                }
+                final int i = phoneOrderMapper.updatePhoneOrder(order);
+                if (i > 0) {
+
                 }
             }
             return WxPayNotifyResponse.success("成功");

@@ -1,9 +1,11 @@
 package com.ruoyi.phone.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.utils.time.DateUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,6 +99,31 @@ public class PhoneOrderController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody PhoneOrder phoneOrder) {
         return toAjax(phoneOrderService.updatePhoneOrder(phoneOrder));
+    }
+
+    /**
+     * 退款
+     */
+    @ApiOperation("退款")
+    @PreAuthorize("@ss.hasPermi('phone:order:edit')")
+    @Log(title = "退款", businessType = BusinessType.UPDATE)
+    @PostMapping("refund")
+    public AjaxResult refund(@RequestBody PhoneOrder phoneOrder) {
+        BigDecimal refundMoney = phoneOrder.getRefundMoney();
+        phoneOrder = phoneOrderService.selectPhoneOrderById(phoneOrder.getId());
+        if (phoneOrder == null) {
+            return warn("订单不存在");
+        }
+        if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) == 0) {
+            return warn("订单支付金额为0，无需退款");
+        }
+        if (phoneOrder.getPayMoney().compareTo(refundMoney) == 0) {
+            return warn("当前订单已全部退款，无法退款");
+        }
+        if (phoneOrder.getPayMoney().compareTo(refundMoney) < 0) {
+            return warn("退款金额不能大于支付金额");
+        }
+        return success(phoneOrderService.refund(phoneOrder));
     }
 
     /**

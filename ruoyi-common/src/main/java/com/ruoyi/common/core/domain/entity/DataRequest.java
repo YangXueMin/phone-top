@@ -1,10 +1,10 @@
 package com.ruoyi.common.core.domain.entity;
 
+import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.utils.time.DateUtil;
 import lombok.ToString;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author yangxuemin
@@ -13,7 +13,7 @@ import java.util.Map;
  * @date 2024/3/25 4:13 PM
  */
 @ToString
-public class DataRequest{
+public class DataRequest extends BaseEntity {
 
     /**
      * APPID
@@ -35,7 +35,6 @@ public class DataRequest{
      */
     private Date endDate;
 
-    private Map<String, Object> params;
 
     public String getAppId() {
         return appId;
@@ -54,7 +53,7 @@ public class DataRequest{
     }
 
     public Date getBeginDate() {
-        if(beginDate != null){
+        if (beginDate != null) {
             return DateUtil.beginOfDate(beginDate);
         }
         return beginDate;
@@ -65,7 +64,7 @@ public class DataRequest{
     }
 
     public Date getEndDate() {
-        if(endDate != null){
+        if (endDate != null) {
             return DateUtil.endOfDate(endDate);
         }
         return endDate;
@@ -73,13 +72,5 @@ public class DataRequest{
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public Map<String, Object> getParams() {
-        return params;
-    }
-
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
     }
 }

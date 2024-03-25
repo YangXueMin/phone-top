@@ -58,4 +58,10 @@ public interface IPhoneWechatMessageService {
      * @return 结果
      */
     public int deletePhoneWechatMessageById(Long id);
+
+    /**
+     * 获取素材接口
+     * @param appId
+     */
+    public void findMaterialList(String appId);
 }

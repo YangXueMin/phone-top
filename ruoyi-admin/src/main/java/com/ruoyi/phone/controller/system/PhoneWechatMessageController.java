@@ -99,4 +99,14 @@ public class PhoneWechatMessageController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(phoneWechatMessageService.deletePhoneWechatMessageByIds(ids));
     }
+
+    /**
+     * 获取公众号素材接口
+     */
+    @ApiOperation("获取公众号素材接口")
+    @GetMapping("findMaterialList")
+    public AjaxResult findMaterialList(@RequestParam String appId) {
+        phoneWechatMessageService.findMaterialList(appId);
+        return toAjax(true);
+    }
 }

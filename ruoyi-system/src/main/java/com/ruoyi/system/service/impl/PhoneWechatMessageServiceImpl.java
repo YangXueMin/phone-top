@@ -2,8 +2,11 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.config.WechatConfiguration;
 import com.ruoyi.common.core.domain.entity.PhoneWechatMessage;
+import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.PhoneWechatMessageMapper;
@@ -19,6 +22,10 @@ import com.ruoyi.system.service.IPhoneWechatMessageService;
 public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService {
     @Autowired
     private PhoneWechatMessageMapper phoneWechatMessageMapper;
+    @Autowired
+    private WechatConfiguration wechatConfiguration;
+    @Autowired
+    private IWechatConfigService wechatConfigService;
 
     /**
      * 查询微信公众号消息类型配置
@@ -51,6 +58,8 @@ public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService
     @Override
     public int insertPhoneWechatMessage(PhoneWechatMessage phoneWechatMessage) {
         phoneWechatMessage.setCreateTime(DateUtils.getNowDate());
+        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneWechatMessage.getAppId());
+        phoneWechatMessage.setDeptId(wechatConfig.getDeptId());
         return phoneWechatMessageMapper.insertPhoneWechatMessage(phoneWechatMessage);
     }
 
@@ -86,5 +95,11 @@ public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService
     @Override
     public int deletePhoneWechatMessageById(Long id) {
         return phoneWechatMessageMapper.deletePhoneWechatMessageById(id);
+    }
+
+    @Override
+    public void findMaterialList(String appId) {
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appId);
+        wechatConfiguration.wxMpService(wechatConfig).getMaterialService();
     }
 }

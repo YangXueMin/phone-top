@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.phone.domain.PhoneMemberCardLog;
 import com.ruoyi.phone.domain.PhoneOrder;
@@ -72,6 +73,7 @@ public interface IPhoneOrderService {
      */
     public int deletePhoneOrderByIds(Long[] ids);
 
+
     /**
      * 删除订单记录信息
      *
@@ -95,6 +97,22 @@ public interface IPhoneOrderService {
      * @return 结果
      */
     public String payNotify(String xmlData);
+
+    /**
+     * 退款
+     *
+     * @param phoneOrder
+     * @return
+     */
+    public WxPayRefundResult refund(PhoneOrder phoneOrder);
+
+    /**
+     * 退款回调处理
+     *
+     * @param xmlData
+     * @return
+     */
+    public String refundNotify(String xmlData);
 
     /**
      * 充值回调

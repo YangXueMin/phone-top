@@ -23,6 +23,7 @@
         <result property="money"    column="money"    />
         <result property="payMoney"    column="pay_money"    />
         <result property="payBalance"    column="pay_balance"    />
+        <result property="refundMoney"    column="refund_money"    />
         <result property="payType"    column="pay_type"    />
         <result property="payStatus"    column="pay_status"    />
         <result property="arrivalStatus"    column="arrival_status"    />
@@ -94,6 +95,7 @@
             a.money,
             a.pay_money,
             a.pay_balance,
+               a.refund_money,
             a.pay_type,
             a.pay_status,
             a.arrival_status,
@@ -258,6 +260,7 @@
             <if test="money != null">money,</if>
             <if test="payMoney != null">pay_money,</if>
             <if test="payBalance != null">pay_balance,</if>
+            <if test="refundMoney != null">refund_money,</if>
             <if test="payType != null">pay_type,</if>
             <if test="payStatus != null">pay_status,</if>
             <if test="arrivalStatus != null">arrival_status,</if>
@@ -291,6 +294,7 @@
             <if test="money != null">#{money},</if>
             <if test="payMoney != null">#{payMoney},</if>
             <if test="payBalance != null">#{payBalance},</if>
+            <if test="refundMoney != null">#{refundMoney},</if>
             <if test="payType != null">#{payType},</if>
             <if test="payStatus != null">#{payStatus},</if>
             <if test="arrivalStatus != null">#{arrivalStatus},</if>
@@ -327,6 +331,7 @@
             <if test="money != null">money = #{money},</if>
             <if test="payMoney != null">pay_money = #{payMoney},</if>
             <if test="payBalance != null">pay_balance = #{payBalance},</if>
+            <if test="refundMoney != null">refund_money = #{refundMoney},</if>
             <if test="payType != null">pay_type = #{payType},</if>
             <if test="payStatus != null">pay_status = #{payStatus},</if>
             <if test="arrivalStatus != null">arrival_status = #{arrivalStatus},</if>
