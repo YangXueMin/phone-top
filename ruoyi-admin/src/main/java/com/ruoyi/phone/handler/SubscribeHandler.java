@@ -3,6 +3,7 @@ package com.ruoyi.phone.handler;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.config.builder.TextBuilder;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.common.core.domain.entity.PhoneWechatMessage;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
@@ -13,6 +14,7 @@ import com.ruoyi.phone.domain.PhoneMemberCoupon;
 import com.ruoyi.phone.service.IPhoneCouponService;
 import com.ruoyi.phone.service.IPhoneMemberCouponService;
 import com.ruoyi.system.service.IMemberService;
+import com.ruoyi.system.service.IPhoneWechatMessageService;
 import com.ruoyi.system.service.IWechatConfigService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -44,6 +46,10 @@ public class SubscribeHandler extends AbstractHandler {
     private IPhoneCouponService phoneCouponService;
     @Autowired
     private IPhoneMemberCouponService phoneMemberCouponService;
+    @Autowired
+    private MessageUtil messageUtil;
+    @Autowired
+    private IPhoneWechatMessageService wechatMessageService;
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map, WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
@@ -125,6 +131,15 @@ public class SubscribeHandler extends AbstractHandler {
             return responseResult;
         }
         try {
+            PhoneWechatMessage phoneWechatMessage = new PhoneWechatMessage();
+            phoneWechatMessage.setAppId(wxMpConfigStorage.getAppId());
+            phoneWechatMessage.setTouchType("1");
+            phoneWechatMessage.setStatus("1");
+            List<PhoneWechatMessage> messageList = wechatMessageService.selectPhoneWechatMessageList(phoneWechatMessage);
+            if(messageList.size() > 0){
+                phoneWechatMessage = messageList.get(0);
+                return messageUtil.sendMessage(phoneWechatMessage, wxMpXmlMessage, wxMpService);
+            }
             return new TextBuilder().build("感谢关注", wxMpXmlMessage, wxMpService);
         } catch (Exception e) {
             this.logger.error(e.getMessage(), e);

@@ -1,5 +1,6 @@
 package com.ruoyi.phone.controller.api;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -9,6 +10,7 @@ import com.ruoyi.phone.domain.PhoneCommissionLog;
 import com.ruoyi.phone.service.IPhoneCommissionLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ import java.util.List;
 @Api("佣金管理")
 @RestController
 @RequestMapping("/api/phone/commission")
+@Slf4j
 public class PhoneCommissionControllerApi extends BaseController {
     private final IPhoneCommissionLogService phoneCommissionLogService;
 
@@ -48,6 +51,7 @@ public class PhoneCommissionControllerApi extends BaseController {
     @Log(title = "发起佣金提现", businessType = BusinessType.INSERT)
     @PostMapping(value = "initiateCommission")
     public AjaxResult initiateCommission(@RequestBody PhoneCommissionLog phoneCommissionLog) {
+        log.info("佣金提现接收到参数：{}", JSON.toJSONString(phoneCommissionLog));
         //判断是否有待审批的佣金提现记录
         PhoneCommissionLog query = new PhoneCommissionLog();
         query.setMemberId(phoneCommissionLog.getMemberId());

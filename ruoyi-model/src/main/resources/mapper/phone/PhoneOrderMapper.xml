@@ -436,4 +436,56 @@
         </where>
         group by months
     </select>
+
+    <select id="getOrderListCount" resultType="java.util.Map" parameterType="DataRequest">
+        SELECT
+               wc.app_id as appId,
+               IFNULL(sum(o.money),0) as orderMoney,
+               count(o.id) as orderCount
+        FROM phone_wechat_config wc
+                 LEFT JOIN phone_order o  ON wc.app_id = o.app_id
+        left join sys_dept d on wc.dept_id = d.dept_id
+        <where>
+            wc.id != 1
+            <if test="appId != null and appId != ''">
+                AND wc.app_id = #{appId}
+            </if>
+            <if test="title != null and title != ''">
+                AND wc.title like concat('%',#{title},'%')
+            </if>
+            <if test="beginDate != null and endDate != null">
+                AND o.create_time &gt;= #{beginDate}
+                AND o.create_time &lt;= #{endDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        GROUP BY wc.app_id
+    </select>
+
+    <select id="getArrivalOrderListCount" resultType="java.util.Map" parameterType="DataRequest">
+        SELECT
+               wc.app_id as appId,
+               IFNULL(SUM(o.money),0) as successMoney,
+               count(o.id) as orderSuccessCount
+        FROM phone_wechat_config wc
+                 LEFT JOIN phone_order o  ON wc.app_id = o.app_id
+        left join sys_dept d on wc.dept_id = d.dept_id
+        <where>
+            wc.id != 1 AND o.arrival_status = 2
+            <if test="appId != null and appId != ''">
+                AND wc.app_id = #{appId}
+            </if>
+            <if test="title != null and title != ''">
+                AND wc.title like concat('%',#{title},'%')
+            </if>
+            <if test="beginDate != null and endDate != null">
+                AND o.top_time &gt;= #{beginDate}
+                AND o.top_time &lt;= #{endDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        GROUP BY wc.app_id
+    </select>
 </mapper>

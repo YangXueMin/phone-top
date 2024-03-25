@@ -3,6 +3,7 @@ package com.ruoyi.phone.controller;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.DataRequest;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.phone.domain.PhoneCommissionLog;
 import com.ruoyi.phone.domain.PhoneOrder;
@@ -85,6 +86,16 @@ public class CountController extends BaseController {
     @PostMapping("/getMonthCount")
     public AjaxResult getMonthCount(@RequestBody PhoneOrder phoneOrder) {
         return success(phoneCountService.getMonthCount(phoneOrder));
+    }
+
+    /**
+     * 统计列表数据
+     */
+    @ApiOperation("统计列表数据")
+    @DataScope(deptAlias = "d")
+    @PostMapping("/getListCount")
+    public AjaxResult getListCount(@RequestBody DataRequest dataRequest) {
+        return success(phoneCountService.getListCount(dataRequest));
     }
 
 }

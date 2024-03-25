@@ -8,7 +8,7 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 /**
  * @author ruoyi
  * @ClassName ImageBuilder
- * @Description
+ * @Description 图片消息
  * @date 2024/3/1 10:16 AM
  */
 public class ImageBuilder extends AbstractBuilder {

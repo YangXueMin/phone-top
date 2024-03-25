@@ -166,4 +166,29 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getListCount" resultType="java.util.Map" parameterType="DataRequest">
+        SELECT
+               wc.app_id as appId,
+               IFNULL(SUM(o.money),0) as money
+        FROM phone_wechat_config wc
+                 LEFT JOIN phone_commission_config o  ON wc.app_id = o.app_id
+        left join sys_dept d on wc.dept_id = d.dept_id
+        <where>
+            wc.id != 1
+            <if test="appId != null and appId != ''">
+                AND wc.app_id = #{appId}
+            </if>
+            <if test="title != null and title != ''">
+                AND wc.title like concat('%',#{title},'%')
+            </if>
+            <if test="beginDate != null and endDate != null">
+                AND o.create_time &gt;= #{beginDate}
+                AND o.create_time &lt;= #{endDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        GROUP BY wc.app_id
+    </select>
 </mapper>

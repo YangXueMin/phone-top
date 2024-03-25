@@ -1,5 +1,6 @@
 package com.ruoyi.system.mapper;
 
+import com.ruoyi.common.core.domain.entity.DataRequest;
 import com.ruoyi.common.core.domain.entity.Member;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
@@ -112,4 +113,18 @@ public interface MemberMapper {
      * @return
      */
     public List<Map<String,Object>> getMonthCount(Member member);
+
+    /**
+     * 统计会员数据
+     * @param dataRequest
+     * @return
+     */
+    public List<Map<String,Object>> getMemberCount(DataRequest dataRequest);
+
+    /**
+     * 统计会员时间数据
+     * @param dataRequest
+     * @return
+     */
+    public List<Map<String,Object>> getMemberDateCount(DataRequest dataRequest);
 }

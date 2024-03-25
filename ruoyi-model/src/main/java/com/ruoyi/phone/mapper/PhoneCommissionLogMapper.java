@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.entity.DataRequest;
 import com.ruoyi.phone.domain.PhoneOrder;
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.phone.domain.PhoneCommissionLog;
@@ -78,4 +79,13 @@ public interface PhoneCommissionLogMapper
      * @return
      */
     public List<Map<String,Object>> getMonthCountMoney(PhoneCommissionLog phoneCommissionLog);
+
+    /**
+     * 统计列表数据
+     * @param dataRequest
+     * @return
+     */
+    public List<Map<String,Object>> getListCount(DataRequest dataRequest);
+
+
 }

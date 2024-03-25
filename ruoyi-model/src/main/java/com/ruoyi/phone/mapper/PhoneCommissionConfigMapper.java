@@ -1,6 +1,9 @@
 package com.ruoyi.phone.mapper;
 
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.common.core.domain.entity.DataRequest;
 import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.phone.domain.PhoneCommissionConfig;
 
@@ -60,4 +63,11 @@ public interface PhoneCommissionConfigMapper
      * @return 结果
      */
     public int deletePhoneCommissionConfigByIds(Long[] ids);
+
+    /**
+     * 统计列表数据
+     * @param dataRequest
+     * @return
+     */
+    public List<Map<String,Object>> getListCount(DataRequest dataRequest);
 }

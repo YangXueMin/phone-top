@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PhoneWechatMessageMapper">
+
+    <resultMap type="PhoneWechatMessage" id="PhoneWechatMessageResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="touchType"    column="touch_type"    />
+        <result property="keyWord"    column="key_word"    />
+        <result property="msgType"    column="msg_type"    />
+        <result property="matchingType"    column="matching_type"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="hqPicUrl"    column="hq_pic_url"    />
+        <result property="url"    column="url"    />
+        <result property="content"    column="content"    />
+        <result property="mediaId"    column="media_id"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPhoneWechatMessageVo">
+        select
+            a.id,
+            a.dept_id,
+            a.app_id,
+            a.touch_type,
+            a.key_word,
+            a.msg_type,
+            a.matching_type,
+            a.title,
+            a.description,
+            a.pic_url,
+            a.hq_pic_url,
+            a.url,
+            a.content,
+            a.media_id,
+               a.status,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_wechat_message a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectPhoneWechatMessageList" parameterType="PhoneWechatMessage" resultMap="PhoneWechatMessageResult">
+        <include refid="selectPhoneWechatMessageVo"/>
+        <where>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="touchType != null  and touchType != ''"> and a.touch_type = #{touchType}</if>
+            <if test="keyWord != null  and keyWord != ''"> and a.key_word LIKE CONCAT('%',#{keyWord},'%')</if>
+            <if test="msgType != null  and msgType != ''"> and a.msg_type = #{msgType}</if>
+            <if test="matchingType != null  and matchingType != ''"> and a.matching_type = #{matchingType}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="description != null  and description != ''"> and a.description = #{description}</if>
+            <if test="picUrl != null  and picUrl != ''"> and a.pic_url = #{picUrl}</if>
+            <if test="hqPicUrl != null  and hqPicUrl != ''"> and a.hq_pic_url = #{hqPicUrl}</if>
+            <if test="url != null  and url != ''"> and a.url = #{url}</if>
+            <if test="content != null  and content != ''"> and a.content = #{content}</if>
+            <if test="mediaId != null  and mediaId != ''"> and a.media_id = #{mediaId}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectPhoneWechatMessageById" parameterType="Long" resultMap="PhoneWechatMessageResult">
+        <include refid="selectPhoneWechatMessageVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPhoneWechatMessage" parameterType="PhoneWechatMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_wechat_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="touchType != null">touch_type,</if>
+            <if test="keyWord != null">key_word,</if>
+            <if test="msgType != null">msg_type,</if>
+            <if test="matchingType != null">matching_type,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="picUrl != null">pic_url,</if>
+            <if test="hqPicUrl != null">hq_pic_url,</if>
+            <if test="url != null">url,</if>
+            <if test="content != null">content,</if>
+            <if test="mediaId != null">media_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="touchType != null">#{touchType},</if>
+            <if test="keyWord != null">#{keyWord},</if>
+            <if test="msgType != null">#{msgType},</if>
+            <if test="matchingType != null">#{matchingType},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="picUrl != null">#{picUrl},</if>
+            <if test="hqPicUrl != null">#{hqPicUrl},</if>
+            <if test="url != null">#{url},</if>
+            <if test="content != null">#{content},</if>
+            <if test="mediaId != null">#{mediaId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneWechatMessage" parameterType="PhoneWechatMessage">
+        update phone_wechat_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="touchType != null">touch_type = #{touchType},</if>
+            <if test="keyWord != null">key_word = #{keyWord},</if>
+            <if test="msgType != null">msg_type = #{msgType},</if>
+            <if test="matchingType != null">matching_type = #{matchingType},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="picUrl != null">pic_url = #{picUrl},</if>
+            <if test="hqPicUrl != null">hq_pic_url = #{hqPicUrl},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="mediaId != null">media_id = #{mediaId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneWechatMessageById" parameterType="Long">
+        delete from phone_wechat_message where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneWechatMessageByIds" parameterType="String">
+        delete from phone_wechat_message where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

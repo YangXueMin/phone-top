@@ -2,6 +2,7 @@ package com.ruoyi.phone.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.Bidi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,18 +77,18 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
             phoneCommissionLog.setCommissionAfter(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
             phoneCommissionLog.setDeptId(member.getDeptId());
             phoneCommissionLog.setAppId(member.getAppId());
-            if(StringUtils.equals("1",phoneCommissionLog.getType())){
+            if (StringUtils.equals("1", phoneCommissionLog.getType())) {
                 phoneCommissionLog.setAuditStatus("2");
                 phoneCommissionLog.setChargeMoney(BigDecimal.ZERO);
                 member.setBalance(member.getBalance().add(phoneCommissionLog.getMoney()));
                 member.setCommissionBalance(member.getCommissionBalance().subtract(phoneCommissionLog.getMoney()));
-                member.setWithdrawalAmount(member.getWithdrawalAmount().add(phoneCommissionLog.getMoney()));
+                member.setWithdrawalAmount((member.getWithdrawalAmount() != null ? member.getWithdrawalAmount() : BigDecimal.ZERO).add(phoneCommissionLog.getMoney()));
                 memberMapper.updateMember(member);
-            }else {
-                final PhoneCompanyConfig phoneCompanyConfig = phoneCompanyConfigService.selectPhoneCompanyConfigByAppId(member.getAppId());
-                if(phoneCompanyConfig.getCommissionRate() != null){
+            } else {
+                PhoneCompanyConfig phoneCompanyConfig = phoneCompanyConfigService.selectPhoneCompanyConfigByAppId(member.getAppId());
+                if (phoneCompanyConfig.getCommissionRate() != null) {
                     BigDecimal decimal = phoneCommissionLog.getMoney().multiply(phoneCompanyConfig.getCommissionRate()).setScale(2, RoundingMode.HALF_UP);
-                    phoneCommissionLog.setMoney(phoneCommissionLog.getMoney().subtract(decimal));
+                    phoneCommissionLog.setMoney(phoneCommissionLog.getMoney().subtract(phoneCommissionLog.getMoney()));
                     phoneCommissionLog.setChargeMoney(decimal);
                 }
             }
@@ -119,7 +120,7 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
             Member member = memberMapper.selectMemberById(phoneCommissionLog.getMemberId());
             BigDecimal money = phoneCommissionLog.getMoney().add(phoneCommissionLog.getChargeMoney());
             member.setCommissionBalance(member.getCommissionBalance().subtract(money));
-            member.setWithdrawalAmount(member.getWithdrawalAmount().add(money));
+            member.setWithdrawalAmount((member.getWithdrawalAmount() != null ? member.getWithdrawalAmount() : BigDecimal.ZERO).add(money));
             memberMapper.updateMember(member);
         }
         return phoneCommissionLogMapper.updatePhoneCommissionLog(phoneCommissionLog);

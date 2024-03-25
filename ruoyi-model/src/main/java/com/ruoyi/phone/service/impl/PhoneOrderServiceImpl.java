@@ -173,7 +173,25 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public int updatePhoneOrder(PhoneOrder phoneOrder) {
         phoneOrder.setUpdateTime(DateUtils.getNowDate());
+        Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
         if (StringUtils.equals("4", phoneOrder.getArrivalStatus())) {
+            if(phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0){
+                //回退余额给用户
+                BigDecimal balance = member.getBalance();
+                member.setBalance(balance.add(phoneOrder.getPayBalance()));
+                memberMapper.updateMember(member);
+                //添加余额变更记录
+                PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
+                phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
+                phoneBalanceLog.setAppId(phoneOrder.getAppId());
+                phoneBalanceLog.setMemberId(member.getId());
+                phoneBalanceLog.setType("3");
+                phoneBalanceLog.setBalanceBefore(balance);
+                phoneBalanceLog.setMoney(phoneOrder.getPayBalance());
+                phoneBalanceLog.setBalanceAfter(member.getBalance());
+                phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
+                phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+            }
             //调用取消接口
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
             phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
@@ -199,31 +217,14 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     e.printStackTrace();
                 }
             }
+        }else if(StringUtils.equals("2", phoneOrder.getArrivalStatus())){
+            phoneOrder.setTopTime(DateUtils.getNowDate());
         }
         int i = phoneOrderMapper.updatePhoneOrder(phoneOrder);
         if (i > 0) {
             phoneOrder = phoneOrderMapper.selectPhoneOrderById(phoneOrder.getId());
             PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-            Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
             updateMemberInfoMoney(phoneOrder, phonePrice, member);
-            if((StringUtils.equals("3",phoneOrder.getPayStatus()) || StringUtils.equals("4",phoneOrder.getPayStatus()))
-                    && phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0){
-                //回退余额给用户
-                BigDecimal balance = member.getBalance();
-                member.setBalance(balance.add(phoneOrder.getPayBalance()));
-                memberMapper.updateMember(member);
-                //添加余额变更记录
-                PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-                phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
-                phoneBalanceLog.setAppId(phoneOrder.getAppId());
-                phoneBalanceLog.setMemberId(member.getId());
-                phoneBalanceLog.setType("3");
-                phoneBalanceLog.setBalanceBefore(balance);
-                phoneBalanceLog.setMoney(phoneOrder.getPayBalance());
-                phoneBalanceLog.setBalanceAfter(member.getBalance());
-                phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
-                phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
-            }
         }
         return i;
     }
@@ -524,41 +525,16 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         }
                     }
                 }
-            }
-            //送优惠券
-            PhoneCoupon phoneCoupon = new PhoneCoupon();
-            phoneCoupon.setAppId(phoneOrder.getAppId());
-            List<PhoneCoupon> phoneCouponList = phoneCouponMapper.selectPhoneCouponList(phoneCoupon);
-            if (phoneCouponList.size() > 0) {
-                List<PhoneMemberCoupon> memberCouponList = new ArrayList<>();
-                for (PhoneCoupon coupon : phoneCouponList) {
-                    switch (coupon.getDistributionMode()) {
-                        case "1":
-                            //充值送
-                            if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
-                                int num = 1;
-                                if (coupon.getNumber() != null) {
-                                    num = coupon.getNumber().intValue();
-                                }
-                                for (int i = 0; i < num; i++) {
-                                    PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
-                                    phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
-                                    phoneMemberCoupon.setAppId(phoneOrder.getAppId());
-                                    phoneMemberCoupon.setMemberId(member.getId());
-                                    phoneMemberCoupon.setCouponId(coupon.getId());
-                                    phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
-                                    phoneMemberCoupon.setStatus("1");
-                                    phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
-                                    memberCouponList.add(phoneMemberCoupon);
-                                }
-                            }
-                            break;
-                        case "3":
-                            //首单送
-                            PhoneOrder queryOrder = new PhoneOrder();
-                            queryOrder.setMemberId(member.getId());
-                            List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
-                            if (phoneOrderList.size() == 1) {
+                //送优惠券
+                PhoneCoupon phoneCoupon = new PhoneCoupon();
+                phoneCoupon.setAppId(phoneOrder.getAppId());
+                List<PhoneCoupon> phoneCouponList = phoneCouponMapper.selectPhoneCouponList(phoneCoupon);
+                if (phoneCouponList.size() > 0) {
+                    List<PhoneMemberCoupon> memberCouponList = new ArrayList<>();
+                    for (PhoneCoupon coupon : phoneCouponList) {
+                        switch (coupon.getDistributionMode()) {
+                            case "1":
+                                //充值送
                                 if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
                                     int num = 1;
                                     if (coupon.getNumber() != null) {
@@ -568,7 +544,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                         PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
                                         phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
                                         phoneMemberCoupon.setAppId(phoneOrder.getAppId());
-                                        phoneMemberCoupon.setMemberId(member.getId());
+                                        phoneMemberCoupon.setMemberId(member.getMemberId());
                                         phoneMemberCoupon.setCouponId(coupon.getId());
                                         phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
                                         phoneMemberCoupon.setStatus("1");
@@ -576,15 +552,40 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                         memberCouponList.add(phoneMemberCoupon);
                                     }
                                 }
-                            }
-                            break;
-                        default:
-                            break;
+                                break;
+                            case "3":
+                                //首单送
+                                PhoneOrder queryOrder = new PhoneOrder();
+                                queryOrder.setMemberId(member.getId());
+                                List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
+                                if (phoneOrderList.size() == 1) {
+                                    if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                        int num = 1;
+                                        if (coupon.getNumber() != null) {
+                                            num = coupon.getNumber().intValue();
+                                        }
+                                        for (int i = 0; i < num; i++) {
+                                            PhoneMemberCoupon phoneMemberCoupon = new PhoneMemberCoupon();
+                                            phoneMemberCoupon.setDeptId(phoneOrder.getDeptId());
+                                            phoneMemberCoupon.setAppId(phoneOrder.getAppId());
+                                            phoneMemberCoupon.setMemberId(member.getMemberId());
+                                            phoneMemberCoupon.setCouponId(coupon.getId());
+                                            phoneMemberCoupon.setExpirationTime(DateUtil.endOfDate(DateUtil.addDays(DateUtils.getNowDate(), coupon.getTermValidity().intValue())));
+                                            phoneMemberCoupon.setStatus("1");
+                                            phoneMemberCoupon.setCreateTime(DateUtils.getNowDate());
+                                            memberCouponList.add(phoneMemberCoupon);
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
-                if (memberCouponList.size() > 0) {
-                    for (PhoneMemberCoupon phoneMemberCoupon : memberCouponList) {
-                        phoneMemberCouponMapper.insertPhoneMemberCoupon(phoneMemberCoupon);
+                    if (memberCouponList.size() > 0) {
+                        for (PhoneMemberCoupon phoneMemberCoupon : memberCouponList) {
+                            phoneMemberCouponMapper.insertPhoneMemberCoupon(phoneMemberCoupon);
+                        }
                     }
                 }
             }

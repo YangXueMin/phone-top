@@ -103,6 +103,22 @@ public class PhoneCompanyConfig extends BaseEntity{
     @ApiModelProperty("优惠金额")
     private BigDecimal couponPrice;
 
+    /** 会员卡标题 */
+    @Excel(name = "会员卡标题")
+    @ApiModelProperty("会员卡标题")
+    private String cardTitle;
+
+    /** 会员卡介绍 */
+    @Excel(name = "会员卡介绍")
+    @ApiModelProperty("会员卡介绍")
+    private String cardIntroduce;
+
+    /** 会员卡内容 */
+    @Excel(name = "会员卡内容")
+    @ApiModelProperty("会员卡内容")
+    private String cardContent;
+
+
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
 
@@ -239,5 +255,29 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setCouponPrice(BigDecimal couponPrice) {
         this.couponPrice = couponPrice;
+    }
+
+    public String getCardTitle() {
+        return cardTitle;
+    }
+
+    public void setCardTitle(String cardTitle) {
+        this.cardTitle = cardTitle;
+    }
+
+    public String getCardIntroduce() {
+        return cardIntroduce;
+    }
+
+    public void setCardIntroduce(String cardIntroduce) {
+        this.cardIntroduce = cardIntroduce;
+    }
+
+    public String getCardContent() {
+        return cardContent;
+    }
+
+    public void setCardContent(String cardContent) {
+        this.cardContent = cardContent;
     }
 }

@@ -88,7 +88,7 @@
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        ORDER BY a.create_time DESC
+        ORDER BY a.order_num
     </select>
 
     <select id="selectPhoneMemberCardById" parameterType="Long" resultMap="PhoneMemberCardResult">

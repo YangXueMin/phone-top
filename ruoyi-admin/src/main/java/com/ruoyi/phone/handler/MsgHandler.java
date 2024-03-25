@@ -1,15 +1,20 @@
 package com.ruoyi.phone.handler;
 
 import com.ruoyi.common.config.builder.TextBuilder;
+import com.ruoyi.common.core.domain.entity.PhoneWechatMessage;
 import com.ruoyi.common.utils.JsonUtils;
+import com.ruoyi.system.service.IPhoneWechatMessageService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.config.WxMpConfigStorage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType;
@@ -22,12 +27,16 @@ import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType;
  */
 @Component
 public class MsgHandler extends AbstractHandler {
+    @Autowired
+    private MessageUtil messageUtil;
+    @Autowired
+    private IPhoneWechatMessageService wechatMessageService;
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
-                                    Map<String, Object> context, WxMpService weixinService,
+                                    Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
-
+        final WxMpConfigStorage wxMpConfigStorage = wxMpService.getWxMpConfigStorage();
         if (!wxMessage.getMsgType().equals(XmlMsgType.EVENT)) {
             //TODO 可以选择将消息保存到本地
         }
@@ -35,7 +44,7 @@ public class MsgHandler extends AbstractHandler {
         //当用户输入关键词如“你好”，“客服”等，并且有客服在线时，把消息转发给在线客服
         try {
             if (StringUtils.startsWithAny(wxMessage.getContent(), "你好", "客服")
-                    && weixinService.getKefuService().kfOnlineList()
+                    && wxMpService.getKefuService().kfOnlineList()
                     .getKfOnlineList().size() > 0) {
                 return WxMpXmlOutMessage.TRANSFER_CUSTOMER_SERVICE()
                         .fromUser(wxMessage.getToUser())
@@ -44,11 +53,27 @@ public class MsgHandler extends AbstractHandler {
         } catch (WxErrorException e) {
             e.printStackTrace();
         }
-
-        //TODO 组装回复消息
-        String content = "新人会员添加信息";
-
-        return new TextBuilder().build(content, wxMessage, weixinService);
+        PhoneWechatMessage phoneWechatMessage = new PhoneWechatMessage();
+        phoneWechatMessage.setAppId(wxMpConfigStorage.getAppId());
+        phoneWechatMessage.setTouchType("2");
+        phoneWechatMessage.setStatus("1");
+        phoneWechatMessage.setKeyWord(wxMessage.getContent());
+        List<PhoneWechatMessage> messageList = wechatMessageService.selectPhoneWechatMessageList(phoneWechatMessage);
+        if (messageList.size() > 0) {
+            for (PhoneWechatMessage wechatMessage : messageList) {
+                if (StringUtils.equals("2", wechatMessage.getMatchingType())) {
+                    if (StringUtils.equals(wxMessage.getContent(), wechatMessage.getKeyWord())) {
+                        return messageUtil.sendMessage(wechatMessage, wxMessage, wxMpService);
+                    }
+                } else {
+                    //如果是模糊匹配
+                    if (wxMessage.getContent().contains(wechatMessage.getKeyWord())) {
+                        return messageUtil.sendMessage(wechatMessage, wxMessage, wxMpService);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

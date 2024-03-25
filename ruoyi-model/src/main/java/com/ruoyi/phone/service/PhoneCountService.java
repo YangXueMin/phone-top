@@ -1,6 +1,7 @@
 package com.ruoyi.phone.service;
 
 import com.alibaba.fastjson2.JSONArray;
+import com.ruoyi.common.core.domain.entity.DataRequest;
 import com.ruoyi.phone.domain.PhoneOrder;
 
 /**
@@ -18,4 +19,12 @@ public interface PhoneCountService {
      * @return
      */
     JSONArray getMonthCount(PhoneOrder phoneOrder);
+
+    /**
+     * 统计列表数据
+     *
+     * @param dataRequest
+     * @return
+     */
+    JSONArray getListCount(DataRequest dataRequest);
 }
