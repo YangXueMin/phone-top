@@ -9,6 +9,10 @@
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="promotionPoster"    column="promotion_poster"    />
+        <result property="XAxis"    column="X_axis"    />
+        <result property="YAxis"    column="Y_axis"    />
+        <result property="codeWidth"    column="code_width"    />
+        <result property="codeHeight"    column="code_height"    />
         <result property="slowChargingContent"    column="slow_charging_content"    />
         <result property="quickChargeContent"    column="quick_charge_content"    />
         <result property="electricityContent"    column="electricity_content"    />
@@ -43,6 +47,10 @@
             a.dept_id,
             a.app_id,
             a.promotion_poster,
+               a.X_axis,
+               a.Y_axis,
+               a.code_width,
+               a.code_height,
             a.slow_charging_content,
             a.quick_charge_content,
             a.electricity_content,
@@ -99,6 +107,10 @@
             <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="promotionPoster != null">promotion_poster,</if>
+            <if test="XAxis != null">X_axis,</if>
+            <if test="YAxis != null">Y_axis,</if>
+            <if test="codeWidth != null">code_width,</if>
+            <if test="codeHeight != null">code_height,</if>
             <if test="slowChargingContent != null">slow_charging_content,</if>
             <if test="quickChargeContent != null">quick_charge_content,</if>
             <if test="electricityContent != null">electricity_content,</if>
@@ -125,6 +137,10 @@
             <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="promotionPoster != null">#{promotionPoster},</if>
+            <if test="XAxis != null">#{XAxis},</if>
+            <if test="YAxis != null">#{YAxis},</if>
+            <if test="codeWidth != null">#{codeWidth},</if>
+            <if test="codeHeight != null">#{codeHeight},</if>
             <if test="slowChargingContent != null">#{slowChargingContent},</if>
             <if test="quickChargeContent != null">#{quickChargeContent},</if>
             <if test="electricityContent != null">#{electricityContent},</if>
@@ -155,6 +171,10 @@
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="promotionPoster != null">promotion_poster = #{promotionPoster},</if>
+            <if test="XAxis != null">X_axis = #{XAxis},</if>
+            <if test="YAxis != null">Y_axis = #{YAxis},</if>
+            <if test="codeWidth != null">code_width = #{codeWidth},</if>
+            <if test="codeHeight != null">code_height = #{codeHeight},</if>
             <if test="slowChargingContent != null">slow_charging_content = #{slowChargingContent},</if>
             <if test="quickChargeContent != null">quick_charge_content = #{quickChargeContent},</if>
             <if test="electricityContent != null">electricity_content = #{electricityContent},</if>

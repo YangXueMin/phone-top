@@ -38,6 +38,26 @@ public class PhoneCompanyConfig extends BaseEntity{
     @ApiModelProperty("推广海报")
     private String promotionPoster;
 
+    /** 图片放入推广海报X轴 */
+    @Excel(name = "图片放入推广海报X轴")
+    @ApiModelProperty("图片放入推广海报X轴")
+    private Integer XAxis;
+
+    /** 图片放入推广海报Y轴 */
+    @Excel(name = "图片放入推广海报Y轴")
+    @ApiModelProperty("图片放入推广海报Y轴")
+    private Integer YAxis;
+
+    /** 二维码宽度 */
+    @Excel(name = "二维码宽度")
+    @ApiModelProperty("二维码宽度")
+    private Integer codeWidth;
+
+    /** 二维码高度 */
+    @Excel(name = "二维码高度")
+    @ApiModelProperty("二维码高度")
+    private Integer codeHeight;
+
     /** 慢充简介 */
     @Excel(name = "慢充简介")
     @ApiModelProperty("慢充简介")
@@ -279,5 +299,37 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setCardContent(String cardContent) {
         this.cardContent = cardContent;
+    }
+
+    public Integer getXAxis() {
+        return XAxis;
+    }
+
+    public void setXAxis(Integer XAxis) {
+        this.XAxis = XAxis;
+    }
+
+    public Integer getYAxis() {
+        return YAxis;
+    }
+
+    public void setYAxis(Integer YAxis) {
+        this.YAxis = YAxis;
+    }
+
+    public Integer getCodeWidth() {
+        return codeWidth;
+    }
+
+    public void setCodeWidth(Integer codeWidth) {
+        this.codeWidth = codeWidth;
+    }
+
+    public Integer getCodeHeight() {
+        return codeHeight;
+    }
+
+    public void setCodeHeight(Integer codeHeight) {
+        this.codeHeight = codeHeight;
     }
 }
