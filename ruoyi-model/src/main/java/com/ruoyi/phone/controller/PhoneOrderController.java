@@ -123,6 +123,7 @@ public class PhoneOrderController extends BaseController {
         if (phoneOrder.getPayMoney().compareTo(refundMoney) < 0) {
             return warn("退款金额不能大于支付金额");
         }
+        phoneOrder.setRefundMoney(refundMoney);
         return success(phoneOrderService.refund(phoneOrder));
     }
 

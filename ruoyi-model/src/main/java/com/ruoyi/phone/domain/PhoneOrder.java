@@ -202,7 +202,7 @@ public class PhoneOrder extends BaseEntity {
      * 到账状态(0：代充值，1:充值中，2：充值成功，3：充
      */
     @Excel(name = "到账状态(0：代充值，1:充值中，2：充值成功，3：充值失败")
-    @ApiModelProperty("到账状态(字典值：phone_arrival_status 0：代充值，1:充值中，2：充值成功，3：充值失败")
+    @ApiModelProperty("到账状态(字典值：phone_arrival_status 0：代充值，1:充值中，2：充值成功，3：充值失败，4：取消中，5：已取消")
     private String arrivalStatus;
 
     /**
