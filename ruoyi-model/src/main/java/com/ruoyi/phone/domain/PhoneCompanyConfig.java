@@ -41,12 +41,12 @@ public class PhoneCompanyConfig extends BaseEntity{
     /** 图片放入推广海报X轴 */
     @Excel(name = "图片放入推广海报X轴")
     @ApiModelProperty("图片放入推广海报X轴")
-    private Integer XAxis;
+    private Integer xAxis;
 
     /** 图片放入推广海报Y轴 */
     @Excel(name = "图片放入推广海报Y轴")
     @ApiModelProperty("图片放入推广海报Y轴")
-    private Integer YAxis;
+    private Integer yAxis;
 
     /** 二维码宽度 */
     @Excel(name = "二维码宽度")
@@ -301,20 +301,20 @@ public class PhoneCompanyConfig extends BaseEntity{
         this.cardContent = cardContent;
     }
 
-    public Integer getXAxis() {
-        return XAxis;
+    public Integer getxAxis() {
+        return xAxis;
     }
 
-    public void setXAxis(Integer XAxis) {
-        this.XAxis = XAxis;
+    public void setxAxis(Integer xAxis) {
+        this.xAxis = xAxis;
     }
 
-    public Integer getYAxis() {
-        return YAxis;
+    public Integer getyAxis() {
+        return yAxis;
     }
 
-    public void setYAxis(Integer YAxis) {
-        this.YAxis = YAxis;
+    public void setyAxis(Integer yAxis) {
+        this.yAxis = yAxis;
     }
 
     public Integer getCodeWidth() {

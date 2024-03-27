@@ -1,5 +1,6 @@
 package com.ruoyi.phone.controller.api;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -15,6 +16,7 @@ import com.ruoyi.phone.service.IPhoneCompanyConfigService;
 import com.ruoyi.system.service.IMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,7 @@ import java.util.Base64;
 @Api("会员管理")
 @RestController
 @RequestMapping("/api/phone/member")
+@Slf4j
 public class MemberControllerApi extends BaseController {
     @Autowired
     private IMemberService memberService;
@@ -118,8 +121,9 @@ public class MemberControllerApi extends BaseController {
     @PostMapping("/getInviteQrCode")
     public AjaxResult invitePicture() {
         try {
-            if (SecurityUtils.getLoginUser().getMember() != null) {
-                PhoneCompanyConfig phoneCompanyConfig = companyConfigService.selectPhoneCompanyConfigByAppId(SecurityUtils.getLoginUser().getMember().getAppId());
+            Member member = SecurityUtils.getLoginUser().getMember();
+            if (member != null) {
+                PhoneCompanyConfig phoneCompanyConfig = companyConfigService.selectPhoneCompanyConfigByAppId(member.getAppId());
                 if (phoneCompanyConfig != null) {
                     BufferedImage baseImage = ImageIO.read(new URL(phoneCompanyConfig.getPromotionPoster()));
 
@@ -138,7 +142,7 @@ public class MemberControllerApi extends BaseController {
                     //绘制地图
                     g2d.drawImage(baseImage, 0, 0, null);
                     //绘制顶图  170 700
-                    g2d.drawImage(topImage, phoneCompanyConfig.getXAxis(), phoneCompanyConfig.getYAxis(), null);
+                    g2d.drawImage(topImage, phoneCompanyConfig.getxAxis(), phoneCompanyConfig.getyAxis(), null);
 
                     // 将 BufferedImage 对象写入 ByteArrayOutputStream
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -148,7 +152,7 @@ public class MemberControllerApi extends BaseController {
                     String base64 = Base64.getEncoder().encodeToString(imageBytes);
                     //释放资源
                     g2d.dispose();
-                    AjaxResult.success("合并图片成功", base64);
+                    return AjaxResult.success("合并图片成功", base64);
                 }
             }
         } catch (IOException e) {
