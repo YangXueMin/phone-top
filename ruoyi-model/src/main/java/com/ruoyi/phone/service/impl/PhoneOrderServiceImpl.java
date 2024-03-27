@@ -31,6 +31,7 @@ import com.ruoyi.phone.mapper.*;
 import com.ruoyi.phone.service.*;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IWechatConfigService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2024-03-05
  */
 @Service
+@Slf4j
 public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Autowired
     private PhoneOrderMapper phoneOrderMapper;
@@ -163,7 +165,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
         }
         phoneOrderMapper.insertPhoneOrder(phoneOrder);
-        topOrder(phoneOrder, phonePrice, member);
+        topOrder(phoneOrder, phonePrice);
         return phoneOrder;
     }
 
@@ -217,7 +219,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 try {
                     params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
                     String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.CANCEL_ORDER, JSON.toJSONString(params));
-                    System.out.println("发送请求到第三方返回：" + post);
+                    log.info("发送请求到第三方返回：" + post);
                     if (StringUtils.isNotBlank(post) && JsonUtils.isJson2(post)) {
                         JSONObject jsonObject = JSON.parseObject(post);
                         if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
@@ -359,7 +361,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     phoneOrder.setUpdateTime(DateUtils.getNowDate());
                     phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-                    topOrder(phoneOrder, phonePrice, member);
+                    topOrder(phoneOrder, phonePrice);
                 }
             }
             return WxPayNotifyResponse.success("成功");
@@ -419,7 +421,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
     @Override
     public String topNotify(TopNotifyRequest requestBody) {
-        System.out.println(JSON.toJSONString(requestBody));
+        log.info(JSON.toJSONString(requestBody));
         List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOut_trade_num());
         if (phoneOrderList != null && phoneOrderList.size() > 0) {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
@@ -486,30 +488,42 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
      * 充值
      *
      * @param phoneOrder
-     * @param member
+     * @param phonePrice
      */
     @Transactional(rollbackFor = Exception.class)
-    public void topOrder(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member) {
+    public void topOrder(PhoneOrder phoneOrder, PhonePrice phonePrice) {
         if (StringUtils.equals("2", phoneOrder.getPayStatus())) {
-            System.out.println("开始调用充值第三方接口");
-            //如果是直充
-            PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
-            phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
-            phoneInterfaceConfig.setSwitchType("1");
-            List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
-            if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
-                phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
-                if (phonePrice != null && !StringUtils.equals("1", phonePrice.getRechargeType())) {
+            log.info("价格类型数据：{}", JSON.toJSONString(phonePrice));
+            log.info("调用第三方充值判断：{}", phonePrice != null && !StringUtils.equals("1", phonePrice.getRechargeType()));
+            if (phonePrice != null && !StringUtils.equals("1", phonePrice.getRechargeType())) {
+                log.info("开始调用充值第三方接口");
+                //如果是直充
+                PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
+                phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
+                phoneInterfaceConfig.setSwitchType("1");
+                List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
+                if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
+                    phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
+
                     TreeMap<String, String> params = new TreeMap<>();
                     params.put("out_trade_num", phoneOrder.getOrderNo());
                     params.put("mobile", phoneOrder.getAccountNumber());
                     params.put("notify_url", Constants.URL + "/api/phone/order/topNotify");
                     params.put("userid", phoneInterfaceConfig.getMchId());
                     params.put("product_id", phonePrice.getProductId() + "");
+                    if(StringUtils.equals("0",phonePrice.getMethod())){
+                        String[] areas = phoneOrder.getArea().split("-");
+                        params.put("area",areas[0]);
+                        if(StringUtils.equals("5",phonePrice.getMethod())){
+                            params.put("ytype","1");
+                            params.put("id_card_no",phoneOrder.getCardNo());
+                            params.put("city",areas[1]);
+                        }
+                    }
                     try {
                         params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
                         String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.CREATE_ORDER, JSON.toJSONString(params));
-                        System.out.println("发送请求到第三方返回：" + post);
+                        log.info("发送请求到第三方返回：" + post);
                         if (StringUtils.isNotBlank(post) && JsonUtils.isJson2(post)) {
                             JSONObject jsonObject = JSON.parseObject(post);
                             if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
