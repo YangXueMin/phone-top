@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
+import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.time.DateUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,7 +100,11 @@ public class PhoneOrderController extends BaseController {
     @Log(title = "订单记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PhoneOrder phoneOrder) {
-        return toAjax(phoneOrderService.updatePhoneOrder(phoneOrder));
+        try {
+            return toAjax(phoneOrderService.updatePhoneOrder(phoneOrder));
+        } catch (WxPayException e) {
+            return error("修改订单失败，异常信息" + e.getMessage());
+        }
     }
 
     /**
@@ -109,7 +115,7 @@ public class PhoneOrderController extends BaseController {
     @Log(title = "退款", businessType = BusinessType.UPDATE)
     @PostMapping("refund")
     public AjaxResult refund(@RequestBody PhoneOrder phoneOrder) {
-        BigDecimal refundMoney = phoneOrder.getRefundMoney();
+        BigDecimal refundMoney = phoneOrder.getMoney();
         phoneOrder = phoneOrderService.selectPhoneOrderById(phoneOrder.getId());
         if (phoneOrder == null) {
             return warn("订单不存在");
@@ -117,14 +123,20 @@ public class PhoneOrderController extends BaseController {
         if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) == 0) {
             return warn("订单支付金额为0，无需退款");
         }
-        if (phoneOrder.getPayMoney().compareTo(refundMoney) == 0) {
+        if (phoneOrder.getPayMoney().compareTo(phoneOrder.getRefundMoney()) == 0) {
             return warn("当前订单已全部退款，无法退款");
         }
-        if (phoneOrder.getPayMoney().compareTo(refundMoney) < 0) {
+        if (phoneOrder.getPayMoney().compareTo(phoneOrder.getRefundMoney()) < 0) {
             return warn("退款金额不能大于支付金额");
         }
         phoneOrder.setRefundMoney(refundMoney);
-        return success(phoneOrderService.refund(phoneOrder));
+        WxPayRefundResult refund = null;
+        try {
+            refund = phoneOrderService.refund(phoneOrder);
+            return success(refund);
+        } catch (WxPayException e) {
+            return error("退款失败，异常信息" + e.getMessage());
+        }
     }
 
     /**
@@ -135,7 +147,11 @@ public class PhoneOrderController extends BaseController {
     @Log(title = "订单记录", businessType = BusinessType.UPDATE)
     @PostMapping("cancel")
     public AjaxResult cancel(@RequestBody PhoneOrder phoneOrder) {
-        return toAjax(phoneOrderService.cancel(phoneOrder));
+        try {
+            return toAjax(phoneOrderService.cancel(phoneOrder));
+        } catch (WxPayException e) {
+            return error("取消订单失败，异常信息" + e.getMessage());
+        }
     }
 
     /**

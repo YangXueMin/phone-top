@@ -63,6 +63,15 @@ public class OrderControllerApi extends BaseController {
     }
 
     /**
+     * 获取电费区域信息
+     */
+    @ApiOperation("获取电费区域信息")
+    @GetMapping(value = "getElecityArea")
+    public AjaxResult getElecityArea(@RequestParam("appId") String appId) {
+        return success(phoneOrderService.getElecityArea(appId));
+    }
+
+    /**
      * 创建充值订单
      */
     @ApiOperation("创建充值订单")

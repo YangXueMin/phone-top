@@ -3,8 +3,11 @@ package com.ruoyi.phone.service;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundV3Result;
+import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.phone.domain.PhoneMemberCardLog;
 import com.ruoyi.phone.domain.PhoneOrder;
@@ -34,6 +37,13 @@ public interface IPhoneOrderService {
     public List<PhoneOrder> selectPhoneOrderList(PhoneOrder phoneOrder);
 
     /**
+     * 获取第三方电费支持区域
+     * @param appId
+     * @return
+     */
+    public JSONObject getElecityArea(String appId);
+
+    /**
      * 查询订单记录列表
      *
      * @param phoneOrder 订单记录
@@ -55,7 +65,7 @@ public interface IPhoneOrderService {
      * @param phoneOrder 订单记录
      * @return 结果
      */
-    public int updatePhoneOrder(PhoneOrder phoneOrder);
+    public int updatePhoneOrder(PhoneOrder phoneOrder) throws WxPayException;
 
     /**
      * 取消订单记录
@@ -63,7 +73,7 @@ public interface IPhoneOrderService {
      * @param phoneOrder 订单记录
      * @return 结果
      */
-    public int cancel(PhoneOrder phoneOrder);
+    public int cancel(PhoneOrder phoneOrder) throws WxPayException;
 
     /**
      * 批量删除订单记录
@@ -104,7 +114,7 @@ public interface IPhoneOrderService {
      * @param phoneOrder
      * @return
      */
-    public WxPayRefundResult refund(PhoneOrder phoneOrder);
+    public WxPayRefundResult refund(PhoneOrder phoneOrder) throws WxPayException;
 
     /**
      * 退款回调处理

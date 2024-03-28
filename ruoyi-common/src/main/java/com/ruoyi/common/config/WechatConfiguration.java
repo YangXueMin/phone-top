@@ -79,6 +79,8 @@ public class WechatConfiguration {
                 wxPayConfig.setMchId(StringUtils.trimToNull(wechatConfig.getMchId()));
                 wxPayConfig.setMchKey(StringUtils.trimToNull(wechatConfig.getMchKey()));
                 wxPayConfig.setKeyPath(StringUtils.trimToNull(wechatConfig.getKeyPath()));
+                // 可以指定是否使用沙箱环境
+                wxPayConfig.setUseSandboxEnv(false);
                 wxPayService = new WxPayServiceImpl();
                 wxPayService.setConfig(wxPayConfig);
                 wxPayServicesMap.put(wechatConfig.getAppId(), wxPayService);
