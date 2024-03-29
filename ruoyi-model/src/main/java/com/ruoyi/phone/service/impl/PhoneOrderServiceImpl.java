@@ -606,7 +606,6 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 phoneOrder.setTopResult(post);
                             }
                         }
-                        phoneOrder.setRemark("发送请求到第三方返回：" + post + "——请求参数：" + JSON.toJSONString(params));
                         phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     } catch (Exception e) {
                         e.printStackTrace();
