@@ -41,10 +41,13 @@ public class WxPortalController {
         }
         final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
         final WxMpService wxMpService = wechatConfiguration.wxMpService(wechatConfig);
+        if(wxMpService == null){
+            log.info("初始化失败");
+            return "非法请求";
+        }
         if (wxMpService.checkSignature(timestamp, nonce, signature)) {
             return echostr;
         }
-
         return "非法请求";
     }
 
