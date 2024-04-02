@@ -686,7 +686,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         switch (coupon.getDistributionMode()) {
                             case "1":
                                 //充值送
-                                if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                if (phoneOrder.getTopUpMoney().compareTo(coupon.getRechargeAmount()) > -1) {
                                     int num = 1;
                                     if (coupon.getNumber() != null) {
                                         num = coupon.getNumber().intValue();
@@ -710,7 +710,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 queryOrder.setMemberId(member.getId());
                                 List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
                                 if (phoneOrderList.size() == 1) {
-                                    if (phoneOrder.getMoney().compareTo(coupon.getRechargeAmount()) > -1) {
+                                    if (phoneOrder.getTopUpMoney().compareTo(coupon.getRechargeAmount()) > -1) {
                                         int num = 1;
                                         if (coupon.getNumber() != null) {
                                             num = coupon.getNumber().intValue();

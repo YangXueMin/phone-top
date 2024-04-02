@@ -156,12 +156,15 @@
                 <when test="memberId != null  and ancestors != null ">
                     AND a.member_id != #{memberId}
                     and a.ancestors like concat('%,',#{ancestors},',%')
+                    and c.member_id = #{ancestors}
                 </when>
                 <when test="memberId != null and ancestors == null ">
                     and a.member_id = #{memberId}
+                    and c.member_id =  #{memberId}
                 </when>
                 <when test="memberId == null and ancestors != null">
                     and a.ancestors like concat('%,',#{ancestors},',%')
+                    and c.member_id = #{ancestors}
                 </when>
             </choose>
             <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
