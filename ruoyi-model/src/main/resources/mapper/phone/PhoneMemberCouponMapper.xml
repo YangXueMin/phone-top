@@ -116,7 +116,7 @@
             </if>
             <if test="phoneCoupon != null">
                 <if test="phoneCoupon.type != null and phoneCoupon.type != ''">
-                    AND c.type = ${phoneCoupon.type}
+                    AND c.type = #{phoneCoupon.type}
                 </if>
             </if>
             <!-- 数据范围过滤 -->
