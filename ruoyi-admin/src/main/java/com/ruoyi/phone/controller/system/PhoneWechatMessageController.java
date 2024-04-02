@@ -1,5 +1,6 @@
 package com.ruoyi.phone.controller.system;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -36,6 +37,7 @@ public class PhoneWechatMessageController extends BaseController {
      */
     @ApiOperation("查询微信公众号消息类型配置列表")
     @PreAuthorize("@ss.hasPermi('system:wechatMessage:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @GetMapping("/list")
     public TableDataInfo list(PhoneWechatMessage phoneWechatMessage) {
         startPage();
@@ -47,6 +49,7 @@ public class PhoneWechatMessageController extends BaseController {
      * 导出微信公众号消息类型配置列表
      */
     @PreAuthorize("@ss.hasPermi('system:wechatMessage:export')")
+    @DataScope(deptAlias = "d", userAlias = "a")
     @Log(title = "微信公众号消息类型配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PhoneWechatMessage phoneWechatMessage) {
