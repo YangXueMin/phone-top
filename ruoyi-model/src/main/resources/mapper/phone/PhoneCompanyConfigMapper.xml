@@ -29,6 +29,7 @@
         <result property="cardTitle"    column="card_title"    />
         <result property="cardIntroduce"    column="card_introduce"    />
         <result property="cardContent"    column="card_content"    />
+        <result property="inviteTop"    column="invite_top"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -67,6 +68,7 @@
                a.card_title,
                a.card_introduce,
                a.card_content,
+               a.invite_top,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -127,6 +129,7 @@
             <if test="cardTitle != null">card_title,</if>
             <if test="cardIntroduce != null">card_introduce,</if>
             <if test="cardContent != null">card_content,</if>
+            <if test="inviteTop != null">invite_top,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -157,6 +160,7 @@
             <if test="cardTitle != null">#{cardTitle},</if>
             <if test="cardIntroduce != null">#{cardIntroduce},</if>
             <if test="cardContent != null">#{cardContent},</if>
+            <if test="inviteTop != null">#{inviteTop},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -191,6 +195,7 @@
             <if test="cardTitle != null">card_title = #{cardTitle},</if>
             <if test="cardIntroduce != null">card_introduce = #{cardIntroduce},</if>
             <if test="cardContent != null">card_content = #{cardContent},</if>
+            <if test="inviteTop != null">invite_top = #{inviteTop},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

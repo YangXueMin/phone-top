@@ -140,7 +140,23 @@
             count(o.id) as orderNum
         from phone_member a
                  left join phone_commission_config c on a.id = c.commission_member_id
+        <choose>
+            <when test="memberId != null and ancestors == null ">
+                and c.member_id =  #{memberId}
+            </when>
+            <when test="memberId == null and ancestors != null">
+                and c.member_id = #{ancestors}
+            </when>
+        </choose>
                  left join phone_order o on a.id = o.member_id AND o.pay_status = 2
+        <choose>
+            <when test="memberId != null and ancestors == null ">
+                and c.member_id =  #{memberId}
+            </when>
+            <when test="memberId == null and ancestors != null">
+                and c.member_id = #{ancestors}
+            </when>
+        </choose>
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>

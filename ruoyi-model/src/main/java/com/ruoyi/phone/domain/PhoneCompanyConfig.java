@@ -138,6 +138,10 @@ public class PhoneCompanyConfig extends BaseEntity{
     @ApiModelProperty("会员卡内容")
     private String cardContent;
 
+    /** 邀请弹窗内容 */
+    @Excel(name = "邀请弹窗内容")
+    @ApiModelProperty("邀请弹窗内容")
+    private String inviteTop;
 
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
@@ -331,5 +335,13 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setCodeHeight(Integer codeHeight) {
         this.codeHeight = codeHeight;
+    }
+
+    public String getInviteTop() {
+        return inviteTop;
+    }
+
+    public void setInviteTop(String inviteTop) {
+        this.inviteTop = inviteTop;
     }
 }

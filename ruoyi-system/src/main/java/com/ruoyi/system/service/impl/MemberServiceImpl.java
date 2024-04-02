@@ -158,11 +158,14 @@ public class MemberServiceImpl implements IMemberService {
         Long id = SecurityUtils.getLoginUser().getUserId();
 
         if (StringUtils.equals("1", type)) {
+            //一级
             member.setMemberId(id);
         } else if (StringUtils.equals("2", type)) {
+            //二级
             member.setMemberId(id);
             member.setAncestors(id.toString());
         } else {
+            //全部
             member.setAncestors(id.toString());
         }
         return memberMapper.selectSubordinateMemberList(member);
