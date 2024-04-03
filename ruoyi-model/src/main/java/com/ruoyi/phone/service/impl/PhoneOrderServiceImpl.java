@@ -249,6 +249,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
                 phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
                 TreeMap<String, String> params = new TreeMap<>();
+                params.put("userid",phoneInterfaceConfig.getMchId());
                 params.put("out_trade_nums", phoneOrder.getOrderNo());
                 try {
                     params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
@@ -317,6 +318,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
             phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
             TreeMap<String, String> params = new TreeMap<>();
+            params.put("userid",phoneInterfaceConfig.getMchId());
             params.put("out_trade_nums", old.getOrderNo());
             try {
                 params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
@@ -472,26 +474,30 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
     @Override
     public String refundNotify(String xmlData) {
-        final WxPayRefundNotifyResult result = WxPayRefundNotifyResult.fromXML(xmlData, WxPayRefundNotifyResult.class);
-        if (StringUtils.equals("SUCCESS", result.getReturnCode())) {
-            List<PhoneOrder> orderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(result.getReqInfo().getOutTradeNo());
-            if (orderList != null && orderList.size() > 0) {
-                PhoneOrder order = orderList.get(0);
-                order.setPayStatus("3");
-                order.setPayResult(JSON.toJSONString(result));
-                order.setUpdateTime(DateUtils.getNowDate());
-                BigDecimal refundFee = new BigDecimal(result.getReqInfo().getRefundFee()).divide(BigDecimal.valueOf(100L)).setScale(2, RoundingMode.HALF_UP);
-                if (result.getReqInfo().getRefundFee().equals(result.getReqInfo().getTotalFee())) {
-                    order.setRefundMoney(refundFee);
-                } else {
-                    order.setRefundMoney(order.getRefundMoney().add(refundFee));
+        WxPayRefundNotifyResult wxPayRefundNotifyResult = WxPayRefundNotifyResult.fromXML(xmlData, WxPayRefundNotifyResult.class);
+        log.info("退款返回信息：{}",JSON.toJSONString(wxPayRefundNotifyResult));
+        if (StringUtils.equals("SUCCESS", wxPayRefundNotifyResult.getReturnCode())) {
+            WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(wxPayRefundNotifyResult.getAppid());
+            try {
+                WxPayRefundNotifyResult result = wechatConfiguration.wxPayService(wechatConfig).parseRefundNotifyResult(xmlData);
+                List<PhoneOrder> orderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(result.getReqInfo().getOutTradeNo());
+                if (orderList != null && orderList.size() > 0) {
+                    PhoneOrder order = orderList.get(0);
+                    order.setPayStatus("3");
+                    order.setPayResult(JSON.toJSONString(result));
+                    order.setUpdateTime(DateUtils.getNowDate());
+                    BigDecimal refundFee = new BigDecimal(result.getReqInfo().getRefundFee()).divide(BigDecimal.valueOf(100L)).setScale(2, RoundingMode.HALF_UP);
+                    if (result.getReqInfo().getRefundFee().equals(result.getReqInfo().getTotalFee())) {
+                        order.setRefundMoney(refundFee);
+                    } else {
+                        order.setRefundMoney(order.getRefundMoney().add(refundFee));
+                    }
+                    final int i = phoneOrderMapper.updatePhoneOrder(order);
                 }
-                final int i = phoneOrderMapper.updatePhoneOrder(order);
-                if (i > 0) {
-
-                }
+                return WxPayNotifyResponse.success("成功");
+            } catch (WxPayException e) {
+                e.printStackTrace();
             }
-            return WxPayNotifyResponse.success("成功");
         }
         return WxPayNotifyResponse.fail("失败");
     }
