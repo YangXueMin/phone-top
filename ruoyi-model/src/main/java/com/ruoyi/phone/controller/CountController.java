@@ -89,6 +89,16 @@ public class CountController extends BaseController {
     }
 
     /**
+     * 统计数据按月返回
+     */
+    @ApiOperation("统计数据按日返回")
+    @DataScope(deptAlias = "d")
+    @PostMapping("/getDayChartCount")
+    public AjaxResult getDayChartCount(@RequestBody PhoneOrder phoneOrder) {
+        return success(phoneCountService.getDayChartCount(phoneOrder));
+    }
+
+    /**
      * 统计列表数据
      */
     @ApiOperation("统计列表数据")

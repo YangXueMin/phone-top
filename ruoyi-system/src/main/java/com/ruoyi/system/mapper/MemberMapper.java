@@ -112,7 +112,14 @@ public interface MemberMapper {
      * @param member
      * @return
      */
-    public List<Map<String,Object>> getMonthCount(Member member);
+    public List<Map<String,Object>> getDayChartCount(Member member);
+
+    /**
+     * 统计订单总数
+     * @param member
+     * @return
+     */
+    public List<Map<String,Object>> getMonthChartCount(Member member);
 
     /**
      * 统计会员数据

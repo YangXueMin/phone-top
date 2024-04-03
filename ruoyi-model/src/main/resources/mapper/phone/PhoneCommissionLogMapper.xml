@@ -251,12 +251,29 @@
         </where>
     </select>
 
+    <select id="getDayCountMoney" parameterType="PhoneCommissionLog" resultType="java.util.Map">
+        SELECT DATE_FORMAT(a.create_time,'%Y-%m-%d') days,IFNULL(sum(a.money),0) money
+        FROM phone_commission_log a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.audit_status = '2'
+            AND DATE_FORMAT(a.create_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE, '%Y-%m')
+            <if test="appId != null and appId != ''">
+                AND a.app_id = #{appId}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        group by days
+    </select>
+
     <select id="getMonthCountMoney" parameterType="PhoneCommissionLog" resultType="java.util.Map">
         SELECT DATE_FORMAT(a.create_time,'%Y-%m') months,IFNULL(sum(a.money),0) money
         FROM phone_commission_log a
         left join sys_dept d on a.dept_id = d.dept_id
         <where>
             a.audit_status = '2'
+            AND  YEAR(a.create_time) = YEAR(NOW())
             <if test="appId != null and appId != ''">
                 AND a.app_id = #{appId}
             </if>

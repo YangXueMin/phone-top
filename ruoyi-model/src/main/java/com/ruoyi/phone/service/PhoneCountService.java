@@ -13,6 +13,14 @@ import com.ruoyi.phone.domain.PhoneOrder;
 public interface PhoneCountService {
 
     /**
+     * 统计日数据
+     *
+     * @param phoneOrder
+     * @return
+     */
+    JSONArray getDayChartCount(PhoneOrder phoneOrder);
+
+    /**
      * 统计月数据
      *
      * @param phoneOrder

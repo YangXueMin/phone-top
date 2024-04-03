@@ -406,6 +406,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public String payNotify(String xmlData) {
         WxPayOrderNotifyResult notifyResult = WxPayOrderNotifyResult.fromXML(xmlData);
+        log.info("支付回调返回：{}",notifyResult);
         if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
             List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(notifyResult.getOutTradeNo());
             if (phoneOrderList != null && phoneOrderList.size() > 0) {
@@ -564,7 +565,6 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
      * @param phoneOrder
      * @param phonePrice
      */
-    @Transactional(rollbackFor = Exception.class)
     public void topOrder(PhoneOrder phoneOrder, PhonePrice phonePrice) {
         if (StringUtils.equals("2", phoneOrder.getPayStatus())) {
             log.info("价格类型数据：{}", JSON.toJSONString(phonePrice));
@@ -588,7 +588,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     if (StringUtils.equals("0", phonePrice.getMethod())) {
                         String[] areas = phoneOrder.getArea().split("-");
                         params.put("area", areas[0]);
-                        if (StringUtils.equals("5", phonePrice.getMethod())) {
+                        if (StringUtils.equals("5", phonePrice.getType())) {
                             params.put("ytype", "1");
                             params.put("id_card_no", phoneOrder.getCardNo());
                             params.put("city", areas[1]);

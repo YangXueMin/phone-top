@@ -344,11 +344,27 @@
         </where>
     </select>
 
-    <select id="getMonthCount" parameterType="member" resultType="java.util.Map">
+    <select id="getDayChartCount" parameterType="member" resultType="java.util.Map">
+        SELECT DATE_FORMAT(a.create_time,'%Y-%m-%d') days,count(a.id) number
+        FROM phone_member a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            DATE_FORMAT(a.create_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE, '%Y-%m')
+            <if test="appId != null and appId != ''">
+                AND a.app_id = #{appId}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        group by days
+    </select>
+
+    <select id="getMonthChartCount" parameterType="member" resultType="java.util.Map">
         SELECT DATE_FORMAT(a.create_time,'%Y-%m') months,count(a.id) number
         FROM phone_member a
         left join sys_dept d on a.dept_id = d.dept_id
         <where>
+            YEAR(a.create_time) = YEAR(NOW())
             <if test="appId != null and appId != ''">
                 AND a.app_id = #{appId}
             </if>

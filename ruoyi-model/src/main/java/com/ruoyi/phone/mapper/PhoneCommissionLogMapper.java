@@ -78,6 +78,13 @@ public interface PhoneCommissionLogMapper
      * @param phoneCommissionLog
      * @return
      */
+    public List<Map<String,Object>> getDayCountMoney(PhoneCommissionLog phoneCommissionLog);
+
+    /**
+     * 统计支出金额
+     * @param phoneCommissionLog
+     * @return
+     */
     public List<Map<String,Object>> getMonthCountMoney(PhoneCommissionLog phoneCommissionLog);
 
     /**

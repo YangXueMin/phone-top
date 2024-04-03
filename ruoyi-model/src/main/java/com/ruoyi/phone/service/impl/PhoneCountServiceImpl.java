@@ -42,6 +42,32 @@ public class PhoneCountServiceImpl implements PhoneCountService {
 
 
     @Override
+    public JSONArray getDayChartCount(PhoneOrder phoneOrder) {
+        JSONArray result = new JSONArray();
+        Map<String, Object> businessMap = new HashMap<>();
+        businessMap.put("name", "成交额");
+        businessMap.put("data", getOrderMoneyDayCount(phoneOrder));
+        result.add(businessMap);
+
+        Map<String, Object> orderMap = new HashMap<>();
+        orderMap.put("name", "订单");
+        orderMap.put("data", getOrderDayCount(phoneOrder));
+        result.add(orderMap);
+
+        Map<String, Object> memberMap = new HashMap<>();
+        memberMap.put("name", "新增会员");
+        memberMap.put("data", getMemberDayCount(phoneOrder));
+        result.add(memberMap);
+
+        Map<String, Object> expensesMap = new HashMap<>();
+        expensesMap.put("name", "支出");
+        expensesMap.put("data", getCommissionDayCount(phoneOrder));
+        result.add(expensesMap);
+
+        return result;
+    }
+
+    @Override
     public JSONArray getMonthCount(PhoneOrder phoneOrder) {
         JSONArray result = new JSONArray();
         Map<String, Object> businessMap = new HashMap<>();
@@ -150,6 +176,11 @@ public class PhoneCountServiceImpl implements PhoneCountService {
         return orderList;
     }
 
+    /**
+     * 获取订单数
+     * @param phoneOrder
+     * @return
+     */
     public List<Object> getOrderMonthCount(PhoneOrder phoneOrder) {
         //初始化数据
         Map<String, Object> map = new LinkedHashMap<>();
@@ -189,7 +220,7 @@ public class PhoneCountServiceImpl implements PhoneCountService {
         Member member = new Member();
         member.setParams(phoneOrder.getParams());
         member.setAppId(phoneOrder.getAppId());
-        List<Map<String, Object>> monthOrderCountMoney = memberMapper.getMonthCount(member);
+        List<Map<String, Object>> monthOrderCountMoney = memberMapper.getMonthChartCount(member);
         map.forEach((k, v) -> {
             for (Map<String, Object> stringObjectMap : monthOrderCountMoney) {
                 if (StringUtils.equals(k, stringObjectMap.get("months").toString())) {
@@ -233,4 +264,130 @@ public class PhoneCountServiceImpl implements PhoneCountService {
         });
         return orderList;
     }
+
+    //TODO 日数据
+
+    /**
+     * 获取成交额
+     *
+     * @param phoneOrder
+     * @return
+     */
+    public List<Object> getOrderMoneyDayCount(PhoneOrder phoneOrder) {
+        //初始化数据
+        Map<String, Object> map = new LinkedHashMap<>();
+        Date date = DateUtil.beginOfMonth(new Date());
+        int monthLength = DateUtil.getMonthLength(new Date());
+        for (int i = 0; i < monthLength; i++) {
+            map.put(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, DateUtil.addDays(date, i)), 0);
+        }
+        List<Object> orderList = new ArrayList<>();
+        List<Map<String, Object>> monthOrderCountMoney = phoneOrderMapper.getDayOrderCountMoney(phoneOrder);
+        map.forEach((k, v) -> {
+            for (Map<String, Object> stringObjectMap : monthOrderCountMoney) {
+                if (StringUtils.equals(k, stringObjectMap.get("days").toString())) {
+                    map.put(k, stringObjectMap.get("money"));
+                }
+            }
+        });
+        map.forEach((k, v) -> {
+            orderList.add(v);
+        });
+        return orderList;
+    }
+
+    /**
+     * 获取订单数
+     * @param phoneOrder
+     * @return
+     */
+    public List<Object> getOrderDayCount(PhoneOrder phoneOrder) {
+        //初始化数据
+        Map<String, Object> map = new LinkedHashMap<>();
+        Date date = DateUtil.beginOfMonth(new Date());
+        int monthLength = DateUtil.getMonthLength(new Date());
+        for (int i = 0; i < monthLength; i++) {
+            map.put(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, DateUtil.addDays(date, i)), 0);
+        }
+        List<Object> orderList = new ArrayList<>();
+        List<Map<String, Object>> monthOrderCountMoney = phoneOrderMapper.getDayOrderCount(phoneOrder);
+        map.forEach((k, v) -> {
+            for (Map<String, Object> stringObjectMap : monthOrderCountMoney) {
+                if (StringUtils.equals(k, stringObjectMap.get("days").toString())) {
+                    map.put(k, stringObjectMap.get("number"));
+                }
+            }
+        });
+        map.forEach((k, v) -> {
+            orderList.add(v);
+        });
+        return orderList;
+    }
+
+    /**
+     * 获取会员
+     *
+     * @param phoneOrder
+     * @return
+     */
+    public List<Object> getMemberDayCount(PhoneOrder phoneOrder) {
+        //初始化数据
+        Map<String, Object> map = new LinkedHashMap<>();
+        Date date = DateUtil.beginOfMonth(new Date());
+        int monthLength = DateUtil.getMonthLength(new Date());
+        for (int i = 0; i < monthLength; i++) {
+            map.put(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, DateUtil.addDays(date, i)), 0);
+        }
+        List<Object> orderList = new ArrayList<>();
+        Member member = new Member();
+        member.setParams(phoneOrder.getParams());
+        member.setAppId(phoneOrder.getAppId());
+        List<Map<String, Object>> monthOrderCountMoney = memberMapper.getDayChartCount(member);
+        map.forEach((k, v) -> {
+            for (Map<String, Object> stringObjectMap : monthOrderCountMoney) {
+                if (StringUtils.equals(k, stringObjectMap.get("days").toString())) {
+                    map.put(k, stringObjectMap.get("number"));
+                }
+            }
+        });
+        map.forEach((k, v) -> {
+            orderList.add(v);
+        });
+        return orderList;
+    }
+
+    /**
+     * 获取支出
+     *
+     * @param phoneOrder
+     * @return
+     */
+    public List<Object> getCommissionDayCount(PhoneOrder phoneOrder) {
+        //初始化数据
+        Map<String, Object> map = new LinkedHashMap<>();
+        Date date = DateUtil.beginOfMonth(new Date());
+        int monthLength = DateUtil.getMonthLength(new Date());
+        for (int i = 0; i < monthLength; i++) {
+            map.put(DateFormatUtil.formatDate(DateFormatUtil.PATTERN_ISO_ON_DATE, DateUtil.addDays(date, i)), 0);
+        }
+        List<Object> orderList = new ArrayList<>();
+        PhoneCommissionLog phoneCommissionLog = new PhoneCommissionLog();
+        phoneCommissionLog.setParams(phoneOrder.getParams());
+        phoneCommissionLog.setAppId(phoneOrder.getAppId());
+        List<Map<String, Object>> monthOrderCountMoney = phoneCommissionLogMapper.getDayCountMoney(phoneCommissionLog);
+        map.forEach((k, v) -> {
+            for (Map<String, Object> stringObjectMap : monthOrderCountMoney) {
+                if (StringUtils.equals(k, stringObjectMap.get("days").toString())) {
+                    map.put(k, stringObjectMap.get("money"));
+                }
+            }
+        });
+        map.forEach((k, v) -> {
+            orderList.add(v);
+        });
+        return orderList;
+    }
+
+
+
 }

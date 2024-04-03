@@ -109,7 +109,21 @@ public interface PhoneOrderMapper
      * @param phoneOrder
      * @return
      */
+    public List<Map<String,Object>> getDayOrderCountMoney(PhoneOrder phoneOrder);
+
+    /**
+     * 统计订单金额
+     * @param phoneOrder
+     * @return
+     */
     public List<Map<String,Object>> getMonthOrderCountMoney(PhoneOrder phoneOrder);
+
+    /**
+     * 统计订单总数
+     * @param phoneOrder
+     * @return
+     */
+    public List<Map<String,Object>> getDayOrderCount(PhoneOrder phoneOrder);
 
     /**
      * 统计订单总数

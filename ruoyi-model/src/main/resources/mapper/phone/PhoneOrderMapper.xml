@@ -73,6 +73,13 @@
         <result property="memberIndirectCommission"    column="member_indirect_commission"    />
         <result property="superMemberDirectCommission"    column="super_member_direct_commission"    />
         <result property="superMemberIndirectCommission"    column="super_member_indirect_commission"    />
+        <association property="phonePriceType"    column="type_id" javaType="PhonePriceType" resultMap="PhonePriceTypeResult" />
+    </resultMap>
+
+    <resultMap type="PhonePriceType" id="PhonePriceTypeResult">
+        <result property="title"    column="typeTitle"    />
+        <result property="status"    column="typeStatus"    />
+        <result property="orderNum"    column="typeOrderNum"    />
     </resultMap>
 
     <sql id="selectPhoneOrderVo">
@@ -132,11 +139,15 @@
             p.member_indirect_commission,
             p.super_member_direct_commission,
             p.super_member_indirect_commission,
-            p.order_num
+            p.order_num,
+            t.title AS typeTitle,
+            t.status AS typeStatus,
+            t.order_num AS typeOrderNum
         from phone_order a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
                  left join phone_member m ON m.id = a.member_id
                 left join phone_price p ON p.id = a.price_id
+                 left join phone_price_type t ON t.id = p.type_id
                  left join sys_dept d on a.dept_id = d.dept_id
     </sql>
 
@@ -412,12 +423,29 @@
         </where>
     </select>
 
+    <select id="getDayOrderCountMoney" parameterType="phoneOrder" resultType="java.util.Map">
+        SELECT DATE_FORMAT(a.create_time,'%Y-%m-%d') days,IFNULL(sum(a.money),0) money
+        FROM phone_order a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.pay_status = '2'
+            AND DATE_FORMAT(a.create_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE, '%Y-%m')
+            <if test="appId != null and appId != ''">
+                AND a.app_id = #{appId}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        group by days
+    </select>
+
     <select id="getMonthOrderCountMoney" parameterType="phoneOrder" resultType="java.util.Map">
         SELECT DATE_FORMAT(a.create_time,'%Y-%m') months,IFNULL(sum(a.money),0) money
         FROM phone_order a
         left join sys_dept d on a.dept_id = d.dept_id
         <where>
             a.pay_status = '2'
+            AND  YEAR(a.create_time) = YEAR(NOW())
             <if test="appId != null and appId != ''">
                 AND a.app_id = #{appId}
             </if>
@@ -427,12 +455,30 @@
         group by months
     </select>
 
+    <select id="getDayOrderCount" parameterType="phoneOrder" resultType="java.util.Map">
+        SELECT DATE_FORMAT(a.create_time,'%Y-%m-%d') days,count(a.id) number
+        FROM phone_order a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.pay_status = '2'
+            AND DATE_FORMAT(a.create_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE, '%Y-%m')
+            AND  YEAR(a.create_time) = YEAR(NOW())
+            <if test="appId != null and appId != ''">
+                AND a.app_id = #{appId}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        group by days
+    </select>
+
     <select id="getMonthOrderCount" parameterType="phoneOrder" resultType="java.util.Map">
         SELECT DATE_FORMAT(a.create_time,'%Y-%m') months,count(a.id) number
         FROM phone_order a
         left join sys_dept d on a.dept_id = d.dept_id
         <where>
             a.pay_status = '2'
+            AND  YEAR(a.create_time) = YEAR(NOW())
             <if test="appId != null and appId != ''">
                 AND a.app_id = #{appId}
             </if>
