@@ -1,10 +1,5 @@
 package com.ruoyi.phone.service.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.util.*;
-
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -13,10 +8,8 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
-import com.github.binarywang.wxpay.bean.request.WxPayRefundV3Request;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
-import com.github.binarywang.wxpay.bean.result.WxPayRefundV3Result;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.config.WechatConfiguration;
@@ -31,13 +24,18 @@ import com.ruoyi.common.utils.time.DateUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.phone.domain.*;
 import com.ruoyi.phone.mapper.*;
-import com.ruoyi.phone.service.*;
+import com.ruoyi.phone.service.IPhoneOrderService;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IWechatConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * 订单记录Service业务层处理
@@ -48,6 +46,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 public class PhoneOrderServiceImpl implements IPhoneOrderService {
+
+    private static List<String> directManageCityList = Arrays.asList("北京", "天津", "上海","重庆");
+
+
     @Autowired
     private PhoneOrderMapper phoneOrderMapper;
     @Autowired
@@ -588,10 +590,13 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     if (StringUtils.equals("0", phonePrice.getMethod())) {
                         String[] areas = phoneOrder.getArea().split("-");
                         params.put("area", areas[0]);
+                        if(!directManageCityList.contains(areas[0])){
+                            //不是直辖市传地市
+                            params.put("city", areas[1]);
+                        }
                         if (StringUtils.equals("5", phonePrice.getType())) {
                             params.put("ytype", "1");
                             params.put("id_card_no", phoneOrder.getCardNo());
-                            params.put("city", areas[1]);
                         }
                     }
                     try {
