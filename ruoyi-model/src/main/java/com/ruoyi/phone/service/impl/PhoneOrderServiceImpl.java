@@ -461,12 +461,22 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     }
 
     public static void main(String[] args) {
+        //TreeMap<String, String> params = new TreeMap<>();
+        //params.put("userid", "175");
+        //try {
+        //    params.put("sign", SignUtils.unionSign(params, "DB346B5FA26FD55DBE7068DAD6DFE43B"));
+        //    String post = HttpUtil.post("http://8.218.193.88/" + GreatUrlConstants.QUERY_ELECTRICITY_AREA, JSON.toJSONString(params));
+        //    log.info("发送请求到第三方返回：" + post);
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
         TreeMap<String, String> params = new TreeMap<>();
-        params.put("userid", "175");
+        params.put("userid","166");
+        params.put("out_trade_nums", "2024040323392046629");
         try {
-            params.put("sign", SignUtils.unionSign(params, "DB346B5FA26FD55DBE7068DAD6DFE43B"));
-            String post = HttpUtil.post("http://8.218.193.88/" + GreatUrlConstants.QUERY_ELECTRICITY_AREA, JSON.toJSONString(params));
-            log.info("发送请求到第三方返回：" + post);
+            params.put("sign", SignUtils.unionSign(params, "ltVkJU28epDISRuZHxGQ4WTvojPA6NYb"));
+            String post = HttpUtil.post("http://8.218.193.88/yrapi.php/index/cancel" , JSON.toJSONString(params));
+            System.out.println(post);
         } catch (Exception e) {
             e.printStackTrace();
         }
