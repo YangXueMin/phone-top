@@ -47,7 +47,7 @@ import java.util.*;
 @Slf4j
 public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
-    private static List<String> directManageCityList = Arrays.asList("北京", "天津", "上海","重庆");
+    private static List<String> directManageCityList = Arrays.asList("北京", "天津", "上海", "重庆");
 
 
     @Autowired
@@ -214,7 +214,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         phoneOrder.setUpdateTime(DateUtils.getNowDate());
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
         PhoneOrder old = phoneOrderMapper.selectPhoneOrderById(phoneOrder.getId());
-        if (StringUtils.equals("4", phoneOrder.getArrivalStatus())) {
+        if (StringUtils.equals("4", phoneOrder.getArrivalStatus()) || StringUtils.equals("5", phoneOrder.getArrivalStatus())) {
             if (!StringUtils.equals("4", old.getArrivalStatus()) && !StringUtils.equals("5", old.getArrivalStatus())) {
                 if (phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
                     //回退余额给用户
@@ -249,7 +249,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
                 phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
                 TreeMap<String, String> params = new TreeMap<>();
-                params.put("userid",phoneInterfaceConfig.getMchId());
+                params.put("userid", phoneInterfaceConfig.getMchId());
                 params.put("out_trade_nums", phoneOrder.getOrderNo());
                 try {
                     params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
@@ -285,6 +285,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         PhoneOrder old = phoneOrderMapper.selectPhoneOrderById(phoneOrder.getId());
         Member member = memberMapper.selectMemberById(old.getMemberId());
         if (!StringUtils.equals("4", old.getArrivalStatus()) && !StringUtils.equals("5", old.getArrivalStatus())) {
+            phoneOrder.setArrivalStatus("5");
             if (old.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
                 //回退余额给用户
                 BigDecimal balance = member.getBalance();
@@ -318,7 +319,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
             phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
             TreeMap<String, String> params = new TreeMap<>();
-            params.put("userid",phoneInterfaceConfig.getMchId());
+            params.put("userid", phoneInterfaceConfig.getMchId());
             params.put("out_trade_nums", old.getOrderNo());
             try {
                 params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
@@ -329,7 +330,6 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
                         //表示下单成功
                         phoneOrder.setArrivalStatus("5");
-                        phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     }
                 }
             } catch (Exception e) {
@@ -410,7 +410,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public String payNotify(String xmlData) {
         WxPayOrderNotifyResult notifyResult = WxPayOrderNotifyResult.fromXML(xmlData);
-        log.info("支付回调返回：{}",notifyResult);
+        log.info("支付回调返回：{}", notifyResult);
         if (StringUtils.equals("SUCCESS", notifyResult.getReturnCode())) {
             List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(notifyResult.getOutTradeNo());
             if (phoneOrderList != null && phoneOrderList.size() > 0) {
@@ -435,7 +435,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     }
 
     @Override
-    public WxPayRefundResult refund(PhoneOrder phoneOrder) throws WxPayException{
+    public WxPayRefundResult refund(PhoneOrder phoneOrder) throws WxPayException {
         WxPayRefundRequest request = new WxPayRefundRequest();
         //订单号
         request.setOutTradeNo(phoneOrder.getOrderNo());
@@ -453,9 +453,9 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         final WxPayService wxPayService = wechatConfiguration.wxPayService(wechatConfig);
         final WxPayRefundResult refund = wxPayService.refund(request);
         log.info("调用退款接口：订单号：{},响应：{}", phoneOrder.getOrderNo(), JSON.toJSONString(refund));
-        if(StringUtils.equals("SUCCESS",refund.getResultCode())){
+        if (StringUtils.equals("SUCCESS", refund.getResultCode())) {
             return refund;
-        }else {
+        } else {
             throw new WxPayException(refund.getErrCodeDes());
         }
     }
@@ -471,11 +471,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         //    e.printStackTrace();
         //}
         TreeMap<String, String> params = new TreeMap<>();
-        params.put("userid","166");
+        params.put("userid", "166");
         params.put("out_trade_nums", "2024040323392046629");
         try {
             params.put("sign", SignUtils.unionSign(params, "ltVkJU28epDISRuZHxGQ4WTvojPA6NYb"));
-            String post = HttpUtil.post("http://8.218.193.88/yrapi.php/index/cancel" , JSON.toJSONString(params));
+            String post = HttpUtil.post("http://8.218.193.88/yrapi.php/index/cancel", JSON.toJSONString(params));
             System.out.println(post);
         } catch (Exception e) {
             e.printStackTrace();
@@ -485,7 +485,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Override
     public String refundNotify(String xmlData) {
         WxPayRefundNotifyResult wxPayRefundNotifyResult = WxPayRefundNotifyResult.fromXML(xmlData, WxPayRefundNotifyResult.class);
-        log.info("退款返回信息：{}",JSON.toJSONString(wxPayRefundNotifyResult));
+        log.info("退款返回信息：{}", JSON.toJSONString(wxPayRefundNotifyResult));
         if (StringUtils.equals("SUCCESS", wxPayRefundNotifyResult.getReturnCode())) {
             WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(wxPayRefundNotifyResult.getAppid());
             try {
@@ -518,20 +518,16 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOut_trade_num());
         if (phoneOrderList != null && phoneOrderList.size() > 0) {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
-            if (requestBody.getState() == -1) {
-                phoneOrder.setArrivalStatus("5");
-            } else if (requestBody.getState() == 1) {
+            if (requestBody.getState() == 1) {
                 phoneOrder.setArrivalStatus("2");
-            } else if (requestBody.getState() == 2) {
-                phoneOrder.setArrivalStatus("3");
+                phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000L));
+                phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
+                phoneOrder.setUpdateTime(DateUtils.getNowDate());
+                phoneOrderMapper.updatePhoneOrder(phoneOrder);
+                PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
+                Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
+                updateMemberInfoMoney(phoneOrder, phonePrice, member);
             }
-            phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000L));
-            phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
-            phoneOrder.setUpdateTime(DateUtils.getNowDate());
-            phoneOrderMapper.updatePhoneOrder(phoneOrder);
-            PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-            Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
-            updateMemberInfoMoney(phoneOrder, phonePrice, member);
         }
         return "success";
     }
@@ -606,7 +602,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     if (StringUtils.equals("0", phonePrice.getMethod())) {
                         String[] areas = phoneOrder.getArea().split("-");
                         params.put("area", areas[0]);
-                        if(!directManageCityList.contains(areas[0])){
+                        if (!directManageCityList.contains(areas[0])) {
                             //不是直辖市传地市
                             params.put("city", areas[1]);
                         }
