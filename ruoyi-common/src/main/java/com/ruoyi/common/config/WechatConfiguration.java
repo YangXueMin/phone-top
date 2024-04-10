@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 //引入WxPayService这个类 下面两个才会实例化
-@ConditionalOnClass(WxPayService.class)
+@ConditionalOnClass({WxPayService.class,WxMaService.class})
 @RequiredArgsConstructor
 public class WechatConfiguration {
     @Resource
