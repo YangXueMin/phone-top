@@ -2,6 +2,7 @@ package com.ruoyi.phone.service.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
@@ -140,6 +141,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         phoneOrder.setOrderNo(SnowflakeGenerator.generateOrderNumber());
         phoneOrder.setCreateTime(DateUtils.getNowDate());
         phoneOrder.setRefundMoney(BigDecimal.ZERO);
+        phoneOrder.setTopStatus("1");
         PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
         phoneOrder.setTopUpMoney(phonePrice.getOriginalPrice());
         Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
@@ -339,6 +341,47 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         return phoneOrderMapper.updatePhoneOrder(phoneOrder);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject cancelBatch(PhoneOrder phoneOrder) {
+        JSONObject jsonObject = new JSONObject();
+        int success = 0;
+        int error = 0;
+        if (phoneOrder.getParams().get("accountNumberList") != null) {
+            List<String> accountNumberList = JSON.parseArray(JSON.toJSONString(phoneOrder.getParams().get("accountNumberList")), String.class);
+            if (!accountNumberList.isEmpty()) {
+                for (String account : accountNumberList) {
+                    List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByAccountNumber(account);
+                    if (!phoneOrderList.isEmpty()) {
+                        try {
+                            success = success + this.cancel(phoneOrderList.get(0));
+                        } catch (WxPayException e) {
+                            error++;
+                        }
+                    }
+                }
+            }
+        }
+        if (phoneOrder.getParams().get("orderNoList") != null) {
+            List<String> orderNoList = JSON.parseArray(JSON.toJSONString(phoneOrder.getParams().get("orderNoList")), String.class);
+            if (!orderNoList.isEmpty()) {
+                for (String orderNo : orderNoList) {
+                    List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(orderNo);
+                    if (!phoneOrderList.isEmpty()) {
+                        try {
+                            success = success + this.cancel(phoneOrderList.get(0));
+                        } catch (WxPayException e) {
+                            error++;
+                        }
+                    }
+                }
+            }
+        }
+        jsonObject.put("success", success);
+        jsonObject.put("error", error);
+        return jsonObject;
+    }
+
     /**
      * 批量删除订单记录
      *
@@ -490,6 +533,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(wxPayRefundNotifyResult.getAppid());
             try {
                 WxPayRefundNotifyResult result = wechatConfiguration.wxPayService(wechatConfig).parseRefundNotifyResult(xmlData);
+                log.info("退款返回信息解密：{}", JSON.toJSONString(result.getReqInfo()));
                 List<PhoneOrder> orderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(result.getReqInfo().getOutTradeNo());
                 if (orderList != null && orderList.size() > 0) {
                     PhoneOrder order = orderList.get(0);
@@ -615,10 +659,12 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         params.put("sign", SignUtils.unionSign(params, phoneInterfaceConfig.getApiKey()));
                         String post = HttpUtil.post(phoneInterfaceConfig.getInterfaceUrl() + GreatUrlConstants.CREATE_ORDER, JSON.toJSONString(params));
                         log.info("发送请求到第三方返回：" + post);
+                        phoneOrder.setTopStatusRemark(post);
                         if (StringUtils.isNotBlank(post) && JsonUtils.isJson2(post)) {
                             JSONObject jsonObject = JSON.parseObject(post);
                             if (jsonObject != null && jsonObject.get("errno") != null && jsonObject.getInteger("errno") == 0) {
                                 //表示下单成功
+                                phoneOrder.setTopStatus("2");
                                 phoneOrder.setArrivalStatus("1");
                                 phoneOrder.setTopResult(post);
                             }

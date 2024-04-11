@@ -155,6 +155,17 @@ public class PhoneOrderController extends BaseController {
     }
 
     /**
+     * 取消订单记录
+     */
+    @ApiOperation("批量取消订单记录")
+    @PreAuthorize("@ss.hasPermi('phone:order:edit')")
+    @Log(title = "订单记录", businessType = BusinessType.UPDATE)
+    @PostMapping("cancelBatch")
+    public AjaxResult cancelBatch(@RequestBody PhoneOrder phoneOrder) {
+        return success(phoneOrderService.cancelBatch(phoneOrder));
+    }
+
+    /**
      * 删除订单记录
      */
     @ApiOperation("删除订单记录")

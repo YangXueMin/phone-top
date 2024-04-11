@@ -53,6 +53,14 @@ public interface PhoneOrderMapper
     /**
      * 查询订单记录列表
      *
+     * @param accountNumber 充值号
+     * @return 订单记录集合
+     */
+    public List<PhoneOrder> selectPhoneOrderListByAccountNumber(String accountNumber);
+
+    /**
+     * 查询订单记录列表
+     *
      * @param appId 微信小程序ID
      * @return 订单记录集合
      */

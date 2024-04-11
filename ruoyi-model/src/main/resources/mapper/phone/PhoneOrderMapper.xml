@@ -32,6 +32,8 @@
         <result property="topResult"    column="top_result"    />
         <result property="topTime"    column="top_time"    />
         <result property="topNotifyResult"    column="top_notify_result"    />
+        <result property="topStatus"    column="top_status"    />
+        <result property="topStatusRemark"    column="top_status_remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -111,6 +113,8 @@
                a.top_result,
                a.top_time,
                a.top_notify_result,
+               a.top_status,
+               a.top_status_remark,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -173,6 +177,7 @@
             <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
             <if test="payStatus != null  and payStatus != ''"> and a.pay_status = #{payStatus}</if>
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and a.arrival_status = #{arrivalStatus}</if>
+            <if test="topStatus != null  and topStatus != ''"> and a.top_status = #{topStatus}</if>
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
              <if test="createTime != null"> AND a.create_time &lt; #{createTime}</if>
@@ -190,6 +195,20 @@
                      AND m.is_super_member = #{member.isSuperMember}
                  </if>
              </if>
+            <if test="params != null">
+                <if test="params.accountNumberList != null and params.accountNumberList.size() > 0">
+                    and a.account_number IN
+                    <foreach collection="params.accountNumberList" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="params.orderNoList != null and params.orderNoList.size() > 0">
+                    and a.order_no IN
+                    <foreach collection="params.orderNoList" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
@@ -222,6 +241,7 @@
             <if test="payType != null  and payType != ''"> and a.pay_type = #{payType}</if>
             <if test="payStatus != null  and payStatus != ''"> and a.pay_status = #{payStatus}</if>
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and a.arrival_status = #{arrivalStatus}</if>
+            <if test="topStatus != null  and topStatus != ''"> and a.top_status = #{topStatus}</if>
             <if test="payTime != null  and payTime != ''"> and a.pay_time = #{payTime}</if>
             <if test="payResult != null  and payResult != ''"> and a.pay_result = #{payResult}</if>
         </where>
@@ -230,6 +250,11 @@
     <select id="selectPhoneOrderListByOrderNo" parameterType="string" resultMap="PhoneOrderResult">
         <include refid="selectPhoneOrderVo"/>
         where a.order_no = #{orderNo}
+    </select>
+
+    <select id="selectPhoneOrderListByAccountNumber" parameterType="string" resultMap="PhoneOrderResult">
+        <include refid="selectPhoneOrderVo"/>
+        where a.account_number = #{accountNumber}
     </select>
 
     <select id="selectNewsflash" parameterType="string" resultType="string">
@@ -275,6 +300,8 @@
             <if test="payType != null">pay_type,</if>
             <if test="payStatus != null">pay_status,</if>
             <if test="arrivalStatus != null">arrival_status,</if>
+            <if test="topStatus != null">top_status,</if>
+            <if test="topStatusRemark != null">top_status_remark,</if>
             <if test="payTime != null">pay_time,</if>
             <if test="payResult != null">pay_result,</if>
             <if test="topResult != null">top_result,</if>
@@ -309,6 +336,8 @@
             <if test="payType != null">#{payType},</if>
             <if test="payStatus != null">#{payStatus},</if>
             <if test="arrivalStatus != null">#{arrivalStatus},</if>
+            <if test="topStatus != null">#{topStatus},</if>
+            <if test="topStatusRemark != null">#{topStatusRemark},</if>
             <if test="payTime != null">#{payTime},</if>
             <if test="payResult != null">#{payResult},</if>
             <if test="topResult != null">#{topResult},</if>
@@ -346,6 +375,8 @@
             <if test="payType != null">pay_type = #{payType},</if>
             <if test="payStatus != null">pay_status = #{payStatus},</if>
             <if test="arrivalStatus != null">arrival_status = #{arrivalStatus},</if>
+            <if test="topStatus != null">top_status = #{topStatus},</if>
+            <if test="topStatusRemark != null">top_status_remark = #{topStatusRemark},</if>
             <if test="payTime != null">pay_time = #{payTime},</if>
             <if test="payResult != null">pay_result = #{payResult},</if>
             <if test="topResult != null">top_result = #{topResult},</if>

@@ -76,6 +76,14 @@ public interface IPhoneOrderService {
     public int cancel(PhoneOrder phoneOrder) throws WxPayException;
 
     /**
+     * 批量取消订单记录
+     *
+     * @param phoneOrder 订单记录
+     * @return 结果
+     */
+    public JSONObject cancelBatch(PhoneOrder phoneOrder);
+
+    /**
      * 批量删除订单记录
      *
      * @param ids 需要删除的订单记录主键集合
