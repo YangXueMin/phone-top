@@ -347,32 +347,26 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         JSONObject jsonObject = new JSONObject();
         int success = 0;
         int error = 0;
-        if (phoneOrder.getParams().get("accountNumberList") != null) {
-            List<String> accountNumberList = JSON.parseArray(JSON.toJSONString(phoneOrder.getParams().get("accountNumberList")), String.class);
-            if (!accountNumberList.isEmpty()) {
-                for (String account : accountNumberList) {
-                    List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByAccountNumber(account);
-                    if (!phoneOrderList.isEmpty()) {
-                        try {
-                            success = success + this.cancel(phoneOrderList.get(0));
-                        } catch (WxPayException e) {
-                            error++;
-                        }
+        if (phoneOrder.getAccountNumberList() != null && !phoneOrder.getAccountNumberList().isEmpty()) {
+            for (String account : phoneOrder.getAccountNumberList()) {
+                List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByAccountNumber(account);
+                if (!phoneOrderList.isEmpty()) {
+                    try {
+                        success = success + this.cancel(phoneOrderList.get(0));
+                    } catch (WxPayException e) {
+                        error++;
                     }
                 }
             }
         }
-        if (phoneOrder.getParams().get("orderNoList") != null) {
-            List<String> orderNoList = JSON.parseArray(JSON.toJSONString(phoneOrder.getParams().get("orderNoList")), String.class);
-            if (!orderNoList.isEmpty()) {
-                for (String orderNo : orderNoList) {
-                    List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(orderNo);
-                    if (!phoneOrderList.isEmpty()) {
-                        try {
-                            success = success + this.cancel(phoneOrderList.get(0));
-                        } catch (WxPayException e) {
-                            error++;
-                        }
+        if (phoneOrder.getOrderNoList() != null && !phoneOrder.getOrderNoList().isEmpty()) {
+            for (String orderNo : phoneOrder.getOrderNoList()) {
+                List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(orderNo);
+                if (!phoneOrderList.isEmpty()) {
+                    try {
+                        success = success + this.cancel(phoneOrderList.get(0));
+                    } catch (WxPayException e) {
+                        error++;
                     }
                 }
             }

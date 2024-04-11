@@ -195,19 +195,17 @@
                      AND m.is_super_member = #{member.isSuperMember}
                  </if>
              </if>
-            <if test="params != null">
-                <if test="params.accountNumberList != null and params.accountNumberList.size() > 0">
-                    and a.account_number IN
-                    <foreach collection="params.accountNumberList" index="index" item="item" open="(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
-                <if test="params.orderNoList != null and params.orderNoList.size() > 0">
-                    and a.order_no IN
-                    <foreach collection="params.orderNoList" index="index" item="item" open="(" separator="," close=")">
-                        #{item}
-                    </foreach>
-                </if>
+            <if test="accountNumberList != null and accountNumberList.size() > 0">
+                and a.account_number IN
+                <foreach collection="accountNumberList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="orderNoList != null and orderNoList.size() > 0">
+                and a.order_no IN
+                <foreach collection="orderNoList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}

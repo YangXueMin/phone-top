@@ -2,6 +2,7 @@ package com.ruoyi.phone.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
@@ -71,26 +72,26 @@ public class PhoneOrder extends BaseEntity {
     /**
      * 充值方式（电网：0，快充：1，慢充：2）
      */
+    @Excel(name = "充值方式", sort = 4,dictType = "phone_pay_method")
     @ApiModelProperty("充值方式（字典值：phone_pay_method）")
     private String method;
 
     /**
      * 充值方式（电网：0，快充：1，慢充：2）
      */
-    @Excel(name = "充值方式", sort = 4)
     @ApiModelProperty("充值方式")
     private String methodLabel;
 
     /**
      * 类型(移动、联通、电信、国家电网、南方电网)
      */
+    @Excel(name = "充值类型", sort = 5, dictType = "phone_order_pay_type")
     @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
     private String type;
 
     /**
      * 类型(移动、联通、电信、国家电网、南方电网)
      */
-    @Excel(name = "充值类型", sort = 5)
     @ApiModelProperty("类型(字典值：phone_order_pay_type 移动、联通、电信、国家电网、南方电网)")
     private String typeLabel;
 
@@ -111,13 +112,13 @@ public class PhoneOrder extends BaseEntity {
     /**
      * 住宅类型（住宅：1，店铺：2，企事业：3，默认：0）
      */
+    @Excel(name = "住宅类型", sort = 8,dictType = "phone_residence_type")
     @ApiModelProperty("住宅类型")
     private String residenceType;
 
     /**
      * 住宅类型（住宅：1，店铺：2，企事业：3，默认：0）
      */
-    @Excel(name = "住宅类型", sort = 8)
     @ApiModelProperty("住宅类型")
     private String residenceTypeLabel;
 
@@ -171,39 +172,39 @@ public class PhoneOrder extends BaseEntity {
     /**
      * 支付方式（1：线上支付，2：余额支付，3：组合支付）
      */
+    @Excel(name = "支付方式", sort = 14,dictType = "phone_pay_type")
     @ApiModelProperty("支付方式（字典值：phone_pay_type）")
     private String payType;
 
     /**
      * 支付方式（1：线上支付，2：余额支付，3：组合支付）
      */
-    @Excel(name = "支付方式", sort = 14)
     @ApiModelProperty("支付方式（字典值：phone_pay_type）")
     private String payTypeLabel;
 
     /**
      * 支付状态(1:待支付，2：支付完成，3：已退款，4：已取消)
      */
+    @Excel(name = "支付状态", sort = 15,dictType = "phone_pay_status")
     @ApiModelProperty("支付状态(字典值：phone_pay_status 1:待支付，2：支付完成，3：已退款，4：已取消)")
     private String payStatus;
 
     /**
      * 支付状态(1:待支付，2：支付完成，3：已退款，4：已取消)
      */
-    @Excel(name = "支付状态", sort = 15)
     @ApiModelProperty("支付状态(字典值：phone_pay_status 1:待支付，2：支付完成，3：已退款，4：已取消)")
     private String payStatusLabel;
 
     /**
      * 到账状态(0：代充值，1:充值中，2：充值成功，3：充
      */
+    @Excel(name = "到账状态", sort = 16,dictType = "phone_arrival_status")
     @ApiModelProperty("到账状态(字典值：phone_arrival_status 0：代充值，1:充值中，2：充值成功，3：充值失败，4：取消中，5：已取消")
     private String arrivalStatus;
 
     /**
      * 到账状态(1:充值中，2：充值成功，3：已取消
      */
-    @Excel(name = "到账状态", sort = 16)
     @ApiModelProperty("到账状态(字典值：phone_arrival_status 1:充值中，2：充值成功，3：充值失败")
     private String arrivalStatusLabel;
 
@@ -224,13 +225,13 @@ public class PhoneOrder extends BaseEntity {
     /**
      * 提交状态
      */
+    @Excel(name = "提交状态", sort = 17,dictType = "phone_top_status")
     @ApiModelProperty("提交状态(字典值：phone_top_status 1:未提交接口，2：已提交接口")
     private String topStatus;
 
     /**
      * 提交状态
      */
-    @Excel(name = "提交状态", sort = 17)
     @ApiModelProperty("提交状态(字典值：phone_top_status 1:未提交接口，2：已提交接口")
     private String topStatusLabel;
 
@@ -277,6 +278,12 @@ public class PhoneOrder extends BaseEntity {
 
     @Excel(name = "备注", sort = 20)
     private String remark;
+
+    @ApiModelProperty("批量充值账号")
+    private List<String> accountNumberList;
+
+    @ApiModelProperty("批量订单号")
+    private List<String> orderNoList;
 
     public void setId(Long id) {
         this.id = id;
@@ -619,5 +626,21 @@ public class PhoneOrder extends BaseEntity {
     @Override
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public List<String> getAccountNumberList() {
+        return accountNumberList;
+    }
+
+    public void setAccountNumberList(List<String> accountNumberList) {
+        this.accountNumberList = accountNumberList;
+    }
+
+    public List<String> getOrderNoList() {
+        return orderNoList;
+    }
+
+    public void setOrderNoList(List<String> orderNoList) {
+        this.orderNoList = orderNoList;
     }
 }
