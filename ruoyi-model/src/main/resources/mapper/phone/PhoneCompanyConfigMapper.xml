@@ -9,6 +9,7 @@
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="promotionPoster"    column="promotion_poster"    />
+        <result property="levelNumber"    column="level_number"    />
         <result property="xAxis"    column="x_axis"    />
         <result property="yAxis"    column="y_axis"    />
         <result property="codeWidth"    column="code_width"    />
@@ -48,6 +49,7 @@
             a.dept_id,
             a.app_id,
             a.promotion_poster,
+            a.level_number,
                a.x_axis,
                a.y_axis,
                a.code_width,
@@ -109,6 +111,7 @@
             <if test="deptId != null">dept_id,</if>
             <if test="appId != null">app_id,</if>
             <if test="promotionPoster != null">promotion_poster,</if>
+            <if test="levelNumber != null">level_number,</if>
             <if test="xAxis != null">x_axis,</if>
             <if test="yAxis != null">y_axis,</if>
             <if test="codeWidth != null">code_width,</if>
@@ -140,6 +143,7 @@
             <if test="deptId != null">#{deptId},</if>
             <if test="appId != null">#{appId},</if>
             <if test="promotionPoster != null">#{promotionPoster},</if>
+            <if test="levelNumber != null">#{levelNumber},</if>
             <if test="xAxis != null">#{xAxis},</if>
             <if test="yAxis != null">#{yAxis},</if>
             <if test="codeWidth != null">#{codeWidth},</if>
@@ -175,6 +179,7 @@
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="appId != null">app_id = #{appId},</if>
             <if test="promotionPoster != null">promotion_poster = #{promotionPoster},</if>
+            <if test="levelNumber != null">level_number = #{levelNumber},</if>
             <if test="xAxis != null">x_axis = #{xAxis},</if>
             <if test="yAxis != null">y_axis = #{yAxis},</if>
             <if test="codeWidth != null">code_width = #{codeWidth},</if>

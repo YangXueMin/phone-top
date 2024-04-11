@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhonePayMenthodMapper">
+
+    <resultMap type="PhonePayMenthod" id="PhonePayMenthodResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="value"    column="value"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <sql id="selectPhonePayMenthodVo">
+        select
+            a.id,
+            a.dept_id,
+            a.app_id,
+            a.value,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle
+        from phone_pay_menthod a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectPhonePayMenthodList" parameterType="PhonePayMenthod" resultMap="PhonePayMenthodResult">
+        <include refid="selectPhonePayMenthodVo"/>
+        <where>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="value != null  and value != ''"> and a.value = #{value}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectPhonePayMenthodById" parameterType="Long" resultMap="PhonePayMenthodResult">
+        <include refid="selectPhonePayMenthodVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPhonePayMenthod" parameterType="PhonePayMenthod" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_pay_menthod
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="value != null">value,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="value != null">#{value},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhonePayMenthod" parameterType="PhonePayMenthod">
+        update phone_pay_menthod
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhonePayMenthodById" parameterType="Long">
+        delete from phone_pay_menthod where id = #{id}
+    </delete>
+
+    <delete id="deletePhonePayMenthodByAppId" parameterType="Long">
+        delete from phone_pay_menthod where app_id = #{appId}
+    </delete>
+
+    <delete id="deletePhonePayMenthodByIds" parameterType="String">
+        delete from phone_pay_menthod where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

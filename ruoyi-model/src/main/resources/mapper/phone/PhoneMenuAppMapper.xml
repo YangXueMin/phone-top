@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.phone.mapper.PhoneMenuAppMapper">
+
+    <resultMap type="PhoneMenuApp" id="PhoneMenuAppResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="menuId"    column="menu_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
+        <association property="phoneMenu"    column="menu_id" javaType="PhoneMenu" resultMap="PhoneMenuResult" />
+    </resultMap>
+
+    <resultMap type="WechatConfig" id="WechatConfigResult">
+        <result property="title"    column="wxTitle"    />
+    </resultMap>
+
+    <resultMap type="PhoneMenu" id="PhoneMenuResult">
+        <result property="name"    column="name"    />
+        <result property="url"    column="url"    />
+        <result property="banner"    column="banner"    />
+    </resultMap>
+
+    <sql id="selectPhoneMenuAppVo">
+        select
+            a.id,
+            a.dept_id,
+            a.app_id,
+            a.menu_id,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.remark,
+            wc.title as wxTitle,
+            m.name,
+            m.url,
+            m.banner
+        from phone_menu_app a
+                 left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 left join sys_dept d on a.dept_id = d.dept_id
+                left join phone_menu m ON m.id = a.menu_id and m.status = 1
+    </sql>
+
+    <select id="selectPhoneMenuAppList" parameterType="PhoneMenuApp" resultMap="PhoneMenuAppResult">
+        <include refid="selectPhoneMenuAppVo"/>
+        <where>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="menuId != null "> and a.menu_id = #{menuId}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectPhoneMenuAppById" parameterType="Long" resultMap="PhoneMenuAppResult">
+        <include refid="selectPhoneMenuAppVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPhoneMenuApp" parameterType="PhoneMenuApp" useGeneratedKeys="true" keyProperty="id">
+        insert into phone_menu_app
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="menuId != null">menu_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="menuId != null">#{menuId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePhoneMenuApp" parameterType="PhoneMenuApp">
+        update phone_menu_app
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="menuId != null">menu_id = #{menuId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoneMenuAppById" parameterType="Long">
+        delete from phone_menu_app where id = #{id}
+    </delete>
+
+    <delete id="deletePhoneMenuAppByAppId" parameterType="Long">
+        delete from phone_menu_app where app_id = #{appId}
+    </delete>
+
+    <delete id="deletePhoneMenuAppByIds" parameterType="String">
+        delete from phone_menu_app where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

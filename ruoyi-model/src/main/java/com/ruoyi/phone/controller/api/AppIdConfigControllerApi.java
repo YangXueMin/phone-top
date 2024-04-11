@@ -3,10 +3,7 @@ package com.ruoyi.phone.controller.api;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
-import com.ruoyi.phone.service.IPhoneBannerService;
-import com.ruoyi.phone.service.IPhoneCompanyConfigService;
-import com.ruoyi.phone.service.IPhoneCustomerService;
-import com.ruoyi.phone.service.IPhoneMemberNowService;
+import com.ruoyi.phone.service.*;
 import com.ruoyi.system.service.IWechatConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,12 +28,21 @@ public class AppIdConfigControllerApi extends BaseController {
     private final IWechatConfigService wechatConfigService;
     private final IPhoneMemberNowService phoneMemberNowService;
 
-    public AppIdConfigControllerApi(IPhoneBannerService phoneBannerService, IPhoneCompanyConfigService phoneCompanyConfigService, IPhoneCustomerService phoneCustomerService, IWechatConfigService wechatConfigService, IPhoneMemberNowService phoneMemberNowService) {
+    private final IPhoneMenuAppService iPhoneMenuAppService;
+
+    private final IPhonePayMenthodService iPhonePayMenthodService;
+
+    public AppIdConfigControllerApi(IPhoneBannerService phoneBannerService, IPhoneCompanyConfigService phoneCompanyConfigService,
+                                    IPhoneCustomerService phoneCustomerService, IWechatConfigService wechatConfigService,
+                                    IPhoneMemberNowService phoneMemberNowService, IPhoneMenuAppService iPhoneMenuAppService,
+                                    IPhonePayMenthodService iPhonePayMenthodService) {
         this.phoneBannerService = phoneBannerService;
         this.phoneCompanyConfigService = phoneCompanyConfigService;
         this.phoneCustomerService = phoneCustomerService;
         this.wechatConfigService = wechatConfigService;
         this.phoneMemberNowService = phoneMemberNowService;
+        this.iPhoneMenuAppService = iPhoneMenuAppService;
+        this.iPhonePayMenthodService = iPhonePayMenthodService;
     }
 
     /**
@@ -90,5 +96,23 @@ public class AppIdConfigControllerApi extends BaseController {
     @GetMapping("/phoneMemberNow")
     public AjaxResult phoneMemberNow(@RequestParam("appId") String appId) {
         return success(phoneMemberNowService.selectPhoneMemberNowByAppId(appId));
+    }
+
+    /**
+     * 获取我的菜单列表
+     */
+    @ApiOperation("获取我的菜单列表")
+    @GetMapping("/phoneMenuApp")
+    public AjaxResult phoneMenuApp(@RequestParam("appId") String appId) {
+        return success(iPhoneMenuAppService.selectPhoneMenuAppByAppId(appId));
+    }
+
+    /**
+     * 获取充值方式
+     */
+    @ApiOperation("获取充值方式")
+    @GetMapping("/phonePayMethod")
+    public AjaxResult phonePayMethod(@RequestParam("appId") String appId) {
+        return success(iPhonePayMenthodService.selectPhonePayMenthodByAppId(appId));
     }
 }

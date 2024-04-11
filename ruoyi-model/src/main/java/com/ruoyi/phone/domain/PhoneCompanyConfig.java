@@ -38,6 +38,13 @@ public class PhoneCompanyConfig extends BaseEntity{
     @ApiModelProperty("推广海报")
     private String promotionPoster;
 
+    /**
+     * 推广下级数量
+     */
+    @Excel(name = "推广下级数量")
+    @ApiModelProperty("推广下级数量")
+    private Integer levelNumber;
+
     /** 图片放入推广海报X轴 */
     @Excel(name = "图片放入推广海报X轴")
     @ApiModelProperty("图片放入推广海报X轴")
@@ -343,5 +350,13 @@ public class PhoneCompanyConfig extends BaseEntity{
 
     public void setInviteTop(String inviteTop) {
         this.inviteTop = inviteTop;
+    }
+
+    public Integer getLevelNumber() {
+        return levelNumber;
+    }
+
+    public void setLevelNumber(Integer levelNumber) {
+        this.levelNumber = levelNumber;
     }
 }
