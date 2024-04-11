@@ -352,7 +352,12 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByAccountNumber(account);
                 if (!phoneOrderList.isEmpty()) {
                     try {
-                        success = success + this.cancel(phoneOrderList.get(0));
+                        PhoneOrder order = phoneOrderList.get(0);
+                        if(!StringUtils.equals("2",order.getArrivalStatus())){
+                            success = success + this.cancel(order);
+                        }else {
+                            error++;
+                        }
                     } catch (WxPayException e) {
                         error++;
                     }
@@ -364,7 +369,12 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(orderNo);
                 if (!phoneOrderList.isEmpty()) {
                     try {
-                        success = success + this.cancel(phoneOrderList.get(0));
+                        PhoneOrder order = phoneOrderList.get(0);
+                        if(!StringUtils.equals("2",order.getArrivalStatus())){
+                            success = success + this.cancel(order);
+                        }else {
+                            error++;
+                        }
                     } catch (WxPayException e) {
                         error++;
                     }
