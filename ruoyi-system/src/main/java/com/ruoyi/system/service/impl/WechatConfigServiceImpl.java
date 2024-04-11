@@ -113,7 +113,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
         wechatConfig.setUpdateTime(DateUtils.getNowDate());
         int i = wechatConfigMapper.updateWechatConfig(wechatConfig);
         if (i > 0) {
-            redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
+            redisCache.deleteObject(getCacheKey(wechatConfig.getAppId()));
         }
         return i;
     }
