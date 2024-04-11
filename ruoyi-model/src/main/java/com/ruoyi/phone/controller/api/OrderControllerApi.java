@@ -78,6 +78,16 @@ public class OrderControllerApi extends BaseController {
     @PostMapping("/create")
     public AjaxResult create(@RequestBody PhoneOrder phoneOrder) {
         logger.info("接收到参数：{}", JSON.toJSONString(phoneOrder));
+        //判断是否正在充值订单
+        PhoneOrder queryOrder = new PhoneOrder();
+        queryOrder.setArrivalStatus("1");
+        queryOrder.setPayStatus("2");
+        queryOrder.setType(phoneOrder.getType());
+        queryOrder.setAccountNumber(phoneOrder.getAccountNumber());
+        List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
+        if(phoneOrderList != null && !phoneOrderList.isEmpty()){
+            return error("有正在充值订单，不可重复提交，请联系客服处理");
+        }
         return success(phoneOrderService.insertPhoneOrder(phoneOrder));
     }
 
