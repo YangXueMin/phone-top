@@ -3,6 +3,7 @@ package com.ruoyi.phone.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
@@ -74,6 +75,7 @@ public class PhonePayMenthodServiceImpl implements IPhonePayMenthodService {
      * @return 充值方式配置
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhonePayMenthod> selectPhonePayMenthodList(PhonePayMenthod phonePayMenthod) {
         return phonePayMenthodMapper.selectPhonePayMenthodList(phonePayMenthod);
     }

@@ -1,15 +1,16 @@
 package com.ruoyi.phone.service.impl;
 
 import java.math.RoundingMode;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.phone.domain.PhonePriceType;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +58,31 @@ public class PhonePriceServiceImpl implements IPhonePriceService {
     @Override
     public Map<String, List<PhonePrice>> selectPhonePriceListApi(PhonePrice phonePrice) {
         List<PhonePrice> phonePriceList = phonePriceMapper.selectPhonePriceList(phonePrice);
-        return phonePriceList.stream().collect(Collectors.groupingBy(k-> {
-            if(k.getPhonePriceType() != null){
-               return k.getPhonePriceType().getTitle();
+        Map<String, List<PhonePrice>> map = new LinkedHashMap<>();
+        if(phonePriceList != null && !phonePriceList.isEmpty()){
+            phonePriceList = phonePriceList.stream()
+                    .sorted(Comparator.comparing((price) -> {
+                        if (price.getPhonePriceType() != null) {
+                            return price.getPhonePriceType().getTitle();
+                        }
+                        return "默认";
+                    })).collect(Collectors.toList());
+            for (PhonePrice price : phonePriceList) {
+                List<PhonePrice> list = new ArrayList<>();
+                if(price.getPhonePriceType() != null){
+                    PhonePriceType phonePriceType = price.getPhonePriceType();
+                    if(map.get(phonePriceType.getTitle()) != null){
+                        list = map.get(phonePriceType.getTitle());
+                    }
+                    list.add(price);
+                    map.put(price.getPhonePriceType().getTitle(),list);
+                }
             }
-            return "默认";
-        }));
+            map.values().forEach(item -> {
+                item.sort((o1, o2) -> Math.toIntExact(o1.getOrderNum() - o2.getOrderNum()));
+            });
+        }
+        return map;
     }
 
     /**

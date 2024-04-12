@@ -3,6 +3,7 @@ package com.ruoyi.phone.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.phone.domain.PhoneMenu;
@@ -78,6 +79,7 @@ public class PhoneMenuAppServiceImpl implements IPhoneMenuAppService {
      * @return 菜单关联
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "a")
     public List<PhoneMenuApp> selectPhoneMenuAppList(PhoneMenuApp phoneMenuApp) {
         return phoneMenuAppMapper.selectPhoneMenuAppList(phoneMenuApp);
     }
