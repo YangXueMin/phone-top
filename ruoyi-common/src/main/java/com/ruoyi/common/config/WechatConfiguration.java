@@ -69,26 +69,16 @@ public class WechatConfiguration {
      * @return WxPayService
      */
     public synchronized WxPayService wxPayService(WechatConfig wechatConfig) {
-        //获取集合中的 WxPayService
-        if (wechatConfig != null) {
-            WxPayService wxPayService = wxPayServicesMap.get(wechatConfig.getAppId());
-            //集合中没有则创建
-            if (wxPayService == null) {
-                WxPayConfig wxPayConfig = new WxPayConfig();
-                wxPayConfig.setAppId(wechatConfig.getAppId());
-                wxPayConfig.setMchId(StringUtils.trimToNull(wechatConfig.getMchId()));
-                wxPayConfig.setMchKey(StringUtils.trimToNull(wechatConfig.getMchKey()));
-                wxPayConfig.setKeyPath(StringUtils.trimToNull(wechatConfig.getKeyPath()));
-                // 可以指定是否使用沙箱环境
-                wxPayConfig.setUseSandboxEnv(false);
-                wxPayService = new WxPayServiceImpl();
-                wxPayService.setConfig(wxPayConfig);
-                wxPayServicesMap.put(wechatConfig.getAppId(), wxPayService);
-                return wxPayService;
-            }
-            return wxPayService;
-        }
-        return null;
+        WxPayConfig wxPayConfig = new WxPayConfig();
+        wxPayConfig.setAppId(wechatConfig.getAppId());
+        wxPayConfig.setMchId(StringUtils.trimToNull(wechatConfig.getMchId()));
+        wxPayConfig.setMchKey(StringUtils.trimToNull(wechatConfig.getMchKey()));
+        wxPayConfig.setKeyPath(StringUtils.trimToNull(wechatConfig.getKeyPath()));
+        // 可以指定是否使用沙箱环境
+        wxPayConfig.setUseSandboxEnv(false);
+        WxPayService wxPayService = new WxPayServiceImpl();
+        wxPayService.setConfig(wxPayConfig);
+        return wxPayService;
     }
 
     /**
@@ -98,25 +88,15 @@ public class WechatConfiguration {
      * @return WxPayService
      */
     public synchronized WxMpService wxMpService(WechatConfig wechatConfig) {
-        //获取集合中的 WxPayService
-        if (wechatConfig != null) {
-            WxMpService wxMpService = wxMpServicesMap.get(wechatConfig.getAppId());
-            //集合中没有则创建
-            if (wxMpService == null) {
-                WxMpDefaultConfigImpl mpConfig = new WxMpDefaultConfigImpl();
-                mpConfig.setAppId(StringUtils.trimToNull(wechatConfig.getAppId()));
-                mpConfig.setSecret(StringUtils.trimToNull(wechatConfig.getAppSecret()));
-                mpConfig.setToken(wechatConfig.getToken());
-                mpConfig.setAesKey(wechatConfig.getAesKey());
-                wxMpService = new WxMpServiceImpl();
-                //设置配置文件
-                wxMpService.setWxMpConfigStorage(mpConfig);
-                wxMpServicesMap.put(wechatConfig.getAppId(), wxMpService);
-                return wxMpService;
-            }
-            return wxMpService;
-        }
-        return null;
+        WxMpDefaultConfigImpl mpConfig = new WxMpDefaultConfigImpl();
+        mpConfig.setAppId(StringUtils.trimToNull(wechatConfig.getAppId()));
+        mpConfig.setSecret(StringUtils.trimToNull(wechatConfig.getAppSecret()));
+        mpConfig.setToken(wechatConfig.getToken());
+        mpConfig.setAesKey(wechatConfig.getAesKey());
+        WxMpService wxMpService = new WxMpServiceImpl();
+        //设置配置文件
+        wxMpService.setWxMpConfigStorage(mpConfig);
+        return wxMpService;
     }
 
 }
