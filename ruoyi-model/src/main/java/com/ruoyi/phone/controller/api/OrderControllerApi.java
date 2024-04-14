@@ -86,7 +86,7 @@ public class OrderControllerApi extends BaseController {
         queryOrder.setAccountNumber(phoneOrder.getAccountNumber());
         List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
         if(phoneOrderList != null && !phoneOrderList.isEmpty()){
-            return error("有正在充值订单，不可重复提交，请联系客服处理");
+            return error("有正在充值订单，不可重复提交，到账号再提交");
         }
         return success(phoneOrderService.insertPhoneOrder(phoneOrder));
     }
