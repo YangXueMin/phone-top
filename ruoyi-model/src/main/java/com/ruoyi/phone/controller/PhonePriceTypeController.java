@@ -55,6 +55,19 @@ public class PhonePriceTypeController extends BaseController {
     }
 
     /**
+     * 查询价格类型列表
+     */
+    @ApiOperation("查询价格类型列表")
+    @PreAuthorize("@ss.hasPermi('phone:priceType:list')")
+    @DataScope(deptAlias = "d", userAlias = "a")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(PhonePriceType phonePriceType)
+    {
+        List<PhonePriceType> list = phonePriceTypeService.selectPhonePriceTypeList(phonePriceType);
+        return success(list);
+    }
+
+    /**
      * 导出价格类型列表
      */
     @PreAuthorize("@ss.hasPermi('phone:priceType:export')")
