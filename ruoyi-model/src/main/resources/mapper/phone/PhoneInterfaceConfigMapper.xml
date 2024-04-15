@@ -13,8 +13,8 @@
         <result property="interfaceUrl"    column="interface_url"    />
         <result property="mchId"    column="mch_id"    />
         <result property="apiKey"    column="api_key"    />
-        <result property="is_sync"    column="isSync"    />
-        <result property="is_refund"    column="isRefund"    />
+        <result property="isSync"    column="is_sync"    />
+        <result property="isRefund"    column="is_refund"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
