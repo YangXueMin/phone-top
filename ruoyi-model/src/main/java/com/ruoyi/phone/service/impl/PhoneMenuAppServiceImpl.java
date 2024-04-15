@@ -92,6 +92,8 @@ public class PhoneMenuAppServiceImpl implements IPhoneMenuAppService {
      */
     @Override
     public int insertPhoneMenuApp(PhoneMenuApp phoneMenuApp) {
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMenuApp.getAppId());
+        phoneMenuApp.setDeptId(wechatConfig.getDeptId());
         phoneMenuApp.setCreateTime(DateUtils.getNowDate());
         return phoneMenuAppMapper.insertPhoneMenuApp(phoneMenuApp);
     }
@@ -121,6 +123,8 @@ public class PhoneMenuAppServiceImpl implements IPhoneMenuAppService {
      */
     @Override
     public int updatePhoneMenuApp(PhoneMenuApp phoneMenuApp) {
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneMenuApp.getAppId());
+        phoneMenuApp.setDeptId(wechatConfig.getDeptId());
         phoneMenuApp.setUpdateTime(DateUtils.getNowDate());
         return phoneMenuAppMapper.updatePhoneMenuApp(phoneMenuApp);
     }

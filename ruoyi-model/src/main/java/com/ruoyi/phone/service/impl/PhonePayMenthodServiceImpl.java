@@ -88,6 +88,8 @@ public class PhonePayMenthodServiceImpl implements IPhonePayMenthodService {
      */
     @Override
     public int insertPhonePayMenthod(PhonePayMenthod phonePayMenthod) {
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phonePayMenthod.getAppId());
+        phonePayMenthod.setDeptId(wechatConfig.getDeptId());
         phonePayMenthod.setCreateTime(DateUtils.getNowDate());
         return phonePayMenthodMapper.insertPhonePayMenthod(phonePayMenthod);
     }
@@ -117,6 +119,8 @@ public class PhonePayMenthodServiceImpl implements IPhonePayMenthodService {
      */
     @Override
     public int updatePhonePayMenthod(PhonePayMenthod phonePayMenthod) {
+        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phonePayMenthod.getAppId());
+        phonePayMenthod.setDeptId(wechatConfig.getDeptId());
         phonePayMenthod.setUpdateTime(DateUtils.getNowDate());
         return phonePayMenthodMapper.updatePhonePayMenthod(phonePayMenthod);
     }
