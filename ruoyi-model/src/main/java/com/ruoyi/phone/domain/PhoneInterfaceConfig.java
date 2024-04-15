@@ -63,6 +63,22 @@ public class PhoneInterfaceConfig extends BaseEntity{
     @ApiModelProperty("apiKey")
     private String apiKey;
 
+    @Excel(name = "是否同步状态")
+    @ApiModelProperty("是否同步状态")
+    private String isSync;
+
+    @Excel(name = "是否同步状态")
+    @ApiModelProperty("是否同步状态")
+    private String isSyncLabel;
+
+    @Excel(name = "是否退款")
+    @ApiModelProperty("是否退款")
+    private String isRefund;
+
+    @Excel(name = "是否退款")
+    @ApiModelProperty("是否退款")
+    private String isRefundLabel;
+
     @ApiModelProperty("微信配置")
     private WechatConfig wechatConfig;
 
@@ -133,6 +149,44 @@ public class PhoneInterfaceConfig extends BaseEntity{
             return DictUtils.getDictLabel("phone_interface_type",interfaceType);
         }
         return interfaceTypeLabel;
+    }
+
+    public String getIsSync() {
+        return isSync;
+    }
+
+    public void setIsSync(String isSync) {
+        this.isSync = isSync;
+    }
+
+    public String getIsRefund() {
+        return isRefund;
+    }
+
+    public void setIsRefund(String isRefund) {
+        this.isRefund = isRefund;
+    }
+
+    public String getIsSyncLabel() {
+        if(StringUtils.isNotBlank(isSync)){
+            return DictUtils.getDictLabel("phone_status",isSync);
+        }
+        return isSyncLabel;
+    }
+
+    public void setIsSyncLabel(String isSyncLabel) {
+        this.isSyncLabel = isSyncLabel;
+    }
+
+    public String getIsRefundLabel() {
+        if(StringUtils.isNotBlank(isRefund)){
+            return DictUtils.getDictLabel("phone_status",isRefund);
+        }
+        return isRefundLabel;
+    }
+
+    public void setIsRefundLabel(String isRefundLabel) {
+        this.isRefundLabel = isRefundLabel;
     }
 
     public String getAppId() {

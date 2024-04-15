@@ -353,9 +353,9 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 if (!phoneOrderList.isEmpty()) {
                     try {
                         PhoneOrder order = phoneOrderList.get(0);
-                        if(!StringUtils.equals("2",order.getArrivalStatus())){
+                        if (!StringUtils.equals("2", order.getArrivalStatus())) {
                             success = success + this.cancel(order);
-                        }else {
+                        } else {
                             error++;
                         }
                     } catch (WxPayException e) {
@@ -370,9 +370,9 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 if (!phoneOrderList.isEmpty()) {
                     try {
                         PhoneOrder order = phoneOrderList.get(0);
-                        if(!StringUtils.equals("2",order.getArrivalStatus())){
+                        if (!StringUtils.equals("2", order.getArrivalStatus())) {
                             success = success + this.cancel(order);
-                        }else {
+                        } else {
                             error++;
                         }
                     } catch (WxPayException e) {
@@ -568,14 +568,40 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
             if (requestBody.getState() == 1) {
                 phoneOrder.setArrivalStatus("2");
-                phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000L));
-                phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
-                phoneOrder.setUpdateTime(DateUtils.getNowDate());
-                phoneOrderMapper.updatePhoneOrder(phoneOrder);
-                PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
-                Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
-                updateMemberInfoMoney(phoneOrder, phonePrice, member);
+            } else {
+                PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
+                phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
+                phoneInterfaceConfig.setSwitchType("1");
+                List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
+                if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
+                    phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
+                    if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsSync()) && StringUtils.equals("1", phoneInterfaceConfig.getIsSync())) {
+                        if (requestBody.getState() == -1) {
+                            phoneOrder.setArrivalStatus("5");
+                        } else if (requestBody.getState() == 2) {
+                            phoneOrder.setArrivalStatus("3");
+                            //判断是否需要退款
+                            if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsRefund()) && StringUtils.equals("1", phoneInterfaceConfig.getIsRefund())) {
+                                if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) > 0) {
+                                    //调用退款接口
+                                    try {
+                                        this.refund(phoneOrder);
+                                    } catch (WxPayException e) {
+                                        log.error(e.getMessage());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
+            phoneOrder.setTopTime(new Date(requestBody.getOtime() * 1000L));
+            phoneOrder.setTopNotifyResult(JSON.toJSONString(requestBody));
+            phoneOrder.setUpdateTime(DateUtils.getNowDate());
+            phoneOrderMapper.updatePhoneOrder(phoneOrder);
+            PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
+            Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
+            updateMemberInfoMoney(phoneOrder, phonePrice, member);
         }
         return "success";
     }

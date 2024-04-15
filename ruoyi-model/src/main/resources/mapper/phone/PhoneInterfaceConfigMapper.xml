@@ -13,6 +13,8 @@
         <result property="interfaceUrl"    column="interface_url"    />
         <result property="mchId"    column="mch_id"    />
         <result property="apiKey"    column="api_key"    />
+        <result property="is_sync"    column="isSync"    />
+        <result property="is_refund"    column="isRefund"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -35,6 +37,8 @@
             a.interface_url,
             a.mch_id,
             a.api_key,
+            a.is_sync,
+            a.is_refund,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -56,6 +60,8 @@
             <if test="interfaceUrl != null  and interfaceUrl != ''"> and a.interface_url = #{interfaceUrl}</if>
             <if test="mchId != null  and mchId != ''"> and a.mch_id = #{mchId}</if>
             <if test="apiKey != null  and apiKey != ''"> and a.api_key = #{apiKey}</if>
+            <if test="isSync != null  and isSync != ''"> and a.is_sync = #{isSync}</if>
+            <if test="isRefund != null  and isRefund != ''"> and a.is_refund = #{isRefund}</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
@@ -77,6 +83,8 @@
             <if test="interfaceUrl != null">interface_url,</if>
             <if test="mchId != null">mch_id,</if>
             <if test="apiKey != null">api_key,</if>
+            <if test="isSync != null">is_sync,</if>
+            <if test="isRefund != null">is_refund,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -91,6 +99,8 @@
             <if test="interfaceUrl != null">#{interfaceUrl},</if>
             <if test="mchId != null">#{mchId},</if>
             <if test="apiKey != null">#{apiKey},</if>
+            <if test="isSync != null">#{isSync},</if>
+            <if test="isRefund != null">#{isRefund},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -109,6 +119,8 @@
             <if test="interfaceUrl != null">interface_url = #{interfaceUrl},</if>
             <if test="mchId != null">mch_id = #{mchId},</if>
             <if test="apiKey != null">api_key = #{apiKey},</if>
+            <if test="isSync != null">is_sync = #{isSync},</if>
+            <if test="isRefund != null">is_refund = #{isRefund},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
