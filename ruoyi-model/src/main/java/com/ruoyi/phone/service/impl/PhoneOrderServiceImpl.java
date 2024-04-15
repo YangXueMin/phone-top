@@ -578,8 +578,6 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsSync()) && StringUtils.equals("1", phoneInterfaceConfig.getIsSync())) {
                         if (requestBody.getState() == -1) {
                             phoneOrder.setArrivalStatus("5");
-                        } else if (requestBody.getState() == 2) {
-                            phoneOrder.setArrivalStatus("3");
                             //判断是否需要退款
                             if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsRefund()) && StringUtils.equals("1", phoneInterfaceConfig.getIsRefund())) {
                                 if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) > 0) {
@@ -591,6 +589,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                     }
                                 }
                             }
+                        } else if (requestBody.getState() == 2) {
+                            phoneOrder.setArrivalStatus("3");
                         }
                     }
                 }
