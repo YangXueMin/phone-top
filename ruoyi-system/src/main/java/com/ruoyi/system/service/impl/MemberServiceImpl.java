@@ -10,6 +10,7 @@ import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.vo.LevelVo;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.IWechatConfigService;
@@ -19,10 +20,13 @@ import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 会员管理Service业务层处理
@@ -153,7 +157,7 @@ public class MemberServiceImpl implements IMemberService {
     }
 
     @Override
-    public List<Map<String, Object>> findSubordinateList(String type) {
+    public List<LevelVo> findSubordinateList(String type) {
         Member member = new Member();
         Long id = SecurityUtils.getLoginUser().getUserId();
 
@@ -168,7 +172,18 @@ public class MemberServiceImpl implements IMemberService {
             //全部
             member.setAncestors(id.toString());
         }
-        return memberMapper.selectSubordinateMemberList(member);
+        List<LevelVo> commissionList = memberMapper.selectSubordinateMemberCommissionList(member);
+        List<LevelVo> orderList = memberMapper.selectSubordinateMemberOrderList(member);
+        commissionList.addAll(orderList);
+
+        return commissionList.stream()
+                // 表示id为key， 接着如果有重复的，那么从BillsNums对象o1与o2中筛选出一个，这里选择o1，
+                // 并把id重复，需要将nums和sums与o1进行合并的o2, 赋值给o1，最后返回o1
+                .collect(Collectors.toMap(LevelVo::getId, a -> a, (o1, o2)-> {
+                    o1.setCommission(o1.getCommission().add(o2.getCommission()));
+                    o1.setOrderNum(o1.getOrderNum() + o2.getOrderNum());
+                    return o1;
+                })).values().stream().collect(Collectors.toList());
     }
 
     @Override

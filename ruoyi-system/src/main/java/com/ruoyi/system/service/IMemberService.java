@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.system.domain.vo.LevelVo;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 
 import java.util.List;
@@ -103,7 +104,7 @@ public interface IMemberService {
      * @param type
      * @return
      */
-    List<Map<String,Object>> findSubordinateList(String type);
+    List<LevelVo> findSubordinateList(String type);
 
     /**
      * 获取推广二维码

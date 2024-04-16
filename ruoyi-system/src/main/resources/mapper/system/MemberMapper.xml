@@ -126,13 +126,12 @@
         order by a.create_time DESC
     </select>
 
-    <select id="selectSubordinateMemberList" parameterType="Member" resultType="java.util.Map">
+    <select id="selectSubordinateMemberCommissionList" parameterType="Member" resultType="LevelVo">
         select
             a.id,
             a.name,
             a.avatar,
             a.number,
-            a.password,
             a.mobile,
             a.sex,
             a.birthday,
@@ -140,23 +139,48 @@
             count(o.id) as orderNum
         from phone_member a
                  left join phone_commission_config c on a.id = c.commission_member_id
-        <choose>
-            <when test="memberId != null and ancestors == null ">
-                and c.member_id =  #{memberId}
-            </when>
-            <when test="memberId == null and ancestors != null">
-                and c.member_id = #{ancestors}
-            </when>
-        </choose>
-                 left join phone_order o on a.id = o.member_id AND o.pay_status = 2
-        <choose>
-            <when test="memberId != null and ancestors == null ">
-                and c.member_id =  #{memberId}
-            </when>
-            <when test="memberId == null and ancestors != null">
-                and c.member_id = #{ancestors}
-            </when>
-        </choose>
+        <where>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="appId != null and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="number != null "> and a.number = #{number}</if>
+            <if test="mobile != null  and mobile != ''"> and a.mobile like concat('%', #{mobile}, '%')</if>
+            <if test="sex != null  and sex != ''"> and a.sex = #{sex}</if>
+            <if test="openId != null  and openId != ''"> and a.open_id = #{openId}</if>
+            <if test="isMember != null  and isMember != ''"> and a.is_member = #{isMember}</if>
+            <if test="isSuperMember != null  and isSuperMember != ''"> and a.is_super_member = #{isSuperMember}</if>
+            <if test="isBlacklist != null  and isBlacklist != ''"> and a.is_blacklist = #{isBlacklist}</if>
+            <choose>
+                <when test="memberId != null  and ancestors != null ">
+                    AND a.member_id != #{memberId}
+                    and a.ancestors like concat('%,',#{ancestors},',%')
+                </when>
+                <when test="memberId != null and ancestors == null ">
+                    and a.member_id = #{memberId}
+                </when>
+                <when test="memberId == null and ancestors != null">
+                    and a.ancestors like concat('%,',#{ancestors},',%')
+                </when>
+            </choose>
+            <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
+            <if test="loginDate != null "> and a.login_date = #{loginDate}</if>
+        </where>
+        GROUP BY a.id
+        order by a.create_time DESC
+    </select>
+
+    <select id="selectSubordinateMemberOrderList" parameterType="Member" resultType="LevelVo">
+        select
+        a.id,
+        a.name,
+        a.avatar,
+        a.number,
+        a.mobile,
+        a.sex,
+        a.birthday,
+        count(o.id) as orderNum
+        from phone_member a
+        left join phone_order o on a.id = o.member_id AND o.pay_status = 2
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>

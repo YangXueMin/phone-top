@@ -772,6 +772,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 //送优惠券
                 PhoneCoupon phoneCoupon = new PhoneCoupon();
                 phoneCoupon.setAppId(phoneOrder.getAppId());
+                phoneCoupon.setStatus("1");
                 List<PhoneCoupon> phoneCouponList = phoneCouponMapper.selectPhoneCouponList(phoneCoupon);
                 if (phoneCouponList.size() > 0) {
                     List<PhoneMemberCoupon> memberCouponList = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.common.core.domain.entity.DataRequest;
 import com.ruoyi.common.core.domain.entity.Member;
+import com.ruoyi.system.domain.vo.LevelVo;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,8 +40,15 @@ public interface MemberMapper {
      * @param member 会员管理
      * @return 会员管理集合
      */
-    @MapKey("id")
-    public List<Map<String,Object>>selectSubordinateMemberList(Member member);
+    public List<LevelVo>selectSubordinateMemberCommissionList(Member member);
+
+    /**
+     * 查询下级会员管理列表
+     *
+     * @param member 会员管理
+     * @return 会员管理集合
+     */
+    public List<LevelVo>selectSubordinateMemberOrderList(Member member);
 
     /**
      * 查询会员管理列表
