@@ -160,7 +160,7 @@
             <if test="indirectCommission != null">#{indirectCommission},</if>
             <if test="memberDirectCommission != null">#{memberDirectCommission},</if>
             <if test="memberIndirectCommission != null">#{memberIndirectCommission},</if>
-            <if test="superMemberDirectCommission != null">#{memberDirectCommission},</if>
+            <if test="superMemberDirectCommission != null">#{superMemberDirectCommission},</if>
             <if test="superMemberIndirectCommission != null">#{superMemberIndirectCommission},</if>
             <if test="orderNum != null">#{orderNum},</if>
             <if test="productId != null">#{productId},</if>

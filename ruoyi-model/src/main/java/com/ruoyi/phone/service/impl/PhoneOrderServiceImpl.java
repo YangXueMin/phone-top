@@ -566,31 +566,25 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOut_trade_num());
         if (phoneOrderList != null && phoneOrderList.size() > 0) {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
+
+            boolean flag = false;
+            PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
+            phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
+            phoneInterfaceConfig.setSwitchType("1");
+            List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
+
             if (requestBody.getState() == 1) {
                 phoneOrder.setArrivalStatus("2");
             } else {
-                PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
-                phoneInterfaceConfig.setAppId(phoneOrder.getAppId());
-                phoneInterfaceConfig.setSwitchType("1");
-                List<PhoneInterfaceConfig> phoneInterfaceConfigList = phoneInterfaceConfigMapper.selectPhoneInterfaceConfigList(phoneInterfaceConfig);
-                if (phoneInterfaceConfigList != null && phoneInterfaceConfigList.size() > 0) {
+                if (phoneInterfaceConfigList != null && !phoneInterfaceConfigList.isEmpty()) {
                     phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
                     if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsSync()) && StringUtils.equals("1", phoneInterfaceConfig.getIsSync())) {
                         if (requestBody.getState() == -1) {
                             phoneOrder.setArrivalStatus("5");
-                            //判断是否需要退款
-                            if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsRefund()) && StringUtils.equals("1", phoneInterfaceConfig.getIsRefund())) {
-                                if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) > 0) {
-                                    //调用退款接口
-                                    try {
-                                        this.refund(phoneOrder);
-                                    } catch (WxPayException e) {
-                                        log.error(e.getMessage());
-                                    }
-                                }
-                            }
+                            flag = true;
                         } else if (requestBody.getState() == 2) {
                             phoneOrder.setArrivalStatus("3");
+                            flag = true;
                         }
                     }
                 }
@@ -602,6 +596,23 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
             PhonePrice phonePrice = phonePriceMapper.selectPhonePriceById(phoneOrder.getPriceId());
             Member member = memberMapper.selectMemberById(phoneOrder.getMemberId());
             updateMemberInfoMoney(phoneOrder, phonePrice, member);
+            if (flag) {
+                //判断是否需要退款
+                if (!phoneInterfaceConfigList.isEmpty()) {
+                    phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
+                    if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsRefund()) && StringUtils.equals("1", phoneInterfaceConfig.getIsRefund())) {
+                        if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) > 0) {
+                            //调用退款接口
+                            try {
+                                phoneOrder.setRefundMoney(phoneOrder.getPayMoney().subtract(phoneOrder.getRefundMoney()));
+                                this.refund(phoneOrder);
+                            } catch (WxPayException e) {
+                                log.error(e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
         }
         return "success";
     }

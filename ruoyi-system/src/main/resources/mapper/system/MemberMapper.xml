@@ -109,7 +109,7 @@
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="appId != null and appId != ''"> and a.app_id = #{appId}</if>
-            <if test="number != null "> and a.number = #{number}</if>
+            <if test="number != null "> and a.number like concat('%', #{number}, '%')</if>
             <if test="mobile != null  and mobile != ''"> and a.mobile like concat('%', #{mobile}, '%')</if>
             <if test="sex != null  and sex != ''"> and a.sex = #{sex}</if>
             <if test="openId != null  and openId != ''"> and a.open_id = #{openId}</if>
@@ -135,8 +135,7 @@
             a.mobile,
             a.sex,
             a.birthday,
-            IFNULL(sum(c.money),0) as commission,
-            count(o.id) as orderNum
+            IFNULL(sum(c.money),0) as commission
         from phone_member a
                  left join phone_commission_config c on a.id = c.commission_member_id
         <where>
@@ -180,7 +179,7 @@
         a.birthday,
         count(o.id) as orderNum
         from phone_member a
-        left join phone_order o on a.id = o.member_id AND o.pay_status = 2
+        left join phone_order o on a.id = o.member_id AND o.arrival_status = 2
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
