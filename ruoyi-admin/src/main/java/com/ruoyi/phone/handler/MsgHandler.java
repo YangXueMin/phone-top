@@ -65,12 +65,17 @@ public class MsgHandler extends AbstractHandler {
                     if (StringUtils.equals(wxMessage.getContent(), wechatMessage.getKeyWord())) {
                         return messageUtil.sendMessage(wechatMessage, wxMessage, wxMpService);
                     }
-                } else {
+                } else if (StringUtils.equals("1", wechatMessage.getMatchingType())){
                     //如果是模糊匹配
                     if (wxMessage.getContent().contains(wechatMessage.getKeyWord())) {
                         return messageUtil.sendMessage(wechatMessage, wxMessage, wxMpService);
                     }
+                }else{
+                    if(StringUtils.equals("*",wechatMessage.getKeyWord())){
+                        return messageUtil.sendMessage(wechatMessage, wxMessage, wxMpService);
+                    }
                 }
+
             }
         }
         return null;
