@@ -152,7 +152,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login","/memberLogin", "/wx/**","/MP_verify_*","/wxLogin", "/register", "/captchaImage","/data/**","/common/**","/api/**","/wxPayCallBack/**","/websocket/**").permitAll()
+                .antMatchers("/login","/memberLogin", "/wx/**","/MP_verify_*","/wxLogin", "/register",
+                        "/captchaImage","/data/**","/common/**",
+                        "/api/**",
+                        "/api/phone/config/**",
+                        "/api/phone/balance/payNotify",
+                        "/api/phone/dict/**",
+                        "/api/phone/memberCard/payNotify",
+                        "/api/phone/menu/list",
+                        "/api/phone/notice/**",
+                        "/api/phone/price/**",
+                        "/api/phone/order/getElecityArea",
+                        "/api/phone/order/payNotify",
+                        "/api/phone/order/refundNotify",
+                        "/api/phone/order/topNotify",
+                        "/api/phone/order/findNewsflash",
+                        "/wxPayCallBack/**","/websocket/**").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html","/doc.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
