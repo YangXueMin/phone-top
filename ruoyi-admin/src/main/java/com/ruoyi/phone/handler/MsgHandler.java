@@ -44,8 +44,8 @@ public class MsgHandler extends AbstractHandler {
         //当用户输入关键词如“你好”，“客服”等，并且有客服在线时，把消息转发给在线客服
         try {
             if (StringUtils.startsWithAny(wxMessage.getContent(), "你好", "客服")
-                    && wxMpService.getKefuService().kfOnlineList()
-                    .getKfOnlineList().size() > 0) {
+                    && !wxMpService.getKefuService().kfOnlineList()
+                    .getKfOnlineList().isEmpty()) {
                 return WxMpXmlOutMessage.TRANSFER_CUSTOMER_SERVICE()
                         .fromUser(wxMessage.getToUser())
                         .toUser(wxMessage.getFromUser()).build();
@@ -57,9 +57,8 @@ public class MsgHandler extends AbstractHandler {
         phoneWechatMessage.setAppId(wxMpConfigStorage.getAppId());
         phoneWechatMessage.setTouchType("2");
         phoneWechatMessage.setStatus("1");
-        phoneWechatMessage.setKeyWord(wxMessage.getContent());
         List<PhoneWechatMessage> messageList = wechatMessageService.selectPhoneWechatMessageList(phoneWechatMessage);
-        if (messageList.size() > 0) {
+        if (!messageList.isEmpty()) {
             for (PhoneWechatMessage wechatMessage : messageList) {
                 if (StringUtils.equals("2", wechatMessage.getMatchingType())) {
                     if (StringUtils.equals(wxMessage.getContent(), wechatMessage.getKeyWord())) {
