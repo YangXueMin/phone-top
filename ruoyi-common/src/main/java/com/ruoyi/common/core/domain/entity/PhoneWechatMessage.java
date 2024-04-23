@@ -67,7 +67,7 @@ public class PhoneWechatMessage extends BaseEntity {
     /**
      * 消息类型（文本消息、图片消息、语音消息、视频消息、音乐消息、图文消息） 字典：phone_wechat_msg_type
      */
-    @Excel(name = "消息类型", readConverterExp = "文=本消息、图片消息、语音消息、视频消息、音乐消息、图文消息")
+    @Excel(name = "消息类型", readConverterExp = "文本消息、图片消息、语音消息、视频消息、音乐消息、图文消息")
     private String msgType;
 
     /**
@@ -276,7 +276,7 @@ public class PhoneWechatMessage extends BaseEntity {
 
     public String getMatchingTypeLabel() {
         if (StringUtils.isNotBlank(matchingType)) {
-            return DictUtils.getDictLabel("phone_wechat_key_word_type", matchingType);
+            return DictUtils.getDictLabel("phone_wechat_touch_type", matchingType);
         }
         return matchingTypeLabel;
     }
