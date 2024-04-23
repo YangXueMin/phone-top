@@ -276,7 +276,7 @@ public class PhoneWechatMessage extends BaseEntity {
 
     public String getMatchingTypeLabel() {
         if (StringUtils.isNotBlank(matchingType)) {
-            return DictUtils.getDictLabel("phone_wechat_touch_type", matchingType);
+            return DictUtils.getDictLabel("phone_wechat_key_word_type", matchingType);
         }
         return matchingTypeLabel;
     }
