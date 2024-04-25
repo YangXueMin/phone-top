@@ -186,18 +186,20 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 phoneOrder.setPayTime(DateUtils.getNowDate());
                 phoneOrder.setPayMoney(BigDecimal.ZERO);
             }
-            memberMapper.updateMember(member);
-            //添加余额变更记录
-            PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
-            phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
-            phoneBalanceLog.setAppId(phoneOrder.getAppId());
-            phoneBalanceLog.setMemberId(member.getId());
-            phoneBalanceLog.setType("2");
-            phoneBalanceLog.setBalanceBefore(balance);
-            phoneBalanceLog.setMoney(money);
-            phoneBalanceLog.setBalanceAfter(member.getBalance());
-            phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
-            phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+            if(money.compareTo(BigDecimal.ZERO) > 0){
+                memberMapper.updateMember(member);
+                //添加余额变更记录
+                PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
+                phoneBalanceLog.setDeptId(phoneOrder.getDeptId());
+                phoneBalanceLog.setAppId(phoneOrder.getAppId());
+                phoneBalanceLog.setMemberId(member.getId());
+                phoneBalanceLog.setType("2");
+                phoneBalanceLog.setBalanceBefore(balance);
+                phoneBalanceLog.setMoney(money);
+                phoneBalanceLog.setBalanceAfter(member.getBalance());
+                phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
+                phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+            }
         }
         phoneOrderMapper.insertPhoneOrder(phoneOrder);
         topOrder(phoneOrder, phonePrice);
