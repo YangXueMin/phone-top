@@ -186,7 +186,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 phoneOrder.setPayTime(DateUtils.getNowDate());
                 phoneOrder.setPayMoney(BigDecimal.ZERO);
             }
-            if(money.compareTo(BigDecimal.ZERO) > 0){
+            if (money.compareTo(BigDecimal.ZERO) > 0) {
                 memberMapper.updateMember(member);
                 //添加余额变更记录
                 PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
@@ -236,6 +236,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     phoneBalanceLog.setBalanceAfter(member.getBalance());
                     phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
                     phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+                    phoneOrder.setRefundMoney(phoneOrder.getPayBalance());
                 }
                 log.info("判断退款逻辑：{}", JSON.toJSONString(old));
                 log.info("判断退款逻辑：{}", old.getPayMoney().compareTo(BigDecimal.ZERO) > 0);
@@ -243,6 +244,10 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     //调用退款接口
                     old.setRefundMoney(old.getPayMoney().subtract(old.getRefundMoney()));
                     this.refund(old);
+                } else {
+                    if (phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
+                        phoneOrder.setPayStatus("3");
+                    }
                 }
             }
             //调用取消接口
