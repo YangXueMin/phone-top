@@ -327,6 +327,14 @@
         where id = #{id}
     </update>
 
+    <update id="updateMemberExpiration">
+        update phone_member set is_member = 0 where is_member = 1 AND expiration_time &lt; now();
+    </update>
+
+    <update id="updateSuperMemberExpiration">
+        update phone_member set is_super_member = 0 where is_super_member = 1 AND super_expiration_time &lt; now();
+    </update>
+
     <update id="resetMemberPwd" parameterType="Member">
         update phone_member set password = #{password} where id = #{id}
     </update>

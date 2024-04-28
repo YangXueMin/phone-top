@@ -83,6 +83,20 @@ public interface MemberMapper {
     public int updateMember(Member member);
 
     /**
+     * 修改会员管理
+     *
+     * @return 结果
+     */
+    public int updateMemberExpiration();
+
+    /**
+     * 修改会员管理
+     *
+     * @return 结果
+     */
+    public int updateSuperMemberExpiration();
+
+    /**
      * 重置用户密码
      *
      * @param id 会员ID
