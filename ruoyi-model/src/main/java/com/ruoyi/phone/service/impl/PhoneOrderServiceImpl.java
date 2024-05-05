@@ -796,7 +796,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     List<PhoneMemberCoupon> memberCouponList = new ArrayList<>();
                     for (PhoneCoupon coupon : phoneCouponList) {
                         switch (coupon.getDistributionMode()) {
-                            case "1":
+                            case "2":
                                 //充值送
                                 if (phoneOrder.getTopUpMoney().compareTo(coupon.getRechargeAmount()) > -1) {
                                     int num = 1;
