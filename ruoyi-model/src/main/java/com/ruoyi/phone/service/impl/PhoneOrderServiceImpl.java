@@ -820,6 +820,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 //首单送
                                 PhoneOrder queryOrder = new PhoneOrder();
                                 queryOrder.setMemberId(member.getId());
+                                queryOrder.setPayStatus("2");
+                                queryOrder.setArrivalStatus("2");
                                 List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderList(queryOrder);
                                 if (phoneOrderList.size() == 1) {
                                     if (phoneOrder.getTopUpMoney().compareTo(coupon.getRechargeAmount()) > -1) {
