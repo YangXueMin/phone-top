@@ -318,6 +318,10 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 //调用退款接口
                 old.setRefundMoney(old.getPayMoney().subtract(old.getRefundMoney()));
                 this.refund(old);
+            }else{
+                if (phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
+                    phoneOrder.setPayStatus("3");
+                }
             }
         }
         //调用取消接口
