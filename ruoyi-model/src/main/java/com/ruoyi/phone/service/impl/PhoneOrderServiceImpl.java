@@ -577,6 +577,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOut_trade_num());
         if (phoneOrderList != null && phoneOrderList.size() > 0) {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
+            PhoneOrder old = phoneOrderList.get(0);
 
             boolean flag = false;
             PhoneInterfaceConfig phoneInterfaceConfig = new PhoneInterfaceConfig();
@@ -612,6 +613,23 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 if (!phoneInterfaceConfigList.isEmpty()) {
                     phoneInterfaceConfig = phoneInterfaceConfigList.get(0);
                     if (StringUtils.isNotBlank(phoneInterfaceConfig.getIsRefund()) && StringUtils.equals("1", phoneInterfaceConfig.getIsRefund())) {
+                        if (old.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
+                            //回退余额给用户
+                            BigDecimal balance = member.getBalance();
+                            member.setBalance(balance.add(old.getPayBalance()));
+                            memberMapper.updateMember(member);
+                            //添加余额变更记录
+                            PhoneBalanceLog phoneBalanceLog = new PhoneBalanceLog();
+                            phoneBalanceLog.setDeptId(old.getDeptId());
+                            phoneBalanceLog.setAppId(old.getAppId());
+                            phoneBalanceLog.setMemberId(member.getId());
+                            phoneBalanceLog.setType("3");
+                            phoneBalanceLog.setBalanceBefore(balance);
+                            phoneBalanceLog.setMoney(old.getPayBalance());
+                            phoneBalanceLog.setBalanceAfter(member.getBalance());
+                            phoneBalanceLog.setCreateTime(DateUtils.getNowDate());
+                            phoneBalanceLogMapper.insertPhoneBalanceLog(phoneBalanceLog);
+                        }
                         if (phoneOrder.getPayMoney().compareTo(BigDecimal.ZERO) > 0) {
                             //调用退款接口
                             try {
@@ -621,9 +639,12 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 log.error(e.getMessage());
                             }
                         }
+                        phoneOrder.setPayStatus("3");
+                        phoneOrderMapper.updatePhoneOrder(phoneOrder);
                     }
                 }
             }
+
         }
         return "success";
     }
