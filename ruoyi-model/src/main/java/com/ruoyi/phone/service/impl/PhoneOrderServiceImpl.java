@@ -762,14 +762,16 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         if (agency.getCommissionBalance() != null) {
                             agencyBalance = agency.getCommissionBalance();
                         }
-                        expenditureFirst = agencyBalance;
-                        expenditureTotal = expenditureTotal.add(agencyBalance);
+                        //计算佣金
                         BigDecimal directCommission = phonePrice.getDirectCommission();
                         if (StringUtils.equals("1", agency.getIsSuperMember())) {
                             directCommission = phonePrice.getSuperMemberDirectCommission();
                         } else if (StringUtils.equals("1", agency.getIsMember())) {
                             directCommission = phonePrice.getMemberDirectCommission();
                         }
+                        expenditureFirst = directCommission;
+                        expenditureTotal = expenditureTotal.add(directCommission);
+
                         agency.setCommissionBalance(agencyBalance.add(directCommission));
                         memberMapper.updateMember(agency);
                         //添加佣金记录
@@ -791,14 +793,17 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 if (secondary.getCommissionBalance() != null) {
                                     secondaryBalance = secondary.getCommissionBalance();
                                 }
-                                expenditureSecond = secondaryBalance;
-                                expenditureTotal = expenditureTotal.add(secondaryBalance);
+                               //计算佣金
                                 BigDecimal secondaryDirectCommission = phonePrice.getIndirectCommission();
                                 if (StringUtils.equals("1", secondary.getIsSuperMember())) {
                                     secondaryDirectCommission = phonePrice.getSuperMemberIndirectCommission();
                                 } else if (StringUtils.equals("1", secondary.getIsMember())) {
                                     secondaryDirectCommission = phonePrice.getMemberIndirectCommission();
                                 }
+
+                                expenditureSecond = secondaryDirectCommission;
+                                expenditureTotal = expenditureTotal.add(secondaryDirectCommission);
+
                                 secondary.setCommissionBalance(secondaryBalance.add(secondaryDirectCommission));
                                 memberMapper.updateMember(secondary);
                                 //添加佣金记录
