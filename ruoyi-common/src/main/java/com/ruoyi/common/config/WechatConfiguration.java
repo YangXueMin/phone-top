@@ -8,13 +8,16 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.google.common.collect.Maps;
 import com.ruoyi.common.config.properties.WechatPayProperties;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.error.WxRuntimeException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,15 +35,13 @@ import java.util.stream.Collectors;
  */
 @Configuration
 //引入WxPayService这个类 下面两个才会实例化
-@ConditionalOnClass({WxPayService.class,WxMaService.class})
+@ConditionalOnClass({WxPayService.class, WxMaService.class})
 @RequiredArgsConstructor
 public class WechatConfiguration {
     @Resource
     private WechatPayProperties payProperties;
-
-    private static Map<String, WxPayService> wxPayServicesMap = Maps.newHashMap();
-
-    private static Map<String, WxMpService> wxMpServicesMap = Maps.newHashMap();
+    @Autowired
+    private RedisCache redisCache;
 
     @Bean
     public WxMaService wxMaService() {
@@ -69,15 +70,21 @@ public class WechatConfiguration {
      * @return WxPayService
      */
     public synchronized WxPayService wxPayService(WechatConfig wechatConfig) {
-        WxPayConfig wxPayConfig = new WxPayConfig();
-        wxPayConfig.setAppId(wechatConfig.getAppId());
-        wxPayConfig.setMchId(StringUtils.trimToNull(wechatConfig.getMchId()));
-        wxPayConfig.setMchKey(StringUtils.trimToNull(wechatConfig.getMchKey()));
-        wxPayConfig.setKeyPath(StringUtils.trimToNull(wechatConfig.getKeyPath()));
-        // 可以指定是否使用沙箱环境
-        wxPayConfig.setUseSandboxEnv(false);
-        WxPayService wxPayService = new WxPayServiceImpl();
-        wxPayService.setConfig(wxPayConfig);
+        String key = CacheConstants.WX_PAY_SERVICE_KEY + wechatConfig.getAppId();
+        WxPayService wxPayService;
+        if (redisCache.hasKey(key)) {
+            wxPayService = redisCache.getCacheObject(key);
+        } else {
+            WxPayConfig wxPayConfig = new WxPayConfig();
+            wxPayConfig.setAppId(wechatConfig.getAppId());
+            wxPayConfig.setMchId(StringUtils.trimToNull(wechatConfig.getMchId()));
+            wxPayConfig.setMchKey(StringUtils.trimToNull(wechatConfig.getMchKey()));
+            wxPayConfig.setKeyPath(StringUtils.trimToNull(wechatConfig.getKeyPath()));
+            // 可以指定是否使用沙箱环境
+            wxPayConfig.setUseSandboxEnv(false);
+            wxPayService = new WxPayServiceImpl();
+            wxPayService.setConfig(wxPayConfig);
+        }
         return wxPayService;
     }
 
@@ -88,14 +95,20 @@ public class WechatConfiguration {
      * @return WxPayService
      */
     public synchronized WxMpService wxMpService(WechatConfig wechatConfig) {
-        WxMpDefaultConfigImpl mpConfig = new WxMpDefaultConfigImpl();
-        mpConfig.setAppId(StringUtils.trimToNull(wechatConfig.getAppId()));
-        mpConfig.setSecret(StringUtils.trimToNull(wechatConfig.getAppSecret()));
-        mpConfig.setToken(wechatConfig.getToken());
-        mpConfig.setAesKey(wechatConfig.getAesKey());
-        WxMpService wxMpService = new WxMpServiceImpl();
-        //设置配置文件
-        wxMpService.setWxMpConfigStorage(mpConfig);
+        String key = CacheConstants.WX_MP_SERVICE_KEY + wechatConfig.getAppId();
+        WxMpService wxMpService;
+        if (redisCache.hasKey(key)) {
+            wxMpService = redisCache.getCacheObject(key);
+        } else {
+            WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
+            configStorage.setAppId(StringUtils.trimToNull(wechatConfig.getAppId()));
+            configStorage.setSecret(StringUtils.trimToNull(wechatConfig.getAppSecret()));
+            configStorage.setToken(wechatConfig.getToken());
+            configStorage.setAesKey(wechatConfig.getAesKey());
+            wxMpService = new WxMpServiceImpl();
+            wxMpService.setWxMpConfigStorage(configStorage);
+            redisCache.setCacheObject(key, wxMpService);
+        }
         return wxMpService;
     }
 

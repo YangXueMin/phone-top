@@ -48,6 +48,13 @@ public class PhoneCommissionConfig extends BaseEntity {
     private Long memberId;
 
     /**
+     * 订单ID
+     */
+    @Excel(name = "订单ID")
+    @ApiModelProperty("订单ID")
+    private Long orderId;
+
+    /**
      * 推送会员ID
      */
     @Excel(name = "推送会员ID")
@@ -83,6 +90,9 @@ public class PhoneCommissionConfig extends BaseEntity {
 
     @ApiModelProperty("提成会员信息")
     private Member commissionMember;
+
+    @ApiModelProperty("订单信息")
+    private PhoneOrder order;
 
     public void setId(Long id) {
         this.id = id;
@@ -170,5 +180,21 @@ public class PhoneCommissionConfig extends BaseEntity {
 
     public void setCommissionMember(Member commissionMember) {
         this.commissionMember = commissionMember;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public PhoneOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(PhoneOrder order) {
+        this.order = order;
     }
 }

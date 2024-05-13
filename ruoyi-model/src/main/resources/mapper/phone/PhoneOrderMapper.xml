@@ -34,6 +34,9 @@
         <result property="topNotifyResult"    column="top_notify_result"    />
         <result property="topStatus"    column="top_status"    />
         <result property="topStatusRemark"    column="top_status_remark"    />
+        <result property="expenditureTotal"    column="expenditure_total"    />
+        <result property="expenditureFirst"    column="expenditure_first"    />
+        <result property="expenditureSecond"    column="expenditure_second"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -115,6 +118,9 @@
                a.top_notify_result,
                a.top_status,
                a.top_status_remark,
+               a.expenditure_total,
+               a.expenditure_first,
+               a.expenditure_second,
             a.create_by,
             a.create_time,
             a.update_by,
@@ -305,6 +311,9 @@
             <if test="topResult != null">top_result,</if>
             <if test="topTime != null">top_time,</if>
             <if test="topNotifyResult != null">top_notify_result,</if>
+            <if test="expenditureTotal != null">expenditure_total,</if>
+            <if test="expenditureFirst != null">expenditure_first,</if>
+            <if test="expenditureSecond != null">expenditure_second,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -341,6 +350,9 @@
             <if test="topResult != null">#{topResult},</if>
             <if test="topTime != null">#{topTime},</if>
             <if test="topNotifyResult != null">#{topNotifyResult},</if>
+            <if test="expenditureTotal != null">#{expenditureTotal},</if>
+            <if test="expenditureFirst != null">#{expenditureFirst},</if>
+            <if test="expenditureSecond != null">#{expenditureSecond},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -380,6 +392,9 @@
             <if test="topResult != null">top_result = #{topResult},</if>
             <if test="topTime != null">top_time = #{topTime},</if>
             <if test="topNotifyResult != null">top_notify_result = #{topNotifyResult},</if>
+            <if test="expenditureTotal != null">expenditure_total = #{expenditureTotal},</if>
+            <if test="expenditureFirst != null">expenditure_first = #{expenditureFirst},</if>
+            <if test="expenditureSecond != null">expenditure_second = #{expenditureSecond},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

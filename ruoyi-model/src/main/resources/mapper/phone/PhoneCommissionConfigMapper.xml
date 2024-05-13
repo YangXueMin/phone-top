@@ -9,6 +9,7 @@
         <result property="deptId"    column="dept_id"    />
         <result property="appId"    column="app_id"    />
         <result property="memberId"    column="member_id"    />
+        <result property="orderId"    column="order_id"    />
         <result property="commissionMemberId"    column="commission_member_id"    />
         <result property="commissionBefore"    column="commission_before"    />
         <result property="money"    column="money"    />
@@ -20,6 +21,7 @@
         <result property="remark"    column="remark"    />
         <association property="wechatConfig"    column="app_id" javaType="WechatConfig" resultMap="WechatConfigResult" />
         <association property="member"    column="member_id" javaType="Member" resultMap="MemberResult" />
+        <association property="order"    column="order_id" javaType="PhoneOrder" resultMap="PhoneOrderResult" />
     </resultMap>
 
     <resultMap type="WechatConfig" id="WechatConfigResult">
@@ -39,6 +41,10 @@
         <result property="isMember"    column="is_member"    />
     </resultMap>
 
+    <resultMap type="PhoneOrder" id="PhoneOrderResult">
+        <result property="orderNo"    column="order_no"    />
+    </resultMap>
+
     <sql id="selectPhoneCommissionConfigVo">
         select
             a.id,
@@ -46,6 +52,7 @@
             a.app_id,
             a.member_id,
                a.commission_member_id,
+               a.order_id,
             a.commission_before,
             a.money,
             a.commission_after,
@@ -63,9 +70,11 @@
             m.birthday,
             m.balance,
             m.open_id,
-            m.is_member
+            m.is_member,
+            o.order_no
         from phone_commission_config  a
                  left join phone_wechat_config wc ON wc.app_id = a.app_id
+                 LEFT JOIN phone_order o  ON a.order_id = o.id
                  left join phone_member m ON m.id = a.member_id
                  left join sys_dept d on a.dept_id = d.dept_id
     </sql>
@@ -77,6 +86,7 @@
             <if test="appId != null "> and a.app_id = #{appId}</if>
             <if test="memberId != null "> and a.member_id = #{memberId}</if>
             <if test="commissionMemberId != null "> and a.commission_member_id = #{commissionMemberId}</if>
+            <if test="orderId != null "> and a.order_id = #{orderId}</if>
             <if test="commissionBefore != null "> and a.commission_before = #{commissionBefore}</if>
             <if test="money != null "> and a.money = #{money}</if>
             <if test="commissionAfter != null "> and a.commission_after = #{commissionAfter}</if>
@@ -92,6 +102,11 @@
                 </if>
                 <if test="member.isSuperMember != null and member.isSuperMember != ''">
                     AND m.is_super_member = #{member.isSuperMember}
+                </if>
+            </if>
+            <if test="order != null">
+                <if test="order.orderNo != null and order.orderNo != ''">
+                    AND o.order_no like concat('%',#{order.orderNo},'%')
                 </if>
             </if>
             <!-- 数据范围过滤 -->
@@ -112,6 +127,7 @@
             <if test="appId != null">app_id,</if>
             <if test="memberId != null">member_id,</if>
             <if test="commissionMemberId != null">commission_member_id,</if>
+            <if test="orderId != null">order_id,</if>
             <if test="commissionBefore != null">commission_before,</if>
             <if test="money != null">money,</if>
             <if test="commissionAfter != null">commission_after,</if>
@@ -126,6 +142,7 @@
             <if test="appId != null">#{appId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="commissionMemberId != null">#{commissionMemberId},</if>
+            <if test="orderId != null">#{orderId},</if>
             <if test="commissionBefore != null">#{commissionBefore},</if>
             <if test="money != null">#{money},</if>
             <if test="commissionAfter != null">#{commissionAfter},</if>
@@ -144,6 +161,7 @@
             <if test="appId != null">app_id = #{appId},</if>
             <if test="memberId != null">member_id = #{memberId},</if>
             <if test="commissionMemberId != null">commission_member_id = #{commissionMemberId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
             <if test="commissionBefore != null">commission_before = #{commissionBefore},</if>
             <if test="money != null">money = #{money},</if>
             <if test="commissionAfter != null">commission_after = #{commissionAfter},</if>

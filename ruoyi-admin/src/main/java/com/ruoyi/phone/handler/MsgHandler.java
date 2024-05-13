@@ -14,8 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType;
 
@@ -46,7 +48,8 @@ public class MsgHandler extends AbstractHandler {
         phoneWechatMessage.setStatus("1");
         List<PhoneWechatMessage> messageList = wechatMessageService.selectPhoneWechatMessageList(phoneWechatMessage);
         if (!messageList.isEmpty()) {
-            for (PhoneWechatMessage wechatMessage : messageList) {
+            List<PhoneWechatMessage> sortList = messageList.stream().sorted(Comparator.comparing(PhoneWechatMessage::getMatchingType).reversed()).collect(Collectors.toList());
+            for (PhoneWechatMessage wechatMessage : sortList) {
                 if (StringUtils.equals("2", wechatMessage.getMatchingType())) {
                     if (StringUtils.equals(wxMessage.getContent(), wechatMessage.getKeyWord())) {
                         return messageUtil.sendMessage(wechatMessage, wxMessage, wxMpService);

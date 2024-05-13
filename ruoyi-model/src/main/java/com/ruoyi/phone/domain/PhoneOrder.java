@@ -261,6 +261,24 @@ public class PhoneOrder extends BaseEntity {
     @ApiModelProperty("充值回调记录")
     private String topNotifyResult;
 
+    /**
+     * 总支出
+     */
+    @ApiModelProperty("总支出")
+    private BigDecimal expenditureTotal;
+
+    /**
+     * 一级支出
+     */
+    @ApiModelProperty("一级支出")
+    private BigDecimal expenditureFirst;
+
+    /**
+     * 二级支出
+     */
+    @ApiModelProperty("二级支出")
+    private BigDecimal expenditureSecond;
+
     @ApiModelProperty("微信配置")
     @Excels({
             @Excel(name = "公众号名称", targetAttr = "title", sort = 1, type = Excel.Type.EXPORT)
@@ -642,5 +660,29 @@ public class PhoneOrder extends BaseEntity {
 
     public void setOrderNoList(List<String> orderNoList) {
         this.orderNoList = orderNoList;
+    }
+
+    public BigDecimal getExpenditureTotal() {
+        return expenditureTotal;
+    }
+
+    public void setExpenditureTotal(BigDecimal expenditureTotal) {
+        this.expenditureTotal = expenditureTotal;
+    }
+
+    public BigDecimal getExpenditureFirst() {
+        return expenditureFirst;
+    }
+
+    public void setExpenditureFirst(BigDecimal expenditureFirst) {
+        this.expenditureFirst = expenditureFirst;
+    }
+
+    public BigDecimal getExpenditureSecond() {
+        return expenditureSecond;
+    }
+
+    public void setExpenditureSecond(BigDecimal expenditureSecond) {
+        this.expenditureSecond = expenditureSecond;
     }
 }

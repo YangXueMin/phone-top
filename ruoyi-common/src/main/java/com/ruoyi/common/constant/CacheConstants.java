@@ -63,6 +63,16 @@ public class CacheConstants
     public static final String WECHAT_COMPANY_CONFIG_KEY = "wechat_company_config:";
 
     /**
+     * 参数管理 cache key
+     */
+    public static final String WX_MP_SERVICE_KEY = "wxMpService:";
+
+    /**
+     * 参数管理 cache key
+     */
+    public static final String WX_PAY_SERVICE_KEY = "wxPayService:";
+
+    /**
      * 字典管理 cache key
      */
     public static final String SYS_DICT_KEY = "sys_dict:";

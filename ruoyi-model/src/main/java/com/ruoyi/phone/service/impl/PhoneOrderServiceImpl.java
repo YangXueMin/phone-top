@@ -753,6 +753,9 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
     public void updateMemberInfoMoney(PhoneOrder phoneOrder, PhonePrice phonePrice, Member member) {
         if (StringUtils.equals("2", phoneOrder.getArrivalStatus())) {
+            BigDecimal expenditureTotal = BigDecimal.ZERO;
+            BigDecimal expenditureFirst = BigDecimal.ZERO;
+            BigDecimal expenditureSecond = BigDecimal.ZERO;
             //如果是被推荐用户获取上级
             if (member.getMemberId() != null) {
                 //获取佣金
@@ -763,6 +766,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         if (agency.getCommissionBalance() != null) {
                             agencyBalance = agency.getCommissionBalance();
                         }
+                        expenditureFirst = agencyBalance;
+                        expenditureTotal = expenditureTotal.add(agencyBalance);
                         BigDecimal directCommission = phonePrice.getDirectCommission();
                         if (StringUtils.equals("1", agency.getIsSuperMember())) {
                             directCommission = phonePrice.getSuperMemberDirectCommission();
@@ -781,6 +786,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                         phoneCommissionConfig.setCommissionMemberId(member.getId());
                         phoneCommissionConfig.setCommissionAfter(agency.getCommissionBalance());
                         phoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                        phoneCommissionConfig.setOrderId(phoneOrder.getId());
                         phoneCommissionConfigMapper.insertPhoneCommissionConfig(phoneCommissionConfig);
                         if (agency.getMemberId() != null) {
                             Member secondary = memberMapper.selectMemberById(agency.getMemberId());
@@ -789,6 +795,8 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 if (secondary.getCommissionBalance() != null) {
                                     secondaryBalance = secondary.getCommissionBalance();
                                 }
+                                expenditureSecond = secondaryBalance;
+                                expenditureTotal = expenditureTotal.add(secondaryBalance);
                                 BigDecimal secondaryDirectCommission = phonePrice.getIndirectCommission();
                                 if (StringUtils.equals("1", secondary.getIsSuperMember())) {
                                     secondaryDirectCommission = phonePrice.getSuperMemberIndirectCommission();
@@ -807,6 +815,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 secondaryPhoneCommissionConfig.setMoney(secondaryDirectCommission);
                                 secondaryPhoneCommissionConfig.setCommissionAfter(secondary.getCommissionBalance());
                                 secondaryPhoneCommissionConfig.setCreateTime(DateUtils.getNowDate());
+                                secondaryPhoneCommissionConfig.setOrderId(phoneOrder.getId());
                                 phoneCommissionConfigMapper.insertPhoneCommissionConfig(secondaryPhoneCommissionConfig);
                             }
                         }
@@ -879,6 +888,11 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     }
                 }
             }
+            //更新订单支出金额
+            phoneOrder.setExpenditureFirst(expenditureFirst);
+            phoneOrder.setExpenditureSecond(expenditureSecond);
+            phoneOrder.setExpenditureTotal(expenditureTotal);
+            phoneOrderMapper.updatePhoneOrder(phoneOrder);
         }
     }
 }
