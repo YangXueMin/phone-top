@@ -88,7 +88,7 @@ public class PhoneCommissionLogServiceImpl implements IPhoneCommissionLogService
                 PhoneCompanyConfig phoneCompanyConfig = phoneCompanyConfigService.selectPhoneCompanyConfigByAppId(member.getAppId());
                 if (phoneCompanyConfig.getCommissionRate() != null) {
                     BigDecimal decimal = phoneCommissionLog.getMoney().multiply(phoneCompanyConfig.getCommissionRate()).setScale(2, RoundingMode.HALF_UP);
-                    phoneCommissionLog.setMoney(phoneCommissionLog.getMoney().subtract(phoneCommissionLog.getMoney()));
+                    phoneCommissionLog.setMoney(phoneCommissionLog.getMoney().subtract(decimal));
                     phoneCommissionLog.setChargeMoney(decimal);
                 }
             }

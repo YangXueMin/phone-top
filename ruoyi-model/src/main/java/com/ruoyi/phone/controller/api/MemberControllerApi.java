@@ -120,6 +120,7 @@ public class MemberControllerApi extends BaseController {
     @ApiOperation("生成合并后的推广二维码")
     @PostMapping("/getInviteQrCode")
     public AjaxResult invitePicture() {
+        Graphics2D g2d = null;
         try {
             Member member = SecurityUtils.getLoginUser().getMember();
             if (member != null) {
@@ -134,11 +135,10 @@ public class MemberControllerApi extends BaseController {
                     BufferedImage topImage = new BufferedImage(phoneCompanyConfig.getCodeWidth(), phoneCompanyConfig.getCodeHeight(), originalImage.getType());
                     topImage.getGraphics().drawImage(originalImage.getScaledInstance(phoneCompanyConfig.getCodeWidth(), phoneCompanyConfig.getCodeHeight(), Image.SCALE_SMOOTH), 0, 0, null);
 
-
                     //创建一个新的图像，大小与地图相同
                     BufferedImage resultImage = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), BufferedImage.TYPE_INT_RGB);
                     //获取Graphics2D对象，用于绘制图像
-                    Graphics2D g2d = resultImage.createGraphics();
+                    g2d = resultImage.createGraphics();
                     //绘制地图
                     g2d.drawImage(baseImage, 0, 0, null);
                     //绘制顶图  170 700
@@ -150,13 +150,17 @@ public class MemberControllerApi extends BaseController {
 
                     byte[] imageBytes = baos.toByteArray();
                     String base64 = Base64.getEncoder().encodeToString(imageBytes);
-                    //释放资源
-                    g2d.dispose();
+                    baos.close();
                     return AjaxResult.success("合并图片成功", base64);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(g2d != null){
+                //释放资源
+                g2d.dispose();
+            }
         }
         return AjaxResult.error("图片合并失败");
     }
