@@ -718,11 +718,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                     params.put("product_id", phonePrice.getProductId() + "");
                     if (StringUtils.equals("0", phonePrice.getMethod())) {
                         String[] areas = phoneOrder.getArea().split("-");
-                        params.put("area", areas[0]);
-                        if (!directManageCityList.contains(areas[0])) {
-                            //不是直辖市传地市
-                            params.put("city", areas[1]);
-                        }
+                        params.put("city", areas[1]);
                         if (StringUtils.equals("5", phonePrice.getType())) {
                             params.put("ytype", "1");
                             params.put("id_card_no", phoneOrder.getCardNo());
