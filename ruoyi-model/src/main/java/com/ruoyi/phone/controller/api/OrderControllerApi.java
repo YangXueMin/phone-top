@@ -86,7 +86,7 @@ public class OrderControllerApi extends BaseController {
         queryOrder.setAccountNumber(phoneOrder.getAccountNumber());
         List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
         if(phoneOrderList != null && !phoneOrderList.isEmpty()){
-            return error("有正在充值订单，不可重复提交，到账后再提交");
+            return warn("有正在充值订单，不可重复提交，到账后再提交");
         }
         return success(phoneOrderService.insertPhoneOrder(phoneOrder));
     }
@@ -116,7 +116,7 @@ public class OrderControllerApi extends BaseController {
         queryOrder.setAccountNumber(phoneOrder.getAccountNumber());
         List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
         if(phoneOrderList != null && !phoneOrderList.isEmpty()){
-            return error("有正在充值订单，不可重复支付，到账后再提交");
+            return warn("有正在充值订单，不可重复支付，到账后再提交");
         }
         WxPayMpOrderResult pay = phoneOrderService.pay(phoneOrder);
         return success(pay);
