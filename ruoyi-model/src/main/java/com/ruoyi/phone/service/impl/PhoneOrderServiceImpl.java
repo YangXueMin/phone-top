@@ -318,7 +318,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                 //调用退款接口
                 old.setRefundMoney(old.getPayMoney().subtract(old.getRefundMoney()));
                 this.refund(old);
-            }else{
+            } else {
                 if (phoneOrder.getPayBalance().compareTo(BigDecimal.ZERO) > 0) {
                     phoneOrder.setPayStatus("3");
                 }
@@ -573,7 +573,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
 
     @Override
     public String topNotify(TopNotifyRequest requestBody) {
-        log.info(JSON.toJSONString(requestBody));
+        log.info("充值返回结果{}", JSON.toJSONString(requestBody));
         List<PhoneOrder> phoneOrderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(requestBody.getOut_trade_num());
         if (phoneOrderList != null && phoneOrderList.size() > 0) {
             PhoneOrder phoneOrder = phoneOrderList.get(0);
@@ -794,7 +794,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
                                 if (secondary.getCommissionBalance() != null) {
                                     secondaryBalance = secondary.getCommissionBalance();
                                 }
-                               //计算佣金
+                                //计算佣金
                                 BigDecimal secondaryDirectCommission = phonePrice.getIndirectCommission();
                                 if (StringUtils.equals("1", secondary.getIsSuperMember())) {
                                     secondaryDirectCommission = phonePrice.getSuperMemberIndirectCommission();

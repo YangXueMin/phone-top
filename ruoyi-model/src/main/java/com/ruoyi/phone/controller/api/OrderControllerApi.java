@@ -86,7 +86,7 @@ public class OrderControllerApi extends BaseController {
         queryOrder.setAccountNumber(phoneOrder.getAccountNumber());
         List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
         if(phoneOrderList != null && !phoneOrderList.isEmpty()){
-            return error("有正在充值订单，不可重复提交，到账号再提交");
+            return error("有正在充值订单，不可重复提交，到账后再提交");
         }
         return success(phoneOrderService.insertPhoneOrder(phoneOrder));
     }
@@ -107,6 +107,16 @@ public class OrderControllerApi extends BaseController {
         long now = System.currentTimeMillis();
         if (DateUtil.addHours(phoneOrder.getCreateTime(), 24).getTime() <= now) {
             return warn("订单已超24小时，请重新下单");
+        }
+        //判断是否正在充值订单
+        PhoneOrder queryOrder = new PhoneOrder();
+        queryOrder.setArrivalStatus("1");
+        queryOrder.setPayStatus("2");
+        queryOrder.setType(phoneOrder.getType());
+        queryOrder.setAccountNumber(phoneOrder.getAccountNumber());
+        List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
+        if(phoneOrderList != null && !phoneOrderList.isEmpty()){
+            return error("有正在充值订单，不可重复支付，到账后再提交");
         }
         WxPayMpOrderResult pay = phoneOrderService.pay(phoneOrder);
         return success(pay);
