@@ -4,7 +4,6 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
-import com.ruoyi.common.annotation.RefreshScope;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +57,6 @@ public class WechatMultiConfiguration {
             " phone_wechat_config a";
 
     @Bean
-    @RefreshScope
     public WxMpService wxMpService() {
         // 根据数据库内容来决定Bean的行为
         List<WechatConfig> wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
@@ -80,7 +78,6 @@ public class WechatMultiConfiguration {
     }
 
     @Bean
-    @RefreshScope
     public WxPayService wxPayService() {
         // 根据数据库内容来决定Bean的行为
         List<WechatConfig> wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
