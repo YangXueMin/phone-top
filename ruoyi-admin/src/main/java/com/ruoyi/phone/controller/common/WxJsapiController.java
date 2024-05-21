@@ -1,7 +1,7 @@
 package com.ruoyi.phone.controller.common;
 
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/wx/jsapi/{appid}")
 public class WxJsapiController {
-    private final WechatTestConfiguration wechatTestConfiguration;
+    private final WechatMultiConfiguration wechatMultiConfiguration;
     private final RedisCache redisCache;
 
     @GetMapping("/getJsapiTicket")
@@ -29,7 +29,7 @@ public class WxJsapiController {
         if (redisCache.hasKey(getCacheKey(appid + url))) {
             return JSON.parseObject(redisCache.getCacheObject(getCacheKey(appid + url)).toString(), WxJsapiSignature.class);
         }
-        final WxJsapiSignature jsapiSignature = this.wechatTestConfiguration.wxMpService().switchoverTo(appid).createJsapiSignature(url);
+        final WxJsapiSignature jsapiSignature = this.wechatMultiConfiguration.wxMpService().switchoverTo(appid).createJsapiSignature(url);
         redisCache.setCacheObject(getCacheKey(appid + url), JSON.toJSONString(jsapiSignature), 1, TimeUnit.HOURS);
         return jsapiSignature;
     }

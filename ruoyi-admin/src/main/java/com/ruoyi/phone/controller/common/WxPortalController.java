@@ -1,6 +1,6 @@
 package com.ruoyi.phone.controller.common;
 
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.phone.config.WxMpConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/wx/portal/{appid}")
 public class WxPortalController {
-    private final WechatTestConfiguration wechatTestConfiguration;
+    private final WechatMultiConfiguration wechatMultiConfiguration;
     private final WxMpConfiguration wxMpConfiguration;
 
     @GetMapping(produces = "text/plain;charset=utf-8")
@@ -36,7 +36,7 @@ public class WxPortalController {
         if (StringUtils.isAnyBlank(signature, timestamp, nonce, echostr)) {
             throw new IllegalArgumentException("请求参数非法，请核实!");
         }
-        final WxMpService wxMpService = wechatTestConfiguration.wxMpService().switchoverTo(appid);
+        final WxMpService wxMpService = wechatMultiConfiguration.wxMpService().switchoverTo(appid);
         if (wxMpService == null) {
             log.info("初始化失败");
             return "非法请求";
@@ -59,7 +59,7 @@ public class WxPortalController {
         log.info("\n接收微信请求：[openid=[{}], [signature=[{}], encType=[{}], msgSignature=[{}],"
                         + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
                 openid, signature, encType, msgSignature, timestamp, nonce, requestBody);
-        final WxMpService wxMpService = wechatTestConfiguration.wxMpService().switchoverTo(appid);
+        final WxMpService wxMpService = wechatMultiConfiguration.wxMpService().switchoverTo(appid);
         if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
             throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
         }
@@ -93,7 +93,7 @@ public class WxPortalController {
 
     private WxMpXmlOutMessage route(String appid, WxMpXmlMessage message) {
         try {
-            return this.wxMpConfiguration.messageRouter(wechatTestConfiguration.wxMpService().switchoverTo(appid)).route(message);
+            return this.wxMpConfiguration.messageRouter(wechatMultiConfiguration.wxMpService().switchoverTo(appid)).route(message);
         } catch (Exception e) {
             log.error("路由消息时出现异常！", e);
         }

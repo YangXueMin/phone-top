@@ -2,7 +2,6 @@ package com.ruoyi.phone.service.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
@@ -13,8 +12,7 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
-import com.ruoyi.common.config.WechatConfiguration;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -55,7 +53,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
     @Autowired
     private PhoneOrderMapper phoneOrderMapper;
     @Autowired
-    private WechatTestConfiguration wechatTestConfiguration;
+    private WechatMultiConfiguration wechatMultiConfiguration;
     @Autowired
     private MemberMapper memberMapper;
     @Autowired
@@ -458,7 +456,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         }
         request.setBody(sb.toString());
         try {
-            return wechatTestConfiguration.wxPayService().switchoverTo(phoneOrder.getAppId()).createOrder(request);
+            return wechatMultiConfiguration.wxPayService().switchoverTo(phoneOrder.getAppId()).createOrder(request);
         } catch (WxPayException e) {
             e.printStackTrace();
         }
@@ -507,7 +505,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         request.setSignType("MD5");
         //回调通知地址（必须外网能访问的地址）
         request.setNotifyUrl(Constants.URL + "/api/phone/order/refundNotify");
-        final WxPayService wxPayService = wechatTestConfiguration.wxPayService().switchoverTo(phoneOrder.getAppId());
+        final WxPayService wxPayService = wechatMultiConfiguration.wxPayService().switchoverTo(phoneOrder.getAppId());
         final WxPayRefundResult refund = wxPayService.refund(request);
         log.info("调用退款接口：订单号：{},响应：{}", phoneOrder.getOrderNo(), JSON.toJSONString(refund));
         if (StringUtils.equals("SUCCESS", refund.getResultCode())) {
@@ -545,7 +543,7 @@ public class PhoneOrderServiceImpl implements IPhoneOrderService {
         log.info("退款返回信息：{}", JSON.toJSONString(wxPayRefundNotifyResult));
         if (StringUtils.equals("SUCCESS", wxPayRefundNotifyResult.getReturnCode())) {
             try {
-                WxPayRefundNotifyResult result = wechatTestConfiguration.wxPayService().switchoverTo(wxPayRefundNotifyResult.getAppid()).parseRefundNotifyResult(xmlData);
+                WxPayRefundNotifyResult result = wechatMultiConfiguration.wxPayService().switchoverTo(wxPayRefundNotifyResult.getAppid()).parseRefundNotifyResult(xmlData);
                 log.info("退款返回信息解密：{}", JSON.toJSONString(result.getReqInfo()));
                 List<PhoneOrder> orderList = phoneOrderMapper.selectPhoneOrderListByOrderNo(result.getReqInfo().getOutTradeNo());
                 if (orderList != null && orderList.size() > 0) {

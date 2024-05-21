@@ -7,8 +7,7 @@ import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.annotation.DataScope;
-import com.ruoyi.common.config.WechatConfiguration;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -46,7 +45,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
     @Autowired
     private PhoneMemberCardLogMapper phoneMemberCardLogMapper;
     @Autowired
-    private WechatTestConfiguration wechatTestConfiguration;
+    private WechatMultiConfiguration wechatMultiConfiguration;
     @Autowired
     private MemberMapper memberMapper;
     @Autowired
@@ -159,7 +158,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
         request.setOpenid(member.getOpenId());
         request.setBody(phoneMemberCardLog.getCardName());
         try {
-            return wechatTestConfiguration.wxPayService().switchoverTo(phoneMemberCardLog.getAppId()).createOrder(request);
+            return wechatMultiConfiguration.wxPayService().switchoverTo(phoneMemberCardLog.getAppId()).createOrder(request);
         } catch (WxPayException e) {
             e.printStackTrace();
         }
@@ -215,7 +214,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                     BigDecimal directCommission = phoneMemberCard.getDirectCommission();
                     if (StringUtils.equals("1", agency.getIsSuperMember())) {
                         directCommission = phoneMemberCard.getSuperMemberDirectCommission();
-                    }else if(StringUtils.equals("1",agency.getIsMember())){
+                    } else if (StringUtils.equals("1", agency.getIsMember())) {
                         directCommission = phoneMemberCard.getMemberDirectCommission();
                     }
                     agency.setCommissionBalance(agencyBalance.add(directCommission));
@@ -236,7 +235,7 @@ public class PhoneMemberCardLogServiceImpl implements IPhoneMemberCardLogService
                             BigDecimal secondaryDirectCommission = phoneMemberCard.getIndirectCommission();
                             if (StringUtils.equals("1", secondary.getIsSuperMember())) {
                                 secondaryDirectCommission = phoneMemberCard.getSuperMemberIndirectCommission();
-                            }else if(StringUtils.equals("1",secondary.getIsMember())){
+                            } else if (StringUtils.equals("1", secondary.getIsMember())) {
                                 secondaryDirectCommission = phoneMemberCard.getMemberIndirectCommission();
                             }
                             secondary.setCommissionBalance(secondaryBalance.add(secondaryDirectCommission));

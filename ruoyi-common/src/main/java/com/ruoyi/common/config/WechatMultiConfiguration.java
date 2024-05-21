@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 //引入WxPayService这个类 下面两个才会实例化
 @ConditionalOnClass({WxPayService.class, WxMaService.class})
 @RequiredArgsConstructor
-public class WechatTestConfiguration {
+public class WechatMultiConfiguration {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

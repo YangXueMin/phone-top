@@ -1,18 +1,11 @@
 package com.ruoyi.framework.web.service;
 
-import cn.binarywang.wx.miniapp.api.WxMaService;
-import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
-import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WechatConfiguration;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
@@ -28,7 +21,6 @@ import com.ruoyi.system.service.IMemberService;
 import com.ruoyi.system.service.IWechatConfigService;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
-import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.service.WxOAuth2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,7 +31,6 @@ import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author ruoyi
@@ -54,7 +45,7 @@ public class MemberLoginService {
     @Resource
     private MemberAuthenticationProvider authenticationManager;
     @Autowired
-    private WechatTestConfiguration wechatTestConfiguration;
+    private WechatMultiConfiguration wechatMultiConfiguration;
     @Autowired
     private IMemberService memberService;
     @Autowired
@@ -82,7 +73,7 @@ public class MemberLoginService {
         String openId, wxHeadImg, wxNickName;
         Integer wxSex;
         try {
-            WxOAuth2Service oAuth2Service = wechatTestConfiguration.wxMpService().switchoverTo(appId).getOAuth2Service();
+            WxOAuth2Service oAuth2Service = wechatMultiConfiguration.wxMpService().switchoverTo(appId).getOAuth2Service();
             WxOAuth2AccessToken accessToken = oAuth2Service.getAccessToken(code);
             WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(accessToken, null);
             openId = wxMpUser.getOpenid();

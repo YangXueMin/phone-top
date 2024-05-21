@@ -1,17 +1,16 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.List;
-
-import com.ruoyi.common.config.WechatConfiguration;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.core.domain.entity.PhoneWechatMessage;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.mapper.PhoneWechatMessageMapper;
+import com.ruoyi.system.service.IPhoneWechatMessageService;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.PhoneWechatMessageMapper;
-import com.ruoyi.system.service.IPhoneWechatMessageService;
+
+import java.util.List;
 
 /**
  * 微信公众号消息类型配置Service业务层处理
@@ -24,7 +23,7 @@ public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService
     @Autowired
     private PhoneWechatMessageMapper phoneWechatMessageMapper;
     @Autowired
-    private WechatTestConfiguration wechatTestConfiguration;
+    private WechatMultiConfiguration wechatMultiConfiguration;
     @Autowired
     private IWechatConfigService wechatConfigService;
 
@@ -100,6 +99,6 @@ public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService
 
     @Override
     public void findMaterialList(String appId) {
-        wechatTestConfiguration.wxMpService().switchoverTo(appId).getMaterialService();
+        wechatMultiConfiguration.wxMpService().switchoverTo(appId).getMaterialService();
     }
 }

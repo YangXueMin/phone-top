@@ -1,17 +1,12 @@
 package com.ruoyi.phone.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.order.WxPayMpOrderResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
-import com.ruoyi.common.annotation.DataScope;
-import com.ruoyi.common.config.WechatConfiguration;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -20,14 +15,16 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.SnowflakeGenerator;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.phone.domain.PhoneOrder;
+import com.ruoyi.phone.domain.PhoneBalanceLog;
+import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
+import com.ruoyi.phone.service.IPhoneBalanceLogService;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IWechatConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.phone.mapper.PhoneBalanceLogMapper;
-import com.ruoyi.phone.domain.PhoneBalanceLog;
-import com.ruoyi.phone.service.IPhoneBalanceLogService;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 余额充值记录Service业务层处理
@@ -42,7 +39,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
     @Autowired
     private IWechatConfigService wechatConfigService;
     @Autowired
-    private WechatTestConfiguration wechatTestConfiguration;
+    private WechatMultiConfiguration wechatMultiConfiguration;
     @Autowired
     private MemberMapper memberMapper;
 
@@ -141,7 +138,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
         request.setOpenid(member.getOpenId());
         request.setBody("余额充值");
         try {
-            return wechatTestConfiguration.wxPayService().switchoverTo(phoneBalanceLog.getAppId()).createOrder(request);
+            return wechatMultiConfiguration.wxPayService().switchoverTo(phoneBalanceLog.getAppId()).createOrder(request);
         } catch (WxPayException e) {
             e.printStackTrace();
         }

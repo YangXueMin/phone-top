@@ -1,7 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WechatTestConfiguration;
+import com.ruoyi.common.config.WechatMultiConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.Member;
@@ -35,7 +35,7 @@ public class MemberServiceImpl implements IMemberService {
     @Autowired
     private MemberMapper memberMapper;
     @Autowired
-    private WechatTestConfiguration wechatTestConfiguration;
+    private WechatMultiConfiguration wechatMultiConfiguration;
     @Autowired
     private RedisCache redisCache;
 
@@ -184,7 +184,7 @@ public class MemberServiceImpl implements IMemberService {
     public String getQrCode() {
         try {
             Member member = SecurityUtils.getLoginUser().getMember();
-            WxMpService wxMpService = wechatTestConfiguration.wxMpService().switchoverTo(member.getAppId());
+            WxMpService wxMpService = wechatMultiConfiguration.wxMpService().switchoverTo(member.getAppId());
             WxMpQrCodeTicket wxMpQrCodeTicket;
             if (redisCache.hasKey(getCacheKey(member.getOpenId()))) {
                 wxMpQrCodeTicket = JSON.parseObject(redisCache.getCacheObject(getCacheKey(member.getOpenId())).toString(), WxMpQrCodeTicket.class);
