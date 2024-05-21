@@ -11,6 +11,7 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.config.WechatTestConfiguration;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.Member;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
@@ -41,7 +42,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
     @Autowired
     private IWechatConfigService wechatConfigService;
     @Autowired
-    private WechatConfiguration wechatConfiguration;
+    private WechatTestConfiguration wechatTestConfiguration;
     @Autowired
     private MemberMapper memberMapper;
 
@@ -140,8 +141,7 @@ public class PhoneBalanceLogServiceImpl implements IPhoneBalanceLogService {
         request.setOpenid(member.getOpenId());
         request.setBody("余额充值");
         try {
-            final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(phoneBalanceLog.getAppId());
-            return wechatConfiguration.wxPayService(wechatConfig).createOrder(request);
+            return wechatTestConfiguration.wxPayService().switchoverTo(phoneBalanceLog.getAppId()).createOrder(request);
         } catch (WxPayException e) {
             e.printStackTrace();
         }

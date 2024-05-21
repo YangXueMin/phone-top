@@ -1,11 +1,10 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.config.WechatTestConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.Member;
-import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -13,15 +12,12 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.vo.LevelVo;
 import com.ruoyi.system.mapper.MemberMapper;
 import com.ruoyi.system.service.IMemberService;
-import com.ruoyi.system.service.IWechatConfigService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +35,7 @@ public class MemberServiceImpl implements IMemberService {
     @Autowired
     private MemberMapper memberMapper;
     @Autowired
-    private WechatConfiguration wechatConfiguration;
-    @Autowired
-    private IWechatConfigService wechatConfigService;
+    private WechatTestConfiguration wechatTestConfiguration;
     @Autowired
     private RedisCache redisCache;
 
@@ -179,7 +173,7 @@ public class MemberServiceImpl implements IMemberService {
         return commissionList.stream()
                 // 表示id为key， 接着如果有重复的，那么从BillsNums对象o1与o2中筛选出一个，这里选择o1，
                 // 并把id重复，需要将nums和sums与o1进行合并的o2, 赋值给o1，最后返回o1
-                .collect(Collectors.toMap(LevelVo::getId, a -> a, (o1, o2)-> {
+                .collect(Collectors.toMap(LevelVo::getId, a -> a, (o1, o2) -> {
                     o1.setCommission(o1.getCommission().add(o2.getCommission()));
                     o1.setOrderNum(o1.getOrderNum() + o2.getOrderNum());
                     return o1;
@@ -190,8 +184,7 @@ public class MemberServiceImpl implements IMemberService {
     public String getQrCode() {
         try {
             Member member = SecurityUtils.getLoginUser().getMember();
-            WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(member.getAppId());
-            WxMpService wxMpService = wechatConfiguration.wxMpService(wechatConfig);
+            WxMpService wxMpService = wechatTestConfiguration.wxMpService().switchoverTo(member.getAppId());
             WxMpQrCodeTicket wxMpQrCodeTicket;
             if (redisCache.hasKey(getCacheKey(member.getOpenId()))) {
                 wxMpQrCodeTicket = JSON.parseObject(redisCache.getCacheObject(getCacheKey(member.getOpenId())).toString(), WxMpQrCodeTicket.class);

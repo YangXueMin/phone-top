@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.config.WechatTestConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -53,7 +54,7 @@ public class MemberLoginService {
     @Resource
     private MemberAuthenticationProvider authenticationManager;
     @Autowired
-    private WechatConfiguration wechatConfiguration;
+    private WechatTestConfiguration wechatTestConfiguration;
     @Autowired
     private IMemberService memberService;
     @Autowired
@@ -81,7 +82,7 @@ public class MemberLoginService {
         String openId, wxHeadImg, wxNickName;
         Integer wxSex;
         try {
-            WxOAuth2Service oAuth2Service = wechatConfiguration.wxMpService(wechatConfig).getOAuth2Service();
+            WxOAuth2Service oAuth2Service = wechatTestConfiguration.wxMpService().switchoverTo(appId).getOAuth2Service();
             WxOAuth2AccessToken accessToken = oAuth2Service.getAccessToken(code);
             WxOAuth2UserInfo wxMpUser = oAuth2Service.getUserInfo(accessToken, null);
             openId = wxMpUser.getOpenid();
@@ -137,24 +138,6 @@ public class MemberLoginService {
         recordLoginInfo(loginUser.getUserId());
         // 生成token
         return tokenService.createToken(loginUser);
-    }
-
-    /**
-     * <pre>
-     * 获取用户绑定手机号信息
-     * </pre>
-     */
-    public AjaxResult phone(String phoneCode) {
-        WxMaService wxMaService = wechatConfiguration.wxMaService();
-        // 解密
-        WxMaPhoneNumberInfo phoneNoInfo = null;
-        try {
-            phoneNoInfo = wxMaService.getUserService().getPhoneNoInfo(phoneCode);
-        } catch (WxErrorException e) {
-            return AjaxResult.error("电话解密失败");
-        }
-        WxMaConfigHolder.remove();//清理ThreadLocal
-        return AjaxResult.success(phoneNoInfo);
     }
 
     /**

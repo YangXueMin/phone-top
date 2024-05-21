@@ -1,6 +1,7 @@
 package com.ruoyi.phone.controller.common;
 
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.config.WechatTestConfiguration;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.system.service.IWechatConfigService;
@@ -29,8 +30,7 @@ import static me.chanjar.weixin.common.api.WxConsts.MenuButtonType;
 @RestController
 @RequestMapping("/wx/menu/{appid}")
 public class WxMenuController {
-    private final WechatConfiguration wechatConfiguration;
-    private final IWechatConfigService wechatConfigService;
+    private final WechatTestConfiguration wechatTestConfiguration;
 
     /**
      * <pre>
@@ -44,15 +44,13 @@ public class WxMenuController {
      */
     @PostMapping("/create")
     public AjaxResult menuCreate(@PathVariable String appid, @RequestBody WxMenu menu) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuCreate(menu));
     }
 
     @GetMapping("/create")
     public String menuCreateSample(@PathVariable String appid) throws WxErrorException, MalformedURLException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();
         button1.setType(MenuButtonType.CLICK);
@@ -124,8 +122,7 @@ public class WxMenuController {
      */
     @PostMapping("/createByJson")
     public AjaxResult menuCreate(@PathVariable String appid, @RequestBody String json) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuCreate(json));
     }
 
@@ -137,8 +134,7 @@ public class WxMenuController {
      */
     @GetMapping("/delete")
     public AjaxResult menuDelete(@PathVariable String appid) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         wxMpService.switchoverTo(appid).getMenuService().menuDelete();
         return AjaxResult.success();
     }
@@ -153,8 +149,7 @@ public class WxMenuController {
      */
     @GetMapping("/delete/{menuId}")
     public void menuDelete(@PathVariable String appid, @PathVariable String menuId) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         wxMpService.switchoverTo(appid).getMenuService().menuDelete(menuId);
     }
 
@@ -166,8 +161,7 @@ public class WxMenuController {
      */
     @GetMapping("/get")
     public AjaxResult menuGet(@PathVariable String appid) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuGet());
     }
 
@@ -181,8 +175,7 @@ public class WxMenuController {
      */
     @GetMapping("/menuTryMatch/{userid}")
     public AjaxResult menuTryMatch(@PathVariable String appid, @PathVariable String userid) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         return AjaxResult.success(wxMpService.switchoverTo(appid).getMenuService().menuTryMatch(userid));
     }
 
@@ -203,8 +196,7 @@ public class WxMenuController {
      */
     @GetMapping("/getSelfMenuInfo")
     public WxMpGetSelfMenuInfoResult getSelfMenuInfo(@PathVariable String appid) throws WxErrorException {
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxMpService wxMpService = this.wechatConfiguration.wxMpService(wechatConfig);
+        final WxMpService wxMpService = this.wechatTestConfiguration.wxMpService().switchoverTo(appid);
         return wxMpService.switchoverTo(appid).getMenuService().getSelfMenuInfo();
     }
 }

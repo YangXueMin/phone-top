@@ -1,11 +1,9 @@
 package com.ruoyi.phone.controller.common;
 
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.config.WechatTestConfiguration;
 import com.ruoyi.common.constant.CacheConstants;
-import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.system.service.IWechatConfigService;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -23,8 +21,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/wx/jsapi/{appid}")
 public class WxJsapiController {
-    private final WechatConfiguration wechatConfiguration;
-    private final IWechatConfigService wechatConfigService;
+    private final WechatTestConfiguration wechatTestConfiguration;
     private final RedisCache redisCache;
 
     @GetMapping("/getJsapiTicket")
@@ -32,9 +29,7 @@ public class WxJsapiController {
         if (redisCache.hasKey(getCacheKey(appid + url))) {
             return JSON.parseObject(redisCache.getCacheObject(getCacheKey(appid + url)).toString(), WxJsapiSignature.class);
         }
-        final WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appid);
-        final WxJsapiSignature jsapiSignature = this.wechatConfiguration.wxMpService(wechatConfig).createJsapiSignature(url);
-        //final String jsapiTicket = this.wechatConfiguration.wxMpService(wechatConfig).getJsapiTicket(true);
+        final WxJsapiSignature jsapiSignature = this.wechatTestConfiguration.wxMpService().switchoverTo(appid).createJsapiSignature(url);
         redisCache.setCacheObject(getCacheKey(appid + url), JSON.toJSONString(jsapiSignature), 1, TimeUnit.HOURS);
         return jsapiSignature;
     }

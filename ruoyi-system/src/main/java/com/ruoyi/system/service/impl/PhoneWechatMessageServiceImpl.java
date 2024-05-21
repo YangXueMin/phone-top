@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.config.WechatConfiguration;
+import com.ruoyi.common.config.WechatTestConfiguration;
 import com.ruoyi.common.core.domain.entity.PhoneWechatMessage;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
 import com.ruoyi.common.utils.DateUtils;
@@ -23,7 +24,7 @@ public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService
     @Autowired
     private PhoneWechatMessageMapper phoneWechatMessageMapper;
     @Autowired
-    private WechatConfiguration wechatConfiguration;
+    private WechatTestConfiguration wechatTestConfiguration;
     @Autowired
     private IWechatConfigService wechatConfigService;
 
@@ -99,7 +100,6 @@ public class PhoneWechatMessageServiceImpl implements IPhoneWechatMessageService
 
     @Override
     public void findMaterialList(String appId) {
-        WechatConfig wechatConfig = wechatConfigService.selectWechatConfigByAppId(appId);
-        wechatConfiguration.wxMpService(wechatConfig).getMaterialService();
+        wechatTestConfiguration.wxMpService().switchoverTo(appId).getMaterialService();
     }
 }

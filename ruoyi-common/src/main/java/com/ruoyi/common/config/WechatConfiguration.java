@@ -82,7 +82,7 @@ public class WechatConfiguration {
     }
 
     /**
-     * 获取支付类型
+     * 微信公众号配置
      *
      * @param wechatConfig
      * @return WxPayService
