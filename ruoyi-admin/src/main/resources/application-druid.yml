@@ -6,9 +6,8 @@ spring:
         druid:
             # 主库数据源
             master:
+#                url: jdbc:mysql://122.51.72.98:3306/phone_up?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 url: jdbc:mysql://127.0.0.1:3306/phone_up?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-#                url: jdbc:mysql://49.235.133.119:3306/phone_up?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-#                url: jdbc:mysql://127.0.0.1:3306/ruoyi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: phone_up
                 password: 8ayJY3ahh2sbKFL8
 #                username: root
