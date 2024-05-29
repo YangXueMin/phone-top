@@ -1,10 +1,13 @@
 package com.ruoyi.common.config;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
+import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.entity.WechatConfig;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
 public class WechatMultiConfiguration {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private RedisCache redisCache;
 
     public static String sql = "SELECT " +
             " a.id, " +
@@ -59,7 +64,15 @@ public class WechatMultiConfiguration {
     @Bean
     public WxMpService wxMpService() {
         // 根据数据库内容来决定Bean的行为
-        List<WechatConfig> wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
+        Boolean b = redisCache.hasKey(CacheConstants.WECHAT_CONFIG_LIST_KEY);
+        List<WechatConfig> wechatConfigList;
+        if (b) {
+            List<Object> cacheList = redisCache.getCacheList(CacheConstants.WECHAT_CONFIG_LIST_KEY);
+            wechatConfigList = JSON.parseArray(JSON.toJSONString(cacheList), WechatConfig.class);
+        } else {
+            wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
+            redisCache.setCacheObject(CacheConstants.WECHAT_CONFIG_LIST_KEY, wechatConfigList);
+        }
         return createWxMpService(wechatConfigList);
     }
 

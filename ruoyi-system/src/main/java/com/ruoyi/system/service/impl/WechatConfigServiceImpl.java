@@ -95,7 +95,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
         wechatConfig.setCreateTime(DateUtils.getNowDate());
         final int i = wechatConfigMapper.insertWechatConfig(wechatConfig);
         if (i > 0) {
-            redisCache.setCacheObject(getCacheKey(wechatConfig.getAppId()), JSON.toJSONString(wechatConfig));
+            resetConfigCache();
         }
         return i;
     }
@@ -113,7 +113,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
         wechatConfig.setUpdateTime(DateUtils.getNowDate());
         int i = wechatConfigMapper.updateWechatConfig(wechatConfig);
         if (i > 0) {
-            redisCache.deleteObject(getCacheKey(wechatConfig.getAppId()));
+            resetConfigCache();
         }
         return i;
     }
@@ -126,7 +126,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
      */
     @Override
     public int deleteWechatConfigByIds(Long[] ids) {
-        clearConfigCache();
+        resetConfigCache();
         return wechatConfigMapper.deleteWechatConfigByIds(ids);
     }
 
@@ -164,6 +164,7 @@ public class WechatConfigServiceImpl implements IWechatConfigService {
     public void clearConfigCache() {
         Collection<String> keys = redisCache.keys(CacheConstants.WECHAT_CONFIG_KEY + "*");
         redisCache.deleteObject(keys);
+        redisCache.deleteObject(CacheConstants.WECHAT_CONFIG_LIST_KEY);
     }
 
     /**
