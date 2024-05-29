@@ -71,7 +71,7 @@ public class WechatMultiConfiguration {
             wechatConfigList = JSON.parseArray(JSON.toJSONString(cacheList), WechatConfig.class);
         } else {
             wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
-            redisCache.setCacheObject(CacheConstants.WECHAT_CONFIG_LIST_KEY, wechatConfigList);
+            redisCache.setCacheList(CacheConstants.WECHAT_CONFIG_LIST_KEY, wechatConfigList);
         }
         return createWxMpService(wechatConfigList);
     }
