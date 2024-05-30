@@ -93,7 +93,15 @@ public class WechatMultiConfiguration {
     @Bean
     public WxPayService wxPayService() {
         // 根据数据库内容来决定Bean的行为
-        List<WechatConfig> wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
+        Boolean b = redisCache.hasKey(CacheConstants.WECHAT_CONFIG_LIST_KEY);
+        List<WechatConfig> wechatConfigList;
+        if (b) {
+            List<Object> cacheList = redisCache.getCacheList(CacheConstants.WECHAT_CONFIG_LIST_KEY);
+            wechatConfigList = JSON.parseArray(JSON.toJSONString(cacheList), WechatConfig.class);
+        } else {
+            wechatConfigList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WechatConfig.class));
+            redisCache.setCacheList(CacheConstants.WECHAT_CONFIG_LIST_KEY, wechatConfigList);
+        }
         return createWxPayService(wechatConfigList);
     }
 
