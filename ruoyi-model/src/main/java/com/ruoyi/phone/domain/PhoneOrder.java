@@ -145,21 +145,21 @@ public class PhoneOrder extends BaseEntity {
     /**
      * 订单金额
      */
-    @Excel(name = "订单金额", sort = 11, scale = 2)
+    @Excel(name = "订单金额", sort = 11, scale = 2, roundingMode = BigDecimal.ROUND_HALF_UP)
     @ApiModelProperty("订单金额")
     private BigDecimal money;
 
     /**
      * 支付金额
      */
-    @Excel(name = "支付金额", sort = 12, scale = 2)
+    @Excel(name = "支付金额", sort = 12, scale = 2, roundingMode = BigDecimal.ROUND_HALF_UP)
     @ApiModelProperty("支付金额")
     private BigDecimal payMoney;
 
     /**
      * 余额支付金额
      */
-    @Excel(name = "余额支付", sort = 13, scale = 2)
+    @Excel(name = "余额支付", sort = 13, scale = 2, roundingMode = BigDecimal.ROUND_HALF_UP)
     @ApiModelProperty("余额支付金额")
     private BigDecimal payBalance;
 
