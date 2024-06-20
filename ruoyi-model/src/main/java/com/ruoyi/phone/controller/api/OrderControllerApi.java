@@ -88,6 +88,11 @@ public class OrderControllerApi extends BaseController {
         if(phoneOrderList != null && !phoneOrderList.isEmpty()){
             return warn("有正在充值订单，不可重复提交，到账后再提交");
         }
+        queryOrder.setArrivalStatus("2");
+        phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
+        if(phoneOrderList != null && !phoneOrderList.isEmpty()){
+            return warn("有正在充值订单，不可重复提交，到账后再提交");
+        }
         return success(phoneOrderService.insertPhoneOrder(phoneOrder));
     }
 
@@ -117,6 +122,11 @@ public class OrderControllerApi extends BaseController {
         List<PhoneOrder> phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
         if(phoneOrderList != null && !phoneOrderList.isEmpty()){
             return warn("有正在充值订单，不可重复支付，到账后再提交");
+        }
+        queryOrder.setArrivalStatus("2");
+        phoneOrderList = phoneOrderService.selectPhoneOrderList(queryOrder);
+        if(phoneOrderList != null && !phoneOrderList.isEmpty()){
+            return warn("有正在充值订单，不可重复提交，到账后再提交");
         }
         WxPayMpOrderResult pay = phoneOrderService.pay(phoneOrder);
         return success(pay);
