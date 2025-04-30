@@ -71,13 +71,12 @@ spring:
   redis:
     # 地址
     host: 127.0.0.1
-#    host: 49.235.133.119
     # 端口，默认为6379
     port: 6666
     # 数据库索引
     database: 1
     # 密码
-    password: 1q2w3e4r5t
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -136,16 +135,16 @@ wechat:
     enable: false
     useRedis: false
     configs:
-      - appId: wxbab60a2231517c66 # 公众号的appid
-        appsecret: 732ac72a135a5da89ea668fcc3e2639b # 公众号的appsecret
+      - appId:  # 公众号的appid
+        appsecret:  # 公众号的appsecret
         # 接口配置里的Token值
         token: 111
         # 接口配置里的EncodingAESKey值
         aesKey: 111
         #微信支付商户号
-        mchId: 1645605709
+        mchId: 
         #微信支付商户密钥
-        mchKey: 4a53393645539e49c6d8517a5f1b589c
+        mchKey: 
         #服务商模式下的子商户公众账号ID
         subAppId:
         #服务商模式下的子商户号
@@ -155,13 +154,13 @@ wechat:
         # 交易类型
         tradeType:
         # 支付成功回调地址
-        paymentCallbackUrl: http://mdevgw.tuishou.shop/pay/app/accountManager/callback.json
+        paymentCallbackUrl: 
         # 退款成功回调地址
         refundCallbackUrl:
 
 # Minio配置
 minio:
-  url: https://minio.yueliangjiejie.cn      #使用域名只能使用https
-  accessKey: admin
-  secretKey: Jinyun@123.com
-  bucketName: phone-up
+  url:       #使用域名只能使用https
+  accessKey: 
+  secretKey: 
+  bucketName: 
